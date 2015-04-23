@@ -30,7 +30,7 @@ public class SpecialButton extends Button implements ChangeListener<Object>
 	 * @param text
 	 *            If null no text will be displayed on the button
 	 * @param backgroundImage
-	 *            If null the layout default image will be used
+	 *            If null a mono colored 1x1 pixel will be set
 	 */
 	public SpecialButton(final String text, ObjectProperty<Image> backgroundImage)
 	{
@@ -49,7 +49,7 @@ public class SpecialButton extends Button implements ChangeListener<Object>
 		this.backgroundImage = backgroundImage;
 
 		// React on image changes, e. g. by LayoutManager
-		backgroundImage.addListener(this);
+		this.backgroundImage.addListener(this);
 
 		this.updateBackground(backgroundImage.get());
 	}
