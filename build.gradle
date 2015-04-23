@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
-version = '0.01'
+version = '0.02'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -28,13 +28,17 @@ artifacts {
     archives javadocJar
 }
  
-//Get dependencies from Maven central repository
+// Get dependencies from Maven central repository
 repositories {
     mavenCentral()
+    maven {
+        url "https://repository.apache.org/content/repositories/snapshots/"
+    }
 }
  
 //Project dependencies
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile group: 'commons-io', name: 'commons-io', version: '2.4'
+    compile 'org.apache.commons:commons-configuration2:2.0-alpha1-SNAPSHOT'
 }

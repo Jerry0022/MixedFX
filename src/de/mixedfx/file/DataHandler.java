@@ -183,11 +183,11 @@ public class DataHandler
 	 *            The full absolute directory + file name
 	 * @return True if file was successfully deleted or false if deletion failed
 	 */
-	public static boolean deleteFile(final String fullPath)
+	public static boolean deleteFile(final FileObject fullPath)
 	{
 		boolean success;
 
-		final File file = new File(fullPath);
+		final File file = new File(fullPath.getFullPath());
 
 		if (!file.exists())
 			success = true; // File doesn't exist already

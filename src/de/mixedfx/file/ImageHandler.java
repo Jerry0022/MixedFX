@@ -79,7 +79,7 @@ public class ImageHandler
 		destination.setExtension(ImageHandler.extension);
 
 		// Delete first an existing file
-		DataHandler.deleteFile(destination.getFullPath());
+		DataHandler.deleteFile(destination);
 
 		final PixelReader pixelReader = toWrite.getPixelReader();
 		final int width = (int) toWrite.getWidth();
@@ -130,7 +130,7 @@ public class ImageHandler
 	public static void deleteImageFormatted(final FileObject destination)
 	{
 		destination.setPrefix(ImageHandler.prefix);
-		DataHandler.deleteFile(destination.getFullPath());
+		DataHandler.deleteFile(destination);
 	}
 
 	/**
@@ -140,6 +140,6 @@ public class ImageHandler
 	 */
 	public static void deleteImage(final FileObject destination)
 	{
-		DataHandler.deleteFile(destination.getFullPath());
+		DataHandler.deleteFile(destination);
 	}
 }
