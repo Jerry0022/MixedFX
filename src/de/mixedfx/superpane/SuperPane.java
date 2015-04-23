@@ -145,6 +145,8 @@ public class SuperPane extends StackPane
 	 * visible</li>
 	 * </ol>
 	 *
+	 * The LoadScreen is null => No LoadScreen is shown while loading...
+	 *
 	 * @param content
 	 *            The content which shall be shown.
 	 */
