@@ -1,4 +1,5 @@
-apply plugin: 'java-library-distribution'
+apply plugin: 'eclipse'
+apply plugin: 'java'
 
 version = '0.04'
 sourceCompatibility = 1.8
@@ -12,15 +13,25 @@ sourceSets {
     }
 }
 
-distributions {
-    main{
-        baseName = 'MixedFX'
-        contents {
-            from { 'build/libs' }
-        }
-    }
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
 }
- 
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+jar {
+	dependsOn 'javadocJar'
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
 // Get dependencies from Maven central repository
 repositories {
     mavenCentral()
