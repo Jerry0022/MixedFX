@@ -1,0 +1,6 @@
+INFO  2015-04-23 21:13:36,476 [main] com.barchart.udt.SocketUDT#<clinit>  130 - library location : ./lib/bin
+INFO  2015-04-23 21:13:36,479 [main] com.barchart.udt.SocketUDT#<clinit>  134 - loader provider  : com.barchart.udt.lib.LibraryLoaderUDT
+INFO  2015-04-23 21:13:36,480 [main] com.barchart.udt.lib.PluginPropsUDT#<clinit>  82 - ARCH/OS/LINK = amd64/Windows/gpp
+INFO  2015-04-23 21:13:36,490 [main] com.barchart.udt.lib.LibraryLoaderUDT#load  39 - Platform supported.
+INFO  2015-04-23 21:13:36,492 [main] com.barchart.udt.lib.LibraryLoaderUDT#load  49 - Loading release libraries.
+INFO  2015-04-23 21:13:36,506 [main] com.barchart.udt.lib.LibraryLoaderUDT#load  51 - Release libraries loaded.
