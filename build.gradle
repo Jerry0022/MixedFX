@@ -1,5 +1,6 @@
-apply plugin: 'java'
+// apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'java-library-distribution'
 
 version = '0.03'
 sourceCompatibility = 1.8
@@ -27,6 +28,12 @@ artifacts {
     archives sourcesJar
     archives javadocJar
 }
+
+distributions {
+    main{
+        baseName = 'MixedFX'
+    }
+}
  
 // Get dependencies from Maven central repository
 repositories {
@@ -38,9 +45,10 @@ repositories {
  
 //Project dependencies
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile group: 'commons-io', name: 'commons-io', version: '2.4'
+   	compile group: 'commons-io', name: 'commons-io', version: '2.4'
     compile 'org.apache.commons:commons-configuration2:2.0-alpha1-SNAPSHOT'
     compile 'org.bushe:eventbus:1.4'
     compile 'org.slf4j:slf4j-api:1.7.12'
+    compile 'org.jfxtras:jfxtras-labs:8.0-r3'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
 }
