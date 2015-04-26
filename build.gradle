@@ -2,7 +2,7 @@
 apply plugin: 'eclipse'
 apply plugin: 'java-library-distribution'
 
-version = '0.03'
+version = '0.04'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -47,6 +47,7 @@ repositories {
 dependencies {
    	compile group: 'commons-io', name: 'commons-io', version: '2.4'
     compile 'org.apache.commons:commons-configuration2:2.0-alpha1-SNAPSHOT'
+    compile 'commons-beanutils:commons-beanutils:1.9.2'
     compile 'org.bushe:eventbus:1.4'
     compile 'org.slf4j:slf4j-api:1.7.12'
     compile 'org.jfxtras:jfxtras-labs:8.0-r3'
