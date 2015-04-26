@@ -6,8 +6,9 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
 /**
- * @author Jerry
+ * This class produces {@link Image} Objects from colors.
  *
+ * @author Jerry
  */
 public class ImageProducer
 {

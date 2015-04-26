@@ -18,7 +18,7 @@ import javafx.scene.layout.StackPane;
 
 /**
  * <p>
- * This class can be instantiated to get an advanced pane.
+ * This class can be instantiated to get an advanced very flexible and lightweight pane.
  * </p>
  *
  * @author JerryMobil

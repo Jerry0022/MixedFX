@@ -46,11 +46,6 @@ public class SettingsManager
 		return item.getValue();
 	}
 
-	private static String getValue(final String section, final String key)
-	{
-		return SettingsManager.configMaker.getValue(new ConfigItem(section, key));
-	}
-
 	/**
 	 * Writes the value into the config from now it is usable with the read methods.
 	 *
