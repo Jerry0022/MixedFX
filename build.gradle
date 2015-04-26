@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
-version = '0.02'
+version = '0.03'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -41,13 +41,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile group: 'commons-io', name: 'commons-io', version: '2.4'
     compile 'org.apache.commons:commons-configuration2:2.0-alpha1-SNAPSHOT'
-    compile 'com.kenai.jxse:jxse:2.7'
-    compile 'org.jboss.netty:netty:3.2.10.Final'
-    compile 'com.barchart.udt:barchart-udt4-bundle:1.0.2'
-    compile 'com.barchart.udt:barchart-udt4-parent:1.0.2'
-    compile 'com.barchart.udt:barchart-udt4:1.0.2'
-    compile 'com.barchart.udt:barchart-udt-bundle:2.3.0'
-    compile 'com.barchart.udt:barchart-udt-archon:2.3.0'
-    compile 'com.barchart.udt:barchart-udt-core:2.3.0'
+    compile 'org.bushe:eventbus:1.4'
     compile 'org.slf4j:slf4j-api:1.7.12'
 }
