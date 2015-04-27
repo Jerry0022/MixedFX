@@ -23,11 +23,12 @@ public class ImageHandler
 	public static boolean	backgroundLoading	= false;
 
 	/**
-	 * The preferred prefix.
+	 * The preferred prefix. Default: "img"
 	 */
 	public static String	prefix				= "img";
+
 	/**
-	 * The preferred extension (only needed for writing actions).
+	 * The preferred extension (only needed for writing actions). Default: "png"
 	 */
 	public static String	extension			= "png";
 

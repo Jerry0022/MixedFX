@@ -54,8 +54,8 @@ public class Inspector
 	/**
 	 * <p>
 	 * Sets the background of a node to a random color and shows the chosen color in the console.
-	 * Use the hex color in the console on the website {@see <a
-	 * href="http://www.css3-generator.de/rgba.html" >http://www.css3-generator.de/rgba.html</a>}
+	 * Use the hex color in the console on the website <a
+	 * href="http://www.css3-generator.de/rgba.html" >http://www.css3-generator.de/rgba.html</a>
 	 * </p>
 	 *
 	 * @param region
@@ -83,8 +83,8 @@ public class Inspector
 	 * <p>
 	 * Sets the background of a node to a random color and shows the chosen color in the console.
 	 * The displayed name is the id of the object instance. Use the hex color in the console on the
-	 * website {@see <a href="http://www.css3-generator.de/rgba.html"
-	 * >http://www.css3-generator.de/rgba.html</a>}
+	 * website <a href="http://www.css3-generator.de/rgba.html"
+	 * >http://www.css3-generator.de/rgba.html</a>
 	 * </p>
 	 *
 	 * @param region
