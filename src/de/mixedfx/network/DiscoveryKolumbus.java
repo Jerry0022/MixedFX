@@ -14,14 +14,14 @@ class DiscoveryKolumbus
 	 * Alternates between broadcast the discovery message via default broadcast (255.255.255.255)
 	 * and via the broadcast address of every network interface (every subnet).
 	 */
-	private final static int	DISCOVER_INTERVAL	= 1000;
+	private final static int		DISCOVER_INTERVAL	= 1000;
 
-	private DatagramSocket		socket;
+	private final DatagramSocket	socket;
 
 	public DiscoveryKolumbus() throws Exception
 	{
-		socket = new DatagramSocket();
-		socket.setBroadcast(true);
+		this.socket = new DatagramSocket();
+		this.socket.setBroadcast(true);
 	}
 
 	public synchronized void startDiscovering()
@@ -29,24 +29,24 @@ class DiscoveryKolumbus
 		boolean socketUnclosed = true;
 		while (socketUnclosed)
 		{
-			byte[] sendData = Discovery.Messages.DISCOVERY.toString().getBytes();
+			final byte[] sendData = Discovery.Messages.DISCOVERY.toString().getBytes();
 
 			// Try the 255.255.255.255 first
 			try
 			{
-				DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("255.255.255.255"), Discovery.PORT);
-				socket.send(sendPacket);
+				final DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("255.255.255.255"), Discovery.PORT_UDP_CLIENT);
+				this.socket.send(sendPacket);
 			}
-			catch (Exception e)
+			catch (final Exception e)
 			{
 				socketUnclosed = false;
 			}
 
 			try
 			{
-				Thread.sleep(DISCOVER_INTERVAL);
+				Thread.sleep(DiscoveryKolumbus.DISCOVER_INTERVAL);
 			}
-			catch (InterruptedException e2)
+			catch (final InterruptedException e2)
 			{
 			}
 
@@ -57,43 +57,43 @@ class DiscoveryKolumbus
 				interfaces = NetworkInterface.getNetworkInterfaces();
 				while (interfaces.hasMoreElements())
 				{
-					NetworkInterface networkInterface = interfaces.nextElement();
+					final NetworkInterface networkInterface = interfaces.nextElement();
 
 					// Don't want to broadcast to loopback interfaces or disabled interface
 					if (networkInterface.isLoopback() || !networkInterface.isUp())
 						continue;
 
-					for (InterfaceAddress interfaceAddress : networkInterface.getInterfaceAddresses())
+					for (final InterfaceAddress interfaceAddress : networkInterface.getInterfaceAddresses())
 					{
 						// IPv6 is not supported here
-						InetAddress broadcast = interfaceAddress.getBroadcast();
+						final InetAddress broadcast = interfaceAddress.getBroadcast();
 						if (broadcast == null)
 							continue;
 
 						// Send the broadcast package!
 						try
 						{
-							DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, broadcast, Discovery.PORT);
-							socket.send(sendPacket);
+							final DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, broadcast, Discovery.PORT_UDP_CLIENT);
+							this.socket.send(sendPacket);
 							System.out.println("SENT");
 						}
-						catch (Exception e)
+						catch (final Exception e)
 						{
 							socketUnclosed = false;
 						}
 					}
 				}
 			}
-			catch (SocketException e1)
+			catch (final SocketException e1)
 			{
 				socketUnclosed = false;
 			}
 
 			try
 			{
-				Thread.sleep(DISCOVER_INTERVAL);
+				Thread.sleep(DiscoveryKolumbus.DISCOVER_INTERVAL);
 			}
-			catch (InterruptedException e2)
+			catch (final InterruptedException e2)
 			{
 			}
 		}
@@ -101,6 +101,6 @@ class DiscoveryKolumbus
 
 	public void stopDiscovering()
 	{
-		socket.close();
+		this.socket.close();
 	}
 }

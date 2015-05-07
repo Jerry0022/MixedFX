@@ -1,15 +1,17 @@
 package de.mixedfx.network;
 
+import org.bushe.swing.event.annotation.AnnotationProcessor;
+
 public class Main
 {
-	public static void main(String[] args)
+	public static void main(final String[] args)
 	{
 		try
 		{
-			(new Discovery()).start();
-			;
+			AnnotationProcessor.process(new Main());
+			new Discovery().start();
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -60,7 +62,7 @@ public class Main
 			{
 				Thread.sleep(1000);
 			}
-			catch (InterruptedException e)
+			catch (final InterruptedException e)
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -69,14 +71,20 @@ public class Main
 		}
 	}
 
+	@org.bushe.swing.event.annotation.EventTopicSubscriber(topic = "PortFailed")
+	public void show(final String topic, final Exception e)
+	{
+		e.printStackTrace();
+	}
+
 	/**
 	 * Creates a new thread as daemon and starts it with the given task.
-	 * 
+	 *
 	 * @param task
 	 */
-	private static void startThread(Runnable task)
+	private static void startThread(final Runnable task)
 	{
-		Thread t = new Thread(task);
+		final Thread t = new Thread(task);
 		t.setDaemon(true);
 		t.start();
 	}

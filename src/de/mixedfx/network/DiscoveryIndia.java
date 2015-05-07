@@ -19,7 +19,7 @@ class DiscoveryIndia
 	 */
 	public ReadOnlyListProperty<InetAddress>	discovered;
 
-	private DatagramSocket						socket;
+	private final DatagramSocket				socket;
 
 	/**
 	 * @throws Exception
@@ -28,11 +28,11 @@ class DiscoveryIndia
 	 */
 	public DiscoveryIndia() throws Exception
 	{
-		discovered = new ReadOnlyListWrapper<>(new ObservableListWrapper<InetAddress>(new ArrayList<InetAddress>()));
+		this.discovered = new ReadOnlyListWrapper<>(new ObservableListWrapper<InetAddress>(new ArrayList<InetAddress>()));
 
 		// Keep a socket open to listen to all the UDP trafic that is destined for this port
-		socket = new DatagramSocket(Discovery.PORT, InetAddress.getByName("0.0.0.0"));
-		socket.setBroadcast(true);
+		this.socket = new DatagramSocket(Discovery.PORT_UDP_SERVER, InetAddress.getByName("0.0.0.0"));
+		this.socket.setBroadcast(true);
 	}
 
 	/**
@@ -46,67 +46,55 @@ class DiscoveryIndia
 			// Wait until first SEARCH message was received.
 			while (true)
 			{
-				System.out.println(getClass().getName() + "Server" + ">>>Ready to receive broadcast packets!");
+				System.out.println(this.getClass().getName() + "Server" + ">>>Ready to receive broadcast packets!");
 
 				// Receive a packet
-				byte[] recvBuf = new byte[15000];
-				DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
-				socket.receive(packet); // BLOCKING
+				final byte[] recvBuf = new byte[15000];
+				final DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
+				this.socket.receive(packet); // BLOCKING
 
 				if (new String(packet.getData(), 0, packet.getLength()).equals(Discovery.Messages.DISCOVERY.toString()))
-				{
-
-					if (!containsIP(packet.getAddress()))
-					{
-						addIP(packet.getAddress());
-					}
-				}
+					if (!this.containsIP(packet.getAddress()))
+						this.addIP(packet.getAddress());
 			}
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 		}
 		finally
 		{
-			socket.close();
+			this.socket.close();
 		}
 	}
 
 	public void stopListening()
 	{
-		socket.close();
+		this.socket.close();
 	}
 
-	private void addIP(InetAddress ip)
+	private void addIP(final InetAddress ip)
 	{
-		synchronized (discovered)
+		synchronized (this.discovered)
 		{
-			Runnable r = new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					discovered.add(ip);
-				}
-			};
-			Thread t = new Thread(r);
+			final Runnable r = () -> DiscoveryIndia.this.discovered.add(ip);
+			final Thread t = new Thread(r);
 			t.start();
 		}
 	}
 
-	public void removeIP(InetAddress ip)
+	public void removeIP(final InetAddress ip)
 	{
-		synchronized (discovered)
+		synchronized (this.discovered)
 		{
-			discovered.remove(ip);
+			this.discovered.remove(ip);
 		}
 	}
 
-	private boolean containsIP(InetAddress ip)
+	private boolean containsIP(final InetAddress ip)
 	{
-		synchronized (discovered)
+		synchronized (this.discovered)
 		{
-			return discovered.contains(ip);
+			return this.discovered.contains(ip);
 		}
 	}
 }
