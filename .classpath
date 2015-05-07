@@ -3,5 +3,10 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="con" path="org.springsource.ide.eclipse.gradle.classpathcontainer"/>
+	<classpathentry kind="lib" path="libs/FreePastry-2.1.jar" sourcepath="libs/FreePastry-2.1-source.zip">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/MixedFX/libs/FreePastry-2.1-docs.zip!/pastry-2.1/docs/javadoc"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
