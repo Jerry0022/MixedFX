@@ -19,7 +19,7 @@ public class TCPCoordinator
 	public static AtomicInteger	localNetworkID;
 
 	private final TCPServer		tcpServer;
-	private TCPClient			tcpClient;
+	private final TCPClient		tcpClient;
 
 	public TCPCoordinator()
 	{
@@ -29,6 +29,7 @@ public class TCPCoordinator
 		AnnotationProcessor.process(this);
 
 		this.tcpServer = new TCPServer();
+		this.tcpClient = new TCPClient();
 
 		Overall.status.addListener((ChangeListener<NetworkStatus>) (observable, oldValue, newValue) ->
 		{
