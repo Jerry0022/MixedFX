@@ -9,12 +9,14 @@ import javafx.beans.value.ChangeListener;
 import org.bushe.swing.event.annotation.AnnotationProcessor;
 import org.bushe.swing.event.annotation.EventTopicSubscriber;
 
+import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.network.Overall.NetworkStatus;
+import de.mixedfx.network.messages.Message;
 
 public class TCPCoordinator
 {
-	public static final int		PORT_TRIES			= 5;
-	public static final String	TCP_CONNECTION_LOST	= "TCP_CONNECTION_LOST";
+	public static final int		PORT_TRIES		= 5;
+	public static final String	CONNECTION_LOST	= "TCP_CONNECTION_LOST";
 
 	public static AtomicInteger	localNetworkMainID;
 	public static AtomicInteger	localNetworkID;
@@ -71,7 +73,7 @@ public class TCPCoordinator
 		// Overall.status.set(NetworkStatus.Server);
 	}
 
-	@EventTopicSubscriber(topic = TCPCoordinator.TCP_CONNECTION_LOST)
+	@EventTopicSubscriber(topic = TCPCoordinator.CONNECTION_LOST)
 	public synchronized void lostConnection(final String topic, final Integer clientID)
 	{
 		if (clientID.equals(TCPCoordinator.localNetworkMainID.get()))
@@ -107,6 +109,9 @@ public class TCPCoordinator
 			}
 
 			Overall.status.set(NetworkStatus.BoundToServer);
+
+			final Message message = new Message();
+			EventBusExtended.publishSyncSafe(Connection.MESSAGE_SEND, message);
 		}
 	}
 

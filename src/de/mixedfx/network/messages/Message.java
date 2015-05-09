@@ -1,6 +1,14 @@
 package de.mixedfx.network.messages;
 
-public class Message
-{
+import java.io.Serializable;
 
+@SuppressWarnings("serial")
+public class Message implements Serializable
+{
+	public boolean	fromServer;
+
+	public Message()
+	{
+		this.fromServer = false;
+	}
 }
