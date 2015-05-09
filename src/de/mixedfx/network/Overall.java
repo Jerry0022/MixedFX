@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleObjectProperty;
 
 public class Overall
 {
-	public static ObjectProperty<NetworkStatus>	status	= new SimpleObjectProperty<>(NetworkStatus.Unbound);
+	public static ObjectProperty<NetworkStatus>	status	= new SimpleObjectProperty<>(NetworkStatus.Server);
 
 	public enum NetworkStatus
 	{

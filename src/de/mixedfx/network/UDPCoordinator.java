@@ -27,11 +27,6 @@ public class UDPCoordinator implements org.bushe.swing.event.EventTopicSubscribe
 	 */
 	public ListProperty<InetAddress>	allServerAdresses;
 
-	/**
-	 * The current host.
-	 */
-	public InetAddress					nextHostAdress;
-
 	public UDPCoordinator()
 	{
 		this.allAdresses = new SimpleListProperty<>(FXCollections.observableArrayList(new ArrayList<>()));
@@ -55,30 +50,34 @@ public class UDPCoordinator implements org.bushe.swing.event.EventTopicSubscribe
 	@Override
 	public synchronized void onEvent(final String topic, final Object data)
 	{
-		if (topic.equals(UDPCoordinator.RECEIVE))
+		synchronized (Overall.status)
 		{
-			final DatagramPacket packet = (DatagramPacket) data;
-			final String packetMessage = new String(packet.getData(), 0, packet.getLength());
-
-			// Add all sending NICs to list
-			if (!this.allAdresses.contains(packet.getAddress()))
-				this.allAdresses.add(packet.getAddress());
-
-			// Add all sending server NICs to list
-			if (packetMessage.equals(Overall.NetworkStatus.Server.toString()) && !this.allServerAdresses.contains(packet.getAddress()))
-				this.allServerAdresses.add(packet.getAddress());
-
-			// If I'm searching and the other one is a server or bound to server then let's connect
-			if (Overall.status.get().equals(NetworkStatus.Unbound) && (packetMessage.equals(Overall.NetworkStatus.Server.toString()) || packetMessage.equals(Overall.NetworkStatus.BoundToServer.toString())))
+			if (topic.equals(UDPCoordinator.RECEIVE))
 			{
-				this.nextHostAdress = packet.getAddress();
-				// TODO Open TCP Connection to first server replied and save if host or boundhost
-				// (of packetMessage)
-				System.out.println(Overall.NetworkStatus.valueOf(packetMessage));
-				Overall.status.set(Overall.NetworkStatus.valueOf(packetMessage));
+				final DatagramPacket packet = (DatagramPacket) data;
+				final String packetMessage = new String(packet.getData(), 0, packet.getLength());
+
+				// Add all sending NICs to list
+				if (!this.allAdresses.contains(packet.getAddress()))
+					this.allAdresses.add(packet.getAddress());
+
+				// Add all sending server NICs to list
+				if (packetMessage.equals(Overall.NetworkStatus.Server.toString()) && !this.allServerAdresses.contains(packet.getAddress()))
+					this.allServerAdresses.add(packet.getAddress());
+
+				// If I'm searching and the other one is a server or bound to server then let's
+				// connect
+				if (Overall.status.get().equals(NetworkStatus.Unbound) && (packetMessage.equals(Overall.NetworkStatus.Server.toString()) || packetMessage.equals(Overall.NetworkStatus.BoundToServer.toString())))
+				{
+					// TODO Open TCP Server, if fails return;
+					// TODO Open TCP Connection to first server replied and save if host or
+					// boundhost (of packetMessage). If fails, close TCP Server and return;
+					System.out.println(Overall.NetworkStatus.valueOf(packetMessage));
+					Overall.status.set(Overall.NetworkStatus.BoundToServer);
+				}
 			}
+			else if (topic.equals(UDPCoordinator.ERROR))
+				this.handleNetworkerror((Exception) data);
 		}
-		else if (topic.equals(UDPCoordinator.ERROR))
-			this.handleNetworkerror((Exception) data);
 	}
 }
