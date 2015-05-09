@@ -1,4 +1,4 @@
-package de.mixedfx.network.p2pAgain;
+package de.mixedfx.network.archive;
 
 import java.io.IOException;
 import java.net.UnknownHostException;

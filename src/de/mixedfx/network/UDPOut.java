@@ -53,7 +53,7 @@ public class UDPOut
 				 */
 				try
 				{
-					final DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("255.255.255.255"), Overall.PORT_UDP);
+					final DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("255.255.255.255"), Overall.PORT);
 					this.socket.send(sendPacket);
 					worked = true;
 				}
@@ -87,7 +87,7 @@ public class UDPOut
 							// Send the broadcast package!
 							try
 							{
-								final DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, broadcast, Overall.PORT_UDP);
+								final DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, broadcast, Overall.PORT);
 								this.socket.send(sendPacket);
 								worked = true;
 							}

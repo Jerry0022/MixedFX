@@ -1,4 +1,4 @@
-package de.mixedfx.network.p2p;
+package de.mixedfx.network.archive;
 
 /*******************************************************************************
  * "FreePastry" Peer-to-Peer Application Development Substrate

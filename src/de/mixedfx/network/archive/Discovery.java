@@ -1,4 +1,4 @@
-package de.mixedfx.network;
+package de.mixedfx.network.archive;
 
 import java.net.InetAddress;
 

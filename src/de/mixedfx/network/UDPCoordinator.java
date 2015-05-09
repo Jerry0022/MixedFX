@@ -13,7 +13,7 @@ import de.mixedfx.network.Overall.NetworkStatus;
 public class UDPCoordinator implements org.bushe.swing.event.EventTopicSubscriber<Object>
 {
 	public static final String			RECEIVE	= "RECEIVE";
-	public static final String			ERROR	= "error";
+	public static final String			ERROR	= "ERROR";
 
 	public static final EventBusService	service	= new EventBusService("UDPCoordinator");
 
@@ -69,15 +69,13 @@ public class UDPCoordinator implements org.bushe.swing.event.EventTopicSubscribe
 				// connect
 				if (Overall.status.get().equals(NetworkStatus.Unbound) && (packetMessage.equals(Overall.NetworkStatus.Server.toString()) || packetMessage.equals(Overall.NetworkStatus.BoundToServer.toString())))
 				{
-					// TODO Open TCP Server, if fails return;
-					// TODO Open TCP Connection to first server replied and save if host or
-					// boundhost (of packetMessage). If fails, close TCP Server and return;
+					Starter.t.startFullTCP(packet.getAddress());
 					System.out.println(Overall.NetworkStatus.valueOf(packetMessage));
-					Overall.status.set(Overall.NetworkStatus.BoundToServer);
 				}
 			}
-			else if (topic.equals(UDPCoordinator.ERROR))
-				this.handleNetworkerror((Exception) data);
+			else
+				if (topic.equals(UDPCoordinator.ERROR))
+					this.handleNetworkerror((Exception) data);
 		}
 	}
 }

@@ -5,12 +5,12 @@ import javafx.beans.property.SimpleObjectProperty;
 
 public class Overall
 {
-	public static ObjectProperty<NetworkStatus>	status	= new SimpleObjectProperty<>(NetworkStatus.Server);
+	public static ObjectProperty<NetworkStatus>	status	= new SimpleObjectProperty<>(NetworkStatus.Unbound);
 
 	public enum NetworkStatus
 	{
 		Server, BoundToServer, Unbound;
 	}
 
-	public final static int	PORT_UDP	= 8888;
+	public final static int	PORT	= 8888;
 }

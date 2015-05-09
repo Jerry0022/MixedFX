@@ -1,4 +1,4 @@
-package de.mixedfx.network.p2pAgain;
+package de.mixedfx.network.archive;
 
 import rice.p2p.commonapi.Message;
 

@@ -1,14 +1,14 @@
-package de.mixedfx.network;
+package de.mixedfx.network.archive;
 
 import org.bushe.swing.event.annotation.AnnotationProcessor;
 
-public class Main
+public class Main2
 {
 	public static void main(final String[] args)
 	{
 		try
 		{
-			AnnotationProcessor.process(new Main());
+			AnnotationProcessor.process(new Main2());
 			new Discovery().start();
 			while (true)
 				;

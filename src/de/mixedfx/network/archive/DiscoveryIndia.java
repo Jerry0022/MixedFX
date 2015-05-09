@@ -1,4 +1,4 @@
-package de.mixedfx.network;
+package de.mixedfx.network.archive;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -11,6 +11,7 @@ import javafx.beans.property.ReadOnlyListWrapper;
 
 import com.sun.javafx.collections.ObservableListWrapper;
 
+import de.mixedfx.network.Overall;
 import de.mixedfx.network.Overall.NetworkStatus;
 
 class DiscoveryIndia

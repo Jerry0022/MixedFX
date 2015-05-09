@@ -17,7 +17,7 @@ public class UDPIn
 	{
 		try
 		{
-			UDPIn.this.socket = new DatagramSocket(Overall.PORT_UDP, InetAddress.getByName("0.0.0.0"));
+			UDPIn.this.socket = new DatagramSocket(Overall.PORT, InetAddress.getByName("0.0.0.0"));
 		}
 		catch (final SocketException | UnknownHostException e)
 		{
