@@ -46,14 +46,14 @@ public class UDPOut
 			{
 				worked = false;
 
-				final byte[] sendData = Discovery.Messages.DISCOVERY_REQUEST.toString().getBytes();
+				final byte[] sendData = Overall.status.get().toString().getBytes();
 
 				/*
 				 * Try the 255.255.255.255 first
 				 */
 				try
 				{
-					final DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("255.255.255.255"), Discovery.PORT_UDP_CLIENT);
+					final DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("255.255.255.255"), Overall.PORT_UDP);
 					this.socket.send(sendPacket);
 					worked = true;
 				}
@@ -87,7 +87,7 @@ public class UDPOut
 							// Send the broadcast package!
 							try
 							{
-								final DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, broadcast, Discovery.PORT_UDP_CLIENT);
+								final DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, broadcast, Overall.PORT_UDP);
 								this.socket.send(sendPacket);
 								worked = true;
 							}

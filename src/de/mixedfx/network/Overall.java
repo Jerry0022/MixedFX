@@ -11,4 +11,6 @@ public class Overall
 	{
 		Server, BoundToServer, Unbound;
 	}
+
+	public final static int	PORT_UDP	= 8888;
 }

@@ -2,7 +2,9 @@ package de.mixedfx.network;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 
 public class UDPIn
 {
@@ -15,9 +17,9 @@ public class UDPIn
 	{
 		try
 		{
-			UDPIn.this.socket = new DatagramSocket();
+			UDPIn.this.socket = new DatagramSocket(Overall.PORT_UDP, InetAddress.getByName("0.0.0.0"));
 		}
-		catch (final SocketException e)
+		catch (final SocketException | UnknownHostException e)
 		{
 			UDPCoordinator.service.publishSync(UDPCoordinator.ERROR, e);
 		}
@@ -40,7 +42,6 @@ public class UDPIn
 				try
 				{
 					UDPIn.this.socket.receive(receivePacket);
-					System.out.println("RECEIVED");
 					UDPCoordinator.service.publishAsync(UDPCoordinator.RECEIVE, receivePacket);
 				}
 				catch (final Exception e)
