@@ -10,6 +10,8 @@ public class Main
 		{
 			AnnotationProcessor.process(new Main());
 			new Discovery().start();
+			while (true)
+				;
 		}
 		catch (final Exception e)
 		{

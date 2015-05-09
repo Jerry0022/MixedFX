@@ -1,11 +1,13 @@
 package de.mixedfx.network;
 
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.Enumeration;
 
 class DiscoveryKolumbus
@@ -14,7 +16,9 @@ class DiscoveryKolumbus
 	 * Alternates between broadcast the discovery message via default broadcast (255.255.255.255)
 	 * and via the broadcast address of every network interface (every subnet).
 	 */
-	private final static int		DISCOVER_INTERVAL	= 1000;
+	private final static int		DISCOVER_TIMEOUT	= 3000;
+
+	private final static int		DISCOVER_TRYS		= 5;
 
 	private final DatagramSocket	socket;
 
@@ -22,80 +26,98 @@ class DiscoveryKolumbus
 	{
 		this.socket = new DatagramSocket();
 		this.socket.setBroadcast(true);
+		this.socket.setSoTimeout(DiscoveryKolumbus.DISCOVER_TIMEOUT);
 	}
 
 	public synchronized void startDiscovering()
 	{
-		boolean socketUnclosed = true;
-		while (socketUnclosed)
+		for (int i = 0; i < DiscoveryKolumbus.DISCOVER_TRYS; i++)
 		{
-			final byte[] sendData = Discovery.Messages.DISCOVERY.toString().getBytes();
+			boolean worked = true;
+			boolean timeout;
+			while (worked)
+			{
+				worked = false;
 
-			// Try the 255.255.255.255 first
-			try
-			{
-				final DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("255.255.255.255"), Discovery.PORT_UDP_CLIENT);
-				this.socket.send(sendPacket);
-			}
-			catch (final Exception e)
-			{
-				socketUnclosed = false;
-			}
+				final byte[] sendData = Discovery.Messages.DISCOVERY_REQUEST.toString().getBytes();
 
-			try
-			{
-				Thread.sleep(DiscoveryKolumbus.DISCOVER_INTERVAL);
-			}
-			catch (final InterruptedException e2)
-			{
-			}
-
-			// Broadcast the message over all the network interfaces
-			Enumeration<NetworkInterface> interfaces;
-			try
-			{
-				interfaces = NetworkInterface.getNetworkInterfaces();
-				while (interfaces.hasMoreElements())
+				// Try the 255.255.255.255 first
+				try
 				{
-					final NetworkInterface networkInterface = interfaces.nextElement();
+					final DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("255.255.255.255"), Discovery.PORT_UDP_CLIENT);
+					this.socket.send(sendPacket);
+					worked = true;
+				}
+				catch (final Exception e)
+				{
+				}
 
-					// Don't want to broadcast to loopback interfaces or disabled interface
-					if (networkInterface.isLoopback() || !networkInterface.isUp())
-						continue;
-
-					for (final InterfaceAddress interfaceAddress : networkInterface.getInterfaceAddresses())
+				// Broadcast the message over all the network interfaces
+				Enumeration<NetworkInterface> interfaces;
+				try
+				{
+					interfaces = NetworkInterface.getNetworkInterfaces();
+					while (interfaces.hasMoreElements())
 					{
-						// IPv6 is not supported here
-						final InetAddress broadcast = interfaceAddress.getBroadcast();
-						if (broadcast == null)
+						final NetworkInterface networkInterface = interfaces.nextElement();
+
+						// Don't want to broadcast to loopback interfaces or disabled interface
+						if (networkInterface.isLoopback() || !networkInterface.isUp())
 							continue;
 
-						// Send the broadcast package!
-						try
+						for (final InterfaceAddress interfaceAddress : networkInterface.getInterfaceAddresses())
 						{
-							final DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, broadcast, Discovery.PORT_UDP_CLIENT);
-							this.socket.send(sendPacket);
-							System.out.println("SENT");
-						}
-						catch (final Exception e)
-						{
-							socketUnclosed = false;
+							// IPv6 is not supported here
+							final InetAddress broadcast = interfaceAddress.getBroadcast();
+							if (broadcast == null)
+								continue;
+
+							// Send the broadcast package!
+							try
+							{
+								final DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, broadcast, Discovery.PORT_UDP_CLIENT);
+								this.socket.send(sendPacket);
+								System.out.println("SENT DISCOVER");
+								worked = true;
+							}
+							catch (final Exception e)
+							{
+							}
 						}
 					}
 				}
-			}
-			catch (final SocketException e1)
-			{
-				socketUnclosed = false;
-			}
+				catch (final SocketException e1)
+				{
+				}
 
-			try
-			{
-				Thread.sleep(DiscoveryKolumbus.DISCOVER_INTERVAL);
+				if (worked)
+				{
+					// TODO Do receival in separate thread
+					timeout = false;
+					while (!timeout)
+					{
+						// Receive a packet
+						final byte[] recvBuf = new byte[15000];
+						final DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
+						try
+						{
+							System.out.println("WAIT");
+							this.socket.receive(packet); // BLOCKING
+							System.out.println("GOT: " + packet.getAddress());
+							// TODO Add packet.getAdress to LIST!
+						}
+						catch (final IOException e)
+						{
+							System.out.println("failure");
+							if (e instanceof SocketTimeoutException)
+								timeout = true;
+						}
+					}
+					if (timeout)
+						worked = false;
+				}
 			}
-			catch (final InterruptedException e2)
-			{
-			}
+			// Could not find a for UDP working network connection
 		}
 	}
 

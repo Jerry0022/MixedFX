@@ -11,6 +11,8 @@ import javafx.beans.property.ReadOnlyListWrapper;
 
 import com.sun.javafx.collections.ObservableListWrapper;
 
+import de.mixedfx.network.Overall.NetworkStatus;
+
 class DiscoveryIndia
 {
 	/**
@@ -36,8 +38,8 @@ class DiscoveryIndia
 	}
 
 	/**
-	 * Starts listening for the {@link Discovery.Messages#DISCOVERY} and puts the InetAddresses of
-	 * the sender into the {@link #discovered} ListProperty.
+	 * Starts listening for the {@link Discovery.Messages#DISCOVERY_REQUEST} and puts the
+	 * InetAddresses of the sender into the {@link #discovered} ListProperty.
 	 */
 	public synchronized void startListening()
 	{
@@ -53,9 +55,23 @@ class DiscoveryIndia
 				final DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
 				this.socket.receive(packet); // BLOCKING
 
-				if (new String(packet.getData(), 0, packet.getLength()).equals(Discovery.Messages.DISCOVERY.toString()))
-					if (!this.containsIP(packet.getAddress()))
-						this.addIP(packet.getAddress());
+				if (new String(packet.getData(), 0, packet.getLength()).equals(Discovery.Messages.DISCOVERY_REQUEST.toString()))
+					if (!this.containsIP(packet.getAddress())) // TODO Really necessary?
+						if (Overall.status.get().equals(Overall.NetworkStatus.Server) || Overall.status.get().equals(NetworkStatus.BoundToServer))
+						{
+							final byte[] sendData = Discovery.Messages.DISCOVERY_ANSWER.toString().getBytes();
+
+							try
+							{
+								final DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, packet.getAddress(), Discovery.PORT_UDP_CLIENT);
+								this.socket.send(sendPacket);
+								System.out.println("SENT ANSWER");
+								this.addIP(packet.getAddress());
+							}
+							catch (final IOException e)
+							{
+							}
+						}
 			}
 		}
 		catch (final IOException e)
@@ -78,6 +94,7 @@ class DiscoveryIndia
 		{
 			final Runnable r = () -> DiscoveryIndia.this.discovered.add(ip);
 			final Thread t = new Thread(r);
+			t.setDaemon(true);
 			t.start();
 		}
 	}

@@ -3,7 +3,6 @@ package de.mixedfx.network;
 import java.net.InetAddress;
 
 import javafx.collections.ListChangeListener;
-import de.mixedfx.eventbus.EventBusExtended;
 
 public class Discovery
 {
@@ -12,7 +11,7 @@ public class Discovery
 
 	public enum Messages
 	{
-		DISCOVERY;
+		DISCOVERY_REQUEST, DISCOVERY_ANSWER;
 	}
 
 	public enum Errors
@@ -47,7 +46,7 @@ public class Discovery
 			}
 			catch (final Exception e)
 			{
-				EventBusExtended.publishSafe(Errors.PortFailed.toString(), e);
+				System.out.println(e);
 			}
 		};
 
@@ -59,7 +58,7 @@ public class Discovery
 			}
 			catch (final Exception e)
 			{
-				EventBusExtended.publishSafe(Errors.PortFailed.toString(), e);
+				System.out.println(e);
 			}
 			Discovery.this.kolumbus.startDiscovering();
 		};
@@ -67,7 +66,7 @@ public class Discovery
 
 	public void start()
 	{
-		this.startThread(this.indiaTask);
+		// this.startThread(this.indiaTask);
 		this.startThread(this.kolumbusTask);
 	}
 
