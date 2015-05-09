@@ -5,6 +5,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.Enumeration;
 
 public class UDPOut
@@ -18,16 +19,21 @@ public class UDPOut
 	 */
 	public void start()
 	{
-		try
+		Exception exception = null;
+		for (int i = 0; i < UDPCoordinator.PORT_TRIES; i++)
+			try
 		{
-			UDPOut.this.socket = new DatagramSocket();
-			UDPOut.this.socket.setBroadcast(true);
-			UDPOut.this.broadcast();
+				UDPOut.this.socket = new DatagramSocket();
+				UDPOut.this.socket.setBroadcast(true);
+				UDPOut.this.broadcast();
+				break;
 		}
-		catch (final Exception e)
+		catch (final SocketException e)
 		{
-			UDPCoordinator.service.publishSync(UDPCoordinator.ERROR, e);
+			exception = e;
 		}
+		if (this.socket == null)
+			UDPCoordinator.service.publishSync(UDPCoordinator.ERROR, exception);
 	}
 
 	public void close()
@@ -99,8 +105,7 @@ public class UDPOut
 					}
 				}
 				catch (final Exception e1)
-				{
-				}
+				{}
 
 				if (!worked)
 					break;
@@ -112,8 +117,7 @@ public class UDPOut
 					Thread.sleep(UDPOut.BROADCAST_INTERVAL);
 				}
 				catch (final Exception e)
-				{
-				}
+				{}
 			}
 			if (!(exception instanceof NullPointerException))
 				UDPCoordinator.service.publishSync(UDPCoordinator.ERROR, new Exception("No network device suitable for UDP broadcast."));

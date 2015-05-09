@@ -15,15 +15,20 @@ public class UDPIn
 	 */
 	public void start()
 	{
-		try
+		Exception exception = null;
+		for (int i = 0; i < UDPCoordinator.PORT_TRIES; i++)
+			try
 		{
-			UDPIn.this.socket = new DatagramSocket(Overall.PORT, InetAddress.getByName("0.0.0.0"));
+				UDPIn.this.socket = new DatagramSocket(Overall.PORT + i, InetAddress.getByName("0.0.0.0"));
+				UDPIn.this.listen();
+				break;
 		}
 		catch (final SocketException | UnknownHostException e)
 		{
-			UDPCoordinator.service.publishSync(UDPCoordinator.ERROR, e);
+			exception = e;
 		}
-		UDPIn.this.listen();
+		if (this.socket == null)
+			UDPCoordinator.service.publishSync(UDPCoordinator.ERROR, exception);
 	}
 
 	public void stop()

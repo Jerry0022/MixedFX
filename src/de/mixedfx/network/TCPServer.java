@@ -3,6 +3,8 @@ package de.mixedfx.network;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import javafx.beans.property.ListProperty;
@@ -17,11 +19,23 @@ public class TCPServer
 
 	public void start() throws IOException
 	{
-		this.registrar = new Registrar();
-		this.connectionList = this.registrar.connectionList;
-		final Thread registrarThread = new Thread(this.registrar);
-		registrarThread.setDaemon(true);
-		registrarThread.start();
+		IOException exception = null;
+		for (int i = 0; i < TCPCoordinator.PORT_TRIES; i++)
+			try
+			{
+				this.registrar = new Registrar(Overall.PORT + i);
+				this.connectionList = this.registrar.connectionList;
+				final Thread registrarThread = new Thread(this.registrar);
+				registrarThread.setDaemon(true);
+				registrarThread.start();
+				break;
+			}
+			catch (final SocketException | UnknownHostException e)
+			{
+				exception = e;
+			}
+		if (this.registrar == null)
+			throw exception;
 	}
 
 	/**
@@ -29,7 +43,8 @@ public class TCPServer
 	 */
 	public void stop()
 	{
-		this.registrar.terminate();
+		if (this.registrar != null)
+			this.registrar.terminate();
 	}
 
 	/**
@@ -49,9 +64,9 @@ public class TCPServer
 		 * @throws IOException
 		 *             Throws an Exception if e. g. port is not available
 		 */
-		public Registrar() throws IOException
+		public Registrar(final int port) throws IOException
 		{
-			this.serverSocket = new ServerSocket(Overall.PORT);
+			this.serverSocket = new ServerSocket(port);
 			this.connectionList = new SimpleListProperty<>(FXCollections.observableArrayList(new ArrayList<>()));
 			System.out.println(this.getClass().getSimpleName() + " initialized on " + this.serverSocket.getLocalSocketAddress());
 		}
@@ -61,15 +76,15 @@ public class TCPServer
 		{
 			while (true)
 				try
-			{
+				{
 					final Socket clientSocket = this.serverSocket.accept();
 					this.connectionList.add(new Connection(TCPCoordinator.localNetworkID.getAndIncrement(), clientSocket));
 					System.out.println("Registrar registered client!");
-			}
-			catch (final IOException e)
-				{
-				// In case of termination or connection failure => nothing to do!
-			}
+				}
+				catch (final IOException e)
+			{
+					// In case of termination or connection failure => nothing to do!
+				}
 		}
 
 		public void terminate()

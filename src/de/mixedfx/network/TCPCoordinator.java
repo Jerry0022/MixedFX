@@ -13,6 +13,7 @@ import de.mixedfx.network.Overall.NetworkStatus;
 
 public class TCPCoordinator
 {
+	public static final int		PORT_TRIES			= 5;
 	public static final String	TCP_CONNECTION_LOST	= "TCP_CONNECTION_LOST";
 
 	public static AtomicInteger	localNetworkMainID;
@@ -66,6 +67,8 @@ public class TCPCoordinator
 					this.stopTCPFull();
 			}
 		});
+
+		// Overall.status.set(NetworkStatus.Server);
 	}
 
 	@EventTopicSubscriber(topic = TCPCoordinator.TCP_CONNECTION_LOST)
@@ -87,12 +90,6 @@ public class TCPCoordinator
 			try
 			{
 				this.tcpClient.start(ip, Overall.PORT);
-				/**
-				 * <pre>
-				 * TODO If TCP Client Connection fails (not if interrupted by this class)
-				 * this.stopTCPServer();
-				 * </pre>
-				 */
 			}
 			catch (final IOException e)
 			{

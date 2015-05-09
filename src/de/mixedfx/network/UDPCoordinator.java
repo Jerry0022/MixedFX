@@ -12,10 +12,12 @@ import de.mixedfx.network.Overall.NetworkStatus;
 
 public class UDPCoordinator implements org.bushe.swing.event.EventTopicSubscriber<Object>
 {
-	public static final String			RECEIVE	= "RECEIVE";
-	public static final String			ERROR	= "ERROR";
+	public static final int				PORT_TRIES	= 5;
 
-	public static final EventBusService	service	= new EventBusService("UDPCoordinator");
+	public static final String			RECEIVE		= "RECEIVE";
+	public static final String			ERROR		= "ERROR";
+
+	public static final EventBusService	service		= new EventBusService("UDPCoordinator");
 
 	/**
 	 * Just a list of all who made them known at least once (aren't necessarily still active).

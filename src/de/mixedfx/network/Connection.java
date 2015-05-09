@@ -14,7 +14,7 @@ public class Connection implements EventBusServiceInterface
 {
 	public enum TOPICS
 	{
-		MESSAGE_RECEIVED, CONNECTION_LOST;
+		MESSAGE_SEND, MESSAGE_RECEIVED, CONNECTION_LOST;
 	}
 
 	private final int					clientID;
@@ -50,6 +50,7 @@ public class Connection implements EventBusServiceInterface
 	public void initilizeEventBusAndSubscriptions()
 	{
 		this.eventBus = new EventBusService(this.getClass(), this.clientID);
+		this.eventBus.subscribe(TOPICS.MESSAGE_SEND.toString(), this);
 		this.eventBus.subscribe(TOPICS.MESSAGE_RECEIVED.toString(), this);
 		this.eventBus.subscribe(TOPICS.CONNECTION_LOST.toString(), this);
 
@@ -59,16 +60,17 @@ public class Connection implements EventBusServiceInterface
 	@Override
 	public void onEvent(final String topic, final Object event)
 	{
-		if (topic.equals(TOPICS.MESSAGE_RECEIVED.toString()))
-		{
-			final Message message = this.inputConnection.getNextMessage();
-			System.out.println("Message received, I'm: " + this.clientID);
-			;
-		}
+		if (topic.equals(TOPICS.MESSAGE_SEND.toString()))
+			this.outputConnection.sendMessage((Message) event);
 		else
-			EventBusExtended.publishSafe(TCPCoordinator.TCP_CONNECTION_LOST, this.clientID);
-		;
-
+			if (topic.equals(TOPICS.MESSAGE_RECEIVED.toString()))
+			{
+				final Message message = this.inputConnection.getNextMessage();
+				System.out.println("Message received, I'm: " + this.clientID);
+				;
+			}
+			else
+				EventBusExtended.publishSafe(TCPCoordinator.TCP_CONNECTION_LOST, this.clientID);
 	}
 
 	public void close()
