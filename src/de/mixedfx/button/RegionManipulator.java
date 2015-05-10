@@ -20,7 +20,7 @@ public class RegionManipulator
 	 * @param property
 	 *            Double to which the min, pref and max width of the region shall be bound.
 	 */
-	private static void bindAllWidth(final Region region, final DoubleExpression property)
+	public static void bindAllWidth(final Region region, final DoubleExpression property)
 	{
 		region.minWidthProperty().bind(property);
 		region.prefWidthProperty().bind(property);
@@ -35,7 +35,7 @@ public class RegionManipulator
 	 * @param property
 	 *            Double to which the min, pref and max height of the region shall be bound.
 	 */
-	private static void bindAllHeight(final Region region, final DoubleExpression property)
+	public static void bindAllHeight(final Region region, final DoubleExpression property)
 	{
 		region.minHeightProperty().bind(property);
 		region.prefHeightProperty().bind(property);
@@ -51,7 +51,7 @@ public class RegionManipulator
 	 * @param image
 	 *            Image which shall be the background of the region.
 	 */
-	private static void bindBackground(final Region region, final Image image)
+	public static void bindBackground(final Region region, final Image image)
 	{
 		region.heightProperty().addListener((ChangeListener<Number>) (observable, oldValue, newValue) ->
 		{
