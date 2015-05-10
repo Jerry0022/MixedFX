@@ -5,5 +5,6 @@ Please find packages under build/distributions.
 Please unpack the file and add the contained jars to your build path.
 
 ## To Build with Eclipse:
+May change version in preBuild.gradle and build.gradle (should be the same version)
 Run preBuild.gradle as "gradle build Gradle build"
 Run build.gradle as "Gradle Build"

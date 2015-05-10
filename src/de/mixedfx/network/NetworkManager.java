@@ -14,7 +14,7 @@ import de.mixedfx.network.NetworkConfig.States;
 import de.mixedfx.network.messages.Message;
 
 /**
- * <pre>
+ * <p>
  * Builds up a network. Manually only host server must be called and {@link Message} received or
  * send. Connection to a host server or someone who is connected to the host server will be
  * established automatically.
@@ -23,7 +23,7 @@ import de.mixedfx.network.messages.Message;
  *
  * If you may want to set the port use {@link NetworkManager#setPort(int)}. (Usually only necessary
  * if there was an fatal error)
- * </pre>
+ * </p>
  *
  * @author Jerry
  *
@@ -53,18 +53,16 @@ public class NetworkManager
 	protected static UDPCoordinator	u;
 
 	/**
-	 * <pre>
+	 * <p>
 	 * Initializes UDP and TCP connection. Start listening and broadcasting on UDP connection and
 	 * automatically sets up a TCP connection if {@link NetworkConfig.States#BoundToServer} or if
 	 * {@link NetworkConfig.States#Server} application was found.
-	 * 
-	 * <b>Use</b> {@link MessageBus} to deal with
-	 * {@link Message}!
-	 * 
-	 * <b>Use</b>
-	 * {@link NetworkManager#online} [reading] to listen to the NetworkStatus.
 	 *
-	 * <pre>
+	 * <b>Use</b> {@link MessageBus} to deal with {@link Message}!
+	 *
+	 * <b>Use</b> {@link NetworkManager#online} [reading] to listen to the NetworkStatus.
+	 *
+	 * <p>
 	 */
 	public static void init()
 	{

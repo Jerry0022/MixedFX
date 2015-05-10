@@ -1,6 +1,10 @@
 apply plugin: 'java-library-distribution'
 
-version = '0.5'
+/*
+ * Put .jar, sources.jar and javadoc.jar plus all necessary libraries into one zip file.
+ */
+
+version = '0.6'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 

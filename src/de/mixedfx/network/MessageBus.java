@@ -9,20 +9,19 @@ import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.network.messages.Message;
 
 /**
- * <pre>
- * You can send and receive messages over the network (if established, otherwise nothing will happen) in
- * two ways (in the end it's the same way):
+ * <p>
+ * You can send and receive messages over the network (if established, otherwise nothing will
+ * happen) in two ways (in the end it's the same way):
+ * </p>
  * <ol>
  * <li>By using {@link EventBusExtended#publishAsyncSafe(String, Object)} (async) /
- * {@link EventBusExtended#publishSyncSafe(String, Object)} (sync)
- * with {@link MessageBus#MESSAGE_SEND} [methods must be "public"]
- * or
- * writing a method with the Annotation {@link EventTopicSubscriber} subscribing
- * for the topic {@link MessageBus#MESSAGE_RECEIVE} and call once
- * {@link AnnotationProcessor#process(Object)}</li>
- * <li>By using {@link MessageBus#send(Message)} (async) or {@link MessageBus#registerForReceival()}</li>
+ * {@link EventBusExtended#publishSyncSafe(String, Object)} (sync) with
+ * {@link MessageBus#MESSAGE_SEND} [methods must be "public"] or writing a method with the
+ * Annotation {@link EventTopicSubscriber} subscribing for the topic
+ * {@link MessageBus#MESSAGE_RECEIVE} and call once {@link AnnotationProcessor#process(Object)}</li>
+ * <li>By using {@link MessageBus#send(Message)} (async) or
+ * {@link MessageBus#registerForReceival(MessageReceiver)}!</li>
  * </ol>
- * </pre>
  *
  * @author Jerry
  */
@@ -41,8 +40,8 @@ public class MessageBus
 	public interface MessageReceiver
 	{
 		/**
-		 * Is called synchronized if a message was received. => Messages will be received through
-		 * this method in the same order they were received from the network.
+		 * Is called synchronized if a message was received. Therefore Messages will be received
+		 * through this method in the same order they were received from the network.
 		 *
 		 * @param message
 		 */
