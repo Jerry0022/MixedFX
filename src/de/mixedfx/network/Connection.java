@@ -9,16 +9,16 @@ import org.bushe.swing.event.annotation.EventTopicSubscriber;
 import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.eventbus.EventBusService;
 import de.mixedfx.eventbus.EventBusServiceInterface;
-import de.mixedfx.network.Overall.NetworkStatus;
+import de.mixedfx.network.NetworkConfig.States;
 import de.mixedfx.network.messages.Message;
 
 public class Connection implements EventBusServiceInterface
 {
-	public static final String	MESSAGE_SEND	= "MESSAGE_SEND";
+	public static final String	MESSAGE_CHANNEL_SEND	= "MESSAGE_CHANNEL_SEND";
 
 	public enum TOPICS
 	{
-		MESSAGE_RECEIVED, CONNECTION_LOST;
+		MESSAGE_CHANNEL_RECEIVED, CONNECTION_LOST;
 	}
 
 	private final int					clientID;
@@ -54,26 +54,26 @@ public class Connection implements EventBusServiceInterface
 	public void initilizeEventBusAndSubscriptions()
 	{
 		this.eventBus = new EventBusService(this.getClass(), this.clientID);
-		this.eventBus.subscribe(TOPICS.MESSAGE_RECEIVED.toString(), this);
+		this.eventBus.subscribe(TOPICS.MESSAGE_CHANNEL_RECEIVED.toString(), this);
 		this.eventBus.subscribe(TOPICS.CONNECTION_LOST.toString(), this);
 
 		AnnotationProcessor.process(this);
 	}
 
 	@Override
-	@EventTopicSubscriber(topic = Connection.MESSAGE_SEND)
+	@EventTopicSubscriber(topic = Connection.MESSAGE_CHANNEL_SEND)
 	public synchronized void onEvent(final String topic, final Object event)
 	{
-		if (topic.equals(Connection.MESSAGE_SEND))
+		if (topic.equals(Connection.MESSAGE_CHANNEL_SEND))
 		{
 			final Message message = (Message) event;
-			if (Overall.status.equals(NetworkStatus.Server))
+			if (NetworkConfig.status.get().equals(States.Server))
 			{
 				message.fromServer = true;
 				this.outputConnection.sendMessage(message);
 			}
 			else
-				if (Overall.status.equals(NetworkStatus.BoundToServer))
+				if (NetworkConfig.status.get().equals(States.BoundToServer))
 					if (message.fromServer && this.clientID != TCPCoordinator.localNetworkMainID.get())
 						this.outputConnection.sendMessage(message);
 					else
@@ -81,13 +81,12 @@ public class Connection implements EventBusServiceInterface
 							this.outputConnection.sendMessage(message);
 		}
 		else
-			if (topic.equals(TOPICS.MESSAGE_RECEIVED.toString()))
+			if (topic.equals(TOPICS.MESSAGE_CHANNEL_RECEIVED.toString()))
 			{
 				final Message message = this.inputConnection.getNextMessage();
-				System.out.println("Message received, I'm: " + this.clientID);
 				if (message.fromServer)
-					EventBusExtended.publishSyncSafe(Connection.MESSAGE_SEND, message); // FORWARD!
-				// TODO Publish to local application in each case
+					EventBusExtended.publishSyncSafe(Connection.MESSAGE_CHANNEL_SEND, message); // FORWARD!
+				EventBusExtended.publishAsyncSafe(MessageBus.MESSAGE_RECEIVE, message);
 			}
 			else
 				EventBusExtended.publishSyncSafe(TCPCoordinator.CONNECTION_LOST, this.clientID);

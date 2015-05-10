@@ -11,8 +11,8 @@ import javafx.beans.property.ReadOnlyListWrapper;
 
 import com.sun.javafx.collections.ObservableListWrapper;
 
-import de.mixedfx.network.Overall;
-import de.mixedfx.network.Overall.NetworkStatus;
+import de.mixedfx.network.NetworkConfig;
+import de.mixedfx.network.NetworkConfig.States;
 
 class DiscoveryIndia
 {
@@ -58,7 +58,7 @@ class DiscoveryIndia
 
 				if (new String(packet.getData(), 0, packet.getLength()).equals(Discovery.Messages.DISCOVERY_REQUEST.toString()))
 					if (!this.containsIP(packet.getAddress())) // TODO Really necessary?
-						if (Overall.status.get().equals(Overall.NetworkStatus.Server) || Overall.status.get().equals(NetworkStatus.BoundToServer))
+						if (NetworkConfig.status.get().equals(NetworkConfig.States.Server) || NetworkConfig.status.get().equals(States.BoundToServer))
 						{
 							final byte[] sendData = Discovery.Messages.DISCOVERY_ANSWER.toString().getBytes();
 

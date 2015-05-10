@@ -29,6 +29,7 @@ public class ConnectionOutput implements Runnable
 
 	protected void sendMessage(final Message message)
 	{
+		System.out.println("SENDING!");
 		synchronized (this.outputMessageCache)
 		{
 			this.outputMessageCache.add(message);

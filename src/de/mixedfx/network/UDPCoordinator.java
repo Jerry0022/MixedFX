@@ -7,17 +7,16 @@ import java.util.ArrayList;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
+import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.eventbus.EventBusService;
-import de.mixedfx.network.Overall.NetworkStatus;
+import de.mixedfx.network.NetworkConfig.States;
 
 public class UDPCoordinator implements org.bushe.swing.event.EventTopicSubscriber<Object>
 {
-	public static final int				PORT_TRIES	= 5;
+	public static final String			RECEIVE	= "RECEIVE";
+	public static final String			ERROR	= "ERROR";
 
-	public static final String			RECEIVE		= "RECEIVE";
-	public static final String			ERROR		= "ERROR";
-
-	public static final EventBusService	service		= new EventBusService("UDPCoordinator");
+	public static final EventBusService	service	= new EventBusService("UDPCoordinator");
 
 	/**
 	 * Just a list of all who made them known at least once (aren't necessarily still active).
@@ -29,6 +28,9 @@ public class UDPCoordinator implements org.bushe.swing.event.EventTopicSubscribe
 	 */
 	public ListProperty<InetAddress>	allServerAdresses;
 
+	private final UDPIn					in;
+	private final UDPOut				out;
+
 	public UDPCoordinator()
 	{
 		this.allAdresses = new SimpleListProperty<>(FXCollections.observableArrayList(new ArrayList<>()));
@@ -37,22 +39,32 @@ public class UDPCoordinator implements org.bushe.swing.event.EventTopicSubscribe
 		UDPCoordinator.service.subscribe(UDPCoordinator.ERROR, this);
 		UDPCoordinator.service.subscribe(UDPCoordinator.RECEIVE, this);
 
-		final UDPIn in = new UDPIn();
-		in.start();
+		this.in = new UDPIn();
+		this.in.start();
 
-		final UDPOut out = new UDPOut();
-		out.start();
+		this.out = new UDPOut();
+		this.out.start();
 	}
 
 	private void handleNetworkerror(final Exception e)
 	{
-		e.printStackTrace();
+		NetworkManager.t.stopTCPFull();
+		this.stopUDPFull();
+
+		// E. G. if two not servers were started => UDP Server BindException of the second
+		EventBusExtended.publishSyncSafe(NetworkManager.NETWORK_FATALERROR, e);
+	}
+
+	public void stopUDPFull()
+	{
+		this.out.close();
+		this.in.close();
 	}
 
 	@Override
 	public synchronized void onEvent(final String topic, final Object data)
 	{
-		synchronized (Overall.status)
+		synchronized (NetworkConfig.status)
 		{
 			if (topic.equals(UDPCoordinator.RECEIVE))
 			{
@@ -64,16 +76,13 @@ public class UDPCoordinator implements org.bushe.swing.event.EventTopicSubscribe
 					this.allAdresses.add(packet.getAddress());
 
 				// Add all sending server NICs to list
-				if (packetMessage.equals(Overall.NetworkStatus.Server.toString()) && !this.allServerAdresses.contains(packet.getAddress()))
+				if (packetMessage.equals(NetworkConfig.States.Server.toString()) && !this.allServerAdresses.contains(packet.getAddress()))
 					this.allServerAdresses.add(packet.getAddress());
 
 				// If I'm searching and the other one is a server or bound to server then let's
 				// connect
-				if (Overall.status.get().equals(NetworkStatus.Unbound) && (packetMessage.equals(Overall.NetworkStatus.Server.toString()) || packetMessage.equals(Overall.NetworkStatus.BoundToServer.toString())))
-				{
-					Starter.t.startFullTCP(packet.getAddress());
-					System.out.println(Overall.NetworkStatus.valueOf(packetMessage));
-				}
+				if (NetworkConfig.status.get().equals(States.Unbound) && (packetMessage.equals(NetworkConfig.States.Server.toString()) || packetMessage.equals(NetworkConfig.States.BoundToServer.toString())))
+					NetworkManager.t.startFullTCP(packet.getAddress());
 			}
 			else
 				if (topic.equals(UDPCoordinator.ERROR))

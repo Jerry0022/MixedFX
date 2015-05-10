@@ -75,27 +75,28 @@ public class FileObject implements Cloneable
 
 		if (file.isDirectory())
 			this.setPath(FilenameUtils.getFullPath(file.getAbsolutePath()));
-		else if (file.isFile())
-		{
-			this.setPath(FilenameUtils.getFullPath(file.getAbsolutePath()));
-			this.setFullName(FilenameUtils.getName(file.getAbsolutePath()));
-		}
-	}
-
-	/**
-	 * @return Returns the corresponding {@link File} even if the file is not valid / created
-	 */
-	public File getFile()
-	{
-		return new File(this.getFullPath());
+		else
+			if (file.isFile())
+			{
+				this.setPath(FilenameUtils.getFullPath(file.getAbsolutePath()));
+				this.setFullName(FilenameUtils.getName(file.getAbsolutePath()));
+			}
 	}
 
 	/**
 	 * @return Returns the size of the file or folder as {@link BigInteger} in Bytes
 	 */
-	public BigInteger getSize()
+	public BigInteger size()
 	{
-		return FileUtils.sizeOfAsBigInteger(this.getFile());
+		return FileUtils.sizeOfAsBigInteger(this.toFile());
+	}
+
+	/**
+	 * @return Returns the corresponding {@link File} even if the file is not valid / created
+	 */
+	public File toFile()
+	{
+		return new File(this.getFullPath());
 	}
 
 	/**
@@ -107,21 +108,22 @@ public class FileObject implements Cloneable
 	}
 
 	/**
-	 * Compares file/folder size and name (ignoring case)
+	 * Compares file/folder size and name (ignoring case). It doesn't compare the
+	 * {@link #getFullPath()}.
 	 *
 	 * @param toCompare
 	 * @return Returns true if size and name is equal.
 	 */
 	public boolean equalsNameSize(final FileObject toCompare)
 	{
-		if (this.getName().equalsIgnoreCase(toCompare.getName()) && this.getSize().equals(toCompare.getSize()))
+		if (this.getName().equalsIgnoreCase(toCompare.getName()) && this.size().equals(toCompare.size()))
 			return true;
 		else
 			return false;
 	}
 
 	/**
-	 * Compares file/folder fullPath.
+	 * Compares file/folder fullPath via {@link #getFullPath()} comparison.
 	 *
 	 * @param toCompare
 	 *            The FileObject to compare.
@@ -136,7 +138,7 @@ public class FileObject implements Cloneable
 	}
 
 	/**
-	 * Checks if {@link #getFullPath()} is valid. This means the criterias of the os.
+	 * Checks if {@link #getFullPath()} is valid. This means the criterias of the os apply.
 	 *
 	 * @return boolean True if it fulfills the criterias, false if not.
 	 */
@@ -163,7 +165,8 @@ public class FileObject implements Cloneable
 	@Override
 	public FileObject clone()
 	{
-		return FileObject.create(this.getFile());
+		// Works because Strings are immutuable
+		return FileObject.create().setPath(this.getPath()).setFullName(this.getFullName());
 	}
 
 	// Getters and Setters

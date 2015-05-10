@@ -23,7 +23,7 @@ public class TCPServer
 		for (int i = 0; i < TCPCoordinator.PORT_TRIES; i++)
 			try
 			{
-				this.registrar = new Registrar(Overall.PORT + i);
+				this.registrar = new Registrar(NetworkConfig.PORT + i);
 				this.connectionList = this.registrar.connectionList;
 				final Thread registrarThread = new Thread(this.registrar);
 				registrarThread.setDaemon(true);

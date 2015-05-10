@@ -70,7 +70,7 @@ public class ConnectionInput implements Runnable
 						this.inputMessageCache.add(receivedMessage);
 					}
 					System.out.println(this.getClass().getSimpleName() + " received message!");
-					this.eventBusParent.publishAsync(Connection.TOPICS.MESSAGE_RECEIVED.toString(), this);
+					this.eventBusParent.publishAsync(Connection.TOPICS.MESSAGE_CHANNEL_RECEIVED.toString(), this);
 				}
 				else
 					throw new Exception("Not a message received! Object rejected!");

@@ -10,7 +10,7 @@ import org.bushe.swing.event.annotation.AnnotationProcessor;
 import org.bushe.swing.event.annotation.EventTopicSubscriber;
 
 import de.mixedfx.eventbus.EventBusExtended;
-import de.mixedfx.network.Overall.NetworkStatus;
+import de.mixedfx.network.NetworkConfig.States;
 import de.mixedfx.network.messages.Message;
 
 public class TCPCoordinator
@@ -34,15 +34,15 @@ public class TCPCoordinator
 		this.tcpServer = new TCPServer();
 		this.tcpClient = new TCPClient();
 
-		Overall.status.addListener((ChangeListener<NetworkStatus>) (observable, oldValue, newValue) ->
+		NetworkConfig.status.addListener((ChangeListener<States>) (observable, oldValue, newValue) ->
 		{
-			synchronized (Overall.status)
+			synchronized (NetworkConfig.status)
 			{
 				// Switch Server on
-				if (newValue.equals(NetworkStatus.Server))
+				if (newValue.equals(States.Server))
 				{
 					// If already connected to server stop connection
-					if (oldValue.equals(NetworkStatus.BoundToServer))
+					if (oldValue.equals(States.BoundToServer))
 						this.stopTCPFull(); // => Stops also TCP Server && set to unbound; see
 					// below
 
@@ -54,9 +54,9 @@ public class TCPCoordinator
 					{
 						final Thread t = new Thread(() ->
 						{
-							synchronized (Overall.status)
+							synchronized (NetworkConfig.status)
 							{
-								Overall.status.set(NetworkStatus.Unbound);
+								NetworkConfig.status.set(States.Unbound);
 							}
 						});
 						t.setDaemon(true);
@@ -65,12 +65,12 @@ public class TCPCoordinator
 				}
 
 				// Switch Server off
-				if (oldValue.equals(NetworkStatus.Server))
+				if (oldValue.equals(States.Server))
 					this.stopTCPFull();
 			}
 		});
 
-		// Overall.status.set(NetworkStatus.Server);
+		NetworkConfig.status.set(States.Server);
 	}
 
 	@EventTopicSubscriber(topic = TCPCoordinator.CONNECTION_LOST)
@@ -87,11 +87,11 @@ public class TCPCoordinator
 	 */
 	public synchronized void startFullTCP(final InetAddress ip)
 	{
-		synchronized (Overall.status)
+		synchronized (NetworkConfig.status)
 		{
 			try
 			{
-				this.tcpClient.start(ip, Overall.PORT);
+				this.tcpClient.start(ip, NetworkConfig.PORT);
 			}
 			catch (final IOException e)
 			{
@@ -108,10 +108,10 @@ public class TCPCoordinator
 				return;
 			}
 
-			Overall.status.set(NetworkStatus.BoundToServer);
+			NetworkConfig.status.set(States.BoundToServer);
 
 			final Message message = new Message();
-			EventBusExtended.publishSyncSafe(Connection.MESSAGE_SEND, message);
+			EventBusExtended.publishSyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
 		}
 	}
 
@@ -120,11 +120,11 @@ public class TCPCoordinator
 	 */
 	public synchronized void stopTCPFull()
 	{
-		synchronized (Overall.status)
+		synchronized (NetworkConfig.status)
 		{
 			this.tcpClient.stop();
 			this.tcpServer.stop();
-			Overall.status.set(NetworkStatus.Unbound);
+			NetworkConfig.status.set(States.Unbound);
 		}
 	}
 }

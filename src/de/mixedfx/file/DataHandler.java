@@ -12,6 +12,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * <pre>
@@ -72,7 +73,7 @@ public class DataHandler
 	 */
 	public static Collection<File> getExecuteables(final FileObject parentFolder)
 	{
-		return FileUtils.listFiles(parentFolder.getFile(), new RegexFileFilter("(.*\\.exe)$"), DirectoryFileFilter.DIRECTORY);
+		return FileUtils.listFiles(parentFolder.toFile(), new RegexFileFilter("(.*\\.exe)$"), DirectoryFileFilter.DIRECTORY);
 	}
 
 	/*
@@ -139,12 +140,13 @@ public class DataHandler
 					break;
 				}
 			}
-			else // fileName does contain an extension
-			if (FilenameUtils.getName(f.toString()).toString().toLowerCase().equals(fileFolder))
-			{
-				result = f;
-				break;
-			}
+			else
+				// fileName does contain an extension
+				if (FilenameUtils.getName(f.toString()).toString().toLowerCase().equals(fileFolder))
+				{
+					result = f;
+					break;
+				}
 
 		if (result != null)
 			return result;
@@ -191,7 +193,8 @@ public class DataHandler
 
 		if (!file.exists())
 			success = true; // File doesn't exist already
-		else // File exists
+		else
+			// File exists
 			if (!file.isDirectory())
 			{
 				if (file.delete())
@@ -200,15 +203,15 @@ public class DataHandler
 					success = false;
 			}
 			else
-			try
-			{
-				FileUtils.deleteDirectory(file);
-				success = true;
-			}
-			catch (final IOException e)
-			{
-				success = false;
-			}
+				try
+				{
+					FileUtils.deleteDirectory(file);
+					success = true;
+				}
+				catch (final IOException e)
+				{
+					success = false;
+				}
 
 		return success;
 	}
@@ -224,7 +227,7 @@ public class DataHandler
 	 */
 	public static FileObject createFolder(final FileObject folder) throws IOException
 	{
-		FileUtils.forceMkdir(folder.getFile());
+		FileUtils.forceMkdir(folder.toFile());
 		return folder;
 	}
 
@@ -236,7 +239,8 @@ public class DataHandler
 	 * Fuses directory and file to one full path.
 	 *
 	 * @param directory
-	 *            Should contain only \\ as folder separator. Last char as \\ is not needed.
+	 *            Should contain only \\ or / as folder separator. Last char as \\ or / is not
+	 *            needed.
 	 * @param fileFolder
 	 *            The file or folder which should be fused.
 	 * @return Returns a full string containing the directory and file or folder
@@ -247,7 +251,11 @@ public class DataHandler
 
 		final String substring = directory.length() > 1 ? directory.substring(directory.length() - 1) : directory;
 		if (!substring.equals("\\"))
-			directory += "\\";
+			if (!substring.equals("/"))
+				if (StringUtils.countMatches(directory, "/") > 0)
+					directory += "/";
+				else
+					directory += "\\";
 
 		fullPath = directory + fileFolder;
 

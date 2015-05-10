@@ -19,21 +19,16 @@ public class UDPOut
 	 */
 	public void start()
 	{
-		Exception exception = null;
-		for (int i = 0; i < UDPCoordinator.PORT_TRIES; i++)
-			try
+		try
 		{
-				UDPOut.this.socket = new DatagramSocket();
-				UDPOut.this.socket.setBroadcast(true);
-				UDPOut.this.broadcast();
-				break;
+			UDPOut.this.socket = new DatagramSocket();
+			UDPOut.this.socket.setBroadcast(true);
+			UDPOut.this.broadcast();
 		}
 		catch (final SocketException e)
 		{
-			exception = e;
+			UDPCoordinator.service.publishSync(UDPCoordinator.ERROR, e);
 		}
-		if (this.socket == null)
-			UDPCoordinator.service.publishSync(UDPCoordinator.ERROR, exception);
 	}
 
 	public void close()
@@ -52,14 +47,14 @@ public class UDPOut
 			{
 				worked = false;
 
-				final byte[] sendData = Overall.status.get().toString().getBytes();
+				final byte[] sendData = NetworkConfig.status.get().toString().getBytes();
 
 				/*
 				 * Try the 255.255.255.255 first
 				 */
 				try
 				{
-					final DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("255.255.255.255"), Overall.PORT);
+					final DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("255.255.255.255"), NetworkConfig.PORT);
 					this.socket.send(sendPacket);
 					worked = true;
 				}
@@ -93,7 +88,7 @@ public class UDPOut
 							// Send the broadcast package!
 							try
 							{
-								final DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, broadcast, Overall.PORT);
+								final DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, broadcast, NetworkConfig.PORT);
 								this.socket.send(sendPacket);
 								worked = true;
 							}

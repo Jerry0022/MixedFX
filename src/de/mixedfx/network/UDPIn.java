@@ -6,6 +6,8 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import de.mixedfx.network.NetworkConfig.States;
+
 public class UDPIn
 {
 	private DatagramSocket	socket;
@@ -15,23 +17,19 @@ public class UDPIn
 	 */
 	public void start()
 	{
-		Exception exception = null;
-		for (int i = 0; i < UDPCoordinator.PORT_TRIES; i++)
-			try
+		try
 		{
-				UDPIn.this.socket = new DatagramSocket(Overall.PORT + i, InetAddress.getByName("0.0.0.0"));
-				UDPIn.this.listen();
-				break;
+			UDPIn.this.socket = new DatagramSocket(NetworkConfig.PORT, InetAddress.getByName("0.0.0.0"));
+			UDPIn.this.listen();
 		}
-		catch (final SocketException | UnknownHostException e)
+		catch (SocketException | UnknownHostException e)
 		{
-			exception = e;
+			if (!NetworkConfig.status.get().equals(States.Server))
+				UDPCoordinator.service.publishSync(UDPCoordinator.ERROR, e);
 		}
-		if (this.socket == null)
-			UDPCoordinator.service.publishSync(UDPCoordinator.ERROR, exception);
 	}
 
-	public void stop()
+	public void close()
 	{
 		this.socket.close();
 	}

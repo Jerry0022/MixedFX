@@ -48,7 +48,7 @@ public class EventBusExtended extends EventBus
 	 * @param eventObject
 	 *            The object to transfer to the subscribers
 	 */
-	public synchronized static void publishSafe(final String topic, final Object eventObject)
+	public synchronized static void publishAsyncSafe(final String topic, final Object eventObject)
 	{
 		final ArrayList<Object> proxySubscribers = new ArrayList<Object>(EventBus.getSubscribers(topic));
 
