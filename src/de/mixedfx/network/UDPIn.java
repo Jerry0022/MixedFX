@@ -31,7 +31,8 @@ public class UDPIn
 
 	public void close()
 	{
-		this.socket.close();
+		if (this.socket != null)
+			this.socket.close();
 	}
 
 	private void listen()

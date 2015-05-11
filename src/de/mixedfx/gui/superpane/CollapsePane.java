@@ -1,4 +1,4 @@
-package de.mixedfx.superpane;
+package de.mixedfx.gui.superpane;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

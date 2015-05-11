@@ -8,6 +8,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 
 import org.bushe.swing.event.EventBus;
+import org.bushe.swing.event.annotation.AnnotationProcessor;
+import org.bushe.swing.event.annotation.EventTopicSubscriber;
 
 import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.network.NetworkConfig.States;
@@ -106,7 +108,11 @@ public class NetworkManager
 
 	public static void main(final String[] args)
 	{
+		AnnotationProcessor.process(new NetworkManager());
+
 		NetworkManager.init();
+
+		// NetworkConfig.status.set(States.Server);
 
 		NetworkManager.u.allAdresses.addListener((ListChangeListener<InetAddress>) c ->
 		{
@@ -121,5 +127,11 @@ public class NetworkManager
 
 		while (true)
 			;
+	}
+
+	@EventTopicSubscriber(topic = NetworkManager.NETWORK_FATALERROR)
+	public void error(final String topic, final Exception exception)
+	{
+		System.out.println("Caught error: " + exception.getMessage());
 	}
 }

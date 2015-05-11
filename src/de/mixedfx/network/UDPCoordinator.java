@@ -2,7 +2,11 @@ package de.mixedfx.network;
 
 import java.net.DatagramPacket;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -57,8 +61,10 @@ public class UDPCoordinator implements org.bushe.swing.event.EventTopicSubscribe
 
 	public void stopUDPFull()
 	{
-		this.out.close();
-		this.in.close();
+		if (this.out != null)
+			this.out.close();
+		if (this.in != null)
+			this.in.close();
 	}
 
 	@Override
@@ -71,18 +77,39 @@ public class UDPCoordinator implements org.bushe.swing.event.EventTopicSubscribe
 				final DatagramPacket packet = (DatagramPacket) data;
 				final String packetMessage = new String(packet.getData(), 0, packet.getLength());
 
-				// Add all sending NICs to list
-				if (!this.allAdresses.contains(packet.getAddress()))
-					this.allAdresses.add(packet.getAddress());
+				/*
+				 * Check all interfaces if it was a broadcast to myself!
+				 */
+				boolean ownOne = false;
+				try
+				{
+					final Enumeration<NetworkInterface> nics = NetworkInterface.getNetworkInterfaces();
+					while (nics.hasMoreElements())
+					{
+						final NetworkInterface nic = nics.nextElement();
+						if (Collections.list(nic.getInetAddresses()).contains(packet.getAddress()))
+							ownOne = true;
+					}
 
-				// Add all sending server NICs to list
-				if (packetMessage.equals(NetworkConfig.States.Server.toString()) && !this.allServerAdresses.contains(packet.getAddress()))
-					this.allServerAdresses.add(packet.getAddress());
+				}
+				catch (final SocketException e)
+				{}
 
-				// If I'm searching and the other one is a server or bound to server then let's
-				// connect
-				if (NetworkConfig.status.get().equals(States.Unbound) && (packetMessage.equals(NetworkConfig.States.Server.toString()) || packetMessage.equals(NetworkConfig.States.BoundToServer.toString())))
-					NetworkManager.t.startFullTCP(packet.getAddress());
+				if (!ownOne)
+				{
+					// Add all sending NICs to list
+					if (!this.allAdresses.contains(packet.getAddress()))
+						this.allAdresses.add(packet.getAddress());
+
+					// Add all sending server NICs to list
+					if (packetMessage.equals(NetworkConfig.States.Server.toString()) && !this.allServerAdresses.contains(packet.getAddress()))
+						this.allServerAdresses.add(packet.getAddress());
+
+					// If I'm searching and the other one is a server or bound to server then let's
+					// connect
+					if (NetworkConfig.status.get().equals(States.Unbound) && (packetMessage.equals(NetworkConfig.States.Server.toString()) || packetMessage.equals(NetworkConfig.States.BoundToServer.toString())))
+						NetworkManager.t.startFullTCP(packet.getAddress());
+				}
 			}
 			else
 				if (topic.equals(UDPCoordinator.ERROR))

@@ -33,7 +33,8 @@ public class UDPOut
 
 	public void close()
 	{
-		this.socket.close();
+		if (this.socket != null)
+			this.socket.close();
 		this.socket = null;
 	}
 

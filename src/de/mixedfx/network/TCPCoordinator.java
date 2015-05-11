@@ -69,8 +69,6 @@ public class TCPCoordinator
 					this.stopTCPFull();
 			}
 		});
-
-		NetworkConfig.status.set(States.Server);
 	}
 
 	@EventTopicSubscriber(topic = TCPCoordinator.CONNECTION_LOST)

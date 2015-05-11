@@ -1,4 +1,4 @@
-package de.mixedfx.superpane;
+package de.mixedfx.gui.superpane;
 
 public interface Dynamic
 {

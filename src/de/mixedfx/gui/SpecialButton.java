@@ -1,4 +1,4 @@
-package de.mixedfx.button;
+package de.mixedfx.gui;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

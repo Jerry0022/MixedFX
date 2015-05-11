@@ -1,4 +1,4 @@
-package de.mixedfx.button;
+package de.mixedfx.gui;
 
 import javafx.beans.binding.DoubleExpression;
 import javafx.beans.value.ChangeListener;
