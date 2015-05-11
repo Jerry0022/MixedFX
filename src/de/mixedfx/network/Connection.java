@@ -12,7 +12,7 @@ import de.mixedfx.eventbus.EventBusServiceInterface;
 import de.mixedfx.network.NetworkConfig.States;
 import de.mixedfx.network.messages.Message;
 
-public class Connection implements EventBusServiceInterface
+class Connection implements EventBusServiceInterface
 {
 	public static final String	MESSAGE_CHANNEL_SEND	= "MESSAGE_CHANNEL_SEND";
 
@@ -67,23 +67,24 @@ public class Connection implements EventBusServiceInterface
 		if (topic.equals(Connection.MESSAGE_CHANNEL_SEND))
 		{
 			final Message message = (Message) event;
+			final String gsonMessage = Message.toGSON(message);
 			if (NetworkConfig.status.get().equals(States.Server))
 			{
 				message.fromServer = true;
-				this.outputConnection.sendMessage(message);
+				this.outputConnection.sendMessage(gsonMessage);
 			}
 			else
 				if (NetworkConfig.status.get().equals(States.BoundToServer))
 					if (message.fromServer && this.clientID != TCPCoordinator.localNetworkMainID.get())
-						this.outputConnection.sendMessage(message);
+						this.outputConnection.sendMessage(gsonMessage);
 					else
 						if (!message.fromServer && this.clientID == TCPCoordinator.localNetworkMainID.get())
-							this.outputConnection.sendMessage(message);
+							this.outputConnection.sendMessage(gsonMessage);
 		}
 		else
 			if (topic.equals(TOPICS.MESSAGE_CHANNEL_RECEIVED.toString()))
 			{
-				final Message message = this.inputConnection.getNextMessage();
+				final Message message = Message.fromGSON((String) this.inputConnection.getNextMessage());
 				if (message.fromServer)
 					EventBusExtended.publishSyncSafe(Connection.MESSAGE_CHANNEL_SEND, message); // FORWARD!
 				EventBusExtended.publishAsyncSafe(MessageBus.MESSAGE_RECEIVE, message);

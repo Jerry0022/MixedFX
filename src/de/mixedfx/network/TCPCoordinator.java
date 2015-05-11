@@ -13,7 +13,7 @@ import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.network.NetworkConfig.States;
 import de.mixedfx.network.messages.Message;
 
-public class TCPCoordinator
+class TCPCoordinator
 {
 	public static final int		PORT_TRIES		= 5;
 	public static final String	CONNECTION_LOST	= "TCP_CONNECTION_LOST";

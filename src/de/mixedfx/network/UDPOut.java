@@ -8,7 +8,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
-public class UDPOut
+class UDPOut
 {
 	private static final int		BROADCAST_INTERVAL	= 1000;
 

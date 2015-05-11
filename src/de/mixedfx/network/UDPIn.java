@@ -8,7 +8,7 @@ import java.net.UnknownHostException;
 
 import de.mixedfx.network.NetworkConfig.States;
 
-public class UDPIn
+class UDPIn
 {
 	private DatagramSocket	socket;
 

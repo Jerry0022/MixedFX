@@ -204,14 +204,14 @@ public class DataHandler
 			}
 			else
 				try
-				{
+		{
 					FileUtils.deleteDirectory(file);
 					success = true;
-				}
-				catch (final IOException e)
-				{
-					success = false;
-				}
+		}
+		catch (final IOException e)
+		{
+			success = false;
+		}
 
 		return success;
 	}

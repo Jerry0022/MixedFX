@@ -3,31 +3,31 @@ package de.mixedfx.network;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import de.mixedfx.eventbus.EventBusService;
-import de.mixedfx.network.messages.Message;
 
-public class ConnectionOutput implements Runnable
+class ConnectionOutput implements Runnable
 {
-	private static final Class<?>		parentClass	= Connection.class;
+	private static final Class<?>				parentClass	= Connection.class;
 
-	private volatile boolean			running		= true;
+	private volatile boolean					running		= true;
 
-	private final ObjectOutputStream	objectOutputStream;
-	private volatile ArrayList<Message>	outputMessageCache;
-	private final EventBusService		eventBusParent;
+	private final ObjectOutputStream			objectOutputStream;
+	private volatile ArrayList<Serializable>	outputMessageCache;
+	private final EventBusService				eventBusParent;
 
 	protected ConnectionOutput(final int clientID, final OutputStream outputStream) throws IOException
 	{
 		this.eventBusParent = EventBusService.getEventBus(ConnectionOutput.parentClass, clientID);
 		this.objectOutputStream = new ObjectOutputStream(outputStream);
-		this.outputMessageCache = new ArrayList<Message>();
+		this.outputMessageCache = new ArrayList<Serializable>();
 
 		System.out.println(this.getClass().getSimpleName() + " initialized!");
 	}
 
-	protected void sendMessage(final Message message)
+	protected void sendMessage(final Serializable message)
 	{
 		System.out.println("SENDING!");
 		synchronized (this.outputMessageCache)
@@ -80,14 +80,14 @@ public class ConnectionOutput implements Runnable
 		{
 			while (!this.outputMessageCache.isEmpty())
 				try
-				{
+			{
 					Thread.sleep(50);
-				}
-			catch (final InterruptedException e)
-				{
-					// TODO: Handle Exception
-					e.printStackTrace();
-				}
+			}
+				catch (final InterruptedException e)
+			{
+				// TODO: Handle Exception
+				e.printStackTrace();
+			}
 
 			System.out.println("Terminating " + this.getClass().getSimpleName() + "!");
 			this.running = false;

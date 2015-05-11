@@ -11,11 +11,14 @@ import java.util.Enumeration;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
+
+import org.bushe.swing.event.EventTopicSubscriber;
+
 import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.eventbus.EventBusService;
 import de.mixedfx.network.NetworkConfig.States;
 
-public class UDPCoordinator implements org.bushe.swing.event.EventTopicSubscriber<Object>
+class UDPCoordinator implements EventTopicSubscriber<Object>
 {
 	public static final String			RECEIVE	= "RECEIVE";
 	public static final String			ERROR	= "ERROR";

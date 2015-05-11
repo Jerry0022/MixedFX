@@ -3,7 +3,7 @@ package de.mixedfx.network;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
-public class NetworkConfig
+class NetworkConfig
 {
 	/**
 	 * Default port is 8888 for TCP and UDP.

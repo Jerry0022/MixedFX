@@ -6,7 +6,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-public class TCPClient
+class TCPClient
 {
 	public Connection	connection;
 
@@ -16,15 +16,15 @@ public class TCPClient
 		Socket socket = null;
 		for (int i = 0; i < TCPCoordinator.PORT_TRIES; i++)
 			try
-		{
+			{
 				socket = new Socket(ip, port);
 				this.connection = new Connection(0, socket);
 				break;
-		}
-		catch (final SocketException | UnknownHostException e)
-		{
-			exception = e;
-		}
+			}
+			catch (final SocketException | UnknownHostException e)
+			{
+				exception = e;
+			}
 		if (socket == null)
 			throw exception;
 	}

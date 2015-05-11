@@ -21,10 +21,13 @@ import de.mixedfx.network.messages.Message;
  * send. Connection to a host server or someone who is connected to the host server will be
  * established automatically.
  *
+ * To get an information about the network status or if you want to host get/set
+ * {@link NetworkManager#online}!
+ *
  * If an error occur only a {@link NetworkManager#NETWORK_FATALERROR} is sent over the eventBus.
  *
  * If you may want to set the port use {@link NetworkManager#setPort(int)}. (Usually only necessary
- * if there was an fatal error)
+ * if there was an fatal error!)
  * </p>
  *
  * @author Jerry
@@ -37,7 +40,7 @@ public class NetworkManager
 	 * informed that there was a network error which closed the entire network. You have to call
 	 * again {@link NetworkManager#init()} to initialize the network. Further information: This
 	 * error does relate to the UDP Server in most cases (not if {@link NetworkConfig#status} =
-	 * {@link NetworkConfig.States#Server}). The cause probably is the Port. React to that error
+	 * {@link NetworkConfig.States#Server}). The cause probably is the port. React to that error
 	 * with {@link NetworkManager#setPort(int)} with the recommendation to choose a number between
 	 * 10 000 and 60 000!
 	 */
@@ -47,7 +50,9 @@ public class NetworkManager
 	 * Represents the status. True means the network connection is established with at least one
 	 * Participant (as {@link NetworkConfig.States#Server} or
 	 * {@link NetworkConfig.States#BoundToServer}). False means that no connection is yet
-	 * established. This value changes only, it is not invalidated.
+	 * established. This value changes only, it is not invalidated from inside of the Network.
+	 * Furthermore you can set this value to true if you want to be the
+	 * {@link NetworkConfig.States#Server}. {@link NetworkConfig.States#Server}.
 	 */
 	public static BooleanProperty	online;
 
@@ -69,6 +74,13 @@ public class NetworkManager
 	public static void init()
 	{
 		NetworkManager.online = new SimpleBooleanProperty(false);
+		NetworkManager.online.addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) ->
+		{
+			// If variable is set to true from outside start host.
+			if (newValue)
+				NetworkConfig.status.set(NetworkConfig.States.Server);
+		});
+
 		NetworkConfig.status.addListener((ChangeListener<States>) (observable, oldValue, newValue) ->
 		{
 			// Do not invalidate online status, just invoke on change!
@@ -110,9 +122,9 @@ public class NetworkManager
 	{
 		AnnotationProcessor.process(new NetworkManager());
 
-		NetworkManager.init();
+		// NetworkManager.init();
 
-		// NetworkConfig.status.set(States.Server);
+		NetworkConfig.status.set(States.Server);
 
 		NetworkManager.u.allAdresses.addListener((ListChangeListener<InetAddress>) c ->
 		{
