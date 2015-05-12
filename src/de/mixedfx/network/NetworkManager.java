@@ -1,7 +1,5 @@
 package de.mixedfx.network;
 
-import java.net.InetAddress;
-
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -77,8 +75,8 @@ public class NetworkManager
 		NetworkManager.online.addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) ->
 		{
 			// If variable is set to true from outside start host.
-			if (newValue)
-				NetworkConfig.status.set(NetworkConfig.States.Server);
+			// if (newValue)
+			// NetworkConfig.status.set(NetworkConfig.States.Server);
 		});
 
 		NetworkConfig.status.addListener((ChangeListener<States>) (observable, oldValue, newValue) ->
@@ -126,12 +124,12 @@ public class NetworkManager
 
 		NetworkConfig.status.set(States.Server);
 
-		NetworkManager.u.allAdresses.addListener((ListChangeListener<InetAddress>) c ->
+		NetworkManager.u.allAdresses.addListener((ListChangeListener<String>) c ->
 		{
 			c.next();
 			System.out.println("ALL: " + c.getAddedSubList().get(0));
 		});
-		NetworkManager.u.allServerAdresses.addListener((ListChangeListener<InetAddress>) c ->
+		NetworkManager.u.allServerAdresses.addListener((ListChangeListener<String>) c ->
 		{
 			c.next();
 			System.out.println("SERVER: " + c.getAddedSubList().get(0));

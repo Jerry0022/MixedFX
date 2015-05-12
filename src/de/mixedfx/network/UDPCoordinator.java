@@ -2,10 +2,10 @@ package de.mixedfx.network;
 
 import java.net.DatagramPacket;
 import java.net.InetAddress;
+import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Enumeration;
 
 import javafx.beans.property.ListProperty;
@@ -28,12 +28,12 @@ class UDPCoordinator implements EventTopicSubscriber<Object>
 	/**
 	 * Just a list of all who made them known at least once (aren't necessarily still active).
 	 */
-	public ListProperty<InetAddress>	allAdresses;
+	public ListProperty<String>			allAdresses;
 
 	/**
 	 * Just a list of hosts who made them known at least once (aren't necessarily still active).
 	 */
-	public ListProperty<InetAddress>	allServerAdresses;
+	public ListProperty<String>			allServerAdresses;
 
 	private final UDPIn					in;
 	private final UDPOut				out;
@@ -90,23 +90,25 @@ class UDPCoordinator implements EventTopicSubscriber<Object>
 					while (nics.hasMoreElements())
 					{
 						final NetworkInterface nic = nics.nextElement();
-						if (Collections.list(nic.getInetAddresses()).contains(packet.getAddress()))
-							ownOne = true;
+						for (final InterfaceAddress nicAdress : nic.getInterfaceAddresses())
+							if (this.compare(nicAdress.getAddress(), packet.getAddress()))
+								ownOne = true;
 					}
 
 				}
 				catch (final SocketException e)
 				{}
+				System.out.println(ownOne);
 
 				if (!ownOne)
 				{
 					// Add all sending NICs to list
-					if (!this.allAdresses.contains(packet.getAddress()))
-						this.allAdresses.add(packet.getAddress());
+					if (!this.allAdresses.contains(packet.getAddress().getHostAddress()))
+						this.allAdresses.add(packet.getAddress().getHostAddress());
 
 					// Add all sending server NICs to list
-					if (packetMessage.equals(NetworkConfig.States.Server.toString()) && !this.allServerAdresses.contains(packet.getAddress()))
-						this.allServerAdresses.add(packet.getAddress());
+					if (packetMessage.equals(NetworkConfig.States.Server.toString()) && !this.allServerAdresses.contains(packet.getAddress().getHostAddress()))
+						this.allServerAdresses.add(packet.getAddress().getHostAddress());
 
 					// If I'm searching and the other one is a server or bound to server then let's
 					// connect
@@ -118,5 +120,10 @@ class UDPCoordinator implements EventTopicSubscriber<Object>
 				if (topic.equals(UDPCoordinator.ERROR))
 					this.handleNetworkerror((Exception) data);
 		}
+	}
+
+	private boolean compare(final InetAddress ip1, final InetAddress ip2)
+	{
+		return ip1.getHostAddress().equals(ip2.getHostAddress());
 	}
 }

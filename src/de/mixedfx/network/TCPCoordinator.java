@@ -93,6 +93,7 @@ public class TCPCoordinator
 			}
 			catch (final IOException e)
 			{
+				e.printStackTrace();
 				return;
 			}
 
@@ -102,6 +103,7 @@ public class TCPCoordinator
 			}
 			catch (final IOException e)
 			{
+				e.printStackTrace();
 				this.stopTCPFull();
 				return;
 			}
