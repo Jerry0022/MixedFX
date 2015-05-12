@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import de.mixedfx.eventbus.EventBusService;
 import de.mixedfx.network.messages.Message;
 
-class ConnectionInput implements Runnable
+public class ConnectionInput implements Runnable
 {
 	private static final Class<?>			parentClass	= Connection.class;
 
@@ -60,7 +60,7 @@ class ConnectionInput implements Runnable
 		Object receivedObject;
 		while (this.isRunning)
 			try
-		{
+			{
 				receivedObject = this.objectInputStream.readObject();
 
 				if (receivedObject instanceof Message)
@@ -75,33 +75,33 @@ class ConnectionInput implements Runnable
 				}
 				else
 					throw new Exception("Not a message received! Object rejected!");
-			}
-		catch (final EOFException e)
-		{} // Nothing received, still waiting
-			catch (ClassNotFoundException | IOException e)
-		{
-				if (this.isRunning)
+		}
+			catch (final EOFException e)
+			{} // Nothing received, still waiting
+		catch (ClassNotFoundException | IOException e)
+			{
+			if (this.isRunning)
+			{
+				if (e instanceof NotSerializableException || e.getCause() instanceof NotSerializableException)
 				{
-					if (e instanceof NotSerializableException || e.getCause() instanceof NotSerializableException)
-					{
-						System.out.println("A class is not serializable! Implement Serializable Interface!");
-						System.out.print(e.getMessage());
-					}
+					System.out.println("A class is not serializable! Implement Serializable Interface!");
+					System.out.print(e.getMessage());
+				}
 
-					synchronized (this.inputMessageCache)
-					{
-						this.inputMessageCache.clear();
-						this.terminate();
-						System.out.println(this.getClass().getSimpleName() + " lost stream!");
-						this.eventBusParent.publishAsync(Connection.TOPICS.CONNECTION_LOST.toString(), this);
-					}
+				synchronized (this.inputMessageCache)
+				{
+					this.inputMessageCache.clear();
+					this.terminate();
+					System.out.println(this.getClass().getSimpleName() + " lost stream!");
+					this.eventBusParent.publishAsync(Connection.TOPICS.CONNECTION_LOST.toString(), this);
 				}
 			}
-			catch (final Exception e)
-			{
-				// TODO: Handle Exception
-				e.printStackTrace();
-			}
+		}
+		catch (final Exception e)
+		{
+			// TODO: Handle Exception
+			e.printStackTrace();
+		}
 	}
 
 	protected synchronized boolean terminate()

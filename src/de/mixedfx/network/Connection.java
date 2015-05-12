@@ -12,7 +12,7 @@ import de.mixedfx.eventbus.EventBusServiceInterface;
 import de.mixedfx.network.NetworkConfig.States;
 import de.mixedfx.network.messages.Message;
 
-class Connection implements EventBusServiceInterface
+public class Connection implements EventBusServiceInterface
 {
 	public static final String	MESSAGE_CHANNEL_SEND	= "MESSAGE_CHANNEL_SEND";
 

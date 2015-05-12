@@ -122,7 +122,7 @@ public class NetworkManager
 	{
 		AnnotationProcessor.process(new NetworkManager());
 
-		// NetworkManager.init();
+		NetworkManager.init();
 
 		NetworkConfig.status.set(States.Server);
 

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import de.mixedfx.eventbus.EventBusService;
 
-class ConnectionOutput implements Runnable
+public class ConnectionOutput implements Runnable
 {
 	private static final Class<?>				parentClass	= Connection.class;
 
@@ -80,14 +80,14 @@ class ConnectionOutput implements Runnable
 		{
 			while (!this.outputMessageCache.isEmpty())
 				try
-			{
+				{
 					Thread.sleep(50);
-			}
-				catch (final InterruptedException e)
-			{
-				// TODO: Handle Exception
-				e.printStackTrace();
-			}
+				}
+			catch (final InterruptedException e)
+				{
+					// TODO: Handle Exception
+					e.printStackTrace();
+				}
 
 			System.out.println("Terminating " + this.getClass().getSimpleName() + "!");
 			this.running = false;
