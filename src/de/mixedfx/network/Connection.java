@@ -86,8 +86,6 @@ public class Connection implements EventBusServiceInterface
 			{
 				final Message message = Message.fromGSON((String) this.inputConnection.getNextMessage());
 
-				EventBusExtended.publishSyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
-
 				if (message.fromServer)
 					EventBusExtended.publishSyncSafe(Connection.MESSAGE_CHANNEL_SEND, message); // FORWARD!
 				EventBusExtended.publishAsyncSafe(MessageBus.MESSAGE_RECEIVE, message);

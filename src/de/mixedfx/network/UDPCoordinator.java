@@ -80,6 +80,8 @@ class UDPCoordinator implements EventTopicSubscriber<Object>
 				final DatagramPacket packet = (DatagramPacket) data;
 				final String packetMessage = new String(packet.getData(), 0, packet.getLength());
 
+				// System.out.println(packet.getAddress().getHostAddress());
+
 				/*
 				 * Check all interfaces if it was a broadcast to myself!
 				 */
@@ -94,7 +96,6 @@ class UDPCoordinator implements EventTopicSubscriber<Object>
 							if (this.compare(nicAdress, packet.getAddress()))
 								ownOne = true;
 					}
-
 				}
 				catch (final SocketException e)
 				{}

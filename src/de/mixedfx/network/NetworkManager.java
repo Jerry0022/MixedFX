@@ -122,7 +122,7 @@ public class NetworkManager
 
 		NetworkManager.init();
 
-		NetworkConfig.status.set(States.Server);
+		// NetworkConfig.status.set(States.Server);
 
 		NetworkManager.u.allAdresses.addListener((ListChangeListener<String>) c ->
 		{
