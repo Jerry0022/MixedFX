@@ -2,10 +2,10 @@ package de.mixedfx.network;
 
 import java.net.DatagramPacket;
 import java.net.InetAddress;
-import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 
 import javafx.beans.property.ListProperty;
@@ -90,15 +90,14 @@ class UDPCoordinator implements EventTopicSubscriber<Object>
 					while (nics.hasMoreElements())
 					{
 						final NetworkInterface nic = nics.nextElement();
-						for (final InterfaceAddress nicAdress : nic.getInterfaceAddresses())
-							if (this.compare(nicAdress.getAddress(), packet.getAddress()))
+						for (final InetAddress nicAdress : Collections.list(nic.getInetAddresses()))
+							if (this.compare(nicAdress, packet.getAddress()))
 								ownOne = true;
 					}
 
 				}
 				catch (final SocketException e)
 				{}
-				System.out.println(ownOne);
 
 				if (!ownOne)
 				{
