@@ -122,9 +122,9 @@ public class TCPCoordinator
 	{
 		synchronized (NetworkConfig.status)
 		{
+			NetworkConfig.status.set(States.Unbound);
 			this.tcpClient.stop();
 			this.tcpServer.stop();
-			NetworkConfig.status.set(States.Unbound);
 		}
 	}
 }

@@ -91,7 +91,10 @@ public class Connection implements EventBusServiceInterface
 				EventBusExtended.publishAsyncSafe(MessageBus.MESSAGE_RECEIVE, message);
 			}
 			else
+			{
+				this.close();
 				EventBusExtended.publishSyncSafe(TCPCoordinator.CONNECTION_LOST, this.clientID);
+			}
 	}
 
 	public synchronized void close()

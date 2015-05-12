@@ -120,6 +120,8 @@ public class NetworkManager
 	{
 		AnnotationProcessor.process(new NetworkManager());
 
+		NetworkConfig.status.addListener((ChangeListener<States>) (observable, oldValue, newValue) -> System.out.println("OLD: " + oldValue + "! NEW: " + newValue));
+
 		NetworkManager.init();
 
 		// NetworkConfig.status.set(States.Server);
