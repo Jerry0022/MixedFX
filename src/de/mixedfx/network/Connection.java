@@ -69,6 +69,7 @@ public class Connection implements EventBusServiceInterface
 		{
 			final Message message = (Message) event;
 			final String gsonMessage = Message.toGSON(message);
+
 			if (NetworkConfig.status.get().equals(States.Server))
 			{
 				message.fromServer = true;
@@ -87,9 +88,19 @@ public class Connection implements EventBusServiceInterface
 			{
 				final Message message = Message.fromGSON((String) this.inputConnection.getNextMessage());
 
-				if (message.fromServer)
+				if (!NetworkConfig.status.get().equals(States.Server))
+				{
+					if (this.clientID == TCPCoordinator.localNetworkMainID.get())
+						message.fromServer = true;
+					else
+						message.fromServer = false;
 					EventBusExtended.publishSyncSafe(Connection.MESSAGE_CHANNEL_SEND, message); // FORWARD!
-				EventBusExtended.publishAsyncSafe(MessageBus.MESSAGE_RECEIVE, message);
+				}
+				else
+					message.fromServer = false;
+
+				EventBusExtended.publishAsyncSafe(MessageBus.MESSAGE_RECEIVE, message); // Publish
+				// internally
 			}
 			else
 			{
