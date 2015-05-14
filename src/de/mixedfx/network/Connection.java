@@ -1,6 +1,7 @@
 package de.mixedfx.network;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.Socket;
 
 import org.bushe.swing.event.annotation.AnnotationProcessor;
@@ -100,12 +101,13 @@ public class Connection implements EventBusServiceInterface
 	public synchronized void close()
 	{
 		System.out.println("Closing " + this.getClass().getSimpleName());
-		this.outputConnection.terminate();
-		this.inputConnection.terminate();
-
 		try
 		{
-			this.clientSocket.close();
+			final InputStream is = this.clientSocket.getInputStream();
+			this.clientSocket.shutdownOutput(); // Sends the 'FIN' on the network
+			while (is.read() >= 0)
+				; // "read()" returns '-1' when the 'FIN' is reached
+			this.clientSocket.close(); // Now we can close the Socket
 		}
 		catch (final IOException e)
 		{}

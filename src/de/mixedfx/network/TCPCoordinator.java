@@ -74,8 +74,12 @@ public class TCPCoordinator
 	@EventTopicSubscriber(topic = TCPCoordinator.CONNECTION_LOST)
 	public synchronized void lostConnection(final String topic, final Integer clientID)
 	{
-		if (clientID.equals(TCPCoordinator.localNetworkMainID.get()))
-			this.stopTCPFull();
+		synchronized (NetworkConfig.status)
+		{
+			System.out.println("LOST: " + clientID.equals(TCPCoordinator.localNetworkMainID.get()) + clientID);
+			if (clientID.equals(TCPCoordinator.localNetworkMainID.get()))
+				this.stopTCPFull();
+		}
 	}
 
 	/**
@@ -87,6 +91,7 @@ public class TCPCoordinator
 	{
 		synchronized (NetworkConfig.status)
 		{
+			System.out.println("START!");
 			try
 			{
 				this.tcpClient.start(ip, NetworkConfig.PORT);
@@ -122,9 +127,10 @@ public class TCPCoordinator
 	{
 		synchronized (NetworkConfig.status)
 		{
-			NetworkConfig.status.set(States.Unbound);
+			System.out.println("CLOSE EVERYTHING");
 			this.tcpClient.stop();
 			this.tcpServer.stop();
+			NetworkConfig.status.set(States.Unbound);
 		}
 	}
 }

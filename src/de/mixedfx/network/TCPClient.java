@@ -18,7 +18,7 @@ class TCPClient
 			try
 			{
 				socket = new Socket(ip, port);
-				this.connection = new Connection(0, socket);
+				this.connection = new Connection(TCPCoordinator.localNetworkMainID.get(), socket);
 				break;
 			}
 			catch (final SocketException | UnknownHostException e)
@@ -31,7 +31,7 @@ class TCPClient
 
 	public void stop()
 	{
-		if (this.connection != null)
+ 		if (this.connection != null)
 			this.connection.close();
 	}
 }

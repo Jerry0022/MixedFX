@@ -98,7 +98,6 @@ public class ConnectionInput implements Runnable
 			}
 			catch (final Exception e)
 			{
-				// TODO: Handle Exception
 				e.printStackTrace();
 			}
 	}
@@ -107,7 +106,6 @@ public class ConnectionInput implements Runnable
 	{
 		if (this.isRunning)
 		{
-			System.out.println("Terminating ConnectionInput!");
 			this.isRunning = false;
 			try
 			{

@@ -22,18 +22,18 @@ class TCPServer
 		IOException exception = null;
 		for (int i = 0; i < TCPCoordinator.PORT_TRIES; i++)
 			try
-		{
+			{
 				this.registrar = new Registrar(NetworkConfig.PORT + i);
 				this.connectionList = this.registrar.connectionList;
 				final Thread registrarThread = new Thread(this.registrar);
 				registrarThread.setDaemon(true);
 				registrarThread.start();
 				break;
-		}
-		catch (final SocketException | UnknownHostException e)
-		{
-			exception = e;
-		}
+			}
+			catch (final SocketException | UnknownHostException e)
+			{
+				exception = e;
+			}
 		if (this.registrar == null)
 			throw exception;
 	}
@@ -41,7 +41,7 @@ class TCPServer
 	/**
 	 * Stops the Registrar and all bound connections.
 	 */
-	public void stop()
+	public synchronized void stop()
 	{
 		if (this.registrar != null)
 			this.registrar.terminate();
@@ -52,13 +52,13 @@ class TCPServer
 	 */
 	private class Registrar implements Runnable
 	{
-		public ListProperty<Connection>	connectionList;
+		public volatile ListProperty<Connection>	connectionList;
 
 		/**
 		 * Is needed to wait for connection. If someone tries to connect to serverSocket,
 		 * serverSocket returns a normal Socket.
 		 */
-		private final ServerSocket		serverSocket;
+		private final ServerSocket					serverSocket;
 
 		/**
 		 * @throws IOException
@@ -76,15 +76,15 @@ class TCPServer
 		{
 			while (true)
 				try
-			{
+				{
 					final Socket clientSocket = this.serverSocket.accept();
 					this.connectionList.add(new Connection(TCPCoordinator.localNetworkID.getAndIncrement(), clientSocket));
 					System.out.println("Registrar registered client!");
-			}
-			catch (final IOException e)
-				{
-				// In case of termination or connection failure => nothing to do!
-			}
+				}
+				catch (final IOException e)
+			{
+					// In case of termination or connection failure => nothing to do!
+				}
 		}
 
 		public void terminate()
@@ -98,8 +98,9 @@ class TCPServer
 				// In case of termination => nothing to do!
 			}
 
-			for (final Connection c : this.connectionList)
+			for (final Connection c : this.connectionList.get())
 				c.close();
+			this.connectionList.clear();
 		}
 	}
 }
