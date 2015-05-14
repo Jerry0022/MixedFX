@@ -97,7 +97,7 @@ public class NetworkManager
 	 * </p>
 	 *
 	 */
-	public static ObjectProperty<OnlineStates>	online;
+	public static ObjectProperty<OnlineStates>	online				= new SimpleObjectProperty<>(OnlineStates.Offline);	;
 	private static Boolean						onlineBlocker;
 
 	protected static TCPCoordinator				t;
@@ -118,7 +118,6 @@ public class NetworkManager
 	 */
 	public static void init()
 	{
-		NetworkManager.online = new SimpleObjectProperty<>(OnlineStates.Offline);
 		NetworkManager.onlineBlocker = new Boolean(false);
 		NetworkManager.online.addListener((ChangeListener<OnlineStates>) (observable, oldValue, newValue) ->
 		{
@@ -212,7 +211,7 @@ public class NetworkManager
 		// INITIALIZE NETWORK (this is the only line which has to be called once!)
 		NetworkManager.init();
 
-		// NetworkManager.online.set(true);
+		// NetworkManager.online.set(OnlineStates.Established);
 
 		// Show all directly found applications host and all directly found Server (Not the bound to
 		// server ones) which were once online while this application was online.
