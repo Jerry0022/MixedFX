@@ -117,9 +117,6 @@ public class TCPCoordinator
 			}
 
 			NetworkConfig.status.set(States.BoundToServer);
-
-			final Message message = new Message();
-			EventBusExtended.publishSyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
 		}
 	}
 

@@ -67,30 +67,28 @@ public class Connection implements EventBusServiceInterface
 		if (topic.equals(Connection.MESSAGE_CHANNEL_SEND))
 		{
 			final Message message = (Message) event;
-			String gsonMessage = Message.toGSON(message);
 
 			if (NetworkConfig.status.get().equals(States.Server))
 			{
 				message.fromServer = true;
-				gsonMessage = Message.toGSON(message);
-				this.outputConnection.sendMessage(gsonMessage);
+				this.outputConnection.sendMessage(message);
 			}
 			else
 				if (NetworkConfig.status.get().equals(States.BoundToServer))
 					if (message.fromServer && this.clientID != TCPCoordinator.localNetworkMainID.get())
-						this.outputConnection.sendMessage(gsonMessage);
+						this.outputConnection.sendMessage(message);
 					else
 						if (!message.fromServer && this.clientID == TCPCoordinator.localNetworkMainID.get())
-							this.outputConnection.sendMessage(gsonMessage);
+							this.outputConnection.sendMessage(message);
 						else
 							if (message.goodbye && this.clientID != TCPCoordinator.localNetworkMainID.get())
-								this.outputConnection.sendMessage(gsonMessage);
+								this.outputConnection.sendMessage(message);
 
 		}
 		else
 			if (topic.equals(TOPICS.MESSAGE_CHANNEL_RECEIVED.toString()))
 			{
-				final Message message = Message.fromGSON((String) this.inputConnection.getNextMessage());
+				final Message message = (Message) this.inputConnection.getNextMessage();
 
 				if (message.goodbye)
 				{
