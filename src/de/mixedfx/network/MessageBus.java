@@ -48,6 +48,9 @@ public class MessageBus
 		public void receive(Message message);
 	}
 
+	private static MessageBus					intermediateReceiver;
+	private static ArrayList<MessageReceiver>	receiverList	= new ArrayList<>();
+
 	/**
 	 * Sends a message asynchronously!
 	 *
@@ -57,14 +60,10 @@ public class MessageBus
 	 *            {@link NetworkConfig.States#BoundToServer} then it will be internally
 	 *            automatically forwarded - no manual forwarding is required.
 	 */
-	public static void send(final Message message)
+	public static synchronized void send(final Message message)
 	{
-		// TODO SUBSCRIBE!
-		EventBusExtended.publishAsyncSafe(MessageBus.MESSAGE_SEND, message);
+		EventBusExtended.publishAsyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
 	}
-
-	private static MessageBus					intermediateReceiver;
-	private static ArrayList<MessageReceiver>	receiverList	= new ArrayList<>();
 
 	/**
 	 * To undo this use {@link MessageBus#unregisterForReceival(MessageReceiver)}.

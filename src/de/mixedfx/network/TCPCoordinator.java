@@ -15,6 +15,10 @@ import de.mixedfx.network.messages.Message;
 
 public class TCPCoordinator
 {
+	/**
+	 * Default amount of tries to bind/connect to the port (this means if {@link NetworkConfig#PORT}
+	 * fails it will try {@link NetworkConfig#PORT} plus 1 (to 5).
+	 */
 	public static final int		PORT_TRIES		= 5;
 	public static final String	CONNECTION_LOST	= "TCP_CONNECTION_LOST";
 
@@ -115,9 +119,7 @@ public class TCPCoordinator
 			NetworkConfig.status.set(States.BoundToServer);
 
 			final Message message = new Message();
-			System.out.println("SEND MESSAGE FROM START!");
 			EventBusExtended.publishSyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
-			System.out.println("SEND MESSAGE DONE :)");
 		}
 	}
 

@@ -92,25 +92,31 @@ public class Connection implements EventBusServiceInterface
 			{
 				final Message message = Message.fromGSON((String) this.inputConnection.getNextMessage());
 
+				if (message.goodbye)
+				{
+					this.close();
+					EventBusExtended.publishSyncSafe(TCPCoordinator.CONNECTION_LOST, this.clientID);
+					return;
+				}
+
 				if (!NetworkConfig.status.get().equals(States.Server))
 				{
 					if (this.clientID == TCPCoordinator.localNetworkMainID.get())
+					{
 						message.fromServer = true;
+						EventBusExtended.publishAsyncSafe(MessageBus.MESSAGE_RECEIVE, message); // Publish
+						// internally
+					}
 					else
 						message.fromServer = false;
 					EventBusExtended.publishSyncSafe(Connection.MESSAGE_CHANNEL_SEND, message); // FORWARD!
 				}
 				else
-					message.fromServer = false;
-
-				if (message.goodbye)
 				{
-					this.close();
-					EventBusExtended.publishSyncSafe(TCPCoordinator.CONNECTION_LOST, this.clientID);
+					message.fromServer = false;
+					EventBusExtended.publishAsyncSafe(MessageBus.MESSAGE_RECEIVE, message); // Publish
+					// internally
 				}
-
-				EventBusExtended.publishAsyncSafe(MessageBus.MESSAGE_RECEIVE, message); // Publish
-				// internally
 			}
 			else
 			{
