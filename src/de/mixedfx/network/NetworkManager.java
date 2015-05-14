@@ -118,6 +118,8 @@ public class NetworkManager
 	 */
 	public static void init()
 	{
+		final ParticipantManager pManager = new ParticipantManager();
+
 		NetworkManager.onlineBlocker = new Boolean(false);
 		NetworkManager.online.addListener((ChangeListener<OnlineStates>) (observable, oldValue, newValue) ->
 		{
@@ -157,6 +159,20 @@ public class NetworkManager
 				// Otherwise it was called externally
 			}
 
+			switch (newValue)
+			{
+				case Unbound:
+					ParticipantManager.stop();
+					break;
+				case BoundToServer:
+					ParticipantManager.start().connect();
+					break;
+				case Server:
+					// Add me as server also as participant
+					ParticipantManager.PARTICIPANTS.add(ParticipantManager.PARTICIPANT_NUMBER++);
+					ParticipantManager.start();
+					break;
+			}
 		});
 
 		NetworkManager.t = new TCPCoordinator();
@@ -177,8 +193,10 @@ public class NetworkManager
 		{
 			NetworkConfig.PORT = portNumber;
 
-			NetworkManager.t.stopTCPFull();
-			NetworkManager.u.stopUDPFull();
+			if (NetworkManager.t != null)
+				NetworkManager.t.stopTCPFull();
+			if (NetworkManager.u != null)
+				NetworkManager.u.stopUDPFull();
 
 			NetworkManager.init();
 		}
@@ -206,6 +224,11 @@ public class NetworkManager
 		NetworkManager.online.addListener((ChangeListener<OnlineStates>) (observable, oldValue, newValue) ->
 		{
 			System.out.println("NEW ONLINE STATUS: " + newValue);
+		});
+
+		ParticipantManager.PARTICIPANTS.addListener((ListChangeListener<Integer>) c ->
+		{
+			System.out.println(ParticipantManager.PARTICIPANTS);
 		});
 
 		// INITIALIZE NETWORK (this is the only line which has to be called once!)

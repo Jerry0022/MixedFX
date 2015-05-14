@@ -82,6 +82,12 @@ public class MessageBus
 		MessageBus.receiverList.add(receiver);
 	}
 
+	/**
+	 * Works silent. If receiver is not registered this method returns without throwing an
+	 * exception.
+	 *
+	 * @param receiver
+	 */
 	public static synchronized void unregisterForReceival(final MessageReceiver receiver)
 	{
 		MessageBus.receiverList.remove(receiver);
