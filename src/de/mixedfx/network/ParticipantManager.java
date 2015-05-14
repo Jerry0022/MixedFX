@@ -51,6 +51,7 @@ public class ParticipantManager implements MessageReceiver
 	@Override
 	public synchronized void receive(final Message message)
 	{
+		System.out.println(message instanceof ParticipantMessage);
 		if (!(message instanceof ParticipantMessage))
 			return;
 

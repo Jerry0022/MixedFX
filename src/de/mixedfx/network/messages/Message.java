@@ -20,7 +20,11 @@ public class Message implements Serializable
 	private static Gson getGson()
 	{
 		if (Message.gson == null)
-			Message.gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		{
+			final RuntimeTypeAdapterFactory<Message> typeAdaptor = RuntimeTypeAdapterFactory.of(Message.class).registerSubtype(ParticipantMessage.class).registerSubtype(SUBSUB.class);
+			Message.gson = new GsonBuilder().registerTypeAdapterFactory(typeAdaptor).excludeFieldsWithoutExposeAnnotation().create();
+		}
+
 		return Message.gson;
 	}
 

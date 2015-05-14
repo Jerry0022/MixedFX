@@ -234,7 +234,7 @@ public class NetworkManager
 		// INITIALIZE NETWORK (this is the only line which has to be called once!)
 		NetworkManager.init();
 
-		// NetworkManager.online.set(OnlineStates.Established);
+		NetworkManager.online.set(OnlineStates.Established);
 
 		// Show all directly found applications host and all directly found Server (Not the bound to
 		// server ones) which were once online while this application was online.
