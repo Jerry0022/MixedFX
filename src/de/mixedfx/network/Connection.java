@@ -1,7 +1,6 @@
 package de.mixedfx.network;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.Socket;
 
 import org.bushe.swing.event.annotation.AnnotationProcessor;
@@ -68,11 +67,12 @@ public class Connection implements EventBusServiceInterface
 		if (topic.equals(Connection.MESSAGE_CHANNEL_SEND))
 		{
 			final Message message = (Message) event;
-			final String gsonMessage = Message.toGSON(message);
+			String gsonMessage = Message.toGSON(message);
 
 			if (NetworkConfig.status.get().equals(States.Server))
 			{
 				message.fromServer = true;
+				gsonMessage = Message.toGSON(message);
 				this.outputConnection.sendMessage(gsonMessage);
 			}
 			else
@@ -82,6 +82,10 @@ public class Connection implements EventBusServiceInterface
 					else
 						if (!message.fromServer && this.clientID == TCPCoordinator.localNetworkMainID.get())
 							this.outputConnection.sendMessage(gsonMessage);
+						else
+							if (message.goodbye && this.clientID != TCPCoordinator.localNetworkMainID.get())
+								this.outputConnection.sendMessage(gsonMessage);
+
 		}
 		else
 			if (topic.equals(TOPICS.MESSAGE_CHANNEL_RECEIVED.toString()))
@@ -98,6 +102,9 @@ public class Connection implements EventBusServiceInterface
 				}
 				else
 					message.fromServer = false;
+
+				if (message.goodbye)
+					this.close();
 
 				EventBusExtended.publishAsyncSafe(MessageBus.MESSAGE_RECEIVE, message); // Publish
 				// internally
@@ -119,10 +126,8 @@ public class Connection implements EventBusServiceInterface
 
 		try
 		{
-			final InputStream is = this.clientSocket.getInputStream();
-			this.clientSocket.shutdownOutput(); // Sends the 'FIN' on the network
-			while (is.read() >= 0)
-				; // "read()" returns '-1' when the 'FIN' is reached
+			this.outputConnection.terminate();
+			this.inputConnection.terminate();
 			this.clientSocket.close(); // Now we can close the Socket
 		}
 		catch (final IOException e)

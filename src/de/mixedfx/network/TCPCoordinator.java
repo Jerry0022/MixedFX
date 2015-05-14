@@ -129,6 +129,9 @@ public class TCPCoordinator
 		synchronized (NetworkConfig.status)
 		{
 			System.out.println("CLOSE EVERYTHING");
+			final Message goodbyeMessage = new Message();
+			goodbyeMessage.goodbye = true;
+			EventBusExtended.publishSyncSafe(Connection.MESSAGE_CHANNEL_SEND, goodbyeMessage);
 			this.tcpClient.stop();
 			this.tcpServer.stop();
 			NetworkConfig.status.set(States.Unbound);

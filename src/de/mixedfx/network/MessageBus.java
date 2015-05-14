@@ -59,6 +59,7 @@ public class MessageBus
 	 */
 	public static void send(final Message message)
 	{
+		// TODO SUBSCRIBE!
 		EventBusExtended.publishAsyncSafe(MessageBus.MESSAGE_SEND, message);
 	}
 

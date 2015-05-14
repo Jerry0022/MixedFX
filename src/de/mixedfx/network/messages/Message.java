@@ -41,8 +41,12 @@ public class Message implements Serializable
 	@Expose
 	public boolean	fromServer;
 
+	@Expose
+	public boolean	goodbye;
+
 	public Message()
 	{
 		this.fromServer = false;
+		this.goodbye = false;
 	}
 }
