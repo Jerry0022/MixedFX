@@ -23,7 +23,6 @@ public class EventBusExtended extends EventBus
 		ProxyTopicSubscriber subscriber;
 		for (final Object proxySubscriber : EventBus.getSubscribers(topic))
 		{
-			System.err.println(proxySubscriber.getClass().getSuperclass().getSuperclass().getSimpleName());
 			subscriber = (ProxyTopicSubscriber) proxySubscriber;
 
 			try
@@ -32,7 +31,6 @@ public class EventBusExtended extends EventBus
 			}
 			catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | SecurityException e)
 			{
-				// TODO: Handle Exception
 				e.printStackTrace();
 				System.out.println(101);
 			}
@@ -75,7 +73,7 @@ public class EventBusExtended extends EventBus
 				catch (final ClassCastException e2)
 				{
 					e2.printStackTrace();
-					System.out.println("Guilty is: " + proxySubscriber.getClass().getSimpleName());
+					System.out.println("It was because of: " + proxySubscriber.getClass().getSimpleName());
 					System.out.println("At the topic " + topic + " occured an error!");
 				}
 			}).start();

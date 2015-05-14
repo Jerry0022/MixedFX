@@ -10,6 +10,7 @@ import org.bushe.swing.event.annotation.AnnotationProcessor;
 import org.bushe.swing.event.annotation.EventTopicSubscriber;
 
 import de.mixedfx.eventbus.EventBusExtended;
+import de.mixedfx.java.CustomSysOutErr;
 import de.mixedfx.network.NetworkConfig.States;
 import de.mixedfx.network.messages.Message;
 
@@ -118,6 +119,8 @@ public class NetworkManager
 
 	public static void main(final String[] args)
 	{
+		CustomSysOutErr.init();
+
 		AnnotationProcessor.process(new NetworkManager());
 
 		NetworkConfig.status.addListener((ChangeListener<States>) (observable, oldValue, newValue) -> System.out.println("OLD: " + oldValue + "! NEW: " + newValue));

@@ -91,14 +91,14 @@ public class TCPCoordinator
 	{
 		synchronized (NetworkConfig.status)
 		{
-			System.out.println("START!");
+			System.out.println("START!" + ip);
 			try
 			{
+
 				this.tcpClient.start(ip, NetworkConfig.PORT);
 			}
 			catch (final IOException e)
 			{
-				e.printStackTrace();
 				return;
 			}
 
@@ -108,7 +108,6 @@ public class TCPCoordinator
 			}
 			catch (final IOException e)
 			{
-				e.printStackTrace();
 				this.stopTCPFull();
 				return;
 			}
@@ -116,7 +115,9 @@ public class TCPCoordinator
 			NetworkConfig.status.set(States.BoundToServer);
 
 			final Message message = new Message();
+			System.out.println("SEND MESSAGE FROM START!");
 			EventBusExtended.publishSyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
+			System.out.println("SEND MESSAGE DONE :)");
 		}
 	}
 

@@ -22,24 +22,24 @@ class TCPServer
 		IOException exception = null;
 		for (int i = 0; i < TCPCoordinator.PORT_TRIES; i++)
 			try
-			{
+		{
 				this.registrar = new Registrar(NetworkConfig.PORT + i);
 				this.connectionList = this.registrar.connectionList;
 				final Thread registrarThread = new Thread(this.registrar);
 				registrarThread.setDaemon(true);
 				registrarThread.start();
 				break;
-			}
-			catch (final SocketException | UnknownHostException e)
-			{
-				exception = e;
-			}
+		}
+		catch (final SocketException | UnknownHostException e)
+		{
+			exception = e;
+		}
 		if (this.registrar == null)
 			throw exception;
 	}
 
 	/**
-	 * Stops the Registrar and all bound connections.
+	 * Stops the {@link Registrar} and all bound connections.
 	 */
 	public synchronized void stop()
 	{
@@ -76,15 +76,15 @@ class TCPServer
 		{
 			while (true)
 				try
-				{
+			{
 					final Socket clientSocket = this.serverSocket.accept();
 					this.connectionList.add(new Connection(TCPCoordinator.localNetworkID.getAndIncrement(), clientSocket));
 					System.out.println("Registrar registered client!");
-				}
-				catch (final IOException e)
-			{
-					// In case of termination or connection failure => nothing to do!
-				}
+			}
+			catch (final IOException e)
+				{
+				// In case of termination or connection failure => nothing to do!
+			}
 		}
 
 		public void terminate()

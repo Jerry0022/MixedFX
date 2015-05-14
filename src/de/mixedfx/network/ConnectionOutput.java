@@ -80,14 +80,11 @@ public class ConnectionOutput implements Runnable
 		{
 			while (!this.outputMessageCache.isEmpty())
 				try
-				{
+			{
 					Thread.sleep(50);
-				}
-			catch (final InterruptedException e)
-				{
-					// TODO: Handle Exception
-					e.printStackTrace();
-				}
+			}
+				catch (final InterruptedException e)
+			{}
 
 			System.out.println("Terminating " + this.getClass().getSimpleName() + "!");
 			this.running = false;

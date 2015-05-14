@@ -101,6 +101,11 @@ public class Connection implements EventBusServiceInterface
 	public synchronized void close()
 	{
 		System.out.println("Closing " + this.getClass().getSimpleName());
+
+		AnnotationProcessor.unprocess(this);
+		this.eventBus.unsubscribe(TOPICS.MESSAGE_CHANNEL_RECEIVED.toString(), this);
+		this.eventBus.unsubscribe(TOPICS.CONNECTION_LOST.toString(), this);
+
 		try
 		{
 			final InputStream is = this.clientSocket.getInputStream();
