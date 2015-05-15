@@ -2,6 +2,8 @@ package de.mixedfx.network;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javafx.beans.value.ChangeListener;
@@ -12,6 +14,7 @@ import org.bushe.swing.event.annotation.EventTopicSubscriber;
 import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.network.NetworkConfig.States;
 import de.mixedfx.network.messages.Message;
+import de.mixedfx.network.messages.ParticipantMessage;
 
 public class TCPCoordinator
 {
@@ -83,6 +86,22 @@ public class TCPCoordinator
 			System.out.println("LOST: " + clientID.equals(TCPCoordinator.localNetworkMainID.get()) + clientID);
 			if (clientID.equals(TCPCoordinator.localNetworkMainID.get()))
 				this.stopTCPFull();
+			else
+			{
+				System.out.println("LOST CLIENT!");
+				final Connection lostConnection = this.tcpServer.connectionList.get(clientID - 1);
+				final Collection<Integer> allParticipated = lostConnection.uid_pid_map.values();
+				allParticipated.removeAll(Collections.singleton(null));
+
+				final ParticipantMessage pMessage = new ParticipantMessage();
+				pMessage.uID = "";
+				pMessage.ids.addAll(allParticipated);
+
+				if (!NetworkConfig.status.get().equals(NetworkConfig.States.Server))
+					MessageBus.send(pMessage);
+				else
+					EventBusExtended.publishSyncSafe(MessageBus.MESSAGE_RECEIVE, pMessage);
+			}
 		}
 	}
 

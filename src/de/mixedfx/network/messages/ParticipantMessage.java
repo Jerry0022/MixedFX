@@ -9,7 +9,7 @@ import com.google.gson.annotations.Expose;
 public class ParticipantMessage extends Message
 {
 	@Expose
-	public final String			uID;
+	public String				uID;
 
 	@Expose
 	public ArrayList<Integer>	ids;

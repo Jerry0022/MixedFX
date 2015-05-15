@@ -118,8 +118,6 @@ public class NetworkManager
 	 */
 	public static void init()
 	{
-		final ParticipantManager pManager = new ParticipantManager();
-
 		NetworkManager.onlineBlocker = new Boolean(false);
 		NetworkManager.online.addListener((ChangeListener<OnlineStates>) (observable, oldValue, newValue) ->
 		{
@@ -171,6 +169,8 @@ public class NetworkManager
 					// Add me as server also as participant
 					ParticipantManager.PARTICIPANTS.add(ParticipantManager.PARTICIPANT_NUMBER++);
 					ParticipantManager.start();
+					break;
+				default:
 					break;
 			}
 		});

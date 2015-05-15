@@ -53,34 +53,44 @@ public class ParticipantManager implements MessageReceiver
 	{
 		if (message instanceof ParticipantMessage)
 		{
-
 			final ParticipantMessage pMessage = (ParticipantMessage) message;
 
-			if (pMessage.ids.isEmpty()) // Message from client
+			if (pMessage.uID.equals("") && NetworkConfig.status.get().equals(NetworkConfig.States.Server))
 			{
-				final int clientNr = ParticipantManager.PARTICIPANT_NUMBER++;
-				ParticipantManager.PARTICIPANTS.add(0, clientNr);
-				System.err.println(pMessage.uID + "   !   " + pMessage.ids);
-				pMessage.ids.addAll(ParticipantManager.PARTICIPANTS);
-				System.err.println(pMessage.uID + "   !   " + pMessage.ids);
+				for (final Integer i : pMessage.ids)
+					ParticipantManager.PARTICIPANTS.remove(i);
+				pMessage.uID = String.valueOf(ParticipantManager.PARTICIPANT_NUMBER_SERVER);
+				pMessage.ids.clear();
+				pMessage.ids.addAll(ParticipantManager.PARTICIPANTS.get());
 				MessageBus.send(pMessage);
 			}
 			else
-				// Message from server
-				if (ParticipantManager.PARTICIPANTS.size() > 0) // Already registered
-				{
-					ParticipantManager.PARTICIPANTS.clear();
-					ParticipantManager.PARTICIPANTS.addAll(pMessage.ids);
-					System.err.println("UPDATED ALL: " + ParticipantManager.PARTICIPANTS);
-				}
-				else
-					// Not yet registered
-					if (pMessage.uID.equals(this.myUID))
+				if (!pMessage.uID.equals(""))
+					if (pMessage.ids.isEmpty()) // Message from client
 					{
-						final int myID = pMessage.ids.get(0);
-						System.err.println("JUHU: MyID is: " + myID);
-						ParticipantManager.PARTICIPANTS.addAll(pMessage.ids);
+						final int clientNr = ParticipantManager.PARTICIPANT_NUMBER++;
+						ParticipantManager.PARTICIPANTS.add(0, clientNr);
+						System.err.println(pMessage.uID + "   !   " + pMessage.ids);
+						pMessage.ids.addAll(ParticipantManager.PARTICIPANTS);
+						System.err.println(pMessage.uID + "   !   " + pMessage.ids);
+						MessageBus.send(pMessage);
 					}
+					else
+						// Message from server
+						if (ParticipantManager.PARTICIPANTS.size() > 0) // Already registered
+						{
+							ParticipantManager.PARTICIPANTS.clear();
+							ParticipantManager.PARTICIPANTS.addAll(pMessage.ids);
+							System.err.println("UPDATED ALL: " + ParticipantManager.PARTICIPANTS);
+						}
+						else
+							// Not yet registered
+							if (pMessage.uID.equals(this.myUID))
+							{
+								final int myID = pMessage.ids.get(0);
+								System.err.println("JUHU: MyID is: " + myID);
+								ParticipantManager.PARTICIPANTS.addAll(pMessage.ids);
+							}
 		}
 	}
 }

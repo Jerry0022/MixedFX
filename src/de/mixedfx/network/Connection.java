@@ -23,7 +23,7 @@ public class Connection implements EventBusServiceInterface
 		MESSAGE_CHANNEL_RECEIVED, CONNECTION_CHANNEL_LOST;
 	}
 
-	private final HashMap<String, Integer>	uid_pid_map;
+	public final HashMap<String, Integer>	uid_pid_map;
 
 	private final int						clientID;
 	private final Socket					clientSocket;
@@ -123,7 +123,8 @@ public class Connection implements EventBusServiceInterface
 						if (message instanceof ParticipantMessage)
 						{
 							final ParticipantMessage pMessage = (ParticipantMessage) message;
-							this.uid_pid_map.put(pMessage.uID, null);
+							if (!pMessage.uID.equals(""))
+								this.uid_pid_map.put(pMessage.uID, null);
 						}
 					}
 					EventBusExtended.publishSyncSafe(Connection.MESSAGE_CHANNEL_SEND, message); // FORWARD!
@@ -134,7 +135,8 @@ public class Connection implements EventBusServiceInterface
 					if (message instanceof ParticipantMessage)
 					{
 						final ParticipantMessage pMessage = (ParticipantMessage) message;
-						this.uid_pid_map.put(pMessage.uID, null);
+						if (!pMessage.uID.equals(""))
+							this.uid_pid_map.put(pMessage.uID, null);
 					}
 					EventBusExtended.publishAsyncSafe(MessageBus.MESSAGE_RECEIVE, message); // Publish
 					// internally
@@ -145,7 +147,7 @@ public class Connection implements EventBusServiceInterface
 				this.close();
 				EventBusExtended.publishSyncSafe(TCPCoordinator.CONNECTION_LOST, this.clientID);
 			}
-		System.out.println(this.uid_pid_map.toString());
+		System.out.println(this.clientID + "!" + this.uid_pid_map.toString());
 	}
 
 	public synchronized void close()
