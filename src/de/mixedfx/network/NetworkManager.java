@@ -165,12 +165,12 @@ public class NetworkManager
 					ParticipantManager.stop();
 					break;
 				case BoundToServer:
-					ParticipantManager.start().connect();
+					ParticipantManager.start(false).connect();
 					break;
 				case Server:
 					// Add me as server also as participant
 					ParticipantManager.PARTICIPANTS.add(ParticipantManager.PARTICIPANT_NUMBER++);
-					ParticipantManager.start();
+					ParticipantManager.start(true);
 					break;
 			}
 		});

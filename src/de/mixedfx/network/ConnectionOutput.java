@@ -59,7 +59,7 @@ public class ConnectionOutput implements Runnable
 						if (this.terminate())
 						{
 							System.out.println("OutputStream lost!");
-							this.eventBusParent.publishAsync(Connection.TOPICS.CONNECTION_LOST.toString(), this);
+							this.eventBusParent.publishAsync(Connection.TOPICS.CONNECTION_CHANNEL_LOST.toString(), this);
 						}
 					}
 				}
@@ -80,11 +80,11 @@ public class ConnectionOutput implements Runnable
 		{
 			while (!this.outputMessageCache.isEmpty())
 				try
-			{
+				{
 					Thread.sleep(50);
-			}
-				catch (final InterruptedException e)
-			{}
+				}
+			catch (final InterruptedException e)
+				{}
 
 			System.out.println("Terminating " + this.getClass().getSimpleName() + "!");
 			this.running = false;

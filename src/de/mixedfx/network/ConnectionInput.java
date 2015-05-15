@@ -92,7 +92,7 @@ public class ConnectionInput implements Runnable
 						this.inputMessageCache.clear();
 						this.terminate();
 						System.out.println(this.getClass().getSimpleName() + " lost stream!");
-						this.eventBusParent.publishAsync(Connection.TOPICS.CONNECTION_LOST.toString(), this);
+						this.eventBusParent.publishAsync(Connection.TOPICS.CONNECTION_CHANNEL_LOST.toString(), this);
 					}
 				}
 			}

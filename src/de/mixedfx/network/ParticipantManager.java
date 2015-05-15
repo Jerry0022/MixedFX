@@ -11,14 +11,14 @@ public class ParticipantManager implements MessageReceiver
 	/**
 	 * Last id is always the server, first id is always the newest client.
 	 */
-	public static SimpleListProperty<Integer>	PARTICIPANTS				= new SimpleListProperty(FXCollections.observableArrayList());
+	public static SimpleListProperty<Integer>	PARTICIPANTS				= new SimpleListProperty<Integer>(FXCollections.observableArrayList());
 
 	public static final int						PARTICIPANT_NUMBER_SERVER	= 1;
 	public static int							PARTICIPANT_NUMBER			= ParticipantManager.PARTICIPANT_NUMBER_SERVER;
 
 	private static ParticipantManager			pManager;
 
-	public static ParticipantManager start()
+	public static ParticipantManager start(final boolean server)
 	{
 		// Listen for others
 		ParticipantManager.pManager = new ParticipantManager();
@@ -51,36 +51,39 @@ public class ParticipantManager implements MessageReceiver
 	@Override
 	public synchronized void receive(final Message message)
 	{
-		System.out.println(message instanceof ParticipantMessage);
-		if (!(message instanceof ParticipantMessage))
-			return;
-
-		final ParticipantMessage pMessage = (ParticipantMessage) message;
-
-		if (pMessage.ids.isEmpty()) // Message from client
+		if (message instanceof ParticipantMessage)
 		{
-			final int clientNr = ParticipantManager.PARTICIPANT_NUMBER++;
-			ParticipantManager.PARTICIPANTS.add(0, clientNr);
-			System.err.println(pMessage.uID + "   !   " + pMessage.ids);
-			pMessage.ids.addAll(ParticipantManager.PARTICIPANTS);
-			System.err.println(pMessage.uID + "   !   " + pMessage.ids);
-			MessageBus.send(pMessage);
-		}
-		else
-			// Message from server
-			if (ParticipantManager.PARTICIPANTS.size() > 0) // Already registered
+
+			final ParticipantMessage pMessage = (ParticipantMessage) message;
+
+			if (pMessage.ids.isEmpty()) // Message from client
 			{
-				ParticipantManager.PARTICIPANTS.clear();
-				ParticipantManager.PARTICIPANTS.addAll(pMessage.ids);
-				System.err.println("UPDATED ALL: " + ParticipantManager.PARTICIPANTS);
+				final int clientNr = ParticipantManager.PARTICIPANT_NUMBER++;
+				ParticipantManager.PARTICIPANTS.add(0, clientNr);
+				System.err.println(pMessage.uID + "   !   " + pMessage.ids);
+				pMessage.ids.addAll(ParticipantManager.PARTICIPANTS);
+				System.err.println(pMessage.uID + "   !   " + pMessage.ids);
+				MessageBus.send(pMessage);
 			}
 			else
-				// Not yet registered
-				if (pMessage.uID.equals(this.myUID))
-				{
-					final int myID = pMessage.ids.get(0);
-					System.err.println("JUHU: MyID is: " + myID);
-					ParticipantManager.PARTICIPANTS.addAll(pMessage.ids);
-				}
+				// Message from server
+				if (pMessage.ids.size() == 1)
+					;
+				else
+					if (ParticipantManager.PARTICIPANTS.size() > 0) // Already registered
+					{
+						ParticipantManager.PARTICIPANTS.clear();
+						ParticipantManager.PARTICIPANTS.addAll(pMessage.ids);
+						System.err.println("UPDATED ALL: " + ParticipantManager.PARTICIPANTS);
+					}
+					else
+						// Not yet registered
+						if (pMessage.uID.equals(this.myUID))
+						{
+							final int myID = pMessage.ids.get(0);
+							System.err.println("JUHU: MyID is: " + myID);
+							ParticipantManager.PARTICIPANTS.addAll(pMessage.ids);
+						}
+		}
 	}
 }

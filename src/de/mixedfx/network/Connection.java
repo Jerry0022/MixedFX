@@ -18,7 +18,7 @@ public class Connection implements EventBusServiceInterface
 
 	public enum TOPICS
 	{
-		MESSAGE_CHANNEL_RECEIVED, CONNECTION_LOST;
+		MESSAGE_CHANNEL_RECEIVED, CONNECTION_CHANNEL_LOST;
 	}
 
 	private final int					clientID;
@@ -55,7 +55,7 @@ public class Connection implements EventBusServiceInterface
 	{
 		this.eventBus = new EventBusService(this.getClass(), this.clientID);
 		this.eventBus.subscribe(TOPICS.MESSAGE_CHANNEL_RECEIVED.toString(), this);
-		this.eventBus.subscribe(TOPICS.CONNECTION_LOST.toString(), this);
+		this.eventBus.subscribe(TOPICS.CONNECTION_CHANNEL_LOST.toString(), this);
 
 		AnnotationProcessor.process(this);
 	}
@@ -129,7 +129,7 @@ public class Connection implements EventBusServiceInterface
 
 		AnnotationProcessor.unprocess(this);
 		this.eventBus.unsubscribe(TOPICS.MESSAGE_CHANNEL_RECEIVED.toString(), this);
-		this.eventBus.unsubscribe(TOPICS.CONNECTION_LOST.toString(), this);
+		this.eventBus.unsubscribe(TOPICS.CONNECTION_CHANNEL_LOST.toString(), this);
 
 		try
 		{
