@@ -20,8 +20,8 @@ import de.mixedfx.network.messages.Message;
  * send. Connection to a host server or someone who is connected to the host server will be
  * established automatically.
  *
- * To get an information about the network status or if you want to host get/set
- * {@link NetworkManager#online}!
+ * To get an information about the network status or if you want to host get
+ * {@link NetworkManager#online} or set it to {@link NetworkManager.OnlineStates#Established} !
  *
  * If an error occur only a {@link NetworkManager#NETWORK_FATALERROR} is sent over the eventBus.
  *
@@ -169,6 +169,7 @@ public class NetworkManager
 					// Add me as server also as participant
 					ParticipantManager.PARTICIPANTS.add(ParticipantManager.PARTICIPANT_NUMBER++);
 					ParticipantManager.start();
+					NetworkManager.online.set(OnlineStates.Online);
 					break;
 				default:
 					break;
