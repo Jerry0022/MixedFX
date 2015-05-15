@@ -12,18 +12,21 @@ import de.mixedfx.network.messages.ParticipantMessage;
 public class ParticipantManager implements MessageReceiver
 {
 	/**
-	 * Last id is always the server, first id is always the newest client.
+	 * Last id is always the server, first id is always the newest online client. Is maybe empty.
 	 */
 	public static SimpleListProperty<Integer>	PARTICIPANTS				= new SimpleListProperty<Integer>(FXCollections.observableArrayList());
 
-	public static final int						PARTICIPANT_NUMBER_SERVER	= 1;
-	public static int							PARTICIPANT_NUMBER			= ParticipantManager.PARTICIPANT_NUMBER_SERVER;
+	private static final int					PARTICIPANT_NUMBER_SERVER	= 1;
+	protected static int						PARTICIPANT_NUMBER			= ParticipantManager.PARTICIPANT_NUMBER_SERVER;
 
-	public static final AtomicInteger			myPID						= new AtomicInteger();
+	/**
+	 * 0 means the application is not yet registered in the network.
+	 */
+	public static final AtomicInteger			MY_PID						= new AtomicInteger();
 
 	private static ParticipantManager			pManager;
 
-	public static ParticipantManager start()
+	protected static ParticipantManager start()
 	{
 		// Listen for others
 		ParticipantManager.pManager = new ParticipantManager();
@@ -31,8 +34,9 @@ public class ParticipantManager implements MessageReceiver
 		return ParticipantManager.pManager;
 	}
 
-	public static void stop()
+	protected static void stop()
 	{
+		ParticipantManager.MY_PID.set(0);
 		ParticipantManager.PARTICIPANTS.clear();
 		MessageBus.unregisterForReceival(ParticipantManager.pManager);
 	}
@@ -93,7 +97,7 @@ public class ParticipantManager implements MessageReceiver
 							if (pMessage.uID.equals(this.myUID))
 							{
 								final int myID = pMessage.ids.get(0);
-								ParticipantManager.myPID.set(myID);
+								ParticipantManager.MY_PID.set(myID);
 								ParticipantManager.PARTICIPANTS.addAll(pMessage.ids);
 								NetworkManager.online.set(OnlineStates.Online);
 							}

@@ -15,20 +15,25 @@ import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.java.CustomSysOutErr;
 import de.mixedfx.network.NetworkConfig.States;
 import de.mixedfx.network.messages.Message;
+import de.mixedfx.network.messages.RegisteredMessage;
 
+// TODO Step-by-step guide
 /**
  * <p>
- * Builds up a network. Manually only host server must be called and {@link Message} received or
- * send. Connection to a host server or someone who is connected to the host server will be
- * established automatically.
- *
- * To get an information about the network status or if you want to host get
- * {@link NetworkManager#online} or set it to {@link NetworkManager.OnlineStates#Established} !
- *
- * If an error occur only a {@link NetworkManager#NETWORK_FATALERROR} is sent over the eventBus.
- *
- * If you may want to set the port use {@link NetworkManager#setPort(int)}. (Usually only necessary
- * if there was an fatal error!)
+ * Builds up a network. You can <b>receive or send (a child of) {@link RegisteredMessage} via
+ * {@link MessageBus}</b>. Connection to a host server or someone who is connected to the host
+ * server will be established automatically. <br>
+ * To get an information about the <b>network status or if you want to host get
+ * {@link NetworkManager#online} or set it manually to
+ * {@link NetworkManager.OnlineStates#Established} or {@link NetworkManager.OnlineStates#Offline}
+ * </b><br>
+ * <b>{@link ParticipantManager#PARTICIPANTS}</b> shows at any time <b>all connected and registered
+ * participants</b> (including this application) if online. {@link ParticipantManager#MY_PID} is the
+ * applications participant id if online, otherwise it is 0<br>
+ * If an error occur only a <b>{@link NetworkManager#NETWORK_FATALERROR}</b> is sent over the
+ * EventBus[Extended]. <br>
+ * If you may want to set the port use {@link NetworkManager#setPort(int)} (after setting the port
+ * the entire network is restarted). (Usually only necessary if there was an fatal error!)
  * </p>
  *
  * @author Jerry
@@ -72,12 +77,12 @@ public class NetworkManager
 
 	/**
 	 * Register for this event over {@link EventBusExtended} or {@link EventBus} if you want to be
-	 * informed that there was a network error which closed the entire network. You have to call
-	 * again {@link NetworkManager#init()} to initialize the network. Further information: This
-	 * error does relate to the UDP Server in most cases (not if {@link NetworkConfig#status} =
-	 * {@link NetworkConfig.States#Server}). The cause probably is the port. React to that error
-	 * with {@link NetworkManager#setPort(int)} with the recommendation to choose a random number
-	 * between 10 000 and 60 000!
+	 * informed that there was a network error which closed the entire network. Not recommended: You
+	 * may call again {@link NetworkManager#init()} to initialize the network. Further information:
+	 * This error does <b>relate to the UDP Server in most cases</b> (not if
+	 * {@link NetworkConfig#status} = {@link NetworkConfig.States#Server}). The cause probably is
+	 * the port. React to that <b>port error with {@link NetworkManager#setPort(int)}</b> with the
+	 * recommendation to choose a random number between 10 000 and 60 000!
 	 */
 	public static final String					NETWORK_FATALERROR	= "NETWORK_FATALERROR";
 
