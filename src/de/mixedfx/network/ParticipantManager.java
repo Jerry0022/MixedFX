@@ -18,7 +18,7 @@ public class ParticipantManager implements MessageReceiver
 
 	private static ParticipantManager			pManager;
 
-	public static ParticipantManager start(final boolean server)
+	public static ParticipantManager start()
 	{
 		// Listen for others
 		ParticipantManager.pManager = new ParticipantManager();
@@ -67,23 +67,20 @@ public class ParticipantManager implements MessageReceiver
 			}
 			else
 				// Message from server
-				if (pMessage.ids.size() == 1)
-					;
+				if (ParticipantManager.PARTICIPANTS.size() > 0) // Already registered
+				{
+					ParticipantManager.PARTICIPANTS.clear();
+					ParticipantManager.PARTICIPANTS.addAll(pMessage.ids);
+					System.err.println("UPDATED ALL: " + ParticipantManager.PARTICIPANTS);
+				}
 				else
-					if (ParticipantManager.PARTICIPANTS.size() > 0) // Already registered
+					// Not yet registered
+					if (pMessage.uID.equals(this.myUID))
 					{
-						ParticipantManager.PARTICIPANTS.clear();
+						final int myID = pMessage.ids.get(0);
+						System.err.println("JUHU: MyID is: " + myID);
 						ParticipantManager.PARTICIPANTS.addAll(pMessage.ids);
-						System.err.println("UPDATED ALL: " + ParticipantManager.PARTICIPANTS);
 					}
-					else
-						// Not yet registered
-						if (pMessage.uID.equals(this.myUID))
-						{
-							final int myID = pMessage.ids.get(0);
-							System.err.println("JUHU: MyID is: " + myID);
-							ParticipantManager.PARTICIPANTS.addAll(pMessage.ids);
-						}
 		}
 	}
 }

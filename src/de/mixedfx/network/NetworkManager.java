@@ -165,12 +165,12 @@ public class NetworkManager
 					ParticipantManager.stop();
 					break;
 				case BoundToServer:
-					ParticipantManager.start(false).connect();
+					ParticipantManager.start().connect();
 					break;
 				case Server:
 					// Add me as server also as participant
 					ParticipantManager.PARTICIPANTS.add(ParticipantManager.PARTICIPANT_NUMBER++);
-					ParticipantManager.start(true);
+					ParticipantManager.start();
 					break;
 			}
 		});
@@ -234,7 +234,7 @@ public class NetworkManager
 		// INITIALIZE NETWORK (this is the only line which has to be called once!)
 		NetworkManager.init();
 
-		// NetworkManager.online.set(OnlineStates.Established);
+		NetworkManager.online.set(OnlineStates.Established);
 
 		// Show all directly found applications host and all directly found Server (Not the bound to
 		// server ones) which were once online while this application was online.

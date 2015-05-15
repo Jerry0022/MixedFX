@@ -2,6 +2,7 @@ package de.mixedfx.network;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.HashMap;
 
 import org.bushe.swing.event.annotation.AnnotationProcessor;
 import org.bushe.swing.event.annotation.EventTopicSubscriber;
@@ -11,6 +12,7 @@ import de.mixedfx.eventbus.EventBusService;
 import de.mixedfx.eventbus.EventBusServiceInterface;
 import de.mixedfx.network.NetworkConfig.States;
 import de.mixedfx.network.messages.Message;
+import de.mixedfx.network.messages.ParticipantMessage;
 
 public class Connection implements EventBusServiceInterface
 {
@@ -21,16 +23,20 @@ public class Connection implements EventBusServiceInterface
 		MESSAGE_CHANNEL_RECEIVED, CONNECTION_CHANNEL_LOST;
 	}
 
-	private final int					clientID;
-	private final Socket				clientSocket;
-	private EventBusService				eventBus;
+	private final HashMap<String, Integer>	uid_pid_map;
 
-	private volatile ConnectionOutput	outputConnection;
-	private volatile ConnectionInput	inputConnection;
+	private final int						clientID;
+	private final Socket					clientSocket;
+	private EventBusService					eventBus;
+
+	private volatile ConnectionOutput		outputConnection;
+	private volatile ConnectionInput		inputConnection;
 
 	public Connection(final int clientID, final Socket clientSocket) throws IOException
 	{
 		System.out.println("Initializing " + this.getClass().getSimpleName());
+
+		this.uid_pid_map = new HashMap<>();
 
 		this.clientID = clientID;
 		this.clientSocket = clientSocket;
@@ -69,10 +75,17 @@ public class Connection implements EventBusServiceInterface
 			final Message message = (Message) event;
 
 			if (NetworkConfig.status.get().equals(States.Server))
-			{
 				message.fromServer = true;
-				this.outputConnection.sendMessage(message);
+
+			if (message.fromServer && message instanceof ParticipantMessage)
+			{
+				final ParticipantMessage pMessage = (ParticipantMessage) message;
+				if (this.uid_pid_map.containsKey(pMessage.uID) && this.uid_pid_map.get(pMessage.uID) == null)
+					this.uid_pid_map.replace(pMessage.uID, pMessage.ids.get(0));
 			}
+
+			if (NetworkConfig.status.get().equals(States.Server))
+				this.outputConnection.sendMessage(message);
 			else
 				if (NetworkConfig.status.get().equals(States.BoundToServer))
 					if (message.fromServer && this.clientID != TCPCoordinator.localNetworkMainID.get())
@@ -83,7 +96,6 @@ public class Connection implements EventBusServiceInterface
 						else
 							if (message.goodbye && this.clientID != TCPCoordinator.localNetworkMainID.get())
 								this.outputConnection.sendMessage(message);
-
 		}
 		else
 			if (topic.equals(TOPICS.MESSAGE_CHANNEL_RECEIVED.toString()))
@@ -106,12 +118,24 @@ public class Connection implements EventBusServiceInterface
 						// internally
 					}
 					else
+					{
 						message.fromServer = false;
+						if (message instanceof ParticipantMessage)
+						{
+							final ParticipantMessage pMessage = (ParticipantMessage) message;
+							this.uid_pid_map.put(pMessage.uID, null);
+						}
+					}
 					EventBusExtended.publishSyncSafe(Connection.MESSAGE_CHANNEL_SEND, message); // FORWARD!
 				}
 				else
 				{
 					message.fromServer = false;
+					if (message instanceof ParticipantMessage)
+					{
+						final ParticipantMessage pMessage = (ParticipantMessage) message;
+						this.uid_pid_map.put(pMessage.uID, null);
+					}
 					EventBusExtended.publishAsyncSafe(MessageBus.MESSAGE_RECEIVE, message); // Publish
 					// internally
 				}
@@ -121,6 +145,7 @@ public class Connection implements EventBusServiceInterface
 				this.close();
 				EventBusExtended.publishSyncSafe(TCPCoordinator.CONNECTION_LOST, this.clientID);
 			}
+		System.out.println(this.uid_pid_map.toString());
 	}
 
 	public synchronized void close()
