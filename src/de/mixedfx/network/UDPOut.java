@@ -17,17 +17,19 @@ class UDPOut
 	/**
 	 * Asynchronous
 	 */
-	public void start()
+	public boolean start()
 	{
 		try
 		{
 			UDPOut.this.socket = new DatagramSocket();
 			UDPOut.this.socket.setBroadcast(true);
 			UDPOut.this.broadcast();
+			return true;
 		}
 		catch (final SocketException e)
 		{
 			UDPCoordinator.service.publishSync(UDPCoordinator.ERROR, e);
+			return false;
 		}
 	}
 

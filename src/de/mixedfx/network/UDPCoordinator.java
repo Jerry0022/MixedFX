@@ -1,5 +1,6 @@
 package de.mixedfx.network;
 
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -38,7 +39,7 @@ class UDPCoordinator implements EventTopicSubscriber<Object>
 	private final UDPIn					in;
 	private final UDPOut				out;
 
-	public UDPCoordinator()
+	public UDPCoordinator() throws IOException
 	{
 		this.allAdresses = new SimpleListProperty<>(FXCollections.observableArrayList(new ArrayList<>()));
 		this.allServerAdresses = new SimpleListProperty<>(FXCollections.observableArrayList(new ArrayList<>()));
@@ -47,10 +48,14 @@ class UDPCoordinator implements EventTopicSubscriber<Object>
 		UDPCoordinator.service.subscribe(UDPCoordinator.RECEIVE, this);
 
 		this.in = new UDPIn();
-		this.in.start();
-
-		this.out = new UDPOut();
-		this.out.start();
+		if (!this.in.start())
+			throw new IOException("UDP exception occured!");
+		else
+		{
+			this.out = new UDPOut();
+			if (!this.out.start())
+				throw new IOException("UDP exception occured!");
+		}
 	}
 
 	private void handleNetworkerror(final Exception e)
@@ -59,7 +64,7 @@ class UDPCoordinator implements EventTopicSubscriber<Object>
 		this.stopUDPFull();
 
 		// E. G. if two not servers were started => UDP Server BindException of the second
-		EventBusExtended.publishSyncSafe(NetworkManager.NETWORK_FATALERROR, e);
+		EventBusExtended.publishAsyncSafe(NetworkManager.NETWORK_FATALERROR, e);
 	}
 
 	public void stopUDPFull()

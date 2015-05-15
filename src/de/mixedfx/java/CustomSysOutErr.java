@@ -27,7 +27,7 @@ public class CustomSysOutErr
 		{
 			final StackTraceElement se = Thread.currentThread().getStackTrace()[3];
 			final StringBuilder sb = new StringBuilder();
-			sb.append("(").append("Error: ").append(se.getFileName()).append(":").append(se.getLineNumber()).append(")");
+			sb.append("(").append(se.getFileName()).append(":").append(se.getLineNumber()).append(")");
 			sb.setLength(40);
 			sb.append(": ").append(s);
 			super.print(sb.toString());

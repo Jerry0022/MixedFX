@@ -15,17 +15,23 @@ class UDPIn
 	/**
 	 * Asynchronous
 	 */
-	public void start()
+	public boolean start()
 	{
 		try
 		{
 			UDPIn.this.socket = new DatagramSocket(NetworkConfig.PORT, InetAddress.getByName("0.0.0.0"));
 			UDPIn.this.listen();
+			return true;
 		}
 		catch (SocketException | UnknownHostException e)
 		{
 			if (!NetworkConfig.status.get().equals(States.Server))
+			{
 				UDPCoordinator.service.publishSync(UDPCoordinator.ERROR, e);
+				return false;
+			}
+			else
+				return true;
 		}
 	}
 

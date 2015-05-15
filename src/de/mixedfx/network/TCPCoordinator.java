@@ -85,7 +85,10 @@ public class TCPCoordinator
 		{
 			System.out.println("LOST: " + clientID.equals(TCPCoordinator.localNetworkMainID.get()) + clientID);
 			if (clientID.equals(TCPCoordinator.localNetworkMainID.get()))
+			{
 				this.stopTCPFull();
+				ParticipantManager.PARTICIPANTS.clear();
+			}
 			else
 			{
 				final Connection lostConnection = this.tcpServer.connectionList.get(clientID - 1);

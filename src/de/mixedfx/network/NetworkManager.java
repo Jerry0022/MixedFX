@@ -1,5 +1,7 @@
 package de.mixedfx.network;
 
+import java.io.IOException;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -102,6 +104,7 @@ public class NetworkManager
 
 	protected static TCPCoordinator				t;
 	protected static UDPCoordinator				u;
+	private static boolean						blockUDP			= false;
 
 	/**
 	 * <p>
@@ -126,8 +129,10 @@ public class NetworkManager
 				if (!NetworkManager.onlineBlocker.booleanValue())
 				{
 					NetworkManager.onlineBlocker = true;
+					if (NetworkManager.blockUDP && !NetworkManager.online.get().equals(OnlineStates.Offline))
+						NetworkManager.online.set(OnlineStates.Offline);
 					// If variable is set to true from outside start host.
-					if (newValue.getNumVal() == 1) // Established
+					if (newValue.getNumVal() == 1 && !NetworkManager.blockUDP) // Established
 						NetworkConfig.status.set(NetworkConfig.States.Server);
 					else
 						if (newValue.getNumVal() == 0) // Offline
@@ -177,7 +182,15 @@ public class NetworkManager
 		});
 
 		NetworkManager.t = new TCPCoordinator();
-		NetworkManager.u = new UDPCoordinator();
+
+		try
+		{
+			NetworkManager.u = new UDPCoordinator();
+		}
+		catch (final IOException e)
+		{
+			NetworkManager.blockUDP = true;
+		}
 	}
 
 	/**
@@ -198,6 +211,8 @@ public class NetworkManager
 				NetworkManager.t.stopTCPFull();
 			if (NetworkManager.u != null)
 				NetworkManager.u.stopUDPFull();
+
+			NetworkManager.blockUDP = false;
 
 			NetworkManager.init();
 		}
@@ -236,20 +251,28 @@ public class NetworkManager
 		// INITIALIZE NETWORK (this is the only line which has to be called once!)
 		NetworkManager.init();
 
-		// NetworkManager.online.set(OnlineStates.Established);
+		NetworkManager.online.set(OnlineStates.Established);
 
-		// Show all directly found applications host and all directly found Server (Not the bound to
-		// server ones) which were once online while this application was online.
-		NetworkManager.u.allAdresses.addListener((ListChangeListener<String>) c ->
+		try
 		{
-			c.next();
-			System.out.println("ALL: " + c.getAddedSubList().get(0));
-		});
-		NetworkManager.u.allServerAdresses.addListener((ListChangeListener<String>) c ->
+			// Show all directly found applications host and all directly found Server (Not the
+			// bound to
+			// server ones) which were once online while this application was online.
+			NetworkManager.u.allAdresses.addListener((ListChangeListener<String>) c ->
+			{
+				c.next();
+				System.out.println("ALL: " + c.getAddedSubList().get(0));
+			});
+			NetworkManager.u.allServerAdresses.addListener((ListChangeListener<String>) c ->
+			{
+				c.next();
+				System.out.println("SERVER: " + c.getAddedSubList().get(0));
+			});
+		}
+		catch (final Exception e)
 		{
-			c.next();
-			System.out.println("SERVER: " + c.getAddedSubList().get(0));
-		});
+			// If fatal error occured
+		}
 
 		while (true)
 			;
