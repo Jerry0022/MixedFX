@@ -88,7 +88,6 @@ public class TCPCoordinator
 				this.stopTCPFull();
 			else
 			{
-				System.out.println("LOST CLIENT!");
 				final Connection lostConnection = this.tcpServer.connectionList.get(clientID - 1);
 				final Collection<Integer> allParticipated = lostConnection.uid_pid_map.values();
 				allParticipated.removeAll(Collections.singleton(null));

@@ -1,8 +1,11 @@
 package de.mixedfx.network;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import de.mixedfx.network.MessageBus.MessageReceiver;
+import de.mixedfx.network.NetworkManager.OnlineStates;
 import de.mixedfx.network.messages.Message;
 import de.mixedfx.network.messages.ParticipantMessage;
 
@@ -15,6 +18,8 @@ public class ParticipantManager implements MessageReceiver
 
 	public static final int						PARTICIPANT_NUMBER_SERVER	= 1;
 	public static int							PARTICIPANT_NUMBER			= ParticipantManager.PARTICIPANT_NUMBER_SERVER;
+
+	public static final AtomicInteger			myPID						= new AtomicInteger();
 
 	private static ParticipantManager			pManager;
 
@@ -88,8 +93,9 @@ public class ParticipantManager implements MessageReceiver
 							if (pMessage.uID.equals(this.myUID))
 							{
 								final int myID = pMessage.ids.get(0);
-								System.err.println("JUHU: MyID is: " + myID);
+								ParticipantManager.myPID.set(myID);
 								ParticipantManager.PARTICIPANTS.addAll(pMessage.ids);
+								NetworkManager.online.set(OnlineStates.Online);
 							}
 		}
 	}

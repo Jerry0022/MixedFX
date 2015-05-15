@@ -13,6 +13,7 @@ import de.mixedfx.eventbus.EventBusServiceInterface;
 import de.mixedfx.network.NetworkConfig.States;
 import de.mixedfx.network.messages.Message;
 import de.mixedfx.network.messages.ParticipantMessage;
+import de.mixedfx.network.messages.RegisteredMessage;
 
 public class Connection implements EventBusServiceInterface
 {
@@ -85,11 +86,11 @@ public class Connection implements EventBusServiceInterface
 			}
 
 			if (NetworkConfig.status.get().equals(States.Server))
-				this.outputConnection.sendMessage(message);
+				this.checkSend(message);
 			else
 				if (NetworkConfig.status.get().equals(States.BoundToServer))
 					if (message.fromServer && this.clientID != TCPCoordinator.localNetworkMainID.get())
-						this.outputConnection.sendMessage(message);
+						this.checkSend(message);
 					else
 						if (!message.fromServer && this.clientID == TCPCoordinator.localNetworkMainID.get())
 							this.outputConnection.sendMessage(message);
@@ -114,8 +115,7 @@ public class Connection implements EventBusServiceInterface
 					if (this.clientID == TCPCoordinator.localNetworkMainID.get())
 					{
 						message.fromServer = true;
-						EventBusExtended.publishAsyncSafe(MessageBus.MESSAGE_RECEIVE, message); // Publish
-						// internally
+						this.checkReceive(message);
 					}
 					else
 					{
@@ -147,7 +147,35 @@ public class Connection implements EventBusServiceInterface
 				this.close();
 				EventBusExtended.publishSyncSafe(TCPCoordinator.CONNECTION_LOST, this.clientID);
 			}
-		System.out.println(this.clientID + "!" + this.uid_pid_map.toString());
+	}
+
+	private synchronized void checkReceive(final Message message)
+	{
+		if (message instanceof RegisteredMessage)
+		{
+			final RegisteredMessage regMessage = (RegisteredMessage) message;
+			if (regMessage.receivers.contains(ParticipantManager.myPID.get()))
+				EventBusExtended.publishAsyncSafe(MessageBus.MESSAGE_RECEIVE, message); // Publish
+			// internally
+		}
+		else
+			EventBusExtended.publishAsyncSafe(MessageBus.MESSAGE_RECEIVE, message); // Publish
+		// internally
+	}
+
+	private synchronized void checkSend(final Message message)
+	{
+		if (message instanceof RegisteredMessage)
+		{
+			boolean atLeastOne = false;
+			for (final Integer receiver : ((RegisteredMessage) message).receivers)
+				if (this.uid_pid_map.containsValue(receiver))
+					atLeastOne = true;
+			if (atLeastOne)
+				this.outputConnection.sendMessage(message);
+		}
+		else
+			this.outputConnection.sendMessage(message);
 	}
 
 	public synchronized void close()

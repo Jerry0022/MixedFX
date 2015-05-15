@@ -218,7 +218,8 @@ public class NetworkManager
 		AnnotationProcessor.process(new NetworkManager());
 
 		// Show internal status changes
-		NetworkConfig.status.addListener((ChangeListener<States>) (observable, oldValue, newValue) -> System.out.println("OLD: " + oldValue + "! NEW: " + newValue));
+		// NetworkConfig.status.addListener((ChangeListener<States>) (observable, oldValue,
+		// newValue) -> System.out.println("OLD: " + oldValue + "! NEW: " + newValue));
 
 		// Show online status
 		NetworkManager.online.addListener((ChangeListener<OnlineStates>) (observable, oldValue, newValue) ->
@@ -234,7 +235,7 @@ public class NetworkManager
 		// INITIALIZE NETWORK (this is the only line which has to be called once!)
 		NetworkManager.init();
 
-		NetworkManager.online.set(OnlineStates.Established);
+		// NetworkManager.online.set(OnlineStates.Established);
 
 		// Show all directly found applications host and all directly found Server (Not the bound to
 		// server ones) which were once online while this application was online.
