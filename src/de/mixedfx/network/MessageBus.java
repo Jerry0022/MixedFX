@@ -30,7 +30,7 @@ public class MessageBus
 	/**
 	 * String for the {@link EventBusExtended}. Please submit a {@link Message} object.
 	 */
-	public static final String	MESSAGE_SEND	= "MESSAGE_SEND";
+	public static final String	MESSAGE_SEND	= Connection.MESSAGE_CHANNEL_SEND;
 
 	/**
 	 * String for the {@link EventBusExtended}. You will receive a {@link Message} object.

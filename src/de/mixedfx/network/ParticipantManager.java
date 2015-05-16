@@ -1,5 +1,7 @@
 package de.mixedfx.network;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javafx.beans.property.SimpleListProperty;
@@ -14,7 +16,7 @@ public class ParticipantManager implements MessageReceiver
 	/**
 	 * Last id is always the server, first id is always the newest online client. Is maybe empty.
 	 */
-	public static SimpleListProperty<Integer>	PARTICIPANTS				= new SimpleListProperty<Integer>(FXCollections.observableArrayList());
+	public static SimpleListProperty<Integer>	PARTICIPANTS				= new SimpleListProperty<Integer>(FXCollections.observableList(Collections.synchronizedList(new ArrayList<>())));
 
 	private static final int					PARTICIPANT_NUMBER_SERVER	= 1;
 	protected static int						PARTICIPANT_NUMBER			= ParticipantManager.PARTICIPANT_NUMBER_SERVER;
@@ -88,9 +90,11 @@ public class ParticipantManager implements MessageReceiver
 						// Message from server
 						if (ParticipantManager.PARTICIPANTS.size() > 0) // Already registered
 						{
-							ParticipantManager.PARTICIPANTS.clear();
-							ParticipantManager.PARTICIPANTS.addAll(pMessage.ids);
-							System.err.println("UPDATED ALL: " + ParticipantManager.PARTICIPANTS);
+							ParticipantManager.PARTICIPANTS.removeIf(t -> !pMessage.ids.contains(t));
+							for (final int i : pMessage.ids)
+								if (!ParticipantManager.PARTICIPANTS.contains(i))
+									ParticipantManager.PARTICIPANTS.add(i);
+							System.out.println("UPDATED ALL: " + ParticipantManager.PARTICIPANTS);
 						}
 						else
 							// Not yet registered

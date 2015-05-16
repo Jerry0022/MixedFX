@@ -17,7 +17,7 @@ import de.mixedfx.network.NetworkConfig.States;
 import de.mixedfx.network.messages.Message;
 import de.mixedfx.network.messages.RegisteredMessage;
 
-// TODO Step-by-step guide
+// TODO Step-by-step guide, TODO SyncedManager
 /**
  * <p>
  * Builds up a network. You can <b>receive or send (a child of) {@link RegisteredMessage} via
@@ -29,7 +29,7 @@ import de.mixedfx.network.messages.RegisteredMessage;
  * </b><br>
  * <b>{@link ParticipantManager#PARTICIPANTS}</b> shows at any time <b>all connected and registered
  * participants</b> (including this application) if online. {@link ParticipantManager#MY_PID} is the
- * applications participant id if online, otherwise it is 0<br>
+ * applications participant id (hosts id is 1) if online, otherwise it is 0<br>
  * If an error occur only a <b>{@link NetworkManager#NETWORK_FATALERROR}</b> is sent over the
  * EventBus[Extended]. <br>
  * If you may want to set the port use {@link NetworkManager#setPort(int)} (after setting the port
@@ -144,7 +144,30 @@ public class NetworkManager
 							NetworkConfig.status.set(NetworkConfig.States.ServerGoOff);
 					NetworkManager.onlineBlocker = false;
 				}
-				// Otherwise it was called internally
+				else
+					switch (NetworkManager.online.get())
+					{
+						case Online:
+							synchronized (NetworkConfig.status)
+							{
+								if (NetworkConfig.status.get().equals(NetworkConfig.States.Server))
+									SyncedManager.host();
+								else
+								{
+									final Thread thread = new Thread(() -> SyncedManager.client());
+									thread.setDaemon(true);
+									thread.start();
+								}
+							}
+							break;
+						case Established:
+							break;
+						case Offline:
+							SyncedManager.stop();
+							break;
+						default:
+							break;
+					}
 			}
 		});
 
@@ -177,6 +200,7 @@ public class NetworkManager
 					break;
 				case Server:
 					// Add me as server also as participant
+					ParticipantManager.MY_PID.set(ParticipantManager.PARTICIPANT_NUMBER);
 					ParticipantManager.PARTICIPANTS.add(ParticipantManager.PARTICIPANT_NUMBER++);
 					ParticipantManager.start();
 					NetworkManager.online.set(OnlineStates.Online);
@@ -234,6 +258,8 @@ public class NetworkManager
 	public static void main(final String[] args)
 	{
 		CustomSysOutErr.init();
+
+		SyncedManager.register(new UserManager());
 
 		// Catch fatal errors to show (network reacted already to this error)
 		AnnotationProcessor.process(new NetworkManager());
