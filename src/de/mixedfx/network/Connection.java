@@ -171,7 +171,7 @@ public class Connection implements EventBusServiceInterface
 			for (final Integer receiver : ((RegisteredMessage) message).receivers)
 				if (this.uid_pid_map.containsValue(receiver))
 					atLeastOne = true;
-			if (atLeastOne)
+			if (atLeastOne || ((RegisteredMessage) message).receivers.isEmpty())
 				this.outputConnection.sendMessage(message);
 		}
 		else

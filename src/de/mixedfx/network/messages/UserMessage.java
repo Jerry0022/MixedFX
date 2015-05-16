@@ -2,7 +2,7 @@ package de.mixedfx.network.messages;
 
 import de.mixedfx.network.User;
 
-public class UserMessage extends Message
+public class UserMessage extends RegisteredMessage
 {
 	private final User	user;
 
