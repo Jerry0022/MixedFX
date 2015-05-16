@@ -1,7 +1,5 @@
 package de.mixedfx.gui.panes;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -11,21 +9,27 @@ import jfxtras.labs.animation.BindableTransition;
 
 public class CollapsePane extends HBox
 {
+	public interface CollapseDoneInterface
+	{
+		public void collapseDone();
+	}
+
 	private final static Duration		ANIMATION_DURATION_DEFAULT	= Duration.seconds(3);
 
-	private Duration					duration;
+	private final Duration				duration;
 
 	private final HBox					leftSide;
 	private final HBox					rightSide;
 
 	private final BindableTransition	animation;
+	private CollapseDoneInterface		doneEvent;
 
 	public CollapsePane(final Region left, final Region right)
 	{
-		this(left, right, ANIMATION_DURATION_DEFAULT);
+		this(left, right, CollapsePane.ANIMATION_DURATION_DEFAULT);
 	}
 
-	public CollapsePane(final Region left, final Region right, Duration duration)
+	public CollapsePane(final Region left, final Region right, final Duration duration)
 	{
 		this.duration = duration;
 		this.setAlignment(Pos.CENTER_RIGHT);
@@ -49,9 +53,7 @@ public class CollapsePane extends HBox
 		// Initialize animation and bind leftSide's width to the fullSize minus
 		// the the inner part of the rightSide
 		this.animation = new BindableTransition(this.duration);
-		this.leftSide.prefWidthProperty().bind(
-				this.animation.fractionProperty().multiply(
-						this.widthProperty().subtract(right.widthProperty())));
+		this.leftSide.prefWidthProperty().bind(this.animation.fractionProperty().multiply(this.widthProperty().subtract(right.widthProperty())));
 
 		this.getChildren().addAll(this.leftSide, this.rightSide);
 	}
@@ -63,18 +65,21 @@ public class CollapsePane extends HBox
 		this.animation.setOnFinished(arg0 ->
 		{
 			// Revert growing
-				HBox.setHgrow(this.leftSide, Priority.ALWAYS);
-				// HBox.setHgrow(this.left, Priority.ALWAYS);
-				HBox.setHgrow(this.rightSide, Priority.NEVER);
+			HBox.setHgrow(this.leftSide, Priority.ALWAYS);
+			// HBox.setHgrow(this.left, Priority.ALWAYS);
+			HBox.setHgrow(this.rightSide, Priority.NEVER);
 
-				// Undo all bindings
-				this.leftSide.prefWidthProperty().unbind();
-			});
+			// Undo all bindings
+			this.leftSide.prefWidthProperty().unbind();
+
+			if (this.doneEvent != null)
+				this.doneEvent.collapseDone();
+		});
 		this.animation.play();
 	}
 
-	public void setOnFinished(EventHandler<ActionEvent> event)
+	public void setOnFinished(final CollapseDoneInterface eventHandler)
 	{
-		this.animation.setOnFinished(event);
+		this.doneEvent = eventHandler;
 	}
 }
