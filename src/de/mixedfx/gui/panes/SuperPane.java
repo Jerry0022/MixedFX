@@ -1,4 +1,4 @@
-package de.mixedfx.gui.superpane;
+package de.mixedfx.gui.panes;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;

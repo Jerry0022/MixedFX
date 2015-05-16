@@ -1,4 +1,4 @@
-package de.mixedfx.gui.superpane;
+package de.mixedfx.gui.panes;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
