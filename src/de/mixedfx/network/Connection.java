@@ -154,7 +154,7 @@ public class Connection implements EventBusServiceInterface
 		if (message instanceof RegisteredMessage)
 		{
 			final RegisteredMessage regMessage = (RegisteredMessage) message;
-			if (regMessage.receivers.contains(ParticipantManager.MY_PID.get()))
+			if (regMessage.receivers.contains(ParticipantManager.MY_PID.get()) || regMessage.receivers.isEmpty())
 				EventBusExtended.publishAsyncSafe(MessageBus.MESSAGE_RECEIVE, message); // Publish
 			// internally
 		}
