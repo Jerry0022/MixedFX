@@ -205,8 +205,7 @@ public class SuperPane extends StackPane
 					});
 			}
 			catch (final InterruptedException e)
-			{
-			}
+			{}
 		});
 		t.setDaemon(true);
 		t.start();

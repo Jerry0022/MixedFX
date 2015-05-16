@@ -50,13 +50,16 @@ public class SlidePane extends ScrollPane
 	public void showMain()
 	{
 		this.slideAnimation.setRate(-1.0);
-		this.slideAnimation.play();
+		if (this.slidingFrac.get() != 0)
+			this.slideAnimation.play();
 	}
 
 	public void showDetailed()
 	{
 		this.slideAnimation.setRate(1.0);
-		this.slideAnimation.play();
+
+		if (this.slidingFrac.get() != 1)
+			this.slideAnimation.play();
 	}
 
 	private void bindAllWidth(final Region region, final DoubleExpression property)

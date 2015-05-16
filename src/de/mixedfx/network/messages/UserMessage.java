@@ -8,7 +8,7 @@ public class UserMessage extends RegisteredMessage
 
 	public UserMessage(final User myUser)
 	{
-		this.user = this.user;
+		this.user = myUser;
 	}
 
 	public User getUser()

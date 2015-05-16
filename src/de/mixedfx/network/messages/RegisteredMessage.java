@@ -15,7 +15,7 @@ public class RegisteredMessage extends Message
 {
 	/**
 	 * <p>
-	 * Initially empty => broadcast.
+	 * Initially empty = broadcast.
 	 * </p>
 	 * <p>
 	 * If receivers contains no values then this message is a broadcast to everyone else except me.
