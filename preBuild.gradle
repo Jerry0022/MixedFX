@@ -35,6 +35,12 @@ artifacts {
     archives javadocJar
 }
 
+processResources {
+  from ('src') {
+    include '**/*.css'
+  }
+}
+
 // Get dependencies from Maven central repository
 repositories {
     mavenCentral()
