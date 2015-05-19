@@ -5,7 +5,7 @@ apply plugin: 'eclipse'
  * Build .jar, javadoc.jar and sources.jar from the source folder!
  */
 
-version = '0.7'
+version = '0.8'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
