@@ -78,7 +78,8 @@ public class UserManager implements SyncedInterface
 	public void stop()
 	{
 		UserManager.list.clear();
-		ParticipantManager.PARTICIPANTS.removeListener(this.participants);
+		if (this.participants != null)
+			ParticipantManager.PARTICIPANTS.removeListener(this.participants);
 		AnnotationProcessor.unprocess(this);
 	}
 }
