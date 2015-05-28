@@ -282,7 +282,7 @@ public class NetworkManager
 		// INITIALIZE NETWORK (this is the only line which has to be called once!)
 		NetworkManager.init();
 
-		NetworkManager.online.set(OnlineStates.Established);
+		// NetworkManager.online.set(OnlineStates.Established);
 
 		try
 		{

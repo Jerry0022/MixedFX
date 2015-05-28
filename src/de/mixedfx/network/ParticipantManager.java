@@ -28,10 +28,14 @@ public class ParticipantManager implements MessageReceiver
 
 	private static ParticipantManager			pManager;
 
+	static
+	{
+		ParticipantManager.pManager = new ParticipantManager();
+	}
+
 	protected static ParticipantManager start()
 	{
 		// Listen for others
-		ParticipantManager.pManager = new ParticipantManager();
 		MessageBus.registerForReceival(ParticipantManager.pManager);
 		return ParticipantManager.pManager;
 	}

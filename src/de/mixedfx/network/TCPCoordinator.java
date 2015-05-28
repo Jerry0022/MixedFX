@@ -149,6 +149,7 @@ public class TCPCoordinator
 		synchronized (NetworkConfig.status)
 		{
 			System.out.println("CLOSE EVERYTHING");
+			TCPCoordinator.localNetworkID.set(1);
 			final Message goodbyeMessage = new Message();
 			goodbyeMessage.goodbye = true;
 			EventBusExtended.publishSyncSafe(Connection.MESSAGE_CHANNEL_SEND, goodbyeMessage);
