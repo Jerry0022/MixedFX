@@ -87,47 +87,31 @@ public class Connection implements EventBusServiceInterface
 
 			if (NetworkConfig.status.get().equals(States.Server))
 				this.checkSend(message);
-			else
-				if (NetworkConfig.status.get().equals(States.BoundToServer))
-					if (message.fromServer && this.clientID != TCPCoordinator.localNetworkMainID.get())
-						this.checkSend(message);
-					else
-						if (!message.fromServer && this.clientID == TCPCoordinator.localNetworkMainID.get())
-							this.outputConnection.sendMessage(message);
-						else
-							if (message.goodbye && this.clientID != TCPCoordinator.localNetworkMainID.get())
-								this.outputConnection.sendMessage(message);
+			else if (NetworkConfig.status.get().equals(States.BoundToServer))
+				if (message.fromServer && this.clientID != TCPCoordinator.localNetworkMainID.get())
+					this.checkSend(message);
+				else if (!message.fromServer && this.clientID == TCPCoordinator.localNetworkMainID.get())
+					this.outputConnection.sendMessage(message);
+				else if (message.goodbye && this.clientID != TCPCoordinator.localNetworkMainID.get())
+					this.outputConnection.sendMessage(message);
 		}
-		else
-			if (topic.equals(TOPICS.MESSAGE_CHANNEL_RECEIVED.toString()))
+		else if (topic.equals(TOPICS.MESSAGE_CHANNEL_RECEIVED.toString()))
+		{
+			final Message message = (Message) this.inputConnection.getNextMessage();
+
+			if (message.goodbye)
 			{
-				final Message message = (Message) this.inputConnection.getNextMessage();
+				this.close();
+				EventBusExtended.publishSyncSafe(TCPCoordinator.CONNECTION_LOST, this.clientID);
+				return;
+			}
 
-				if (message.goodbye)
+			if (!NetworkConfig.status.get().equals(States.Server))
+			{
+				if (this.clientID == TCPCoordinator.localNetworkMainID.get())
 				{
-					this.close();
-					EventBusExtended.publishSyncSafe(TCPCoordinator.CONNECTION_LOST, this.clientID);
-					return;
-				}
-
-				if (!NetworkConfig.status.get().equals(States.Server))
-				{
-					if (this.clientID == TCPCoordinator.localNetworkMainID.get())
-					{
-						message.fromServer = true;
-						this.checkReceive(message);
-					}
-					else
-					{
-						message.fromServer = false;
-						if (message instanceof ParticipantMessage)
-						{
-							final ParticipantMessage pMessage = (ParticipantMessage) message;
-							if (!pMessage.uID.equals(""))
-								this.uid_pid_map.put(pMessage.uID, null);
-						}
-					}
-					EventBusExtended.publishSyncSafe(Connection.MESSAGE_CHANNEL_SEND, message); // FORWARD!
+					message.fromServer = true;
+					this.checkReceive(message);
 				}
 				else
 				{
@@ -135,18 +119,30 @@ public class Connection implements EventBusServiceInterface
 					if (message instanceof ParticipantMessage)
 					{
 						final ParticipantMessage pMessage = (ParticipantMessage) message;
-						if (!pMessage.uID.equals(""))
+						if (!pMessage.uID.equals("") && pMessage.ids.isEmpty())
 							this.uid_pid_map.put(pMessage.uID, null);
 					}
-					EventBusExtended.publishAsyncSafe(MessageBus.MESSAGE_RECEIVE, message); // Publish
-					// internally
 				}
+				EventBusExtended.publishSyncSafe(Connection.MESSAGE_CHANNEL_SEND, message); // FORWARD!
 			}
 			else
 			{
-				this.close();
-				EventBusExtended.publishSyncSafe(TCPCoordinator.CONNECTION_LOST, this.clientID);
+				message.fromServer = false;
+				if (message instanceof ParticipantMessage)
+				{
+					final ParticipantMessage pMessage = (ParticipantMessage) message;
+					if (!pMessage.uID.equals(""))
+						this.uid_pid_map.put(pMessage.uID, null);
+				}
+				EventBusExtended.publishAsyncSafe(MessageBus.MESSAGE_RECEIVE, message); // Publish
+				// internally
 			}
+		}
+		else
+		{
+			this.close();
+			EventBusExtended.publishSyncSafe(TCPCoordinator.CONNECTION_LOST, this.clientID);
+		}
 	}
 
 	private synchronized void checkReceive(final Message message)
@@ -154,7 +150,7 @@ public class Connection implements EventBusServiceInterface
 		if (message instanceof RegisteredMessage)
 		{
 			final RegisteredMessage regMessage = (RegisteredMessage) message;
-			if (regMessage.receivers.contains(ParticipantManager.MY_PID.get()) || regMessage.receivers.isEmpty())
+			if ((regMessage.receivers.contains(ParticipantManager.MY_PID.get()) || regMessage.receivers.isEmpty()) && regMessage.sender != ParticipantManager.MY_PID.get())
 				EventBusExtended.publishAsyncSafe(MessageBus.MESSAGE_RECEIVE, message); // Publish
 			// internally
 		}
@@ -193,7 +189,8 @@ public class Connection implements EventBusServiceInterface
 			this.clientSocket.close(); // Now we can close the Socket
 		}
 		catch (final IOException e)
-		{}
+		{
+		}
 
 		System.out.println(this.getClass().getSimpleName() + " closed!");
 	}

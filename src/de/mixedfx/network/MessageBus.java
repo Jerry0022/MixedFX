@@ -34,6 +34,11 @@ public class MessageBus
 
 	/**
 	 * String for the {@link EventBusExtended}. You will receive a {@link Message} object.
+	 * 
+	 * <pre>
+	 * Maybe messages won't received in the right (chronological) order if they were not send by the same
+	 * sender (this is because of the network architecture and the message size).
+	 * </pre>
 	 */
 	public static final String	MESSAGE_RECEIVE	= "MESSAGE_RECEIVE";
 

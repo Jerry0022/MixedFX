@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import com.google.gson.annotations.Expose;
 
+import de.mixedfx.network.ParticipantManager;
+
 /**
  * All NOT network messages shall inherit this class for increased performance!
  *
@@ -25,10 +27,17 @@ public class RegisteredMessage extends Message
 	 * </p>
 	 */
 	@Expose
-	public ArrayList<Integer>	receivers;
+	public final ArrayList<Integer>	receivers;
+
+	/**
+	 * Senders PID, which is automatically set!
+	 */
+	@Expose
+	public final int				sender;
 
 	public RegisteredMessage()
 	{
 		this.receivers = new ArrayList<>();
+		this.sender = ParticipantManager.MY_PID.get();
 	}
 }

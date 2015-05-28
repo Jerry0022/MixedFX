@@ -20,7 +20,7 @@ public class SlidePane extends ScrollPane
 	public SlidePane(final Region mainScreen, final Region detailedScreen, final Duration duration)
 	{
 		// Remove focussable border from ScrollPane
-		this.getStylesheets().add(this.getClass().getResource("SlidePane.css").toExternalForm());
+		this.getStylesheets().add(this.getClass().getResource("/de/mixedfx/gui/panes/SlidePane.css").toExternalForm());
 
 		// Remove ScrollBars
 		this.setHbarPolicy(ScrollBarPolicy.NEVER);
