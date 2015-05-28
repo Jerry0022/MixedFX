@@ -1,6 +1,7 @@
 package de.mixedfx.network.messages;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gson.annotations.Expose;
 
@@ -27,13 +28,13 @@ public class RegisteredMessage extends Message
 	 * </p>
 	 */
 	@Expose
-	public final ArrayList<Integer>	receivers;
+	public final List<Integer>	receivers;
 
 	/**
 	 * Senders PID, which is automatically set!
 	 */
 	@Expose
-	public final int				sender;
+	public final int			sender;
 
 	public RegisteredMessage()
 	{
