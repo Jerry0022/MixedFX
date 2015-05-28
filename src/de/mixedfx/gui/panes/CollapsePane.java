@@ -1,11 +1,13 @@
 package de.mixedfx.gui.panes;
 
 import javafx.geometry.Pos;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.util.Duration;
 import jfxtras.labs.animation.BindableTransition;
+import de.mixedfx.gui.RegionManipulator;
 
 public class CollapsePane extends HBox
 {
@@ -26,23 +28,52 @@ public class CollapsePane extends HBox
 
 	public CollapsePane(final Region left, final Region right)
 	{
-		this(left, right, CollapsePane.ANIMATION_DURATION_DEFAULT);
+		this(left, right, "", "", CollapsePane.ANIMATION_DURATION_DEFAULT);
 	}
 
-	public CollapsePane(final Region left, final Region right, final Duration duration)
+	public CollapsePane(final Region left, Region right, Image backgroundImageLeft, Image backgroundImageRight, Duration duration)
 	{
 		this.duration = duration;
 		this.setAlignment(Pos.CENTER_RIGHT);
 
 		this.leftSide = new HBox(left);
-		this.leftSide.setStyle("-fx-background-color: blue");
+		RegionManipulator.bindBackground(left, backgroundImageLeft);
 		this.leftSide.setAlignment(Pos.CENTER);
 		this.leftSide.setPrefWidth(0);
 		this.leftSide.managedProperty().bind(this.leftSide.visibleProperty());
 		this.leftSide.setVisible(false);
 
 		this.rightSide = new HBox(right);
-		this.rightSide.setStyle("-fx-background-color: pink");
+		RegionManipulator.bindBackground(right, backgroundImageRight);
+		this.rightSide.setAlignment(Pos.CENTER);
+
+		HBox.setHgrow(this.leftSide, Priority.NEVER);
+		HBox.setHgrow(left, Priority.ALWAYS);
+		HBox.setHgrow(this.rightSide, Priority.ALWAYS);
+		HBox.setHgrow(right, Priority.NEVER);
+
+		// Initialize animation and bind leftSide's width to the fullSize minus
+		// the the inner part of the rightSide
+		this.animation = new BindableTransition(this.duration);
+		this.leftSide.prefWidthProperty().bind(this.animation.fractionProperty().multiply(this.widthProperty().subtract(right.widthProperty())));
+
+		this.getChildren().addAll(this.leftSide, this.rightSide);
+	}
+
+	public CollapsePane(final Region left, Region right, String cssIDLeft, String cssIDRight, Duration duration)
+	{
+		this.duration = duration;
+		this.setAlignment(Pos.CENTER_RIGHT);
+
+		this.leftSide = new HBox(left);
+		this.leftSide.setId(cssIDLeft);
+		this.leftSide.setAlignment(Pos.CENTER);
+		this.leftSide.setPrefWidth(0);
+		this.leftSide.managedProperty().bind(this.leftSide.visibleProperty());
+		this.leftSide.setVisible(false);
+
+		this.rightSide = new HBox(right);
+		this.rightSide.setId(cssIDRight);
 		this.rightSide.setAlignment(Pos.CENTER);
 
 		HBox.setHgrow(this.leftSide, Priority.NEVER);

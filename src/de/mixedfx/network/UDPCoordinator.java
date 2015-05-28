@@ -103,7 +103,8 @@ class UDPCoordinator implements EventTopicSubscriber<Object>
 					}
 				}
 				catch (final SocketException e)
-				{}
+				{
+				}
 
 				if (!ownOne)
 				{
@@ -121,9 +122,8 @@ class UDPCoordinator implements EventTopicSubscriber<Object>
 						NetworkManager.t.startFullTCP(packet.getAddress());
 				}
 			}
-			else
-				if (topic.equals(UDPCoordinator.ERROR))
-					this.handleNetworkerror((Exception) data);
+			else if (topic.equals(UDPCoordinator.ERROR))
+				this.handleNetworkerror((Exception) data);
 		}
 	}
 
