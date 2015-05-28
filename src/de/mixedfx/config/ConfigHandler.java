@@ -2,7 +2,7 @@ package de.mixedfx.config;
 
 import javafx.scene.paint.Color;
 import de.mixedfx.file.FileObject;
-import de.mixedfx.tools.ColorConverter;
+import de.mixedfx.gui.ColorConverter;
 
 public class ConfigHandler
 {
