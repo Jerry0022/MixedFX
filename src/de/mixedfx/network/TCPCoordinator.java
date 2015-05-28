@@ -87,7 +87,7 @@ public class TCPCoordinator
 			if (clientID.equals(TCPCoordinator.localNetworkMainID.get()))
 			{
 				this.stopTCPFull();
-				ParticipantManager.PARTICIPANTS.clear();
+				ParticipantManager.PARTICIPANTS.get().clear();
 			}
 			else
 			{

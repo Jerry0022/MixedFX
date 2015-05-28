@@ -43,7 +43,7 @@ public class ParticipantManager implements MessageReceiver
 	protected static void stop()
 	{
 		ParticipantManager.MY_PID.set(0);
-		ParticipantManager.PARTICIPANTS.clear();
+		ParticipantManager.PARTICIPANTS.get().clear();
 		MessageBus.unregisterForReceival(ParticipantManager.pManager);
 	}
 
