@@ -113,8 +113,7 @@ public class Inspector
 				Thread.sleep((long) timeToWait.toMillis());
 			}
 			catch (final InterruptedException e)
-			{
-			}
+			{}
 			Platform.runLater(toRun);
 		}).start();
 	}
@@ -129,5 +128,40 @@ public class Inspector
 	public static void runFXLater(final Runnable toRun)
 	{
 		Inspector.runFXLater(toRun, Duration.seconds(3));
+	}
+
+	/**
+	 * Runs a Runnable later in a new thread. Waits some time before executing the Runnable.
+	 *
+	 * @param toRun
+	 *            The commands to be executed in a separate thread.
+	 * @param timeToWait
+	 *            The Duration this command should wait asynchronous before executing the Runnable
+	 *            in this new thread.
+	 */
+	public static void runLater(final Runnable toRun, final Duration timeToWait)
+	{
+		new Thread(() ->
+		{
+			try
+			{
+				Thread.sleep((long) timeToWait.toMillis());
+			}
+			catch (final InterruptedException e)
+			{}
+			toRun.run();
+		}).start();
+	}
+
+	/**
+	 * Runs a Runnable later in a new thread. Waiting time is asynchronous. Default timeToWait of 3
+	 * seconds.
+	 *
+	 * @param toRun
+	 *            The commands to be executed in the new thread.
+	 */
+	public static void runLater(final Runnable toRun)
+	{
+		Inspector.runLater(toRun, Duration.seconds(3));
 	}
 }

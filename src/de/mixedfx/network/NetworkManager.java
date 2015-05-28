@@ -12,6 +12,7 @@ import org.bushe.swing.event.annotation.AnnotationProcessor;
 import org.bushe.swing.event.annotation.EventTopicSubscriber;
 
 import de.mixedfx.eventbus.EventBusExtended;
+import de.mixedfx.inspector.Inspector;
 import de.mixedfx.java.CustomSysOutErr;
 import de.mixedfx.network.NetworkConfig.States;
 import de.mixedfx.network.messages.Message;
@@ -190,8 +191,10 @@ public class NetworkManager
 				// Otherwise it was called externally
 			}
 
+			System.out.println("OK??? " + newValue);
 			switch (newValue)
 			{
+				case ServerGoOff:
 				case Unbound:
 					ParticipantManager.stop();
 					break;
@@ -283,6 +286,19 @@ public class NetworkManager
 		NetworkManager.init();
 
 		// NetworkManager.online.set(OnlineStates.Established);
+
+		Inspector.runLater(() ->
+		{
+			System.out.println("Executed1");
+			NetworkManager.online.set(OnlineStates.Offline);
+			// TODO Doesnt work because set offline is only for servers
+
+			Inspector.runLater(() ->
+			{
+				System.out.println("Executed2");
+				// NetworkManager.online.set(OnlineStates.Established);
+			});
+		});
 
 		try
 		{
