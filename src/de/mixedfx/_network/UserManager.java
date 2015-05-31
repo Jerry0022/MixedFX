@@ -1,4 +1,4 @@
-package de.mixedfx.network;
+package de.mixedfx._network;
 
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -51,13 +51,19 @@ public class UserManager implements SyncedInterface
 			{
 				// Add all newcomers as unknown
 				for (final Integer i : c.getAddedSubList())
+				{
 					if (!CollectionUtils.exists(UserManager.list, UserPredicates.toApachePredicate(UserPredicates.getByPID(i))))
+					{
 						System.out.println("User, die ich noch nicht habe: " + i);
-				// TODO Add as unknown user!
+						// TODO Add as unknown user!
+					}
+				}
 
 				// Remove all lost ones
 				for (final Integer i : c.getRemoved())
+				{
 					UserManager.list.removeIf(UserPredicates.getByPID(i));
+				}
 			}
 		};
 
@@ -79,7 +85,9 @@ public class UserManager implements SyncedInterface
 	{
 		UserManager.list.clear();
 		if (this.participants != null)
+		{
 			ParticipantManager.PARTICIPANTS.removeListener(this.participants);
+		}
 		AnnotationProcessor.unprocess(this);
 	}
 }

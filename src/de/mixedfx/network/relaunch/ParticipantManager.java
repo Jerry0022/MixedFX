@@ -1,4 +1,4 @@
-package de.mixedfx.network;
+package de.mixedfx.network.relaunch;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,12 +6,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
-import de.mixedfx.network.MessageBus.MessageReceiver;
-import de.mixedfx.network.NetworkManager.OnlineStates;
+
+import org.bushe.swing.event.annotation.AnnotationProcessor;
+import org.bushe.swing.event.annotation.EventTopicSubscriber;
+
+import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.network.messages.Message;
 import de.mixedfx.network.messages.ParticipantMessage;
 
-public class ParticipantManager implements MessageReceiver
+public class ParticipantManager
 {
 	/**
 	 * Last id is always the server, first id is always the newest online client. Is maybe empty.
@@ -24,19 +27,20 @@ public class ParticipantManager implements MessageReceiver
 	/**
 	 * 0 means the application is not yet registered in the network.
 	 */
-	public static final AtomicInteger			MY_PID						= new AtomicInteger();
+	public static final AtomicInteger			MY_PID;
 
 	private static ParticipantManager			pManager;
 
 	static
 	{
+		MY_PID = new AtomicInteger();
 		ParticipantManager.pManager = new ParticipantManager();
 	}
 
 	protected static ParticipantManager start()
 	{
 		// Listen for others
-		MessageBus.registerForReceival(ParticipantManager.pManager);
+		AnnotationProcessor.process(ParticipantManager.pManager);
 		return ParticipantManager.pManager;
 	}
 
@@ -44,7 +48,7 @@ public class ParticipantManager implements MessageReceiver
 	{
 		ParticipantManager.MY_PID.set(0);
 		ParticipantManager.PARTICIPANTS.get().clear();
-		MessageBus.unregisterForReceival(ParticipantManager.pManager);
+		AnnotationProcessor.unprocess(ParticipantManager.pManager);
 	}
 
 	/**
@@ -60,11 +64,11 @@ public class ParticipantManager implements MessageReceiver
 	{
 		final ParticipantMessage message = new ParticipantMessage();
 		this.myUID = message.uID;
-		MessageBus.send(message);
+		EventBusExtended.publishSyncSafe(MessageBus.MESSAGE_SEND, message);
 	}
 
-	@Override
-	public synchronized void receive(final Message message)
+	@EventTopicSubscriber(topic = MessageBus.MESSAGE_RECEIVE)
+	public synchronized void receive(final String topic, final Message message)
 	{
 		if (message instanceof ParticipantMessage)
 		{
@@ -72,32 +76,44 @@ public class ParticipantManager implements MessageReceiver
 
 			if (pMessage.uID.equals("") && NetworkConfig.status.get().equals(NetworkConfig.States.Server))
 			{
+				// PIDs were lost
 				for (final Integer i : pMessage.ids)
+				{
 					ParticipantManager.PARTICIPANTS.remove(i);
+				}
 				pMessage.uID = String.valueOf(ParticipantManager.PARTICIPANT_NUMBER_SERVER);
 				pMessage.ids.clear();
-				pMessage.ids.addAll(ParticipantManager.PARTICIPANTS.get());
-				MessageBus.send(pMessage);
+				pMessage.ids.addAll(ParticipantManager.PARTICIPANTS);
+				EventBusExtended.publishSyncSafe(MessageBus.MESSAGE_SEND, message);
 			}
 			else
 				if (!pMessage.uID.equals(""))
-					if (pMessage.ids.isEmpty()) // Message from client
+				{
+					if (pMessage.ids.isEmpty()) // PID Request from client
 					{
 						final int clientNr = ParticipantManager.PARTICIPANT_NUMBER++;
-						ParticipantManager.PARTICIPANTS.add(0, clientNr);
 						System.err.println(pMessage.uID + "   !   " + pMessage.ids);
+						pMessage.ids.add(clientNr);
 						pMessage.ids.addAll(ParticipantManager.PARTICIPANTS);
 						System.err.println(pMessage.uID + "   !   " + pMessage.ids);
-						MessageBus.send(pMessage);
+						EventBusExtended.publishSyncSafe(MessageBus.MESSAGE_SEND, message);
+						ParticipantManager.PARTICIPANTS.add(0, clientNr);
 					}
 					else
-						// Message from server
+						// Response from server
 						if (ParticipantManager.PARTICIPANTS.size() > 0) // Already registered
 						{
+							// Remove lost
 							ParticipantManager.PARTICIPANTS.removeIf(t -> !pMessage.ids.contains(t));
+
+							// Add new ones
 							for (final int i : pMessage.ids)
+							{
 								if (!ParticipantManager.PARTICIPANTS.contains(i))
+								{
 									ParticipantManager.PARTICIPANTS.add(i);
+								}
+							}
 							System.out.println("UPDATED ALL: " + ParticipantManager.PARTICIPANTS);
 						}
 						else
@@ -107,8 +123,9 @@ public class ParticipantManager implements MessageReceiver
 								final int myID = pMessage.ids.get(0);
 								ParticipantManager.MY_PID.set(myID);
 								ParticipantManager.PARTICIPANTS.addAll(pMessage.ids);
-								NetworkManager.online.set(OnlineStates.Online);
+								// NetworkManager.online.set(OnlineStates.Online);
 							}
+				}
 		}
 	}
 }

@@ -6,6 +6,8 @@ public interface EventBusServiceInterface extends EventTopicSubscriber<Object>
 {
 
 	/**
+	 * This method is not called automatically.
+	 * 
 	 * <pre>
 	 * 	For Example:
 	 *  &#64;Override

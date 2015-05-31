@@ -1,4 +1,4 @@
-package de.mixedfx.network;
+package de.mixedfx._network;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;

@@ -1,4 +1,4 @@
-package de.mixedfx.network;
+package de.mixedfx._network;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

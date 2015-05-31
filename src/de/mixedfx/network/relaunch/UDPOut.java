@@ -1,4 +1,4 @@
-package de.mixedfx.network;
+package de.mixedfx.network.relaunch;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -10,33 +10,29 @@ import java.util.Enumeration;
 
 class UDPOut
 {
-	private static final int		BROADCAST_INTERVAL	= 1000;
-
-	private volatile DatagramSocket	socket;
+	private DatagramSocket	socket;
 
 	/**
-	 * Asynchronous
+	 * Asynchronous broadcasting on {@link NetworkConfig#TRIES_AMOUNT} available ports! If no
+	 * broadcast socket couldn't be opened throws {@link UDPCoordinator#ERROR}!
 	 */
-	public boolean start()
+	public synchronized void start()
 	{
 		try
 		{
 			UDPOut.this.socket = new DatagramSocket();
 			UDPOut.this.socket.setBroadcast(true);
 			UDPOut.this.broadcast();
-			return true;
 		}
 		catch (final SocketException e)
 		{
 			UDPCoordinator.service.publishSync(UDPCoordinator.ERROR, e);
-			return false;
 		}
 	}
 
-	public void close()
+	public synchronized void close()
 	{
-		if (this.socket != null)
-			this.socket.close();
+		this.socket.close();
 		this.socket = null;
 	}
 
@@ -46,6 +42,7 @@ class UDPOut
 		{
 			boolean worked = true;
 			Exception exception = new Exception();
+
 			while (worked)
 			{
 				worked = false;
@@ -55,15 +52,18 @@ class UDPOut
 				/*
 				 * Try the 255.255.255.255 first
 				 */
-				try
+				for (int i = 0; i < NetworkConfig.TRIES_AMOUNT; i++)
 				{
-					final DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("255.255.255.255"), NetworkConfig.PORT);
-					this.socket.send(sendPacket);
-					worked = true;
-				}
-				catch (final Exception e)
-				{
-					exception = e;
+					try
+					{
+						final DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("255.255.255.255"), NetworkConfig.PORT.get() + i * NetworkConfig.TRIES_STEPS);
+						this.socket.send(sendPacket);
+						worked = true;
+					}
+					catch (final Exception e)
+					{
+						exception = e;
+					}
 				}
 
 				/*
@@ -79,25 +79,32 @@ class UDPOut
 
 						// Don't want to broadcast to loopback interfaces or disabled interface
 						if (networkInterface.isLoopback() || !networkInterface.isUp())
+						{
 							continue;
+						}
 
 						for (final InterfaceAddress interfaceAddress : networkInterface.getInterfaceAddresses())
 						{
 							// IPv6 is not supported here
 							final InetAddress broadcast = interfaceAddress.getBroadcast();
 							if (broadcast == null)
+							{
 								continue;
+							}
 
 							// Send the broadcast package!
-							try
+							for (int i = 0; i < NetworkConfig.TRIES_AMOUNT; i++)
 							{
-								final DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, broadcast, NetworkConfig.PORT);
-								this.socket.send(sendPacket);
-								worked = true;
-							}
-							catch (final Exception e)
-							{
-								exception = e;
+								try
+								{
+									final DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, broadcast, NetworkConfig.PORT.get() + i * NetworkConfig.TRIES_STEPS);
+									this.socket.send(sendPacket);
+									worked = true;
+								}
+								catch (final Exception e)
+								{
+									exception = e;
+								}
 							}
 						}
 					}
@@ -106,19 +113,25 @@ class UDPOut
 				{}
 
 				if (!worked)
+				{
 					break;
+				}
 
 				System.out.println("SENT");
 
 				try
 				{
-					Thread.sleep(UDPOut.BROADCAST_INTERVAL);
+					Thread.sleep(NetworkConfig.BROADCAST_INTERVAL);
 				}
 				catch (final Exception e)
 				{}
 			}
+
+			// If this was not closed by user
 			if (!(exception instanceof NullPointerException))
+			{
 				UDPCoordinator.service.publishSync(UDPCoordinator.ERROR, new Exception("No network device suitable for UDP broadcast."));
+			}
 		});
 		thread.setDaemon(true);
 		thread.start();

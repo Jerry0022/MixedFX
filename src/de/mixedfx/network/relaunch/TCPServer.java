@@ -1,4 +1,4 @@
-package de.mixedfx.network;
+package de.mixedfx.network.relaunch;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -20,22 +20,26 @@ class TCPServer
 	public void start() throws IOException
 	{
 		IOException exception = null;
-		for (int i = 0; i < TCPCoordinator.PORT_TRIES; i++)
-			try
+		for (int i = 0; i < NetworkConfig.TRIES_AMOUNT; i++)
 		{
-				this.registrar = new Registrar(NetworkConfig.PORT + i);
+			try
+			{
+				this.registrar = new Registrar(NetworkConfig.PORT.get() + i * NetworkConfig.TRIES_STEPS);
 				this.connectionList = this.registrar.connectionList;
 				final Thread registrarThread = new Thread(this.registrar);
 				registrarThread.setDaemon(true);
 				registrarThread.start();
 				break;
-		}
-		catch (final SocketException | UnknownHostException e)
-		{
-			exception = e;
+			}
+			catch (final SocketException | UnknownHostException e)
+			{
+				exception = e;
+			}
 		}
 		if (this.registrar == null)
+		{
 			throw exception;
+		}
 	}
 
 	/**
@@ -44,7 +48,9 @@ class TCPServer
 	public synchronized void stop()
 	{
 		if (this.registrar != null)
+		{
 			this.registrar.terminate();
+		}
 	}
 
 	/**
@@ -75,15 +81,17 @@ class TCPServer
 		public void run()
 		{
 			while (true)
-				try
 			{
+				try
+				{
 					final Socket clientSocket = this.serverSocket.accept();
 					this.connectionList.add(new Connection(TCPCoordinator.localNetworkID.getAndIncrement(), clientSocket));
 					System.out.println("Registrar registered client!");
-			}
-			catch (final IOException e)
+				}
+				catch (final IOException e)
 				{
-				// In case of termination or connection failure => nothing to do!
+					// In case of termination or connection failure => nothing to do!
+				}
 			}
 		}
 
@@ -99,7 +107,9 @@ class TCPServer
 			}
 
 			for (final Connection c : this.connectionList.get())
+			{
 				c.close();
+			}
 			this.connectionList.clear();
 		}
 	}

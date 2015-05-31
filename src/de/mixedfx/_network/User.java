@@ -1,4 +1,4 @@
-package de.mixedfx.network;
+package de.mixedfx._network;
 
 /**
  * A user shall represent a person. A user is identified world unique and ...

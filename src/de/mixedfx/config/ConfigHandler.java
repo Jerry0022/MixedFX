@@ -17,7 +17,7 @@ public class ConfigHandler
 	 * </pre>
 	 *
 	 * @param fileObject
-	 * @return Returns the ConfigMaker! Or throws serious ErrorExtended and returns null!
+	 * @return Returns the ConfigMaker!
 	 */
 	public static ConfigMaker read(final FileObject fileObject)
 	{
@@ -31,8 +31,6 @@ public class ConfigHandler
 		}
 		catch (final Exception e)
 		{
-			// TODO Throw ErrorExtended
-			// = Serious => Exit program
 			e.printStackTrace();
 			return null;
 		}
