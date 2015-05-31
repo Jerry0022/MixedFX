@@ -67,6 +67,7 @@ public class NetworkManager
 
 	public static void stop()
 	{
+		NetworkManager.t.stopTCPFull();
 		NetworkManager.u.stopUDPFull();
 	}
 
