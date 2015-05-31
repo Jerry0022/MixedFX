@@ -106,14 +106,16 @@ public class Connection implements EventBusServiceInterface
 					}
 					else
 					{
-						if (this.clientID == TCPCoordinator.localNetworkMainID.get())
+						if (message.goodbye)
 						{
+							System.out.println("SEND GOODBYE2");
 							this.outputConnection.sendMessage(message);
-							if (message.goodbye)
+						}
+						else
+							if (this.clientID == TCPCoordinator.localNetworkMainID.get())
 							{
 								this.outputConnection.sendMessage(message);
 							}
-						}
 					}
 				}
 		}

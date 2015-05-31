@@ -42,24 +42,29 @@ public class NetworkManager
 			{
 				case Unbound:
 					/*
-					 * Situation: Fall back from Server or BoundToServer to Unbound. Just let it
-					 * happen but reconnect after an interval multiplied with the index of when I
-					 * joined the network.
+					 * Auto reconnect: Situation: Fall back from Server or BoundToServer to Unbound.
+					 * Just let it happen but reconnect after an interval multiplied with the index
+					 * of when I joined the network.
 					 */
 					// Copy values
 					final List<Integer> lastActivityList = new ArrayList<>(ParticipantManager.PARTICIPANTS);
 					Collections.sort(lastActivityList);
 					final int myIndex = lastActivityList.indexOf(ParticipantManager.MY_PID.get());
-					System.out.println("MEIN INDEX: " + myIndex + "!" + lastActivityList);
 
 					// Stop ParticipantManager
 					ParticipantManager.stop();
 
+					System.out.println("Seconds to wait: " + Duration.millis(NetworkConfig.BROADCAST_INTERVAL).multiply(NetworkConfig.RECONNECT_TOLERANCE).multiply(myIndex).toMillis());
+
 					Inspector.runLater(() ->
 					{
-						NetworkManager.host();
-
-					}, Duration.seconds(NetworkConfig.BROADCAST_INTERVAL).multiply(NetworkConfig.RECONNECT_TOLERANCE).multiply(myIndex));
+						System.out.println("ACHTUNG: " + NetworkConfig.status.get());
+						if (!NetworkConfig.status.get().equals(States.BoundToServer))
+						{
+							System.out.println("ACHTUNG SERVER AUTO START");
+							NetworkManager.host();
+						}
+					}, Duration.millis(NetworkConfig.BROADCAST_INTERVAL).multiply(NetworkConfig.RECONNECT_TOLERANCE).multiply(myIndex));
 					break;
 				case BoundToServer:
 					ParticipantManager.start().connect();
@@ -147,11 +152,11 @@ public class NetworkManager
 		});
 
 		NetworkManager.start();
-		Inspector.runLater(() ->
-		{
-			System.out.println("LEAVE network");
-			NetworkManager.leave();
-		});
+		// Inspector.runLater(() ->
+		// {
+		// System.out.println("LEAVE network");
+		// NetworkManager.leave();
+		// }, Duration.seconds(15));
 
 		while (true)
 		{

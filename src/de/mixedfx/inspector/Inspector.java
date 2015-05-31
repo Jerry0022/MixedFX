@@ -141,7 +141,7 @@ public class Inspector
 	 */
 	public static void runLater(final Runnable toRun, final Duration timeToWait)
 	{
-		new Thread(() ->
+		Inspector.runNowAsDaemon(() ->
 		{
 			try
 			{
@@ -149,8 +149,9 @@ public class Inspector
 			}
 			catch (final InterruptedException e)
 			{}
+			System.out.println("RUN");
 			toRun.run();
-		}).start();
+		});
 	}
 
 	/**
