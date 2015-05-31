@@ -27,6 +27,8 @@ public class NetworkManager
 	protected static TCPCoordinator	t;
 	private static UDPCoordinator	u;
 
+	private static boolean			running;
+
 	static
 	{
 		NetworkConfig.status.addListener((ChangeListener<States>) (observable, oldValue, newValue) ->
@@ -60,13 +62,39 @@ public class NetworkManager
 		{}
 	}
 
-	public static void start()
+	public synchronized static void start()
 	{
 		NetworkManager.u.startUDPFull();
+		NetworkManager.running = true;
 	}
 
-	public static void stop()
+	/**
+	 * If Network is running ({@link #start()} was called before), this method sets this client to
+	 * host the p2p network!
+	 */
+	public synchronized static void host()
 	{
+		if (NetworkManager.running)
+		{
+			NetworkConfig.status.set(States.Server);
+		}
+	}
+
+	/**
+	 * If Network is running ({@link #start()} was called before), this method sets this client to
+	 * stop hosting the p2p network! It may reconnect immediately to a boundToServer.
+	 */
+	public synchronized static void unHost()
+	{
+		if (NetworkManager.running)
+		{
+			NetworkConfig.status.set(States.Unbound);
+		}
+	}
+
+	public synchronized static void stop()
+	{
+		NetworkManager.running = false;
 		NetworkManager.t.stopTCPFull();
 		NetworkManager.u.stopUDPFull();
 	}
@@ -95,7 +123,6 @@ public class NetworkManager
 		});
 
 		NetworkManager.start();
-		NetworkConfig.status.set(States.Server);
 
 		while (true)
 		{

@@ -50,8 +50,8 @@ class UDPIn
 		for (final DatagramSocket socket : this.sockets)
 		{
 			socket.close();
-			this.sockets.remove(socket);
 		}
+		this.sockets.clear();
 	}
 
 	private void listen(final DatagramSocket socket)
@@ -69,15 +69,19 @@ class UDPIn
 				}
 				catch (final Exception e)
 				{
-					// Remove me from available sockets!
-					this.sockets.remove(socket);
-					// Check if others are available, if not and i wasn't forced to stop publish an
-					// error!
-					if (this.sockets.isEmpty())
+					synchronized (UDPIn.this)
 					{
-						if (!(e instanceof SocketException)) // I was forced to close!
+						// Remove me from available sockets!
+						this.sockets.remove(socket);
+						// Check if others are available, if not and i wasn't forced to stop publish
+						// an
+						// error!
+						if (this.sockets.isEmpty())
 						{
-							UDPCoordinator.service.publishSync(UDPCoordinator.ERROR, e);
+							if (!(e instanceof SocketException)) // I was forced to close!
+							{
+								UDPCoordinator.service.publishSync(UDPCoordinator.ERROR, e);
+							}
 						}
 					}
 					break; // Stop this thread!

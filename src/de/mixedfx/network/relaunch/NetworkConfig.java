@@ -37,7 +37,7 @@ class NetworkConfig
 	 */
 	public static IntegerProperty			PORT				= new SimpleIntegerProperty(8888);
 
-	public static ObjectProperty<States>	status				= new SimpleObjectProperty<>(States.Unbound);
+	protected static ObjectProperty<States>	status				= new SimpleObjectProperty<>(States.Unbound);
 
 	static
 	{
