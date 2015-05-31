@@ -108,7 +108,6 @@ public class Connection implements EventBusServiceInterface
 					{
 						if (message.goodbye)
 						{
-							System.out.println("SEND GOODBYE2");
 							this.outputConnection.sendMessage(message);
 						}
 						else
@@ -168,7 +167,6 @@ public class Connection implements EventBusServiceInterface
 
 	private void checkParticipantMessage(final Message message)
 	{
-		// TODO Check if lost participants are handled properly
 		if (message instanceof ParticipantMessage)
 		{
 			final ParticipantMessage pMessage = (ParticipantMessage) message;
@@ -185,6 +183,13 @@ public class Connection implements EventBusServiceInterface
 					{
 						this.uid_pid_map.replace(pMessage.uID, pMessage.ids.get(0));
 					}
+				}
+			}
+			else
+			{
+				for (final int lost : pMessage.ids)
+				{
+					this.uid_pid_map.remove(lost);
 				}
 			}
 		}
