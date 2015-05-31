@@ -1,4 +1,4 @@
-package de.mixedfx.network;
+package de.mixedfx.network.relaunch;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -41,7 +41,9 @@ public class ConnectionInput implements Runnable
 				return message;
 			}
 			else
+			{
 				return null;
+			}
 		}
 	}
 
@@ -58,8 +60,9 @@ public class ConnectionInput implements Runnable
 	{
 		Object receivedObject;
 		while (this.isRunning)
-			try
 		{
+			try
+			{
 				receivedObject = this.objectInputStream.readObject();
 
 				if (receivedObject instanceof Serializable)
@@ -70,15 +73,17 @@ public class ConnectionInput implements Runnable
 						this.inputMessageCache.add(receivedMessage);
 					}
 					System.out.println(this.getClass().getSimpleName() + " received message!");
-					this.eventBusParent.publishAsync(Connection.TOPICS.MESSAGE_CHANNEL_RECEIVED.toString(), this);
+					this.eventBusParent.publishAsync(Connection.MESSAGE_CHANNEL_RECEIVED, this);
 				}
 				else
+				{
 					throw new Exception("Not a message received! Object rejected!");
+				}
 			}
-		catch (final EOFException e)
-		{} // Nothing received, still waiting
+			catch (final EOFException e)
+			{} // Nothing received, still waiting
 			catch (ClassNotFoundException | IOException e)
-		{
+			{
 				if (this.isRunning)
 				{
 					if (e instanceof NotSerializableException || e.getCause() instanceof NotSerializableException)
@@ -92,7 +97,7 @@ public class ConnectionInput implements Runnable
 						this.inputMessageCache.clear();
 						this.terminate();
 						System.out.println(this.getClass().getSimpleName() + " lost stream!");
-						this.eventBusParent.publishAsync(Connection.TOPICS.CONNECTION_CHANNEL_LOST.toString(), this);
+						this.eventBusParent.publishAsync(Connection.CONNECTION_CHANNEL_LOST, this);
 					}
 				}
 			}
@@ -100,6 +105,7 @@ public class ConnectionInput implements Runnable
 			{
 				e.printStackTrace();
 			}
+		}
 	}
 
 	protected synchronized boolean terminate()
@@ -117,6 +123,8 @@ public class ConnectionInput implements Runnable
 			return true;
 		}
 		else
+		{
 			return false;
+		}
 	}
 }

@@ -1,4 +1,4 @@
-package de.mixedfx.network;
+package de.mixedfx.network.relaunch;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -59,7 +59,7 @@ public class ConnectionOutput implements Runnable
 						if (this.terminate())
 						{
 							System.out.println("OutputStream lost!");
-							this.eventBusParent.publishAsync(Connection.TOPICS.CONNECTION_CHANNEL_LOST.toString(), this);
+							this.eventBusParent.publishAsync(Connection.CONNECTION_CHANNEL_LOST, this);
 						}
 					}
 				}
@@ -79,12 +79,14 @@ public class ConnectionOutput implements Runnable
 		if (this.running)
 		{
 			while (!this.outputMessageCache.isEmpty())
+			{
 				try
 				{
 					Thread.sleep(50);
 				}
-			catch (final InterruptedException e)
+				catch (final InterruptedException e)
 				{}
+			}
 
 			System.out.println("Terminating " + this.getClass().getSimpleName() + "!");
 			this.running = false;
@@ -105,6 +107,8 @@ public class ConnectionOutput implements Runnable
 			return true;
 		}
 		else
+		{
 			return false;
+		}
 	}
 }

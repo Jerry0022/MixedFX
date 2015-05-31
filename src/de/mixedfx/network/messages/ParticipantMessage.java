@@ -1,18 +1,26 @@
 package de.mixedfx.network.messages;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-import com.google.gson.annotations.Expose;
-
+/**
+ * There are several usages of this Message:
+ *
+ * <pre>
+ * If uID is not empty and ids are empty => PID request.<br>
+ * If uID is not empty and ids are not empty => PID response. First pid is the pid of the requesting participant.<br>
+ * If uID is empty and ids are not empty => PIDs lost information.
+ * </pre>
+ *
+ * @author Jerry
+ */
 @SuppressWarnings("serial")
 public class ParticipantMessage extends Message
 {
-	@Expose
-	public String				uID;
+	public String			uID;
 
-	@Expose
-	public ArrayList<Integer>	ids;
+	public List<Integer>	ids;
 
 	public ParticipantMessage()
 	{

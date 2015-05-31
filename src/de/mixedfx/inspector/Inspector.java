@@ -164,4 +164,18 @@ public class Inspector
 	{
 		Inspector.runLater(toRun, Duration.seconds(3));
 	}
+
+	/**
+	 * Runs a Runnable later in a new thread. Waiting time is asynchronous. Default timeToWait of 3
+	 * seconds.
+	 *
+	 * @param toRun
+	 *            The commands to be executed in the new thread.
+	 */
+	public static void runNowAsDaemon(final Runnable toRun)
+	{
+		final Thread newThread = new Thread(toRun);
+		newThread.setDaemon(true);
+		newThread.start();
+	}
 }

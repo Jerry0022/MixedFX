@@ -21,7 +21,6 @@ import org.bushe.swing.event.EventTopicSubscriber;
 import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.eventbus.EventBusService;
 import de.mixedfx.java.ApacheTools;
-import de.mixedfx.network.NetworkManager;
 import de.mixedfx.network.relaunch.NetworkConfig.States;
 
 class UDPCoordinator implements EventTopicSubscriber<Object>
@@ -131,7 +130,7 @@ class UDPCoordinator implements EventTopicSubscriber<Object>
 					{
 						CollectionUtils.select(UDPCoordinator.allAdresses, predicate).forEach(t ->
 						{
-							((UDPDetected) t).update(new Date());
+							((UDPDetected) t).update(newDetected.status, new Date());
 						});
 					}
 					else

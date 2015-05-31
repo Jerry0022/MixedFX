@@ -1,4 +1,4 @@
-package de.mixedfx.network;
+package de.mixedfx.network.relaunch;
 
 import java.util.ArrayList;
 
@@ -7,6 +7,7 @@ import org.bushe.swing.event.annotation.EventTopicSubscriber;
 
 import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.network.messages.Message;
+import de.mixedfx.network.messages.RegisteredMessage;
 
 /**
  * <p>
@@ -19,7 +20,7 @@ import de.mixedfx.network.messages.Message;
  * {@link MessageBus#MESSAGE_SEND} [methods must be "public"] or writing a method with the
  * Annotation {@link EventTopicSubscriber} subscribing for the topic
  * {@link MessageBus#MESSAGE_RECEIVE} and call once {@link AnnotationProcessor#process(Object)}</li>
- * <li>By using {@link MessageBus#send(Message)} (async) or
+ * <li>By using {@link MessageBus#send(RegisteredMessage)} (async) or
  * {@link MessageBus#registerForReceival(MessageReceiver)}!</li>
  * </ol>
  *
@@ -28,13 +29,13 @@ import de.mixedfx.network.messages.Message;
 public class MessageBus
 {
 	/**
-	 * String for the {@link EventBusExtended}. Please submit a {@link Message} object.
+	 * String for the {@link EventBusExtended}. Please submit a {@link RegisteredMessage} object.
 	 */
 	public static final String	MESSAGE_SEND	= Connection.MESSAGE_CHANNEL_SEND;
 
 	/**
-	 * String for the {@link EventBusExtended}. You will receive a {@link Message} object.
-	 * 
+	 * String for the {@link EventBusExtended}. You will receive a {@link RegisteredMessage} object.
+	 *
 	 * <pre>
 	 * Maybe messages won't received in the right (chronological) order if they were not send by the same
 	 * sender (this is because of the network architecture and the message size).
@@ -50,7 +51,7 @@ public class MessageBus
 		 *
 		 * @param message
 		 */
-		public void receive(Message message);
+		public void receive(RegisteredMessage message);
 	}
 
 	private static MessageBus					intermediateReceiver;
@@ -65,7 +66,7 @@ public class MessageBus
 	 *            {@link NetworkConfig.States#BoundToServer} then it will be internally
 	 *            automatically forwarded - no manual forwarding is required.
 	 */
-	public static synchronized void send(final Message message)
+	public static synchronized void send(final RegisteredMessage message)
 	{
 		EventBusExtended.publishAsyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
 	}
@@ -110,9 +111,11 @@ public class MessageBus
 	}
 
 	@EventTopicSubscriber(topic = MessageBus.MESSAGE_RECEIVE)
-	public void getMessage(final String topic, final Message message)
+	public void getMessage(final String topic, final RegisteredMessage message)
 	{
 		for (final MessageReceiver receiver : MessageBus.receiverList)
+		{
 			receiver.receive(message);
+		}
 	}
 }

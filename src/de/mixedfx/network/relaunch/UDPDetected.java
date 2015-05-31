@@ -6,9 +6,9 @@ import java.util.function.Predicate;
 
 public class UDPDetected
 {
-	public final InetAddress			address;
-	public final NetworkConfig.States	status;
-	public Date							lastContact;
+	public final InetAddress	address;
+	public NetworkConfig.States	status;
+	public Date					lastContact;
 
 	public UDPDetected(final InetAddress address, final NetworkConfig.States status, final Date firstContact)
 	{
@@ -17,8 +17,9 @@ public class UDPDetected
 		this.lastContact = firstContact;
 	}
 
-	public void update(final Date lastContact)
+	public void update(final NetworkConfig.States status, final Date lastContact)
 	{
+		this.status = status;
 		this.lastContact = lastContact;
 	}
 

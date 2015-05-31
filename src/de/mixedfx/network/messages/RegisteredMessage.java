@@ -3,9 +3,7 @@ package de.mixedfx.network.messages;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gson.annotations.Expose;
-
-import de.mixedfx.network.ParticipantManager;
+import de.mixedfx._network.ParticipantManager;
 
 /**
  * All NOT network messages shall inherit this class for increased performance!
@@ -27,13 +25,11 @@ public class RegisteredMessage extends Message
 	 * If receivers contains no value it does not make sense to send this message ;)
 	 * </p>
 	 */
-	@Expose
 	public final List<Integer>	receivers;
 
 	/**
 	 * Senders PID, which is automatically set!
 	 */
-	@Expose
 	public final int			sender;
 
 	public RegisteredMessage()

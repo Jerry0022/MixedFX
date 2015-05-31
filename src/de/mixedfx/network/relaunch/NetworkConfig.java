@@ -5,8 +5,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
-import de.mixedfx.network.NetworkManager;
-import de.mixedfx.network.TCPCoordinator;
 
 class NetworkConfig
 {

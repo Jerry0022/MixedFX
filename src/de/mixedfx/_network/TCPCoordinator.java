@@ -1,4 +1,4 @@
-package de.mixedfx.network;
+package de.mixedfx._network;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -12,7 +12,6 @@ import org.bushe.swing.event.annotation.AnnotationProcessor;
 import org.bushe.swing.event.annotation.EventTopicSubscriber;
 
 import de.mixedfx.eventbus.EventBusExtended;
-import de.mixedfx.network.NetworkConfig.States;
 import de.mixedfx.network.messages.Message;
 import de.mixedfx.network.messages.ParticipantMessage;
 
@@ -50,8 +49,10 @@ public class TCPCoordinator
 				{
 					// If already connected to server stop connection
 					if (oldValue.equals(States.BoundToServer))
+					{
 						this.stopTCPFull(); // => Stops also TCP Server && set to unbound; see
-					// below
+						// below
+					}
 
 					try
 					{
@@ -73,7 +74,9 @@ public class TCPCoordinator
 
 				// Switch Server off
 				if (oldValue.equals(States.Server))
+				{
 					this.stopTCPFull();
+				}
 			}
 		});
 	}
@@ -100,9 +103,13 @@ public class TCPCoordinator
 				pMessage.ids.addAll(allParticipated);
 
 				if (!NetworkConfig.status.get().equals(NetworkConfig.States.Server))
+				{
 					MessageBus.send(pMessage);
+				}
 				else
+				{
 					EventBusExtended.publishSyncSafe(MessageBus.MESSAGE_RECEIVE, pMessage);
+				}
 			}
 		}
 	}
