@@ -24,6 +24,8 @@ class NetworkConfig
 	 */
 	public static final int					BROADCAST_INTERVAL	= 1000;
 
+	public static final int					RECONNECT_TOLERANCE	= 3;
+
 	/**
 	 * <p>
 	 * Default port is 8888 for TCP and UDP.

@@ -143,6 +143,11 @@ public class TCPCoordinator
 	{
 		synchronized (NetworkConfig.status)
 		{
+			if (!NetworkManager.running)
+			{
+				return;
+			}
+
 			System.out.println("START!" + ip);
 			try
 			{
@@ -176,7 +181,6 @@ public class TCPCoordinator
 		synchronized (NetworkConfig.status)
 		{
 			System.out.println("CLOSE EVERYTHING");
-			TCPCoordinator.localNetworkID.set(1);
 
 			// Send a GoodBye to everyone who is still available to avoid ghost connections.
 			final Message goodbyeMessage = new Message();
@@ -187,6 +191,8 @@ public class TCPCoordinator
 			// clients.
 			this.tcpClient.stop();
 			this.tcpServer.stop();
+
+			TCPCoordinator.localNetworkID.set(1);
 
 			NetworkConfig.status.set(States.Unbound);
 		}

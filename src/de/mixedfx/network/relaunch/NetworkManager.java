@@ -1,14 +1,19 @@
 package de.mixedfx.network.relaunch;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
+import javafx.util.Duration;
 
 import org.bushe.swing.event.annotation.AnnotationProcessor;
 import org.bushe.swing.event.annotation.EventTopicSubscriber;
 
 import de.mixedfx.eventbus.EventBusExtended;
+import de.mixedfx.inspector.Inspector;
 import de.mixedfx.java.CustomSysOutErr;
 import de.mixedfx.network.relaunch.NetworkConfig.States;
 
@@ -24,10 +29,10 @@ public class NetworkManager
 	 */
 	public static final String		NETWORK_FATALERROR	= "NETWORK_FATALERROR";
 
+	public static volatile boolean	running;
+
 	protected static TCPCoordinator	t;
 	private static UDPCoordinator	u;
-
-	private static boolean			running;
 
 	static
 	{
@@ -36,7 +41,25 @@ public class NetworkManager
 			switch (newValue)
 			{
 				case Unbound:
+					/*
+					 * Situation: Fall back from Server or BoundToServer to Unbound. Just let it
+					 * happen but reconnect after an interval multiplied with the index of when I
+					 * joined the network.
+					 */
+					// Copy values
+					final List<Integer> lastActivityList = new ArrayList<>(ParticipantManager.PARTICIPANTS);
+					Collections.sort(lastActivityList);
+					final int myIndex = lastActivityList.indexOf(ParticipantManager.MY_PID.get());
+					System.out.println("MEIN INDEX: " + myIndex + "!" + lastActivityList);
+
+					// Stop ParticipantManager
 					ParticipantManager.stop();
+
+					Inspector.runLater(() ->
+					{
+						NetworkManager.host();
+
+					}, Duration.seconds(NetworkConfig.BROADCAST_INTERVAL).multiply(NetworkConfig.RECONNECT_TOLERANCE).multiply(myIndex));
 					break;
 				case BoundToServer:
 					ParticipantManager.start().connect();
@@ -81,14 +104,15 @@ public class NetworkManager
 	}
 
 	/**
-	 * If Network is running ({@link #start()} was called before), this method sets this client to
-	 * stop hosting the p2p network! It may reconnect immediately to a boundToServer.
+	 * If Network is running ({@link #start()} was called before and maybe {@link #host()}), this
+	 * method sets this client to leave the p2p network! It may reconnect immediately to a
+	 * boundToServer or hosts itself a Server.
 	 */
-	public synchronized static void unHost()
+	public synchronized static void leave()
 	{
 		if (NetworkManager.running)
 		{
-			NetworkConfig.status.set(States.Unbound);
+			NetworkManager.t.stopTCPFull();
 		}
 	}
 
@@ -123,6 +147,11 @@ public class NetworkManager
 		});
 
 		NetworkManager.start();
+		Inspector.runLater(() ->
+		{
+			System.out.println("LEAVE network");
+			NetworkManager.leave();
+		});
 
 		while (true)
 		{

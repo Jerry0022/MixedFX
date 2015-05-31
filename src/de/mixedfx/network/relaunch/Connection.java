@@ -98,6 +98,10 @@ public class Connection implements EventBusServiceInterface
 						if (this.clientID != TCPCoordinator.localNetworkMainID.get())
 						{
 							this.checkSend(message);
+							if (message.goodbye)
+							{
+								this.outputConnection.sendMessage(message);
+							}
 						}
 					}
 					else
@@ -105,12 +109,11 @@ public class Connection implements EventBusServiceInterface
 						if (this.clientID == TCPCoordinator.localNetworkMainID.get())
 						{
 							this.outputConnection.sendMessage(message);
-						}
-						else
-							if (message.goodbye && this.clientID != TCPCoordinator.localNetworkMainID.get())
+							if (message.goodbye)
 							{
 								this.outputConnection.sendMessage(message);
 							}
+						}
 					}
 				}
 		}
