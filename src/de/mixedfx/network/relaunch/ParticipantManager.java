@@ -68,7 +68,7 @@ public class ParticipantManager
 	}
 
 	@EventTopicSubscriber(topic = MessageBus.MESSAGE_RECEIVE)
-	public synchronized void receive(final Message message)
+	public synchronized void receive(final String topic, final Message message)
 	{
 		if (message instanceof ParticipantMessage)
 		{

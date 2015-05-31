@@ -29,6 +29,27 @@ public class NetworkManager
 
 	static
 	{
+		NetworkConfig.status.addListener((ChangeListener<States>) (observable, oldValue, newValue) ->
+		{
+			switch (newValue)
+			{
+				case Unbound:
+					ParticipantManager.stop();
+					break;
+				case BoundToServer:
+					ParticipantManager.start().connect();
+					break;
+				case Server:
+					// Add me as server also as participant
+					ParticipantManager.MY_PID.set(ParticipantManager.PARTICIPANT_NUMBER);
+					ParticipantManager.PARTICIPANTS.add(ParticipantManager.PARTICIPANT_NUMBER++);
+					ParticipantManager.start();
+					break;
+				default:
+					break;
+			}
+		});
+
 		NetworkManager.t = new TCPCoordinator();
 
 		try
@@ -73,6 +94,7 @@ public class NetworkManager
 		});
 
 		NetworkManager.start();
+		NetworkConfig.status.set(States.Server);
 
 		while (true)
 		{
