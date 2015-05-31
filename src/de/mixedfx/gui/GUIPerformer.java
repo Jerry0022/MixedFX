@@ -8,9 +8,6 @@ import javafx.stage.Stage;
 public class GUIPerformer
 {
 	/**
-	 *
-	 */
-	/**
 	 * Usually if you set minimum size and you start the application you can reduce the size of the
 	 * GUI. Set the real minimum size of the GUI. A scene is automatically created, added and as
 	 * content the rootNode is set.

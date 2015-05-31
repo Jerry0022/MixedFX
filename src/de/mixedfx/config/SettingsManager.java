@@ -10,7 +10,7 @@ public class SettingsManager
 	/**
 	 * Initializes the ConfigMaker and writes the initial file.
 	 */
-	public static void init()
+	static
 	{
 		SettingsManager.configMaker = ConfigHandler.read(FileObject.create().setPath(System.getProperty("user.dir")).setName(SettingsManager.fileName));
 	}
