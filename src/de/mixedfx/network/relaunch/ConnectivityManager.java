@@ -3,6 +3,8 @@ package de.mixedfx.network.relaunch;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
+// TODO Set states, listening to PID and NetworkConfig#status
+// TODO fill methods, interacting with methods of NetworkManager#...()
 public class ConnectivityManager
 {
 	public static ObjectProperty<Status>	status;
@@ -10,12 +12,12 @@ public class ConnectivityManager
 	public enum Status
 	{
 		/**
-		 * This means the user is identified in the network with an PID
+		 * The user is identified in the network with an PID
 		 */
 		Online,
 
 		/**
-		 * This means the user connected to a network, but is not yet identified
+		 * The user connected to a network, but is not yet identified
 		 */
 		Establishing,
 

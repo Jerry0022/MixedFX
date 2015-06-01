@@ -61,12 +61,14 @@ public class EventBusExtended extends EventBus
 					final ProxyTopicSubscriber subscriber = proxySubscriberAtomic.get();
 
 					if (subscriber.getSubscriptionMethod() != null)
+					{
 						subscriber.getSubscriptionMethod().invoke(subscriber.getProxiedSubscriber().getClass().cast(subscriber.getProxiedSubscriber()), topic, eventObject);
-					// else should throw a programming failure exception OR asking sth. like ignore?
+						// else should throw a programming failure exception OR asking sth. like
+						// ignore?
+					}
 				}
 				catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | SecurityException e1)
 				{
-					// TODO: Handle Exception
 					e1.printStackTrace();
 					System.out.println(101);
 				}

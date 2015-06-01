@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+// TODO Connect with NetworkManager or is listening to NetworkConfig#status enough?!
 public class ServiceManager
 {
 	/**

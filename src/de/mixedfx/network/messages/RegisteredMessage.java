@@ -1,6 +1,7 @@
 package de.mixedfx.network.messages;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import de.mixedfx._network.ParticipantManager;
@@ -32,9 +33,15 @@ public class RegisteredMessage extends Message
 	 */
 	public final int			sender;
 
+	/**
+	 * The time the message was instantiated!
+	 */
+	public final Date			creationTime;
+
 	public RegisteredMessage()
 	{
 		this.receivers = new ArrayList<>();
 		this.sender = ParticipantManager.MY_PID.get();
+		this.creationTime = new Date();
 	}
 }
