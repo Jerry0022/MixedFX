@@ -20,7 +20,7 @@ import de.mixedfx.network.messages.UserMessage;
  * @author Jerry
  *
  */
-public class UserManager implements SyncedInterface
+public class UserManager implements UniqueService
 {
 	public static User						myUser;
 	public static final ListProperty<User>	list	= new SimpleListProperty<>();

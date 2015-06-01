@@ -130,7 +130,9 @@ class UDPCoordinator implements EventTopicSubscriber<Object>
 					{
 						CollectionUtils.select(UDPCoordinator.allAdresses, predicate).forEach(t ->
 						{
-							((UDPDetected) t).update(newDetected.status, new Date());
+							final UDPDetected detected = (UDPDetected) t;
+							detected.update(newDetected.status, new Date());
+							UDPCoordinator.allAdresses.set(UDPCoordinator.allAdresses.indexOf(detected), detected);
 						});
 					}
 					else

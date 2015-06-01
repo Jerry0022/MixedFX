@@ -27,12 +27,12 @@ public class NetworkManager
 	 * the port. React to that <b>port error with {@link NetworkManager#setPort(int)}</b> with the
 	 * recommendation to choose a random number between 10 000 and 60 000!
 	 */
-	public static final String		NETWORK_FATALERROR	= "NETWORK_FATALERROR";
+	public static final String			NETWORK_FATALERROR	= "NETWORK_FATALERROR";
 
-	public static volatile boolean	running;
+	protected static volatile boolean	running;
 
-	protected static TCPCoordinator	t;
-	private static UDPCoordinator	u;
+	protected static TCPCoordinator		t;
+	private static UDPCoordinator		u;
 
 	static
 	{
@@ -111,7 +111,7 @@ public class NetworkManager
 	/**
 	 * If Network is running ({@link #start()} was called before and maybe {@link #host()}), this
 	 * method sets this client to leave the p2p network! It may reconnect immediately to a
-	 * boundToServer or hosts itself a Server.
+	 * boundToServer or hosts itself a Server after some while.
 	 */
 	public synchronized static void leave()
 	{
