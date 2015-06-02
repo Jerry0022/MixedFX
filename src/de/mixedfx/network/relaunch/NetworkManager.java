@@ -48,11 +48,11 @@ public class NetworkManager
 					// Stop ParticipantManager
 					ParticipantManager.stop();
 
-					System.out.println("Seconds to wait: " + Duration.millis(NetworkConfig.BROADCAST_INTERVAL).multiply(NetworkConfig.RECONNECT_TOLERANCE).multiply(myIndex).toMillis());
+					System.out.println("Seconds to wait: " + Duration.millis(NetworkConfig.BROADCAST_INTERVAL).multiply(NetworkConfig.RECONNECT_TOLERANCE).multiply(myIndex).toSeconds());
 
 					Inspector.runLater(() ->
 					{
-						System.out.println("ACHTUNG: " + NetworkConfig.status.get());
+						System.out.println("Reconnect only if this value is not already 'BoundToServer': " + NetworkConfig.status.get());
 						if (!NetworkConfig.status.get().equals(States.BoundToServer))
 						{
 							System.out.println("ACHTUNG SERVER AUTO START");
