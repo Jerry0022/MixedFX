@@ -47,7 +47,7 @@ class UDPOut
 			{
 				worked = false;
 
-				final byte[] sendData = NetworkConfig.status.get().toString().getBytes();
+				final byte[] sendData = (NetworkConfig.status.get().toString() + "!" + NetworkConfig.statusChangeTime.get().toInstant().toString()).getBytes();
 
 				/*
 				 * Try the 255.255.255.255 first

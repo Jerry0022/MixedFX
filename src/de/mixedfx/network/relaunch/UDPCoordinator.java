@@ -5,6 +5,7 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -64,6 +65,8 @@ class UDPCoordinator implements EventTopicSubscriber<Object>
 	{
 		this.running = true;
 
+		NetworkConfig.statusChangeTime.set(new Date());
+
 		this.in.start();
 		if (this.running)
 		{
@@ -83,6 +86,8 @@ class UDPCoordinator implements EventTopicSubscriber<Object>
 		{
 			this.in.close();
 		}
+
+		NetworkConfig.statusChangeTime.set(new Date());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -122,7 +127,7 @@ class UDPCoordinator implements EventTopicSubscriber<Object>
 
 				if (!ownOne)
 				{
-					final UDPDetected newDetected = new UDPDetected(packet.getAddress(), NetworkConfig.States.valueOf(packetMessage), new Date());
+					final UDPDetected newDetected = new UDPDetected(packet.getAddress(), NetworkConfig.States.valueOf(packetMessage.split("\\!")[0]), new Date(), Date.from(Instant.parse(packetMessage.split("\\!")[1])));
 
 					// Add all sending NICs to list
 					final Predicate predicate = ApacheTools.convert(UDPDetected.getByAddress(newDetected.address));

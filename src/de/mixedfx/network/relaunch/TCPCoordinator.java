@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
@@ -55,6 +56,7 @@ public class TCPCoordinator
 		// Add listener to NetworkConfig.status to force starting TCP Server.
 		NetworkConfig.status.addListener((ChangeListener<States>) (observable, oldValue, newValue) ->
 		{
+			NetworkConfig.statusChangeTime.set(new Date());
 			synchronized (NetworkConfig.status)
 			{
 				// Switch Server on if requested
@@ -71,6 +73,7 @@ public class TCPCoordinator
 					try
 					{
 						this.tcpServer.start();
+
 					}
 					catch (final IOException e)
 					{

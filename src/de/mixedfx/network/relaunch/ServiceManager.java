@@ -4,20 +4,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-// TODO Connect with NetworkManager or is listening to NetworkConfig#status enough?!
+/**
+ * Use {@link UniqueService} or {@link P2PService}!
+ *
+ * @author Jerry
+ */
 public class ServiceManager
 {
-	/**
-	 * Use {@link UniqueService} or {@link P2PService}!
-	 *
-	 * @author Jerry
-	 */
 	private interface Stoppable
 	{
 		/**
 		 * <p>
-		 * Every time {@link NetworkManager#online} is set to
-		 * {@link NetworkManager.OnlineStates#Offline} this method is called.
+		 * Every time {@link ConnectivityManager#status} is set to
+		 * {@link ConnectivityManager.Status#Searching} or
+		 * {@link ConnectivityManager.Status#Offline} this method is called.
 		 * </p>
 		 * <p>
 		 * ATTENTION: This method blocks network activity. Therefore do not execute long running

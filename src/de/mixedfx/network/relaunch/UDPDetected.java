@@ -9,12 +9,14 @@ public class UDPDetected
 	public final InetAddress	address;
 	public NetworkConfig.States	status;
 	public Date					lastContact;
+	public Date					statusSince;
 
-	public UDPDetected(final InetAddress address, final NetworkConfig.States status, final Date firstContact)
+	public UDPDetected(final InetAddress address, final NetworkConfig.States status, final Date firstContact, final Date statusSince)
 	{
 		this.address = address;
 		this.status = status;
 		this.lastContact = firstContact;
+		this.statusSince = statusSince;
 	}
 
 	public void update(final NetworkConfig.States status, final Date lastContact)

@@ -1,5 +1,8 @@
 package de.mixedfx.network.relaunch;
 
+import java.util.Date;
+import java.util.concurrent.atomic.AtomicReference;
+
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -41,13 +44,15 @@ class NetworkConfig
 
 	protected static ObjectProperty<States>	status				= new SimpleObjectProperty<>(States.Unbound);
 
+	protected static AtomicReference<Date>	statusChangeTime	= new AtomicReference<>(new Date());
+
 	static
 	{
 		NetworkConfig.PORT.addListener((ChangeListener<Number>) (observable, oldValue, newValue) ->
 		{
-			if (newValue.intValue() + NetworkConfig.TRIES_AMOUNT * NetworkConfig.TRIES_STEPS > Integer.MAX_VALUE)
+			if (newValue.intValue() + NetworkConfig.TRIES_AMOUNT * NetworkConfig.TRIES_STEPS > Integer.MAX_VALUE || newValue.intValue() <= 0)
 			{
-				System.out.println("PORT plus TRIES_AMOUNT * TRIES_STEPS extends maximum integer value! Change was undone!");
+				System.out.println("PORT plus TRIES_AMOUNT * TRIES_STEPS extends minimum / maximum integer value! Change was undone!");
 				NetworkConfig.PORT.set(oldValue.intValue());
 			}
 		});

@@ -6,15 +6,9 @@ import java.util.Collections;
 import java.util.List;
 
 import javafx.beans.value.ChangeListener;
-import javafx.collections.ListChangeListener;
 import javafx.util.Duration;
-
-import org.bushe.swing.event.annotation.AnnotationProcessor;
-import org.bushe.swing.event.annotation.EventTopicSubscriber;
-
 import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.inspector.Inspector;
-import de.mixedfx.java.CustomSysOutErr;
 import de.mixedfx.network.relaunch.NetworkConfig.States;
 
 public class NetworkManager
@@ -126,47 +120,5 @@ public class NetworkManager
 		NetworkManager.running = false;
 		NetworkManager.t.stopTCPFull();
 		NetworkManager.u.stopUDPFull();
-	}
-
-	public static void main(final String[] args)
-	{
-		CustomSysOutErr.init();
-
-		// Catch fatal errors to show (network reacted already to this error)
-		AnnotationProcessor.process(new NetworkManager());
-
-		NetworkConfig.status.addListener((ChangeListener<States>) (observable, oldValue, newValue) -> System.out.println("OLD: " + oldValue + "! NEW: " + newValue));
-
-		ParticipantManager.PARTICIPANTS.addListener((ListChangeListener<Integer>) c ->
-		{
-			System.out.println(ParticipantManager.PARTICIPANTS);
-		});
-
-		// Show all directly found applications host and all directly found Server (Not the
-		// bound to
-		// server ones) which were once online while this application was online.
-		UDPCoordinator.allAdresses.addListener((ListChangeListener<UDPDetected>) c ->
-		{
-			c.next();
-			System.out.println("ALL: " + c.getAddedSubList().get(0).address + "!" + c.getAddedSubList().get(0).status);
-		});
-
-		NetworkManager.start();
-		// Inspector.runLater(() ->
-		// {
-		// System.out.println("LEAVE network");
-		// NetworkManager.leave();
-		// }, Duration.seconds(15));
-
-		while (true)
-		{
-			;
-		}
-	}
-
-	@EventTopicSubscriber(topic = NetworkManager.NETWORK_FATALERROR)
-	public void error(final String topic, final Exception exception)
-	{
-		System.out.println("Caught error: " + exception.getMessage());
 	}
 }
