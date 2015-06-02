@@ -43,7 +43,7 @@ public class NetworkManager
 					// Copy values
 					final List<Integer> lastActivityList = new ArrayList<>(ParticipantManager.PARTICIPANTS);
 					Collections.sort(lastActivityList);
-					final int myIndex = lastActivityList.indexOf(ParticipantManager.MY_PID.get());
+					final int myIndex = lastActivityList.indexOf(ParticipantManager.MY_PID.get()) + 1;
 
 					// Stop ParticipantManager
 					ParticipantManager.stop();

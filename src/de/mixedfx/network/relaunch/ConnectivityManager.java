@@ -175,6 +175,7 @@ public class ConnectivityManager
 			final UDPDetected detected = c.getAddedSubList().get(0);
 			// If another server makes him known, check if it was created before my Server and if so
 			// reconnect to it!
+			System.out.println(NetworkConfig.status.get().equals(NetworkConfig.States.Server) + "!" + detected.status.equals(States.Server) + "!" + NetworkConfig.statusChangeTime.get().after(detected.statusSince));
 			if (NetworkConfig.status.get().equals(NetworkConfig.States.Server) && detected.status.equals(States.Server) && NetworkConfig.statusChangeTime.get().after(detected.statusSince))
 			{
 				// Force reconnect
