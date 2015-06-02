@@ -47,6 +47,7 @@ public class ParticipantManager
 	protected static void stop()
 	{
 		ParticipantManager.MY_PID.set(0);
+		ParticipantManager.PARTICIPANT_NUMBER = 1;
 		ParticipantManager.PARTICIPANTS.get().clear();
 		AnnotationProcessor.unprocess(ParticipantManager.pManager);
 	}
