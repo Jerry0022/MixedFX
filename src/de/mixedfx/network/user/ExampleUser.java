@@ -1,6 +1,6 @@
 package de.mixedfx.network.user;
 
-import de.mixedfx.network.relaunch.User;
+import de.mixedfx.network.User;
 
 public class ExampleUser extends User
 {
