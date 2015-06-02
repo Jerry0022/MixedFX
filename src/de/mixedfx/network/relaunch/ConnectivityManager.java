@@ -172,6 +172,15 @@ public class ConnectivityManager
 		UDPCoordinator.allAdresses.addListener((ListChangeListener<UDPDetected>) c ->
 		{
 			c.next();
+			final UDPDetected detected = c.getAddedSubList().get(0);
+			// If another server makes him known, check if it was created before my Server and if so
+			// reconnect to it!
+			if (NetworkConfig.status.get().equals(NetworkConfig.States.Server) && detected.status.equals(States.Server) && NetworkConfig.statusChangeTime.get().after(detected.statusSince))
+			{
+				// Force reconnect
+				System.out.println("FORCE RECONNECT TO OTHER SERVER!");
+				ConnectivityManager.force();
+			}
 			System.out.println("ALL: " + c.getAddedSubList().get(0).address + "!" + c.getAddedSubList().get(0).status + "!" + c.getAddedSubList().get(0).statusSince);
 		});
 
