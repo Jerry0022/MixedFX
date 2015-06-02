@@ -172,7 +172,7 @@ public class ConnectivityManager
 		UDPCoordinator.allAdresses.addListener((ListChangeListener<UDPDetected>) c ->
 		{
 			c.next();
-			System.out.println("ALL: " + c.getAddedSubList().get(0).address + "!" + c.getAddedSubList().get(0).status);
+			System.out.println("ALL: " + c.getAddedSubList().get(0).address + "!" + c.getAddedSubList().get(0).status + "!" + c.getAddedSubList().get(0).statusSince);
 		});
 
 		ConnectivityManager.force();
