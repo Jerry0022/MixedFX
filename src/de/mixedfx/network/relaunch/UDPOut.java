@@ -6,6 +6,7 @@ import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.util.Date;
 import java.util.Enumeration;
 
 class UDPOut
@@ -47,7 +48,7 @@ class UDPOut
 			{
 				worked = false;
 
-				final byte[] sendData = (NetworkConfig.status.get().toString() + "!" + NetworkConfig.statusChangeTime.get().toInstant().toString()).getBytes();
+				final byte[] sendData = (new Date().toInstant().toString() + "!" + NetworkConfig.status.get().toString() + "!" + NetworkConfig.statusChangeTime.get().toInstant().toString()).getBytes();
 
 				/*
 				 * Try the 255.255.255.255 first

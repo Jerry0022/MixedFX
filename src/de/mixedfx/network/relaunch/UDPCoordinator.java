@@ -127,7 +127,7 @@ class UDPCoordinator implements EventTopicSubscriber<Object>
 
 				if (!ownOne)
 				{
-					final UDPDetected newDetected = new UDPDetected(packet.getAddress(), NetworkConfig.States.valueOf(packetMessage.split("\\!")[0]), new Date(), Date.from(Instant.parse(packetMessage.split("\\!")[1])));
+					final UDPDetected newDetected = new UDPDetected(packet.getAddress(), NetworkConfig.States.valueOf(packetMessage.split("\\!")[1]), Date.from(Instant.parse(packetMessage.split("\\!")[0])), Date.from(Instant.parse(packetMessage.split("\\!")[2])));
 
 					// Add all sending NICs to list
 					final Predicate predicate = ApacheTools.convert(UDPDetected.getByAddress(newDetected.address));
@@ -136,11 +136,18 @@ class UDPCoordinator implements EventTopicSubscriber<Object>
 						CollectionUtils.select(UDPCoordinator.allAdresses, predicate).forEach(t ->
 						{
 							final UDPDetected detected = (UDPDetected) t;
-							if (detected.status != newDetected.status)
+							if (newDetected.lastContact.after(detected.lastContact))
 							{
-								UDPCoordinator.allAdresses.set(UDPCoordinator.allAdresses.indexOf(detected), detected);
+								if (detected.status != newDetected.status)
+								{
+									UDPCoordinator.allAdresses.set(UDPCoordinator.allAdresses.indexOf(detected), detected);
+								}
+								detected.update(newDetected.status, new Date());
 							}
-							detected.update(newDetected.status, new Date());
+							else
+							{
+								return; // Old UDP Packet, newer one was already received!
+							}
 						});
 					}
 					else
