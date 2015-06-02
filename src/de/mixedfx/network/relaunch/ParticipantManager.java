@@ -82,7 +82,6 @@ public class ParticipantManager
 				{
 					ParticipantManager.PARTICIPANTS.remove(i);
 				}
-				System.out.println("NumberPIDServer!" + ParticipantManager.PARTICIPANT_NUMBER_SERVER);
 				pMessage.uID = String.valueOf(ParticipantManager.PARTICIPANT_NUMBER_SERVER);
 				pMessage.ids.clear();
 				pMessage.ids.addAll(ParticipantManager.PARTICIPANTS);
