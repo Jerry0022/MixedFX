@@ -48,7 +48,11 @@ class UDPOut
 			{
 				worked = false;
 
-				final byte[] sendData = (new Date().toInstant().toString() + "!" + NetworkConfig.status.get().toString() + "!" + NetworkConfig.statusChangeTime.get().toInstant().toString()).getBytes();
+				final byte[] sendData;
+				synchronized (NetworkConfig.status)
+				{
+					sendData = (new Date().toInstant().toString() + "!" + NetworkConfig.status.get().toString() + "!" + NetworkConfig.statusChangeTime.get().toInstant().toString()).getBytes();
+				}
 
 				/*
 				 * Try the 255.255.255.255 first

@@ -115,7 +115,7 @@ class UDPCoordinator implements EventTopicSubscriber<Object>
 						final NetworkInterface nic = nics.nextElement();
 						for (final InetAddress nicAdress : Collections.list(nic.getInetAddresses()))
 						{
-							if (this.compareIP(nicAdress, packet.getAddress()))
+							if (nicAdress.getHostAddress().equals(packet.getAddress().getHostAddress()))
 							{
 								ownOne = true;
 							}
@@ -127,7 +127,10 @@ class UDPCoordinator implements EventTopicSubscriber<Object>
 
 				if (!ownOne)
 				{
-					final UDPDetected newDetected = new UDPDetected(packet.getAddress(), NetworkConfig.States.valueOf(packetMessage.split("\\!")[1]), Date.from(Instant.parse(packetMessage.split("\\!")[0])), Date.from(Instant.parse(packetMessage.split("\\!")[2])));
+					/*
+					 * Register / Update the client in local list of UDP contacts.
+					 */
+					final UDPDetected newDetected = new UDPDetected(packet.getAddress(), Date.from(Instant.parse(packetMessage.split("\\!")[0])), NetworkConfig.States.valueOf(packetMessage.split("\\!")[1]), Date.from(Instant.parse(packetMessage.split("\\!")[2])));
 
 					// Add all sending NICs to list
 					final Predicate predicate = ApacheTools.convert(UDPDetected.getByAddress(newDetected.address));
@@ -135,14 +138,14 @@ class UDPCoordinator implements EventTopicSubscriber<Object>
 					{
 						CollectionUtils.select(UDPCoordinator.allAdresses, predicate).forEach(t ->
 						{
-							final UDPDetected detected = (UDPDetected) t;
-							if (newDetected.lastContact.after(detected.lastContact))
+							final UDPDetected localDetected = (UDPDetected) t;
+							if (newDetected.timeStamp.after(localDetected.timeStamp))
 							{
-								if (detected.status != newDetected.status)
+								localDetected.update(newDetected.status, newDetected.timeStamp);
+								if (!localDetected.status.equals(newDetected.status))
 								{
-									UDPCoordinator.allAdresses.set(UDPCoordinator.allAdresses.indexOf(detected), detected);
+									UDPCoordinator.allAdresses.set(UDPCoordinator.allAdresses.indexOf(localDetected), localDetected);
 								}
-								detected.update(newDetected.status, new Date());
 							}
 							else
 							{
@@ -155,8 +158,10 @@ class UDPCoordinator implements EventTopicSubscriber<Object>
 						UDPCoordinator.allAdresses.add(newDetected);
 					}
 
-					// If I'm searching and the other one is a server or bound to server then let's
-					// connect
+					/*
+					 * If I'm searching and the other one is a server or bound to server then let's
+					 * connect
+					 */
 					if (NetworkConfig.status.get().equals(States.Unbound) && (newDetected.status.equals(NetworkConfig.States.Server) || newDetected.status.equals(NetworkConfig.States.BoundToServer)))
 					{
 						NetworkManager.t.startFullTCP(packet.getAddress());
@@ -172,10 +177,5 @@ class UDPCoordinator implements EventTopicSubscriber<Object>
 					EventBusExtended.publishAsyncSafe(NetworkManager.NETWORK_FATALERROR, data);
 				}
 		}
-	}
-
-	private boolean compareIP(final InetAddress ip1, final InetAddress ip2)
-	{
-		return ip1.getHostAddress().equals(ip2.getHostAddress());
 	}
 }

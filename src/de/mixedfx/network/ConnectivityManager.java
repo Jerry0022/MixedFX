@@ -11,6 +11,7 @@ import org.bushe.swing.event.annotation.EventTopicSubscriber;
 import de.mixedfx.java.CustomSysOutErr;
 import de.mixedfx.network.NetworkConfig.States;
 import de.mixedfx.network.examples.ExampleUniqueService;
+import de.mixedfx.network.examples.UserManager;
 
 public class ConnectivityManager
 {

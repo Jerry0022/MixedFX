@@ -8,21 +8,21 @@ public class UDPDetected
 {
 	public final InetAddress	address;
 	public NetworkConfig.States	status;
-	public Date					lastContact;
+	public Date					timeStamp;
 	public Date					statusSince;
 
-	public UDPDetected(final InetAddress address, final NetworkConfig.States status, final Date firstContact, final Date statusSince)
+	public UDPDetected(final InetAddress address, final Date timeStamp, final NetworkConfig.States status, final Date statusSince)
 	{
 		this.address = address;
 		this.status = status;
-		this.lastContact = firstContact;
+		this.timeStamp = timeStamp;
 		this.statusSince = statusSince;
 	}
 
 	public void update(final NetworkConfig.States status, final Date lastContact)
 	{
 		this.status = status;
-		this.lastContact = lastContact;
+		this.timeStamp = lastContact;
 	}
 
 	public static Predicate<UDPDetected> getByAddress(final InetAddress address)
