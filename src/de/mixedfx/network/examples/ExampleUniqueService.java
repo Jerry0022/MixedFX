@@ -1,5 +1,6 @@
-package de.mixedfx.network;
+package de.mixedfx.network.examples;
 
+import de.mixedfx.network.ServiceManager;
 import de.mixedfx.network.ServiceManager.UniqueService;
 
 public class ExampleUniqueService implements UniqueService
