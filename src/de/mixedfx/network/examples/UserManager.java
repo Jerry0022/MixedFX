@@ -1,6 +1,5 @@
 package de.mixedfx.network.examples;
 
-import de.mixedfx.network.ServiceManager;
 import de.mixedfx.network.ServiceManager.P2PService;
 
 public class UserManager implements P2PService

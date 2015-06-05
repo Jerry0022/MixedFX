@@ -46,36 +46,6 @@ public class ConnectivityManager
 	static
 	{
 		ConnectivityManager.status = new SimpleObjectProperty<>(Status.Offline);
-		ConnectivityManager.status.addListener((ChangeListener<Status>) (observable, oldValue, newValue) ->
-		{
-			synchronized (NetworkConfig.status)
-			{
-				switch (newValue)
-				{
-					case Offline:
-					case Searching:
-						if (!oldValue.equals(Status.Offline) && !oldValue.equals(Status.Searching))
-						{
-							ServiceManager.stop();
-						}
-						break;
-					case Online:
-						if (NetworkConfig.status.get().equals(NetworkConfig.States.Server))
-						{
-							ServiceManager.host();
-						}
-						else
-							if (NetworkConfig.status.get().equals(NetworkConfig.States.BoundToServer))
-							{
-								ServiceManager.client();
-							}
-						break;
-					default:
-						break;
-				}
-			}
-		});
-
 		NetworkConfig.status.addListener((ChangeListener<States>) (observable, oldValue, newValue) ->
 		{
 			if (newValue.equals(States.Server) || newValue.equals(States.BoundToServer))
@@ -94,10 +64,6 @@ public class ConnectivityManager
 				ConnectivityManager.status.set(Status.Online);
 			}
 		});
-		// TODO Listening to UDPCoordinator#allAddresses. If an entry was replaced or new and it is
-		// a Server read out hostedTime and if older than mine call leave() if this one is not
-		// offline (enabling to reconnect to other server).
-		// TODO Add time of invalidating state to UDP messages.
 	}
 
 	/**

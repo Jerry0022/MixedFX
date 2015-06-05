@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import de.mixedfx.eventbus.EventBusExtended;
+import de.mixedfx.network.messages.RegisteredMessage;
+
 /**
  * Use {@link UniqueService} or {@link P2PService}!
  *
@@ -15,18 +18,18 @@ public class ServiceManager
 	{
 		/**
 		 * <p>
-		 * Every time {@link ConnectivityManager#status} is set to
-		 * {@link ConnectivityManager.Status#Searching} or
-		 * {@link ConnectivityManager.Status#Offline} this method is called.
+		 * Every time {@link NetworkConfig#status} is set to {@link NetworkConfig.States#Unbound}
+		 * this method is called synchronously.
 		 * </p>
 		 * <p>
-		 * ATTENTION: This method blocks network activity. Therefore do not execute long running
-		 * tasks directly here!
-		 * </p>
-		 * <p>
-		 * Is called before {@link ParticipantManager} is stopped. Therefore
+		 * Is called before {@link ParticipantManager} is stopped. Therefore the content of
 		 * {@link ParticipantManager#PARTICIPANTS} and {@link ParticipantManager#MY_PID} depends on
-		 * if this application is a client or a host.
+		 * if this application was a network host or client (PARTICIPANTS is maybe empty and MY_PID
+		 * may contain 0 = not yet identified).
+		 * </p>
+		 *
+		 * <p>
+		 * DON'T EXECUTE LONG RUNNING TASKS HERE, since it blocks the network activity!
 		 * </p>
 		 */
 		public void stop();
@@ -36,47 +39,64 @@ public class ServiceManager
 	{
 		/**
 		 * <p>
-		 * Every time {@link NetworkManager#online} is set to
-		 * {@link NetworkManager.OnlineStates#Online} this method is called asynchronously.
+		 * Every time {@link NetworkConfig#status} is set to
+		 * {@link NetworkConfig.States#BoundToServer} this method is called synchronously.
 		 * </p>
+		 * <p>
 		 * The {@link ParticipantManager} already has a pid and all other participants currently
-		 * registered.
+		 * registered!
+		 * </p>
+		 * <p>
+		 * DON'T EXECUTE LONG RUNNING TASKS HERE, since it blocks the network activity!
+		 * </p>
 		 */
 		public void client();
 
 		/**
 		 * <p>
-		 * Every time {@link NetworkManager#online} is set to
-		 * {@link NetworkManager.OnlineStates#Online} this method is called.
-		 * </p>
-		 * <p>
-		 * ATTENTION: This method blocks network activity. Therefore do not execute long running
-		 * tasks here directly!
+		 * Every time {@link NetworkConfig#status} is set to {@link NetworkConfig.States#Server}
+		 * this method is called synchronously.
 		 * </p>
 		 * <p>
 		 * Is called after {@link ParticipantManager} was started. Therefore
 		 * {@link ParticipantManager#MY_PID} is set to 1 and already added to the
 		 * {@link ParticipantManager#PARTICIPANTS}.
 		 * </p>
+		 * <p>
+		 * DON'T EXECUTE LONG RUNNING TASKS HERE, since it blocks the network activity!
+		 * </p>
 		 */
 		public void host();
+
+		/**
+		 * <p>
+		 * Default behavior is returning null (for all UniqueServices) -> message will be forwarded.
+		 * If at least one UniqueService returns a message object, which will be sent directly, the
+		 * original message won't be forwarded.
+		 * </p>
+		 * <p>
+		 * DON'T EXECUTE LONG RUNNING TASKS HERE, since it blocks the network activity!
+		 * </p>
+		 *
+		 * @param message
+		 * @return If return null there is no interest in this message -> no special action will be
+		 *         taken. If it returns a message this message will be sent to the receivers.
+		 */
+		public RegisteredMessage receive(RegisteredMessage message);
 	}
 
 	public interface P2PService extends Stoppable
 	{
 		/**
-		 * Every time {@link NetworkManager#online} is set to
-		 * {@link NetworkManager.OnlineStates#Online} this method is called.
+		 * <p>
+		 * Every time {@link NetworkConfig#status} is set to {@link final
+		 * NetworkConfig.States#BoundToServer} this method is called synchronously.
+		 * </p>
 		 */
 		public void start();
 	}
 
-	protected static List<Stoppable>	list	= Collections.synchronizedList(new ArrayList<Stoppable>());
-
-	static
-	{
-
-	}
+	private static List<Stoppable>	list	= Collections.synchronizedList(new ArrayList<Stoppable>());
 
 	protected static void client()
 	{
@@ -112,6 +132,30 @@ public class ServiceManager
 					{
 						((P2PService) service).start();
 					}
+			}
+		}
+	}
+
+	protected static void hostCheckMessage(final RegisteredMessage message)
+	{
+		synchronized (ServiceManager.list)
+		{
+			boolean atLeastOne = false;
+			for (final Stoppable service : ServiceManager.list)
+			{
+				if (service instanceof UniqueService)
+				{
+					final RegisteredMessage forwardMessage = ((UniqueService) service).receive(message);
+					if (forwardMessage != null)
+					{
+						atLeastOne = true;
+						EventBusExtended.publishSyncSafe(MessageBus.MESSAGE_SEND, forwardMessage);
+					}
+				}
+			}
+			if (!atLeastOne)
+			{
+				EventBusExtended.publishSyncSafe(MessageBus.MESSAGE_SEND, message);
 			}
 		}
 	}

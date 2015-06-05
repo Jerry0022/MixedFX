@@ -154,8 +154,7 @@ public class Connection implements EventBusServiceInterface
 					message.fromServer = false;
 					// Add Participants requests to my list.
 					this.checkParticipantMessage(message);
-					EventBusExtended.publishAsyncSafe(MessageBus.MESSAGE_RECEIVE, message); // Publish
-					// internally
+					this.checkReceive(message);
 				}
 			}
 			else
@@ -206,6 +205,11 @@ public class Connection implements EventBusServiceInterface
 			{
 				EventBusExtended.publishAsyncSafe(MessageBus.MESSAGE_RECEIVE, message); // Publish
 				// internally
+			}
+			// Asks services to process message before forwarding
+			if (NetworkConfig.status.get().equals(States.Server))
+			{
+				ServiceManager.hostCheckMessage(regMessage);
 			}
 		}
 		else

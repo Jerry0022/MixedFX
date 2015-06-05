@@ -99,8 +99,6 @@ public class ConnectionOutput implements Runnable
 			{
 				// In rare cases could be called twice, therefore soft
 				// Exception is needed, no impact!
-				// TODO: Handle Exception
-				// e.printStackTrace();
 				System.err.println("WRITE ERROR! No reason to fear about this :D!");
 			}
 			System.out.println(this.getClass().getSimpleName() + " terminated!");

@@ -35,6 +35,7 @@ public class NetworkManager
 			switch (newValue)
 			{
 				case Unbound:
+					ServiceManager.stop();
 					/*
 					 * Auto reconnect: Situation: Fall back from Server or BoundToServer to Unbound.
 					 * Just let it happen but reconnect after an interval multiplied with the index
@@ -62,12 +63,14 @@ public class NetworkManager
 					break;
 				case BoundToServer:
 					ParticipantManager.start().connect();
+					ServiceManager.client();
 					break;
 				case Server:
 					// Add me as server also as participant
 					ParticipantManager.MY_PID.set(ParticipantManager.PARTICIPANT_NUMBER);
 					ParticipantManager.PARTICIPANTS.add(ParticipantManager.PARTICIPANT_NUMBER++);
 					ParticipantManager.start();
+					ServiceManager.host();
 					break;
 				default:
 					break;
