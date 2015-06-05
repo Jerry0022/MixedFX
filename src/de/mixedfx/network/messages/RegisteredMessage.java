@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import de.mixedfx._network.ParticipantManager;
+import de.mixedfx.network.ParticipantManager;
 
 /**
  * All NOT network messages shall inherit this class for increased performance!
