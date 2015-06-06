@@ -6,7 +6,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 
 import org.bushe.swing.event.annotation.AnnotationProcessor;
 import org.bushe.swing.event.annotation.EventTopicSubscriber;
@@ -37,14 +36,6 @@ public class ParticipantManager
 	{
 		MY_PID = new AtomicInteger();
 		ParticipantManager.pManager = new ParticipantManager();
-
-		ParticipantManager.PARTICIPANTS.addListener((ListChangeListener<Integer>) c ->
-		{
-			if (ParticipantManager.PARTICIPANTS.size() > 0 && ParticipantManager.PARTICIPANTS.get(0).equals(ParticipantManager.MY_PID.get()))
-			{
-				ServiceManager.client();
-			}
-		});
 	}
 
 	protected static ParticipantManager start()

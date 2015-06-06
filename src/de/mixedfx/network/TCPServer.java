@@ -75,7 +75,7 @@ class TCPServer
 		{
 			this.serverSocket = new ServerSocket(port);
 			this.connectionList = new SimpleListProperty<>(FXCollections.observableArrayList(new ArrayList<>()));
-			Log.network.info(this.getClass().getSimpleName() + " initialized on " + this.serverSocket.getLocalSocketAddress());
+			Log.network.debug(this.getClass().getSimpleName() + " initialized on " + this.serverSocket.getLocalSocketAddress());
 		}
 
 		@Override

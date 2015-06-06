@@ -41,7 +41,7 @@ public class Connection implements EventBusServiceInterface
 
 	public Connection(final int clientID, final Socket clientSocket) throws IOException
 	{
-		Log.network.debug("Initializing " + this.getClass().getSimpleName() + " with " + clientSocket.getLocalSocketAddress());
+		Log.network.debug("Initializing " + this.getClass().getSimpleName() + " with " + clientSocket.getRemoteSocketAddress());
 
 		this.uid_pid_map = new HashMap<>();
 

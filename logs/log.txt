@@ -1,45 +1,46 @@
-13:56:18 Network    INFO  - (?.java:)                           : ConnectivityManager status changed from OFFLINE to SEARCHING
-13:56:18 Network    INFO  - (?.java:)                           : ConnectivityManager status changed from SEARCHING to ESTABLISHING
-13:56:18 Network    DEBUG - (?.java:)                           : NetworkConfig status changed from UNBOUND to SERVER
-13:56:18 Network    TRACE - (?.java:)                           : Sent UDP message!
-13:56:19 Network    INFO  - (?.java:)                           : Registrar initialized on 0.0.0.0/0.0.0.0:8888
-13:56:19 Network    INFO  - (?.java:)                           : ConnectivityManager status changed from ESTABLISHING to ONLINE
-13:56:19 Network    INFO  - (?.java:)                           : Participants changed to: ListProperty [value: [1]]
-13:56:19 Network    DEBUG - (?.java:)                           : UserManager started!
-13:56:19 Network    DEBUG - (?.java:)                           : ExampleUniqueService started as host!
-13:56:20 Network    TRACE - (?.java:)                           : Sent UDP message!
-13:56:20 Network    DEBUG - (?.java:)                           : Initializing Connection with /192.168.178.54:8888
-13:56:20 Network    TRACE - (?.java:)                           : ConnectionOutput initialized!
-13:56:20 Network    TRACE - (?.java:)                           : ConnectionInput initialized!
-13:56:20 Network    DEBUG - (?.java:)                           : Connection initialized!
-13:56:20 Network    DEBUG - (?.java:)                           : Registrar registered client!
-13:56:21 Network    TRACE - (?.java:)                           : ConnectionInput received message!
-13:56:21 Network    DEBUG - (?.java:)                           : Participant Request from client: b88e8558-8921-4bd0-996f-ff0658268151   !   []
-13:56:21 Network    DEBUG - (?.java:)                           : Participant Response from me as Server: b88e8558-8921-4bd0-996f-ff0658268151   !   [2, 1]
-13:56:21 Network    TRACE - (?.java:)                           : ConnectionOutput sends a Message!
-13:56:21 Network    INFO  - (?.java:)                           : Participants changed to: ListProperty [value: [2, 1]]
-13:56:21 Network    TRACE - (?.java:)                           : TCP Output Cache Size: 1
-13:56:21 Network    TRACE - (?.java:)                           : ConnectionOutput message sent!
-13:56:21 Network    TRACE - (?.java:)                           : Sent UDP message!
-13:56:23 Network    DEBUG - (?.java:)                           : A new or updated NIC was detected: /192.168.178.22!Server!Sat Jun 06 13:56:23 CEST 2015
-13:56:23 Network    TRACE - (?.java:)                           : Sent UDP message!
-13:56:25 Network    TRACE - (?.java:)                           : Sent UDP message!
-13:56:26 Network    TRACE - (?.java:)                           : Sent UDP message!
-13:56:28 Network    TRACE - (?.java:)                           : Sent UDP message!
-13:56:30 Network    TRACE - (?.java:)                           : Sent UDP message!
-13:56:31 Network    TRACE - (?.java:)                           : Sent UDP message!
-13:56:33 Network    TRACE - (?.java:)                           : Sent UDP message!
-13:56:35 Network    TRACE - (?.java:)                           : Sent UDP message!
-13:56:37 Network    TRACE - (?.java:)                           : Sent UDP message!
-13:56:39 Network    TRACE - (?.java:)                           : Sent UDP message!
-13:56:41 Network    TRACE - (?.java:)                           : Sent UDP message!
-13:56:43 Network    TRACE - (?.java:)                           : Sent UDP message!
-13:56:44 Network    TRACE - (?.java:)                           : ConnectionInput terminated!
-13:56:44 Network    TRACE - (?.java:)                           : ConnectionInput lost stream!
-13:56:44 Network    DEBUG - (?.java:)                           : Closing Connection
-13:56:44 Network    TRACE - (?.java:)                           : Terminating ConnectionOutput!
-13:56:44 Network    TRACE - (?.java:)                           : ConnectionOutput terminated!
-13:56:44 Network    DEBUG - (?.java:)                           : Connection closed!
-13:56:44 Network    DEBUG - (?.java:)                           : Participant lost, is my connection to the server: false
-13:56:44 Network    INFO  - (?.java:)                           : Participants changed to: ListProperty [value: [1]]
-13:56:44 Network    TRACE - (?.java:)                           : Sent UDP message!
+14:16:42 Network    INFO  - (?.java:)                           : ConnectivityManager status changed from OFFLINE to SEARCHING
+14:16:42 Network    INFO  - (?.java:)                           : ConnectivityManager status changed from SEARCHING to ESTABLISHING
+14:16:42 Network    DEBUG - (?.java:)                           : NetworkConfig status changed from UNBOUND to SERVER
+14:16:43 Network    DEBUG - (?.java:)                           : Registrar initialized on 0.0.0.0/0.0.0.0:8888
+14:16:43 Network    DEBUG - (?.java:)                           : UserManager started!
+14:16:43 Network    DEBUG - (?.java:)                           : ExampleUniqueService started as client!
+14:16:43 Network    INFO  - (?.java:)                           : ConnectivityManager status changed from ESTABLISHING to ONLINE
+14:16:43 Network    INFO  - (?.java:)                           : Participants changed to: ListProperty [value: [1]]
+14:16:43 Network    DEBUG - (?.java:)                           : UserManager started!
+14:16:43 Network    DEBUG - (?.java:)                           : ExampleUniqueService started as host!
+14:16:43 Network    TRACE - (?.java:)                           : Sent UDP message!
+14:16:44 Network    TRACE - (?.java:)                           : Sent UDP message!
+14:16:46 Network    TRACE - (?.java:)                           : Sent UDP message!
+14:16:48 Network    TRACE - (?.java:)                           : Sent UDP message!
+14:16:50 Network    TRACE - (?.java:)                           : Sent UDP message!
+14:16:51 Network    TRACE - (?.java:)                           : Sent UDP message!
+14:16:53 Network    TRACE - (?.java:)                           : Sent UDP message!
+14:16:55 Network    TRACE - (?.java:)                           : Sent UDP message!
+14:16:56 Network    TRACE - (?.java:)                           : Sent UDP message!
+14:16:58 Network    TRACE - (?.java:)                           : Sent UDP message!
+14:17:00 Network    TRACE - (?.java:)                           : Sent UDP message!
+14:17:01 Network    TRACE - (?.java:)                           : Sent UDP message!
+14:17:02 Network    DEBUG - (?.java:)                           : Initializing Connection with /192.168.178.54:8888
+14:17:02 Network    TRACE - (?.java:)                           : ConnectionOutput initialized!
+14:17:02 Network    TRACE - (?.java:)                           : ConnectionInput initialized!
+14:17:02 Network    DEBUG - (?.java:)                           : Connection initialized!
+14:17:02 Network    DEBUG - (?.java:)                           : Registrar registered client!
+14:17:03 Network    TRACE - (?.java:)                           : Sent UDP message!
+14:17:03 Network    TRACE - (?.java:)                           : ConnectionInput received message!
+14:17:03 Network    DEBUG - (?.java:)                           : Participant Request from client: cffa415e-39a9-4559-94cb-9c690551d6a0   !   []
+14:17:03 Network    DEBUG - (?.java:)                           : Participant Response from me as server: cffa415e-39a9-4559-94cb-9c690551d6a0   !   [2, 1]
+14:17:03 Network    TRACE - (?.java:)                           : ConnectionOutput sends a Message!
+14:17:03 Network    INFO  - (?.java:)                           : Participants changed to: ListProperty [value: [2, 1]]
+14:17:03 Network    TRACE - (?.java:)                           : ConnectionOutput message sent!
+14:17:05 Network    TRACE - (?.java:)                           : Sent UDP message!
+14:17:06 Network    TRACE - (?.java:)                           : Sent UDP message!
+14:17:08 Network    DEBUG - (?.java:)                           : A new or updated NIC was detected: /192.168.178.22!BoundToServer!Sat Jun 06 14:17:10 CEST 2015
+14:17:08 Network    TRACE - (?.java:)                           : Sent UDP message!
+14:17:10 Network    TRACE - (?.java:)                           : Sent UDP message!
+14:17:11 Network    TRACE - (?.java:)                           : Sent UDP message!
+14:17:13 Network    TRACE - (?.java:)                           : Sent UDP message!
+14:17:15 Network    TRACE - (?.java:)                           : Sent UDP message!
+14:17:16 Network    TRACE - (?.java:)                           : Sent UDP message!
+14:17:18 Network    TRACE - (?.java:)                           : Sent UDP message!
+14:17:20 Network    TRACE - (?.java:)                           : Sent UDP message!
+14:17:21 Network    TRACE - (?.java:)                           : Sent UDP message!

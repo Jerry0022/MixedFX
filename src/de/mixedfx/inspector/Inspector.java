@@ -149,7 +149,6 @@ public class Inspector
 			}
 			catch (final InterruptedException e)
 			{}
-			System.out.println("RUN");
 			toRun.run();
 		});
 	}

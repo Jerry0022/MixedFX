@@ -64,6 +64,16 @@ public class ConnectivityManager
 			if (c.getList().size() > 0)
 			{
 				ConnectivityManager.status.set(Status.Online);
+				if (ParticipantManager.PARTICIPANTS.get(0).equals(ParticipantManager.MY_PID.get()))
+				{
+					synchronized (NetworkConfig.status)
+					{
+						if (NetworkConfig.status.get().equals(States.BoundToServer))
+						{
+							ServiceManager.client();
+						}
+					}
+				}
 			}
 		});
 	}
@@ -143,8 +153,8 @@ public class ConnectivityManager
 		{
 			c.next();
 			final UDPDetected detected = c.getAddedSubList().get(0);
-			// If another server makes him known, check if it was created before my Server and if so
-			// reconnect to it!
+			// If another server makes itself known, check if it was created before my Server and if
+			// so reconnect to it!
 			if (NetworkConfig.status.get().equals(NetworkConfig.States.Server) && detected.status.equals(States.Server) && NetworkConfig.statusChangeTime.get().after(detected.statusSince))
 			{
 				// Force reconnect
