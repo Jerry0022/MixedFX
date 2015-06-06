@@ -99,6 +99,9 @@ public class ConnectivityManager
 				// If another server makes itself known, check if it was created before my Server
 				// and if
 				// so reconnect to it!
+				Log.network.warn(NetworkConfig.status.get().equals(NetworkConfig.States.Server));
+				Log.network.warn(detected.status.equals(States.Server));
+				Log.network.warn(NetworkConfig.statusChangeTime.get().after(detected.statusSince));
 				if (NetworkConfig.status.get().equals(NetworkConfig.States.Server) && detected.status.equals(States.Server) && NetworkConfig.statusChangeTime.get().after(detected.statusSince))
 				{
 					// Force reconnect

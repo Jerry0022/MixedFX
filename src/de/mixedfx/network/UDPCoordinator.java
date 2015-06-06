@@ -140,6 +140,7 @@ class UDPCoordinator implements EventTopicSubscriber<Object>
 							if (newDetected.timeStamp.after(localDetected.timeStamp))
 							{
 								localDetected.update(newDetected.status, newDetected.timeStamp);
+								Log.network.warn("UPDATED");
 								if (!localDetected.status.equals(newDetected.status))
 								{
 									UDPCoordinator.allAdresses.set(UDPCoordinator.allAdresses.indexOf(localDetected), localDetected);
@@ -147,7 +148,6 @@ class UDPCoordinator implements EventTopicSubscriber<Object>
 							}
 							else
 							{
-								Log.network.warn("Old UDP packet received!");
 								return; // Old UDP Packet, newer one was already received!
 							}
 						});
