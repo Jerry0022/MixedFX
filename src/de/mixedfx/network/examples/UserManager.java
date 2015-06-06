@@ -64,7 +64,7 @@ public class UserManager implements P2PService, MessageReceiver, ListChangeListe
 		}
 
 		MessageBus.send(new UserMessage(this.myUser));
-		Log.network.debug("UserManager started!");
+		Log.network.debug("UserManager started! My id: " + this.myUser.getIdentifier());
 	}
 
 	@Override
