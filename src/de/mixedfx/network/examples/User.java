@@ -1,5 +1,7 @@
 package de.mixedfx.network.examples;
 
+import java.io.Serializable;
+
 import org.apache.commons.collections.Predicate;
 
 import de.mixedfx.java.ApacheTools;
@@ -14,7 +16,7 @@ import de.mixedfx.network.ParticipantManager;
  * @author Jerry
  *
  */
-public abstract class User implements Identifiable
+public abstract class User implements Identifiable, Serializable
 {
 	protected Predicate getByPID()
 	{
