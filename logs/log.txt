@@ -1,7 +1,7 @@
-10:45:26 Network    INFO  - (?.java:) : CM OLD: Offline! NEW: Searching
-10:45:26 Network    INFO  - (?.java:) : CM OLD: Searching! NEW: Establishing
-10:45:26 Network    DEBUG - (?.java:) : OLD: Unbound! NEW: Server
-10:45:26 Network    INFO  - (?.java:) : CM OLD: Establishing! NEW: Online
-10:45:26 Network    INFO  - (?.java:) : ListProperty [value: [1]]
-10:45:26 Network    DEBUG - (?.java:) : START CALLED
-10:45:26 Network    DEBUG - (?.java:) : HOST
+11:04:25 Network    INFO  - (?.java:) : CM OLD: Offline! NEW: Searching
+11:04:25 Network    INFO  - (?.java:) : CM OLD: Searching! NEW: Establishing
+11:04:25 Network    DEBUG - (?.java:) : OLD: Unbound! NEW: Server
+11:04:25 Network    INFO  - (?.java:) : CM OLD: Establishing! NEW: Online
+11:04:25 Network    INFO  - (?.java:) : ListProperty [value: [1]]
+11:04:25 Network    DEBUG - (?.java:) : START CALLED
+11:04:25 Network    DEBUG - (?.java:) : HOST

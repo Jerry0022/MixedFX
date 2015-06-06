@@ -9,11 +9,11 @@
 	<Appenders>
 		<Console name="STDOUT">
 			<PatternLayout
-				pattern="%-8date{HH:mm:ss}{GMT+2} %-10.10c %-5.5p - (%class{1}.java:%L) : %m%n" />
+				pattern="%-8date{HH:mm:ss}{GMT+2} %-10.10c %-5.5p - %-30enc{(%class{1}.java:%L)} : %m%n" />
 		</Console>
 		<File name="FILE" fileName="${logFolder}\${logFileName}" append="false">
 			<PatternLayout
-				pattern="%-8date{HH:mm:ss}{GMT+2} %-10.10c %-5.5p - (%class{1}.java:%L) : %m%n" />
+				pattern="%-8date{HH:mm:ss}{GMT+2} %-10.10c %-5.5p - %-30enc{(%class{1}.java:%L)} : %m%n" />
 		</File>
 		<Async name="ASYNCFILE">
 			<AppenderRef ref="FILE" />
