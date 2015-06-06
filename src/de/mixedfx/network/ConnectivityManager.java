@@ -5,10 +5,12 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 
+import org.apache.logging.log4j.Level;
 import org.bushe.swing.event.annotation.AnnotationProcessor;
 import org.bushe.swing.event.annotation.EventTopicSubscriber;
 
 import de.mixedfx.java.CustomSysOutErr;
+import de.mixedfx.logging.Log;
 import de.mixedfx.network.NetworkConfig.States;
 import de.mixedfx.network.examples.ExampleUniqueService;
 import de.mixedfx.network.examples.UserManager;
@@ -122,16 +124,16 @@ public class ConnectivityManager
 		// Catch fatal errors to show (network reacted already to this error)
 		AnnotationProcessor.process(new ConnectivityManager());
 
-		NetworkConfig.status.addListener((ChangeListener<States>) (observable, oldValue, newValue) -> System.out.println("OLD: " + oldValue + "! NEW: " + newValue));
+		NetworkConfig.status.addListener((ChangeListener<States>) (observable, oldValue, newValue) -> Log.network.debug("OLD: " + oldValue + "! NEW: " + newValue));
 
 		ParticipantManager.PARTICIPANTS.addListener((ListChangeListener<Integer>) c ->
 		{
-			System.out.println(ParticipantManager.PARTICIPANTS);
+			Log.network.info(ParticipantManager.PARTICIPANTS);
 		});
 
 		ConnectivityManager.status.addListener((ChangeListener<Status>) (observable, oldValue, newValue) ->
 		{
-			System.out.println("CM OLD: " + oldValue + "! NEW: " + newValue);
+			Log.network.info("CM OLD: " + oldValue + "! NEW: " + newValue);
 		});
 
 		// Show all directly found applications host and all directly found Server (Not the
@@ -146,10 +148,10 @@ public class ConnectivityManager
 			if (NetworkConfig.status.get().equals(NetworkConfig.States.Server) && detected.status.equals(States.Server) && NetworkConfig.statusChangeTime.get().after(detected.statusSince))
 			{
 				// Force reconnect
-				System.out.println("FORCE RECONNECT TO OTHER SERVER!");
+				Log.network.info("Older server detected on " + detected.address.getHostAddress() + " => Force reconect to this server!");
 				ConnectivityManager.force();
 			}
-			System.out.println("ALL: " + c.getAddedSubList().get(0).address + "!" + c.getAddedSubList().get(0).status + "!" + c.getAddedSubList().get(0).statusSince);
+			Log.network.debug("ALL: " + c.getAddedSubList().get(0).address + "!" + c.getAddedSubList().get(0).status + "!" + c.getAddedSubList().get(0).statusSince);
 		});
 
 		ServiceManager.register(new UserManager());
@@ -166,6 +168,6 @@ public class ConnectivityManager
 	@EventTopicSubscriber(topic = NetworkManager.NETWORK_FATALERROR)
 	public void error(final String topic, final Exception exception)
 	{
-		System.out.println("Caught error: " + exception.getMessage());
+		Log.network.catching(Level.ERROR, exception);
 	}
 }
