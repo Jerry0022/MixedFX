@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Level;
 import org.bushe.swing.event.annotation.AnnotationProcessor;
 import org.bushe.swing.event.annotation.EventTopicSubscriber;
 
+import de.mixedfx.inspector.Inspector;
 import de.mixedfx.java.CustomSysOutErr;
 import de.mixedfx.logging.Log;
 import de.mixedfx.network.NetworkConfig.States;
@@ -153,13 +154,20 @@ public class ConnectivityManager
 		{
 			c.next();
 			final UDPDetected detected = c.getAddedSubList().get(0);
-			// If another server makes itself known, check if it was created before my Server and if
-			// so reconnect to it!
-			if (NetworkConfig.status.get().equals(NetworkConfig.States.Server) && detected.status.equals(States.Server) && NetworkConfig.statusChangeTime.get().after(detected.statusSince))
+			synchronized (NetworkConfig.status)
 			{
-				// Force reconnect
-				Log.network.info("Older server detected on " + detected.address.getHostAddress() + " => Force reconnect to this server!");
-				ConnectivityManager.force();
+				// If another server makes itself known, check if it was created before my Server
+				// and if
+				// so reconnect to it!
+				if (NetworkConfig.status.get().equals(NetworkConfig.States.Server) && detected.status.equals(States.Server) && NetworkConfig.statusChangeTime.get().after(detected.statusSince))
+				{
+					// Force reconnect
+					Log.network.info("Older server detected on " + detected.address.getHostAddress() + " => Force reconnect to this server!");
+					Inspector.runNowAsDaemon(() ->
+					{
+						ConnectivityManager.force();
+					});
+				}
 			}
 			Log.network.debug("A new or updated NIC was detected: " + c.getAddedSubList().get(0).address + "!" + c.getAddedSubList().get(0).status + "!" + c.getAddedSubList().get(0).statusSince);
 		});

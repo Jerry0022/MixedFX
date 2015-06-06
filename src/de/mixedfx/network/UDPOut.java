@@ -35,7 +35,8 @@ class UDPOut
 
 	public synchronized void close()
 	{
-		this.socket.close();
+		if (this.socket != null)
+			this.socket.close();
 		this.socket = null;
 	}
 
@@ -117,7 +118,8 @@ class UDPOut
 					}
 				}
 				catch (final Exception e1)
-				{}
+				{
+				}
 
 				if (!worked)
 				{
@@ -131,7 +133,8 @@ class UDPOut
 					Thread.sleep(NetworkConfig.BROADCAST_INTERVAL);
 				}
 				catch (final Exception e)
-				{}
+				{
+				}
 			}
 
 			// If this was not closed by user
