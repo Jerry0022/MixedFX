@@ -148,10 +148,10 @@ public class ConnectivityManager
 			if (NetworkConfig.status.get().equals(NetworkConfig.States.Server) && detected.status.equals(States.Server) && NetworkConfig.statusChangeTime.get().after(detected.statusSince))
 			{
 				// Force reconnect
-				Log.network.info("Older server detected on " + detected.address.getHostAddress() + " => Force reconect to this server!");
+				Log.network.info("Older server detected on " + detected.address.getHostAddress() + " => Force reconnect to this server!");
 				ConnectivityManager.force();
 			}
-			Log.network.debug("ALL: " + c.getAddedSubList().get(0).address + "!" + c.getAddedSubList().get(0).status + "!" + c.getAddedSubList().get(0).statusSince);
+			Log.network.debug("A new or updated NIC was detected: " + c.getAddedSubList().get(0).address + "!" + c.getAddedSubList().get(0).status + "!" + c.getAddedSubList().get(0).statusSince);
 		});
 
 		ServiceManager.register(new UserManager());

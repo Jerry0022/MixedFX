@@ -46,7 +46,6 @@ public class ConnectionOutput implements Runnable
 			{
 				if (this.outputMessageCache.size() > 0)
 				{
-					Log.network.trace("TCP Output Cache Size: " + this.outputMessageCache.size());
 					try
 					{
 						this.objectOutputStream.reset(); // GBC can collect written objects

@@ -68,7 +68,7 @@ public class NetworkManager
 					break;
 				case BoundToServer:
 					ParticipantManager.start().connect();
-					ServiceManager.client();
+					// See ParticipantManager for the start of client() in ServiceManager
 					break;
 				case Server:
 					// Add me as server also as participant
