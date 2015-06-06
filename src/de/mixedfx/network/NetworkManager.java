@@ -110,11 +110,8 @@ public class NetworkManager
 	{
 		if (NetworkManager.running)
 		{
-			Log.network.debug("FORCING" + NetworkConfig.status.get());
 			NetworkManager.t.stopTCPFull();
 		}
-		else
-			Log.network.debug("ABORT FORCE!");
 	}
 
 	public synchronized static void stop()

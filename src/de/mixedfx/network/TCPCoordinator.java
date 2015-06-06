@@ -103,7 +103,7 @@ public class TCPCoordinator
 	{
 		synchronized (NetworkConfig.status)
 		{
-			Log.network.debug("Participant lost, is my connection to the server: " + clientID.equals(TCPCoordinator.localNetworkMainID.get()));
+			Log.network.debug("Participant lost, is my connection to the server: " + clientID.equals(TCPCoordinator.localNetworkMainID.get()) + clientID);
 			// Check if this connection is my main connection to the server
 			if (clientID.equals(TCPCoordinator.localNetworkMainID.get()))
 			{
