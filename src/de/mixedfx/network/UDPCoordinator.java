@@ -21,7 +21,6 @@ import org.bushe.swing.event.EventTopicSubscriber;
 import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.eventbus.EventBusService;
 import de.mixedfx.java.ApacheTools;
-import de.mixedfx.logging.Log;
 import de.mixedfx.network.NetworkConfig.States;
 
 class UDPCoordinator implements EventTopicSubscriber<Object>
@@ -139,9 +138,9 @@ class UDPCoordinator implements EventTopicSubscriber<Object>
 							final UDPDetected localDetected = (UDPDetected) t;
 							if (newDetected.timeStamp.after(localDetected.timeStamp))
 							{
+								final States oldStatus = States.valueOf(localDetected.status.toString());
 								localDetected.update(newDetected.status, newDetected.timeStamp);
-								Log.network.warn("UPDATED");
-								if (!localDetected.status.equals(newDetected.status))
+								if (!oldStatus.equals(newDetected.status))
 								{
 									UDPCoordinator.allAdresses.set(UDPCoordinator.allAdresses.indexOf(localDetected), localDetected);
 								}
