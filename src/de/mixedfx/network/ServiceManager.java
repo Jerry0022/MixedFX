@@ -35,6 +35,14 @@ public class ServiceManager
 		public void stop();
 	}
 
+	/**
+	 * A service which exists from the start to the end of a network if the service is registered by
+	 * calling {@link ServiceManager#register(Stoppable)}! Whereby {@link UniqueService#host()} is
+	 * only called once in the network and {@link UniqueService#client()} is called on all the other
+	 * applications!
+	 *
+	 * @author Jerry
+	 */
 	public interface UniqueService extends Stoppable
 	{
 		/**
@@ -85,6 +93,11 @@ public class ServiceManager
 		public RegisteredMessage receive(RegisteredMessage message);
 	}
 
+	/**
+	 * A network dependant service which exists in the same way on all computers!
+	 *
+	 * @author Jerry
+	 */
 	public interface P2PService extends Stoppable
 	{
 		/**

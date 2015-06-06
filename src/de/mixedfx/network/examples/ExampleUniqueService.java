@@ -1,7 +1,7 @@
 package de.mixedfx.network.examples;
 
-import de.mixedfx.network.ServiceManager;
 import de.mixedfx.network.ServiceManager.UniqueService;
+import de.mixedfx.network.messages.RegisteredMessage;
 
 public class ExampleUniqueService implements UniqueService
 {
@@ -25,6 +25,12 @@ public class ExampleUniqueService implements UniqueService
 	{
 		System.err.println("HOST");
 
+	}
+
+	@Override
+	public RegisteredMessage receive(final RegisteredMessage message)
+	{
+		return null;
 	}
 
 }
