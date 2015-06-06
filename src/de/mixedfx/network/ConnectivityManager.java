@@ -1,5 +1,7 @@
 package de.mixedfx.network;
 
+import java.util.UUID;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -13,6 +15,8 @@ import de.mixedfx.inspector.Inspector;
 import de.mixedfx.logging.Log;
 import de.mixedfx.network.NetworkConfig.States;
 import de.mixedfx.network.examples.ExampleUniqueService;
+import de.mixedfx.network.examples.ExampleUser;
+import de.mixedfx.network.examples.User;
 import de.mixedfx.network.examples.UserManager;
 
 public class ConnectivityManager
@@ -182,8 +186,17 @@ public class ConnectivityManager
 			Log.network.info("ConnectivityManager status changed from " + oldValue.toString().toUpperCase() + " to " + newValue.toString().toUpperCase());
 		});
 
+		// Create example user
+		final String id = UUID.randomUUID().toString();
+		final ExampleUser user = new ExampleUser(id.substring(id.length() - 7, id.length()));
+
 		// Register example services
-		ServiceManager.register(new UserManager());
+		final UserManager userManager = new UserManager(user);
+		userManager.allUsers.addListener((ListChangeListener<User>) c ->
+		{
+			Log.network.info("UserManager list changed to: " + userManager.allUsers);
+		});
+		ServiceManager.register(userManager);
 		ServiceManager.register(new ExampleUniqueService());
 
 		// Start network activity and immediately after that start TCP as host.

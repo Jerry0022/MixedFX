@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.google.gson.annotations.Expose;
+
 import de.mixedfx.network.ParticipantManager;
 
 /**
@@ -26,16 +28,19 @@ public class RegisteredMessage extends Message
 	 * If receivers contains no value it does not make sense to send this message ;)
 	 * </p>
 	 */
+	@Expose
 	public final List<Integer>	receivers;
 
 	/**
 	 * Senders PID, which is automatically set!
 	 */
+	@Expose
 	public final int			sender;
 
 	/**
 	 * The time the message was instantiated!
 	 */
+	@Expose
 	public final Date			creationTime;
 
 	public RegisteredMessage()
