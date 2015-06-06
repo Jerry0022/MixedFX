@@ -10,7 +10,6 @@ import org.bushe.swing.event.annotation.AnnotationProcessor;
 import org.bushe.swing.event.annotation.EventTopicSubscriber;
 
 import de.mixedfx.inspector.Inspector;
-import de.mixedfx.java.CustomSysOutErr;
 import de.mixedfx.logging.Log;
 import de.mixedfx.network.NetworkConfig.States;
 import de.mixedfx.network.examples.ExampleUniqueService;
@@ -49,6 +48,10 @@ public class ConnectivityManager
 	static
 	{
 		ConnectivityManager.status = new SimpleObjectProperty<>(Status.Offline);
+		/*
+		 * Set Establishing if connected but not yet registered as participant or searching if not
+		 * connected but searching for a network.
+		 */
 		NetworkConfig.status.addListener((ChangeListener<States>) (observable, oldValue, newValue) ->
 		{
 			if (newValue.equals(States.Server) || newValue.equals(States.BoundToServer))
@@ -60,6 +63,10 @@ public class ConnectivityManager
 				ConnectivityManager.status.set(Status.Searching);
 			}
 		});
+
+		/*
+		 * Set ONLINE if I'm registered as particpant
+		 */
 		ParticipantManager.PARTICIPANTS.addListener((ListChangeListener<Integer>) c ->
 		{
 			if (c.getList().size() > 0)
@@ -76,6 +83,34 @@ public class ConnectivityManager
 					}
 				}
 			}
+		});
+
+		/*
+		 * Leave network if host my host is newer than another one and connect to this one.
+		 */
+		// Show all directly found applications host and all directly found Server (Not the
+		// bound to
+		// server ones) which were once online while this application was online.
+		UDPCoordinator.allAdresses.addListener((ListChangeListener<UDPDetected>) c ->
+		{
+			c.next();
+			final UDPDetected detected = c.getAddedSubList().get(0);
+			synchronized (NetworkConfig.status)
+			{
+				// If another server makes itself known, check if it was created before my Server
+				// and if
+				// so reconnect to it!
+				if (NetworkConfig.status.get().equals(NetworkConfig.States.Server) && detected.status.equals(States.Server) && NetworkConfig.statusChangeTime.get().after(detected.statusSince))
+				{
+					// Force reconnect
+					Log.network.info("Older server detected on " + detected.address.getHostAddress() + " => Force reconnect to this server!");
+					Inspector.runNowAsDaemon(() ->
+					{
+						ConnectivityManager.force();
+					});
+				}
+			}
+			Log.network.debug("A new or updated NIC was detected: " + c.getAddedSubList().get(0).address + "!" + c.getAddedSubList().get(0).status + "!" + c.getAddedSubList().get(0).statusSince);
 		});
 	}
 
@@ -130,53 +165,32 @@ public class ConnectivityManager
 
 	public static void main(final String[] args)
 	{
-		CustomSysOutErr.init();
-
-		// Catch fatal errors to show (network reacted already to this error)
+		// Log fatal errors (network reacted already to this error)
 		AnnotationProcessor.process(new ConnectivityManager());
 
+		// Log NetworkConfig.status
 		NetworkConfig.status.addListener((ChangeListener<States>) (observable, oldValue, newValue) -> Log.network.debug("NetworkConfig status changed from " + oldValue.toString().toUpperCase() + " to " + newValue.toString().toUpperCase()));
 
+		// Log Participants
 		ParticipantManager.PARTICIPANTS.addListener((ListChangeListener<Integer>) c ->
 		{
 			Log.network.info("Participants changed to: " + ParticipantManager.PARTICIPANTS);
 		});
 
+		// Log ConnectivityManager.status
 		ConnectivityManager.status.addListener((ChangeListener<Status>) (observable, oldValue, newValue) ->
 		{
 			Log.network.info("ConnectivityManager status changed from " + oldValue.toString().toUpperCase() + " to " + newValue.toString().toUpperCase());
 		});
 
-		// Show all directly found applications host and all directly found Server (Not the
-		// bound to
-		// server ones) which were once online while this application was online.
-		UDPCoordinator.allAdresses.addListener((ListChangeListener<UDPDetected>) c ->
-		{
-			c.next();
-			final UDPDetected detected = c.getAddedSubList().get(0);
-			synchronized (NetworkConfig.status)
-			{
-				// If another server makes itself known, check if it was created before my Server
-				// and if
-				// so reconnect to it!
-				if (NetworkConfig.status.get().equals(NetworkConfig.States.Server) && detected.status.equals(States.Server) && NetworkConfig.statusChangeTime.get().after(detected.statusSince))
-				{
-					// Force reconnect
-					Log.network.info("Older server detected on " + detected.address.getHostAddress() + " => Force reconnect to this server!");
-					Inspector.runNowAsDaemon(() ->
-					{
-						ConnectivityManager.force();
-					});
-				}
-			}
-			Log.network.debug("A new or updated NIC was detected: " + c.getAddedSubList().get(0).address + "!" + c.getAddedSubList().get(0).status + "!" + c.getAddedSubList().get(0).statusSince);
-		});
-
+		// Register example services
 		ServiceManager.register(new UserManager());
 		ServiceManager.register(new ExampleUniqueService());
 
+		// Start network activity and immediately after that start TCP as host.
 		ConnectivityManager.force();
 
+		// Don't let the application stop itself!
 		while (true)
 		{
 			;
