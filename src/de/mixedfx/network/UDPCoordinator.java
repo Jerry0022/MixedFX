@@ -21,6 +21,7 @@ import org.bushe.swing.event.EventTopicSubscriber;
 import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.eventbus.EventBusService;
 import de.mixedfx.java.ApacheTools;
+import de.mixedfx.logging.Log;
 import de.mixedfx.network.NetworkConfig.States;
 
 class UDPCoordinator implements EventTopicSubscriber<Object>
@@ -146,6 +147,7 @@ class UDPCoordinator implements EventTopicSubscriber<Object>
 							}
 							else
 							{
+								Log.network.warn("Old UDP packet received!");
 								return; // Old UDP Packet, newer one was already received!
 							}
 						});

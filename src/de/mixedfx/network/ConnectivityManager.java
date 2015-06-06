@@ -89,8 +89,7 @@ public class ConnectivityManager
 		 * Leave network if host my host is newer than another one and connect to this one.
 		 */
 		// Show all directly found applications host and all directly found Server (Not the
-		// bound to
-		// server ones) which were once online while this application was online.
+		// bound to server ones) which were once online while this application was online.
 		UDPCoordinator.allAdresses.addListener((ListChangeListener<UDPDetected>) c ->
 		{
 			c.next();
