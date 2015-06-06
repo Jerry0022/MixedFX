@@ -78,10 +78,10 @@ public class ConnectivityManager
 	/**
 	 * <pre>
 	 * Reconnects the network:
-	 * If network is shutdown it calls {@link #on()}. => Searching
-	 * If network is running and searching it calls {@link NetworkManager#host()}. => Hosting immediately
-	 * If network is running and connected it reconnects, calling {@link NetworkManager#leave()} and immediately {@link NetworkManager#host()}. => Hosting immediately.
-	 * If network is running and hosting it reconnects, calling {@link NetworkManager#leave()}. => Searching and after some time hosting (time depends on which rang joined in last network).
+	 * If network is shutdown it calls {@link #on()}. - Searching
+	 * If network is running and searching it calls {@link NetworkManager#host()}. - Hosting immediately
+	 * If network is running and connected it reconnects, calling {@link NetworkManager#leave()} and immediately {@link NetworkManager#host()}. - Hosting immediately.
+	 * If network is running and hosting it reconnects, calling {@link NetworkManager#leave()}. - Searching and after some time hosting (time depends on which rang joined in last network).
 	 * </pre>
 	 */
 	public static void force()

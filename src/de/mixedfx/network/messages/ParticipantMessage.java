@@ -8,9 +8,9 @@ import java.util.UUID;
  * There are several usages of this Message:
  *
  * <pre>
- * If uID is not empty and ids are empty => PID request.<br>
- * If uID is not empty and ids are not empty => PID response. First pid is the pid of the requesting participant.<br>
- * If uID is empty and ids are not empty => PIDs lost information.
+ * If uID is not empty and ids are empty - PID request.<br>
+ * If uID is not empty and ids are not empty - PID response. First pid is the pid of the requesting participant.<br>
+ * If uID is empty and ids are not empty - PIDs lost information.
  * </pre>
  *
  * @author Jerry

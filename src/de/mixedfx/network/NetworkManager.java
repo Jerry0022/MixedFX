@@ -18,7 +18,7 @@ public class NetworkManager
 	 * was a network error which closed the entire network. Further information: This error does
 	 * <b>relate to the UDP Server in most cases</b> (but not in case of if
 	 * {@link NetworkConfig#status} = {@link NetworkConfig.States#Server}). The cause is probably
-	 * the port. React to that <b>port error with {@link NetworkManager#setPort(int)}</b> with the
+	 * the port. React to that <b>port error with NetworkManager#setPort(int)</b> with the
 	 * recommendation to choose a random number between 10 000 and 60 000!
 	 */
 	public static final String			NETWORK_FATALERROR	= "NETWORK_FATALERROR";

@@ -4,7 +4,7 @@ apply plugin: 'java-library-distribution'
  * Put .jar, sources.jar and javadoc.jar plus all necessary libraries into one zip file.
  */
 
-version = '0.8'
+version = '0.9'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -41,8 +41,8 @@ dependencies {
     compile 'org.bushe:eventbus:1.4'
     compile 'org.slf4j:slf4j-api:1.7.12'
     compile 'org.slf4j:slf4j-simple:1.7.12'
-    compile 'org.apache.logging.log4j:log4j-core:2.2'
-    compile 'org.apache.logging.log4j:log4j-api:2.2'
+    compile 'org.apache.logging.log4j:log4j-core:2.3'
+    compile 'org.apache.logging.log4j:log4j-api:2.3'
     compile 'org.jfxtras:jfxtras-labs:8.0-r3'
     compile 'com.google.code.gson:gson:2.3.1'
     compile fileTree(dir: 'libs', include: ['*.jar'])

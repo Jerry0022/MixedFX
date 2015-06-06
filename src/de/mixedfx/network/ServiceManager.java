@@ -78,7 +78,7 @@ public class ServiceManager
 
 		/**
 		 * <p>
-		 * Default behavior is returning null (for all UniqueServices) -> message will be forwarded.
+		 * Default behavior is returning null (for all UniqueServices) - message will be forwarded.
 		 * If at least one UniqueService returns a message object, which will be sent directly, the
 		 * original message won't be forwarded.
 		 * </p>
@@ -87,7 +87,7 @@ public class ServiceManager
 		 * </p>
 		 *
 		 * @param message
-		 * @return If return null there is no interest in this message -> no special action will be
+		 * @return If return null there is no interest in this message - no special action will be
 		 *         taken. If it returns a message this message will be sent to the receivers.
 		 */
 		public RegisteredMessage receive(RegisteredMessage message);
@@ -102,8 +102,8 @@ public class ServiceManager
 	{
 		/**
 		 * <p>
-		 * Every time {@link NetworkConfig#status} is set to {@link final
-		 * NetworkConfig.States#BoundToServer} this method is called synchronously.
+		 * Every time {@link NetworkConfig#status} is set to
+		 * {@link NetworkConfig.States#BoundToServer} this method is called synchronously.
 		 * </p>
 		 */
 		public void start();
