@@ -111,11 +111,14 @@ public class MessageBus
 	}
 
 	@EventTopicSubscriber(topic = MessageBus.MESSAGE_RECEIVE)
-	public void getMessage(final String topic, final RegisteredMessage message)
+	public void getMessage(final String topic, final Message message)
 	{
-		for (final MessageReceiver receiver : MessageBus.receiverList)
+		if (message instanceof RegisteredMessage)
 		{
-			receiver.receive(message);
+			for (final MessageReceiver receiver : MessageBus.receiverList)
+			{
+				receiver.receive((RegisteredMessage) message);
+			}
 		}
 	}
 }
