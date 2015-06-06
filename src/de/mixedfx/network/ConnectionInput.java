@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import de.mixedfx.eventbus.EventBusService;
+import de.mixedfx.logging.Log;
 
 public class ConnectionInput implements Runnable
 {
@@ -27,7 +28,7 @@ public class ConnectionInput implements Runnable
 
 		this.inputMessageCache = new ArrayList<Serializable>();
 
-		System.out.println(this.getClass().getSimpleName() + " initialized!");
+		Log.network.trace(this.getClass().getSimpleName() + " initialized!");
 	}
 
 	protected Serializable getNextMessage()
@@ -72,12 +73,12 @@ public class ConnectionInput implements Runnable
 					{
 						this.inputMessageCache.add(receivedMessage);
 					}
-					System.out.println(this.getClass().getSimpleName() + " received message!");
+					Log.network.trace(this.getClass().getSimpleName() + " received message!");
 					this.eventBusParent.publishAsync(Connection.MESSAGE_CHANNEL_RECEIVED, this);
 				}
 				else
 				{
-					throw new Exception("Not a message received! Object rejected!");
+					Log.network.warn(new Exception("Not a message received! Object rejected!"));
 				}
 			}
 			catch (final EOFException e)
@@ -88,15 +89,14 @@ public class ConnectionInput implements Runnable
 				{
 					if (e instanceof NotSerializableException || e.getCause() instanceof NotSerializableException)
 					{
-						System.out.println("A class is not serializable! Implement Serializable Interface!");
-						System.out.print(e.getMessage());
+						Log.network.error(new Exception("A class is not serializable! Implement Serializable Interface!"));
 					}
 
 					synchronized (this.inputMessageCache)
 					{
 						this.inputMessageCache.clear();
 						this.terminate();
-						System.out.println(this.getClass().getSimpleName() + " lost stream!");
+						Log.network.trace(this.getClass().getSimpleName() + " lost stream!");
 						this.eventBusParent.publishAsync(Connection.CONNECTION_CHANNEL_LOST, this);
 					}
 				}
@@ -119,7 +119,7 @@ public class ConnectionInput implements Runnable
 			}
 			catch (final IOException e)
 			{}
-			System.out.println(this.getClass().getSimpleName() + " terminated!");
+			Log.network.trace(this.getClass().getSimpleName() + " terminated!");
 			return true;
 		}
 		else

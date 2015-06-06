@@ -11,6 +11,7 @@ import org.bushe.swing.event.annotation.AnnotationProcessor;
 import org.bushe.swing.event.annotation.EventTopicSubscriber;
 
 import de.mixedfx.eventbus.EventBusExtended;
+import de.mixedfx.logging.Log;
 import de.mixedfx.network.messages.Message;
 import de.mixedfx.network.messages.ParticipantMessage;
 
@@ -93,10 +94,10 @@ public class ParticipantManager
 					if (pMessage.ids.isEmpty()) // PID Request from client
 					{
 						final int clientNr = ParticipantManager.PARTICIPANT_NUMBER++;
-						System.err.println(pMessage.uID + "   !   " + pMessage.ids);
+						Log.network.debug("Participant Request from client: " + pMessage.uID + "   !   " + pMessage.ids);
 						pMessage.ids.add(clientNr);
 						pMessage.ids.addAll(ParticipantManager.PARTICIPANTS);
-						System.err.println(pMessage.uID + "   !   " + pMessage.ids);
+						Log.network.debug("Participant Response from me as Server: " + pMessage.uID + "   !   " + pMessage.ids);
 						EventBusExtended.publishSyncSafe(MessageBus.MESSAGE_SEND, message);
 						ParticipantManager.PARTICIPANTS.add(0, clientNr);
 					}
@@ -115,7 +116,7 @@ public class ParticipantManager
 									ParticipantManager.PARTICIPANTS.add(i);
 								}
 							}
-							System.out.println("UPDATED ALL: " + ParticipantManager.PARTICIPANTS);
+							Log.network.debug("Participant Update from Server: " + ParticipantManager.PARTICIPANTS);
 						}
 						else
 							// Not yet registered
@@ -124,7 +125,7 @@ public class ParticipantManager
 								final int myID = pMessage.ids.get(0);
 								ParticipantManager.MY_PID.set(myID);
 								ParticipantManager.PARTICIPANTS.addAll(pMessage.ids);
-								// NetworkManager.online.set(OnlineStates.Online);
+								Log.network.debug("Participant Response from Server: " + ParticipantManager.PARTICIPANTS);
 							}
 				}
 		}

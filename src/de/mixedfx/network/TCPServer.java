@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
+import de.mixedfx.logging.Log;
 
 class TCPServer
 {
@@ -74,7 +75,7 @@ class TCPServer
 		{
 			this.serverSocket = new ServerSocket(port);
 			this.connectionList = new SimpleListProperty<>(FXCollections.observableArrayList(new ArrayList<>()));
-			System.out.println(this.getClass().getSimpleName() + " initialized on " + this.serverSocket.getLocalSocketAddress());
+			Log.network.info(this.getClass().getSimpleName() + " initialized on " + this.serverSocket.getLocalSocketAddress());
 		}
 
 		@Override
@@ -86,7 +87,7 @@ class TCPServer
 				{
 					final Socket clientSocket = this.serverSocket.accept();
 					this.connectionList.add(new Connection(TCPCoordinator.localNetworkID.getAndIncrement(), clientSocket));
-					System.out.println("Registrar registered client!");
+					Log.network.debug("Registrar registered client!");
 				}
 				catch (final IOException e)
 				{

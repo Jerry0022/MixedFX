@@ -1,7 +1,19 @@
-11:04:25 Network    INFO  - (?.java:) : CM OLD: Offline! NEW: Searching
-11:04:25 Network    INFO  - (?.java:) : CM OLD: Searching! NEW: Establishing
-11:04:25 Network    DEBUG - (?.java:) : OLD: Unbound! NEW: Server
-11:04:25 Network    INFO  - (?.java:) : CM OLD: Establishing! NEW: Online
-11:04:25 Network    INFO  - (?.java:) : ListProperty [value: [1]]
-11:04:25 Network    DEBUG - (?.java:) : START CALLED
-11:04:25 Network    DEBUG - (?.java:) : HOST
+13:51:05 Network    INFO  - (?.java:)                           : ConnectivityManager status changed from OFFLINE to SEARCHING
+13:51:05 Network    INFO  - (?.java:)                           : ConnectivityManager status changed from SEARCHING to ESTABLISHING
+13:51:05 Network    DEBUG - (?.java:)                           : NetworkConfig status changed from UNBOUND to SERVER
+13:51:06 Network    INFO  - (?.java:)                           : Registrar initialized on 0.0.0.0/0.0.0.0:8888
+13:51:06 Network    INFO  - (?.java:)                           : ConnectivityManager status changed from ESTABLISHING to ONLINE
+13:51:06 Network    INFO  - (?.java:)                           : Participants changed to: ListProperty [value: [1]]
+13:51:06 Network    DEBUG - (?.java:)                           : UserManager started!
+13:51:06 Network    DEBUG - (?.java:)                           : ExampleUniqueService started as host!
+13:51:06 Network    TRACE - (?.java:)                           : Sent UDP message!
+13:51:07 Network    TRACE - (?.java:)                           : Sent UDP message!
+13:51:09 Network    TRACE - (?.java:)                           : Sent UDP message!
+13:51:10 Network    TRACE - (?.java:)                           : Sent UDP message!
+13:51:12 Network    TRACE - (?.java:)                           : Sent UDP message!
+13:51:13 Network    TRACE - (?.java:)                           : Sent UDP message!
+13:51:15 Network    TRACE - (?.java:)                           : Sent UDP message!
+13:51:16 Network    TRACE - (?.java:)                           : Sent UDP message!
+13:51:18 Network    TRACE - (?.java:)                           : Sent UDP message!
+13:51:19 Network    TRACE - (?.java:)                           : Sent UDP message!
+13:51:21 Network    TRACE - (?.java:)                           : Sent UDP message!

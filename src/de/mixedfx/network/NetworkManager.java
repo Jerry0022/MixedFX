@@ -1,6 +1,5 @@
 package de.mixedfx.network;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,6 +8,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.util.Duration;
 import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.inspector.Inspector;
+import de.mixedfx.logging.Log;
 import de.mixedfx.network.NetworkConfig.States;
 
 public class NetworkManager
@@ -30,6 +30,10 @@ public class NetworkManager
 
 	static
 	{
+		NetworkManager.t = new TCPCoordinator();
+
+		NetworkManager.u = new UDPCoordinator();
+
 		NetworkConfig.status.addListener((ChangeListener<States>) (observable, oldValue, newValue) ->
 		{
 			switch (newValue)
@@ -49,17 +53,18 @@ public class NetworkManager
 					// Stop ParticipantManager
 					ParticipantManager.stop();
 
-					System.out.println("Seconds to wait: " + Duration.millis(NetworkConfig.BROADCAST_INTERVAL).multiply(NetworkConfig.RECONNECT_TOLERANCE).multiply(myIndex).toSeconds());
+					final Duration waitTime = Duration.millis(NetworkConfig.BROADCAST_INTERVAL).multiply(NetworkConfig.RECONNECT_TOLERANCE).multiply(myIndex);
+					Log.network.info("Wait " + waitTime.toSeconds() + " seconds before try to start server.");
 
 					Inspector.runLater(() ->
 					{
-						System.out.println("Reconnect only if this value is not already 'BoundToServer': " + NetworkConfig.status.get());
+						Log.network.debug("Try reconnect only if this value is not already 'BoundToServer': " + NetworkConfig.status.get());
 						if (!NetworkConfig.status.get().equals(States.BoundToServer))
 						{
-							System.out.println("ACHTUNG SERVER AUTO START");
+							Log.network.info("Autostart Server!");
 							NetworkManager.host();
 						}
-					}, Duration.millis(NetworkConfig.BROADCAST_INTERVAL).multiply(NetworkConfig.RECONNECT_TOLERANCE).multiply(myIndex));
+					}, waitTime);
 					break;
 				case BoundToServer:
 					ParticipantManager.start().connect();
@@ -76,15 +81,6 @@ public class NetworkManager
 					break;
 			}
 		});
-
-		NetworkManager.t = new TCPCoordinator();
-
-		try
-		{
-			NetworkManager.u = new UDPCoordinator();
-		}
-		catch (final IOException e)
-		{}
 	}
 
 	public synchronized static void start()

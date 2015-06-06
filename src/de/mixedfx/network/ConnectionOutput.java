@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import de.mixedfx.eventbus.EventBusService;
+import de.mixedfx.logging.Log;
 
 public class ConnectionOutput implements Runnable
 {
@@ -24,14 +25,14 @@ public class ConnectionOutput implements Runnable
 		this.objectOutputStream = new ObjectOutputStream(outputStream);
 		this.outputMessageCache = new ArrayList<Serializable>();
 
-		System.out.println(this.getClass().getSimpleName() + " initialized!");
+		Log.network.trace(this.getClass().getSimpleName() + " initialized!");
 	}
 
 	protected void sendMessage(final Serializable message)
 	{
-		System.out.println("SENDING!");
 		synchronized (this.outputMessageCache)
 		{
+			Log.network.trace(this.getClass().getSimpleName() + " sends a Message!");
 			this.outputMessageCache.add(message);
 		}
 	}
@@ -45,20 +46,20 @@ public class ConnectionOutput implements Runnable
 			{
 				if (this.outputMessageCache.size() > 0)
 				{
-					System.out.println("Output Cache Size: " + this.outputMessageCache.size());
+					Log.network.trace("TCP Output Cache Size: " + this.outputMessageCache.size());
 					try
 					{
 						this.objectOutputStream.reset(); // GBC can collect written objects
 						this.objectOutputStream.writeObject(this.outputMessageCache.get(0));
 						this.outputMessageCache.remove(0);
-						System.out.println(this.getClass().getSimpleName() + " message sent!");
+						Log.network.trace(this.getClass().getSimpleName() + " message sent!");
 					}
 					catch (final IOException e)
 					{
 						this.outputMessageCache.clear();
 						if (this.terminate())
 						{
-							System.out.println("OutputStream lost!");
+							Log.network.trace("OutputStream lost!");
 							this.eventBusParent.publishAsync(Connection.CONNECTION_CHANNEL_LOST, this);
 						}
 					}
@@ -88,7 +89,7 @@ public class ConnectionOutput implements Runnable
 				{}
 			}
 
-			System.out.println("Terminating " + this.getClass().getSimpleName() + "!");
+			Log.network.trace("Terminating " + this.getClass().getSimpleName() + "!");
 			this.running = false;
 
 			try
@@ -99,9 +100,9 @@ public class ConnectionOutput implements Runnable
 			{
 				// In rare cases could be called twice, therefore soft
 				// Exception is needed, no impact!
-				System.err.println("WRITE ERROR! No reason to fear about this :D!");
+				Log.network.trace("WRITE ERROR! No reason to fear about this :D!");
 			}
-			System.out.println(this.getClass().getSimpleName() + " terminated!");
+			Log.network.trace(this.getClass().getSimpleName() + " terminated!");
 			return true;
 		}
 		else

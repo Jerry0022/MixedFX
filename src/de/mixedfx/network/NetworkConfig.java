@@ -8,6 +8,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
+import de.mixedfx.logging.Log;
 
 class NetworkConfig
 {
@@ -52,7 +53,7 @@ class NetworkConfig
 		{
 			if (newValue.intValue() + NetworkConfig.TRIES_AMOUNT * NetworkConfig.TRIES_STEPS > Integer.MAX_VALUE || newValue.intValue() <= 0)
 			{
-				System.out.println("PORT plus TRIES_AMOUNT * TRIES_STEPS extends minimum / maximum integer value! Change was undone!");
+				Log.network.error("PORT plus TRIES_AMOUNT * TRIES_STEPS extends minimum / maximum integer value! Change was undone!");
 				NetworkConfig.PORT.set(oldValue.intValue());
 			}
 		});

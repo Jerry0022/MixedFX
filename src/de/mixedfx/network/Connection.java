@@ -11,6 +11,7 @@ import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.eventbus.EventBusService;
 import de.mixedfx.eventbus.EventBusServiceInterface;
 import de.mixedfx.inspector.Inspector;
+import de.mixedfx.logging.Log;
 import de.mixedfx.network.NetworkConfig.States;
 import de.mixedfx.network.messages.Message;
 import de.mixedfx.network.messages.ParticipantMessage;
@@ -40,7 +41,7 @@ public class Connection implements EventBusServiceInterface
 
 	public Connection(final int clientID, final Socket clientSocket) throws IOException
 	{
-		System.out.println("Initializing " + this.getClass().getSimpleName());
+		Log.network.debug("Initializing " + this.getClass().getSimpleName() + " with " + clientSocket.getLocalSocketAddress());
 
 		this.uid_pid_map = new HashMap<>();
 
@@ -55,7 +56,7 @@ public class Connection implements EventBusServiceInterface
 		this.inputConnection = new ConnectionInput(this.clientID, clientSocket.getInputStream());
 		Inspector.runNowAsDaemon(this.inputConnection);
 
-		System.out.println(this.getClass().getSimpleName() + " initialized!");
+		Log.network.debug(this.getClass().getSimpleName() + " initialized!");
 	}
 
 	@Override
@@ -244,7 +245,7 @@ public class Connection implements EventBusServiceInterface
 
 	public synchronized void close()
 	{
-		System.out.println("Closing " + this.getClass().getSimpleName());
+		Log.network.debug("Closing " + this.getClass().getSimpleName());
 
 		AnnotationProcessor.unprocess(this);
 		this.eventBus.unsubscribe(Connection.CONNECTION_CHANNEL_LOST, this);
@@ -261,6 +262,6 @@ public class Connection implements EventBusServiceInterface
 		catch (final IOException e)
 		{}
 
-		System.out.println(this.getClass().getSimpleName() + " closed!");
+		Log.network.debug(this.getClass().getSimpleName() + " closed!");
 	}
 }

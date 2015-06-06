@@ -17,6 +17,7 @@ import org.bushe.swing.event.annotation.EventTopicSubscriber;
 import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.inspector.Inspector;
 import de.mixedfx.java.ApacheTools;
+import de.mixedfx.logging.Log;
 import de.mixedfx.network.NetworkConfig.States;
 import de.mixedfx.network.messages.Message;
 import de.mixedfx.network.messages.ParticipantMessage;
@@ -102,7 +103,7 @@ public class TCPCoordinator
 	{
 		synchronized (NetworkConfig.status)
 		{
-			System.out.println("LOST: " + clientID.equals(TCPCoordinator.localNetworkMainID.get()) + clientID);
+			Log.network.debug("Participant lost, is my connection to the server: " + clientID.equals(TCPCoordinator.localNetworkMainID.get()));
 			// Check if this connection is my main connection to the server
 			if (clientID.equals(TCPCoordinator.localNetworkMainID.get()))
 			{
@@ -151,7 +152,8 @@ public class TCPCoordinator
 				return;
 			}
 
-			System.out.println("START!" + ip);
+			Log.network.info("Start TCP connection to (BoundTo-)Server: " + ip.getHostAddress());
+
 			try
 			{
 
@@ -183,7 +185,7 @@ public class TCPCoordinator
 	{
 		synchronized (NetworkConfig.status)
 		{
-			System.out.println("CLOSE EVERYTHING");
+			Log.network.info("Stop TCP connection!");
 
 			// Send a GoodBye to everyone who is still available to avoid ghost connections.
 			final Message goodbyeMessage = new Message();

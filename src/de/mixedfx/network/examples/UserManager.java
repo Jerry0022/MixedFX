@@ -14,7 +14,7 @@ public class UserManager implements P2PService
 	@Override
 	public void stop()
 	{
-		Log.network.debug("STOP CALLED");
+		Log.network.debug("UserManager stopped!");
 		// TODO Unlisten
 		// TODO Clear UserList
 	}
@@ -22,7 +22,7 @@ public class UserManager implements P2PService
 	@Override
 	public void start()
 	{
-		Log.network.debug("START CALLED");
+		Log.network.debug("UserManager started!");
 		// TODO Fire myUser as broadcast
 		// TODO Listen to PIDs to update list
 		// TODO Listen to PIDs to send the myUser to the new one

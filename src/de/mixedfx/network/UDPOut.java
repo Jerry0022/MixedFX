@@ -9,6 +9,8 @@ import java.net.SocketException;
 import java.util.Date;
 import java.util.Enumeration;
 
+import de.mixedfx.logging.Log;
+
 class UDPOut
 {
 	private DatagramSocket	socket;
@@ -122,7 +124,7 @@ class UDPOut
 					break;
 				}
 
-				System.out.println("SENT");
+				Log.network.trace("Sent UDP message!");
 
 				try
 				{

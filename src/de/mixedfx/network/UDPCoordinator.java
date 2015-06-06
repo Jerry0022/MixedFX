@@ -1,6 +1,5 @@
 package de.mixedfx.network;
 
-import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -46,7 +45,7 @@ class UDPCoordinator implements EventTopicSubscriber<Object>
 	private final UDPIn						in;
 	private final UDPOut					out;
 
-	public UDPCoordinator() throws IOException
+	public UDPCoordinator()
 	{
 		/*
 		 * Get events of UDPOut and UDPIn
@@ -100,8 +99,6 @@ class UDPCoordinator implements EventTopicSubscriber<Object>
 			{
 				final DatagramPacket packet = (DatagramPacket) data;
 				final String packetMessage = new String(packet.getData(), 0, packet.getLength());
-
-				// System.out.println(packet.getAddress().getHostAddress());
 
 				/*
 				 * Check all interfaces if it was a broadcast to myself!

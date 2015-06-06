@@ -124,16 +124,16 @@ public class ConnectivityManager
 		// Catch fatal errors to show (network reacted already to this error)
 		AnnotationProcessor.process(new ConnectivityManager());
 
-		NetworkConfig.status.addListener((ChangeListener<States>) (observable, oldValue, newValue) -> Log.network.debug("OLD: " + oldValue + "! NEW: " + newValue));
+		NetworkConfig.status.addListener((ChangeListener<States>) (observable, oldValue, newValue) -> Log.network.debug("NetworkConfig status changed from " + oldValue.toString().toUpperCase() + " to " + newValue.toString().toUpperCase()));
 
 		ParticipantManager.PARTICIPANTS.addListener((ListChangeListener<Integer>) c ->
 		{
-			Log.network.info(ParticipantManager.PARTICIPANTS);
+			Log.network.info("Participants changed to: " + ParticipantManager.PARTICIPANTS);
 		});
 
 		ConnectivityManager.status.addListener((ChangeListener<Status>) (observable, oldValue, newValue) ->
 		{
-			Log.network.info("CM OLD: " + oldValue + "! NEW: " + newValue);
+			Log.network.info("ConnectivityManager status changed from " + oldValue.toString().toUpperCase() + " to " + newValue.toString().toUpperCase());
 		});
 
 		// Show all directly found applications host and all directly found Server (Not the

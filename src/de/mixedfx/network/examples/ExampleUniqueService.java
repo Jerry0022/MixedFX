@@ -10,21 +10,21 @@ public class ExampleUniqueService implements UniqueService
 	@Override
 	public void stop()
 	{
-		Log.network.debug("STOP");
+		Log.network.debug("ExampleUniqueService stopped!");
 
 	}
 
 	@Override
 	public void client()
 	{
-		Log.network.debug("CLIENT");
+		Log.network.debug("ExampleUniqueService started as client!");
 
 	}
 
 	@Override
 	public void host()
 	{
-		Log.network.debug("HOST");
+		Log.network.debug("ExampleUniqueService started as host!");
 	}
 
 	@Override
