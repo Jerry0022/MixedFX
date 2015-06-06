@@ -58,11 +58,14 @@ public class NetworkManager
 
 					Inspector.runLater(() ->
 					{
-						Log.network.debug("Try reconnect only if this value is not already 'BoundToServer': " + NetworkConfig.status.get());
-						if (!NetworkConfig.status.get().equals(States.BoundToServer))
+						synchronized (NetworkConfig.status)
 						{
-							Log.network.info("Autostart Server!");
-							NetworkManager.host();
+							Log.network.debug("Try reconnect only if this value is not already 'BoundToServer': " + NetworkConfig.status.get());
+							if (!NetworkConfig.status.get().equals(States.BoundToServer))
+							{
+								Log.network.info("Autostart Server!");
+								NetworkManager.host();
+							}
 						}
 					}, waitTime);
 					break;
