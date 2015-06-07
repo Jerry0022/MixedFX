@@ -7,6 +7,7 @@ import javafx.collections.ListChangeListener;
 import org.apache.commons.collections.CollectionUtils;
 
 import de.mixedfx.logging.Log;
+import de.mixedfx.network.ConnectivityManager;
 import de.mixedfx.network.MessageBus;
 import de.mixedfx.network.MessageBus.MessageReceiver;
 import de.mixedfx.network.ParticipantManager;
@@ -75,11 +76,23 @@ public class UserManager implements P2PService, MessageReceiver, ListChangeListe
 			synchronized (this.allUsers)
 			{
 				final User newUser = ((UserMessage) message).getUser();
-				Log.network.trace("Information about User received, identified by: " + newUser.getIdentifier());
-				final User foundUser = (User) CollectionUtils.select(this.allUsers, newUser.getByPID()).iterator().next();
-				if (foundUser != null)
+				if (newUser.getIdentifier().equals(this.myUser.getIdentifier()))
 				{
-					this.allUsers.set(this.allUsers.indexOf(foundUser), newUser);
+					Log.network.info("Another user in this network has the same identifier: " + this.myUser.getIdentifier() + " therefore network connection is shutdown!");
+					ConnectivityManager.off();
+				}
+				else
+				{
+					Log.network.trace("Information about User received, identified by: " + newUser.getIdentifier());
+					final User foundUser = (User) CollectionUtils.select(this.allUsers, newUser.getByPID()).iterator().next();
+					if (foundUser != null)
+					{
+						this.allUsers.set(this.allUsers.indexOf(foundUser), newUser);
+					}
+					else
+					{
+						Log.network.warn("UserMessage of user " + newUser.getIdentifier() + " with PID " + newUser.pid + " received but there is no participant with this PID!");
+					}
 				}
 			}
 		}
@@ -97,7 +110,7 @@ public class UserManager implements P2PService, MessageReceiver, ListChangeListe
 					final UserMessage message = new UserMessage(this.myUser);
 					for (final int pid : c.getAddedSubList())
 					{
-						Log.network.trace("New participant: " + pid);
+						Log.network.trace("New user with PID" + pid);
 						final ExampleUser user = new ExampleUser("");
 						user.updatePID(pid);
 						this.allUsers.add(user);
@@ -110,13 +123,13 @@ public class UserManager implements P2PService, MessageReceiver, ListChangeListe
 					{
 						for (final int pid : c.getRemoved())
 						{
-							Log.network.trace("Participant " + pid + " lost!");
 							final ExampleUser removedUser = new ExampleUser("");
 							removedUser.updatePID(pid);
 							final User foundUser = (User) CollectionUtils.select(this.allUsers, removedUser.getByPID()).iterator().next();
 							if (foundUser != null)
 							{
 								this.allUsers.remove(foundUser);
+								Log.network.trace("User with ID " + foundUser.getIdentifier() + " and PID " + pid + " lost!");
 							}
 						}
 					}
