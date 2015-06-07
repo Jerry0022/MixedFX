@@ -31,7 +31,9 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 	public static final EventBusService		service	= new EventBusService("UDPCoordinator");
 
 	/**
-	 * Just a list of all who made them known at least once (maybe aren't still active).
+	 * Just a list of all who made them known at least once (maybe aren't still active). An replaced
+	 * event to the listener is only submitted if the state changed, not if the last contact was
+	 * updated. This list isn't cleared as long as the network is running!
 	 */
 	public static ListProperty<UDPDetected>	allAdresses;
 
@@ -85,6 +87,8 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 		{
 			this.in.close();
 		}
+
+		UDPCoordinator.allAdresses.clear();
 
 		NetworkConfig.statusChangeTime.set(new Date());
 	}
