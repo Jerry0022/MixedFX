@@ -145,7 +145,6 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 		UserManager.myUser.updatePID(ParticipantManager.MY_PID.get());
 		synchronized (ParticipantManager.PARTICIPANTS)
 		{
-			ParticipantManager.PARTICIPANTS.addListener(this);
 			for (final Integer pid : ParticipantManager.PARTICIPANTS)
 			{
 				if (pid != ParticipantManager.MY_PID.get())
@@ -153,6 +152,7 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 					UserManager.allUsers.add(this.getAnonymous(pid));
 				}
 			}
+			ParticipantManager.PARTICIPANTS.addListener(this);
 		}
 		MessageBus.registerForReceival(this);
 		MessageBus.send(new UserMessage(UserManager.myUser));
