@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
@@ -92,10 +93,14 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 	 *
 	 * @return Returns a representation of a ghost user.
 	 */
-	public T getAnonymous(final int pid)
+	public T getAnonymous(final int hisPID)
 	{
 		return (T) new User()
 		{
+			{
+				this.pid = hisPID;
+			}
+
 			@Override
 			public Object getIdentifier()
 			{
@@ -164,12 +169,13 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 				else
 				{
 					Log.network.trace("Information about User received: " + newUser);
-					final User foundUser = (User) CollectionUtils.select(UserManager.allUsers, newUser.getByPID()).iterator().next();
-					if (foundUser != null)
+					Log.network.trace("!!!ATTENTION: " + newUser.pid + " vs. " + UserManager.allUsers);
+					try
 					{
+						final User foundUser = (User) CollectionUtils.select(UserManager.allUsers, newUser.getByPID()).iterator().next();
 						UserManager.allUsers.set(UserManager.allUsers.indexOf(foundUser), newUser);
 					}
-					else
+					catch (final NoSuchElementException e)
 					{
 						Log.network.warn("UserMessage of user " + newUser + " received but there is no participant with this PID!");
 					}
