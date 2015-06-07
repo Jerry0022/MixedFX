@@ -15,21 +15,46 @@ import de.mixedfx.network.ServiceManager.P2PService;
 import de.mixedfx.network.messages.RegisteredMessage;
 import de.mixedfx.network.messages.UserMessage;
 
-public class UserManager implements P2PService, MessageReceiver, ListChangeListener<Integer>
+@SuppressWarnings({ "unchecked", "serial" })
+public class UserManager<T extends User> implements P2PService, MessageReceiver, ListChangeListener<Integer>
 {
 	/*
 	 * TODO Listen to UDPCoordinator.allAddresses to know which InetAdresses can be reached! How to
 	 * connect this information to the User? May implement a service who just broadcast his
 	 * IP-Addresses and his user identification if the network devices online state changed.
 	 */
-	public final User						myUser;
+	public final T						myUser;
 
-	public final SimpleListProperty<User>	allUsers;
+	public final SimpleListProperty<T>	allUsers;
 
-	public UserManager(final User myUser)
+	public UserManager(final T myUser)
 	{
 		this.myUser = myUser;
 		this.allUsers = new SimpleListProperty<>(FXCollections.observableArrayList());
+	}
+
+	/**
+	 * An anonymous user does only have a PID by default and the identifier is null. May overwrite
+	 * this method to let an not yet identified user have also other predefined attributes.
+	 *
+	 * @return Returns a representation of a ghost user.
+	 */
+	public T getAnonymous(final int pid)
+	{
+		return (T) new User()
+		{
+			@Override
+			public Object getIdentifier()
+			{
+				return null;
+			}
+
+			@Override
+			public boolean equals(final User user)
+			{
+				return user.getIdentifier().equals(this.getIdentifier());
+			}
+		};
 	}
 
 	@Override
@@ -48,21 +73,19 @@ public class UserManager implements P2PService, MessageReceiver, ListChangeListe
 	@Override
 	public void start()
 	{
-		MessageBus.registerForReceival(this);
 		this.myUser.updatePID(ParticipantManager.MY_PID.get());
 		synchronized (ParticipantManager.PARTICIPANTS)
 		{
 			ParticipantManager.PARTICIPANTS.addListener(this);
-			for (final Integer i : ParticipantManager.PARTICIPANTS)
+			for (final Integer pid : ParticipantManager.PARTICIPANTS)
 			{
-				if (i != ParticipantManager.MY_PID.get())
+				if (pid != ParticipantManager.MY_PID.get())
 				{
-					final ExampleUser user = new ExampleUser("");
-					user.updatePID(i);
-					this.allUsers.add(user);
+					this.allUsers.add(this.getAnonymous(pid));
 				}
 			}
 		}
+		MessageBus.registerForReceival(this);
 
 		MessageBus.send(new UserMessage(this.myUser));
 		Log.network.debug("UserManager started! My id: " + this.myUser.getIdentifier());
@@ -78,20 +101,20 @@ public class UserManager implements P2PService, MessageReceiver, ListChangeListe
 				final User newUser = ((UserMessage) message).getUser();
 				if (newUser.getIdentifier().equals(this.myUser.getIdentifier()))
 				{
-					Log.network.info("Another user in this network has the same identifier: " + this.myUser.getIdentifier() + " therefore network connection is shutdown!");
+					Log.network.info("Network is totally shutdown because user may exist at least twice, my user: " + this.myUser + " the other one: " + newUser);
 					ConnectivityManager.off();
 				}
 				else
 				{
-					Log.network.trace("Information about User received, identified by: " + newUser.getIdentifier());
+					Log.network.trace("Information about User received: " + newUser);
 					final User foundUser = (User) CollectionUtils.select(this.allUsers, newUser.getByPID()).iterator().next();
 					if (foundUser != null)
 					{
-						this.allUsers.set(this.allUsers.indexOf(foundUser), newUser);
+						this.allUsers.set(this.allUsers.indexOf(foundUser), (T) newUser);
 					}
 					else
 					{
-						Log.network.warn("UserMessage of user " + newUser.getIdentifier() + " with PID " + newUser.pid + " received but there is no participant with this PID!");
+						Log.network.warn("UserMessage of user " + newUser + " received but there is no participant with this PID!");
 					}
 				}
 			}
@@ -110,9 +133,8 @@ public class UserManager implements P2PService, MessageReceiver, ListChangeListe
 					final UserMessage message = new UserMessage(this.myUser);
 					for (final int pid : c.getAddedSubList())
 					{
-						Log.network.trace("New user with PID" + pid);
-						final ExampleUser user = new ExampleUser("");
-						user.updatePID(pid);
+						final T user = this.getAnonymous(pid);
+						Log.network.trace("New user registered: " + user);
 						this.allUsers.add(user);
 						message.receivers.add(pid);
 					}
@@ -123,13 +145,11 @@ public class UserManager implements P2PService, MessageReceiver, ListChangeListe
 					{
 						for (final int pid : c.getRemoved())
 						{
-							final ExampleUser removedUser = new ExampleUser("");
-							removedUser.updatePID(pid);
-							final User foundUser = (User) CollectionUtils.select(this.allUsers, removedUser.getByPID()).iterator().next();
+							final User foundUser = (User) CollectionUtils.select(this.allUsers, this.getAnonymous(pid).getByPID()).iterator().next();
 							if (foundUser != null)
 							{
 								this.allUsers.remove(foundUser);
-								Log.network.trace("User with ID " + foundUser.getIdentifier() + " and PID " + pid + " lost!");
+								Log.network.trace("User with ID " + foundUser + " lost!");
 							}
 						}
 					}

@@ -16,17 +16,18 @@ import de.mixedfx.network.ParticipantManager;
  * @author Jerry
  *
  */
+@SuppressWarnings("serial")
 public abstract class User implements Identifiable, Serializable
 {
-	protected Predicate getByPID()
-	{
-		return ApacheTools.convert(t -> ((User) t).pid == this.pid);
-	}
-
-	protected int	pid;
+	/**
+	 * If the user is not yet identified!
+	 */
+	protected boolean	anonym;
+	protected int		pid;
 
 	protected User()
 	{
+		this.anonym = true;
 		this.pid = ParticipantManager.UNREGISTERED;
 	}
 
@@ -40,6 +41,17 @@ public abstract class User implements Identifiable, Serializable
 		this.pid = newPID;
 	}
 
+	protected Predicate getByPID()
+	{
+		return ApacheTools.convert(t -> ((User) t).pid == this.pid);
+	}
+
+	@Override
+	public String toString()
+	{
+		return "UserID: " + this.getIdentifier() + "; PID: " + this.pid + "; Anonym: " + this.anonym;
+	}
+
 	/**
 	 * This method is called after a User is received by the network. If a user is already in the
 	 * network this method should return false. If this method returns false, the user will be
@@ -49,5 +61,8 @@ public abstract class User implements Identifiable, Serializable
 	 * @param user
 	 * @return Returns true if the user is equal to the other user, otherwise false.
 	 */
-	public abstract boolean equals(User user);
+	public boolean equals(final User user)
+	{
+		return this.getIdentifier().equals(user.getIdentifier());
+	};
 }
