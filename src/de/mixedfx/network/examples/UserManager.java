@@ -195,6 +195,10 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 	@Override
 	public void onChanged(final javafx.collections.ListChangeListener.Change<? extends Integer> c)
 	{
+		/*
+		 * If new participant is in the network add an anonymous user to the list. If one is lost,
+		 * remove him from this list.
+		 */
 		synchronized (UserManager.allUsers)
 		{
 			while (c.next())
@@ -202,9 +206,6 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 				if (c.wasAdded())
 				{
 					final UserMessage message = new UserMessage(UserManager.myUser);
-					/*
-					 * As PID updates replace always the whole list
-					 */
 					for (final int pid : c.getAddedSubList())
 					{
 						Log.network.trace("!!!New PID: " + pid);
@@ -220,9 +221,9 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 					{
 						for (final int pid : c.getRemoved())
 						{
-							Log.network.trace("!!!Lost PID: " + pid);
 							try
 							{
+								Log.network.trace("!!!Lost PID: " + pid);
 								final User foundUser = (User) CollectionUtils.select(UserManager.allUsers, this.getAnonymous(pid).getByPID()).iterator().next();
 								UserManager.allUsers.remove(foundUser);
 							}

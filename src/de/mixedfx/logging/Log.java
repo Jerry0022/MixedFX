@@ -21,6 +21,7 @@ public class Log
 
 	static
 	{
+		CustomSysOutErr.init();
 		CONTEXT = new LoggerContext("MixedFX");
 		try
 		{

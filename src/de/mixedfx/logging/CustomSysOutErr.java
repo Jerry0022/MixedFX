@@ -1,4 +1,4 @@
-package de.mixedfx.java;
+package de.mixedfx.logging;
 
 import java.io.PrintStream;
 

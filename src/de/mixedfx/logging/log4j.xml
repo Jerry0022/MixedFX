@@ -9,7 +9,7 @@
 	<Appenders>
 		<Console name="STDOUT">
 			<PatternLayout
-				pattern="%-8date{HH:mm:ss}{GMT+2} %-10.10c %-5.5p - %-35.35enc{(%class{1}.java:%L)} : %m%n" />
+				pattern="%-8date{HH:mm:ss}{GMT+2} %-10.10c %highlight{%-5.5p} - %-35.35enc{(%class{1}.java:%L)} : %m%n" />
 		</Console>
 		<File name="FILE" fileName="${logFolder}\${logFileName}" append="false">
 			<PatternLayout
