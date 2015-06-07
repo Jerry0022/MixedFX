@@ -33,7 +33,7 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 	/**
 	 * Just a list of all who made them known at least once (maybe aren't still active). An replaced
 	 * event to the listener is only submitted if the state changed, not if the last contact was
-	 * updated. This list isn't cleared as long as the network is running!
+	 * updated. This list isn't cleared as long as the udp connection is running!
 	 */
 	public static ListProperty<UDPDetected>	allAdresses;
 

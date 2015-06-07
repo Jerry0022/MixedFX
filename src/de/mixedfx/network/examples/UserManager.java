@@ -28,7 +28,16 @@ import de.mixedfx.network.messages.UserMessage;
 @SuppressWarnings({ "unchecked", "serial" })
 public class UserManager<T extends User> implements P2PService, MessageReceiver, ListChangeListener<Integer>
 {
+	/**
+	 * MyUser which can't be changed until {@link ConnectivityManager#off()} is called and a new
+	 * UserManager with a new myUser is registered to the network and
+	 * {@link ConnectivityManager#on()} is called.
+	 */
 	public static User								myUser;
+
+	/**
+	 * All current online users except {@link UserManager#myUser}!
+	 */
 	public static SimpleListProperty<User>			allUsers;
 
 	private final List<InetAddress>					myNICs;
@@ -169,7 +178,6 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 				else
 				{
 					Log.network.trace("Information about User received: " + newUser);
-					Log.network.trace("!!!ATTENTION: " + newUser.pid + " vs. " + UserManager.allUsers);
 					try
 					{
 						final User foundUser = (User) CollectionUtils.select(UserManager.allUsers, newUser.getByPID()).iterator().next();
@@ -194,8 +202,12 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 				if (c.wasAdded())
 				{
 					final UserMessage message = new UserMessage(UserManager.myUser);
+					/*
+					 * As PID updates replace always the whole list
+					 */
 					for (final int pid : c.getAddedSubList())
 					{
+						Log.network.trace("!!!New PID: " + pid);
 						final T user = this.getAnonymous(pid);
 						Log.network.trace("New user registered: " + user);
 						UserManager.allUsers.add(user);
@@ -208,11 +220,15 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 					{
 						for (final int pid : c.getRemoved())
 						{
-							final User foundUser = (User) CollectionUtils.select(UserManager.allUsers, this.getAnonymous(pid).getByPID()).iterator().next();
-							if (foundUser != null)
+							Log.network.trace("!!!Lost PID: " + pid);
+							try
 							{
+								final User foundUser = (User) CollectionUtils.select(UserManager.allUsers, this.getAnonymous(pid).getByPID()).iterator().next();
 								UserManager.allUsers.remove(foundUser);
-								Log.network.trace("User with ID " + foundUser + " lost!");
+							}
+							catch (final NoSuchElementException e)
+							{
+								Log.network.warn("UserMessage of user with pid " + pid + " received but there is no participant with this PID!");
 							}
 						}
 					}
