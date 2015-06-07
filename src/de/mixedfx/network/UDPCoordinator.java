@@ -23,7 +23,7 @@ import de.mixedfx.eventbus.EventBusService;
 import de.mixedfx.java.ApacheTools;
 import de.mixedfx.network.NetworkConfig.States;
 
-class UDPCoordinator implements EventTopicSubscriber<Object>
+public class UDPCoordinator implements EventTopicSubscriber<Object>
 {
 	public static final String				RECEIVE	= "RECEIVE";
 	public static final String				ERROR	= "ERROR";

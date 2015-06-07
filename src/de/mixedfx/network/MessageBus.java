@@ -6,6 +6,7 @@ import org.bushe.swing.event.annotation.AnnotationProcessor;
 import org.bushe.swing.event.annotation.EventTopicSubscriber;
 
 import de.mixedfx.eventbus.EventBusExtended;
+import de.mixedfx.network.messages.IdentifiedMessage;
 import de.mixedfx.network.messages.Message;
 import de.mixedfx.network.messages.RegisteredMessage;
 
@@ -30,8 +31,9 @@ public class MessageBus
 {
 	/**
 	 * String for the {@link EventBusExtended}. Please submit a {@link RegisteredMessage} object.
+	 * Only for NOT {@link RegisteredMessage}!
 	 */
-	public static final String	MESSAGE_SEND	= Connection.MESSAGE_CHANNEL_SEND;
+	protected static final String	MESSAGE_SEND	= Connection.MESSAGE_CHANNEL_SEND;
 
 	/**
 	 * String for the {@link EventBusExtended}. You will receive a {@link RegisteredMessage} object.
@@ -41,7 +43,7 @@ public class MessageBus
 	 * sender (this is because of the network architecture and the message size).
 	 * </pre>
 	 */
-	public static final String	MESSAGE_RECEIVE	= "MESSAGE_RECEIVE";
+	public static final String		MESSAGE_RECEIVE	= "MESSAGE_RECEIVE";
 
 	public interface MessageReceiver
 	{
@@ -58,16 +60,21 @@ public class MessageBus
 	private static ArrayList<MessageReceiver>	receiverList	= new ArrayList<>();
 
 	/**
-	 * Sends a message asynchronously!
+	 * <b>Sends a message asynchronously! Updates sender id if the message is an
+	 * {@link IdentifiedMessage}.</b> Furthermore internally: {@link Message#fromServer} will be set
+	 * to true if this application is the {@link NetworkConfig.States#Server}. If application is
+	 * {@link NetworkConfig.States#BoundToServer} then it will be internally automatically forwarded
+	 * - no manual forwarding is required.
 	 *
 	 * @param message
-	 *            Message to send. {@link Message#fromServer} will be set to true if this
-	 *            application is the {@link NetworkConfig.States#Server}. If application is
-	 *            {@link NetworkConfig.States#BoundToServer} then it will be internally
-	 *            automatically forwarded - no manual forwarding is required.
+	 *            Message to send.
 	 */
 	public static synchronized void send(final RegisteredMessage message)
 	{
+		if (message instanceof IdentifiedMessage)
+		{
+			((IdentifiedMessage) message).updateSenderID();
+		}
 		EventBusExtended.publishAsyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
 	}
 

@@ -16,6 +16,7 @@ import de.mixedfx.logging.Log;
 import de.mixedfx.network.NetworkConfig.States;
 import de.mixedfx.network.examples.ExampleUniqueService;
 import de.mixedfx.network.examples.ExampleUser;
+import de.mixedfx.network.examples.User;
 import de.mixedfx.network.examples.UserManager;
 
 public class ConnectivityManager
@@ -191,9 +192,9 @@ public class ConnectivityManager
 
 		// Register example services
 		final UserManager<ExampleUser> userManager = new UserManager<ExampleUser>(user);
-		userManager.allUsers.addListener((ListChangeListener<ExampleUser>) c ->
+		UserManager.allUsers.addListener((ListChangeListener<User>) c ->
 		{
-			Log.network.info("UserManager list changed to: " + userManager.allUsers);
+			Log.network.info("UserManager list changed to: " + UserManager.allUsers);
 		});
 		ServiceManager.register(userManager);
 		ServiceManager.register(new ExampleUniqueService());

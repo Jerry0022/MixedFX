@@ -15,7 +15,7 @@ import de.mixedfx.network.ParticipantManager;
  *
  */
 @SuppressWarnings("serial")
-public class RegisteredMessage extends Message
+public abstract class RegisteredMessage extends Message
 {
 	/**
 	 * <p>
@@ -24,8 +24,7 @@ public class RegisteredMessage extends Message
 	 * <p>
 	 * If receivers contains no values then this message is a broadcast to everyone else except me.
 	 * <br>
-	 * If receivers contains one value or more the message is received by these participants. <br>
-	 * If receivers contains no value it does not make sense to send this message ;)
+	 * If receivers contains one value or more the message is received by these participants.
 	 * </p>
 	 */
 	@Expose
@@ -35,7 +34,7 @@ public class RegisteredMessage extends Message
 	 * Senders PID, which is automatically set!
 	 */
 	@Expose
-	public final int			sender;
+	public int					sender;
 
 	/**
 	 * The time the message was instantiated!

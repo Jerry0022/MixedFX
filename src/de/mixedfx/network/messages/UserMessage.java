@@ -2,6 +2,7 @@ package de.mixedfx.network.messages;
 
 import de.mixedfx.network.examples.User;
 
+@SuppressWarnings("serial")
 public class UserMessage extends RegisteredMessage
 {
 	private final User	user;

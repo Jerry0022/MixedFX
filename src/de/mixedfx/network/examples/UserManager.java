@@ -1,5 +1,13 @@
 package de.mixedfx.network.examples;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
+
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -12,25 +20,70 @@ import de.mixedfx.network.MessageBus;
 import de.mixedfx.network.MessageBus.MessageReceiver;
 import de.mixedfx.network.ParticipantManager;
 import de.mixedfx.network.ServiceManager.P2PService;
+import de.mixedfx.network.UDPDetected;
 import de.mixedfx.network.messages.RegisteredMessage;
 import de.mixedfx.network.messages.UserMessage;
 
 @SuppressWarnings({ "unchecked", "serial" })
 public class UserManager<T extends User> implements P2PService, MessageReceiver, ListChangeListener<Integer>
 {
-	/*
-	 * TODO Listen to UDPCoordinator.allAddresses to know which InetAdresses can be reached! How to
-	 * connect this information to the User? May implement a service who just broadcast his
-	 * IP-Addresses and his user identification if the network devices online state changed.
-	 */
-	public final T						myUser;
+	public static User								myUser;
+	public static SimpleListProperty<User>			allUsers;
 
-	public final SimpleListProperty<T>	allUsers;
+	private final List<InetAddress>					myNICs;
+	private final ListChangeListener<UDPDetected>	udpListener;
 
 	public UserManager(final T myUser)
 	{
-		this.myUser = myUser;
-		this.allUsers = new SimpleListProperty<>(FXCollections.observableArrayList());
+		UserManager.allUsers = new SimpleListProperty<>(FXCollections.observableArrayList());
+		UserManager.myUser = myUser;
+		this.myNICs = new ArrayList<InetAddress>();
+		this.udpListener = c ->
+		{
+			while (c.next())
+			{
+				// If added or updated:
+				if (c.wasAdded())
+				{
+					// TODO Do this also at the beginning
+					for (final UDPDetected detected : c.getAddedSubList())
+					{
+						final InetAddress otherOnesAddress = detected.address;
+						// TODO Request as broadcast who has this NIC address? With my UserID and my
+						// NIC address :)
+						// TODO If such a request got => Do I have the NIC address? If yes, Get user
+						// by got UserID and update the recognized related networks! Send back
+						// response with same content but changed NIC addresses and set my User as
+						// related one. Mark as response to not have a loop.
+					}
+
+					// Update list of all NIC addresses
+					final ArrayList<InetAddress> newNICs = new ArrayList<>();
+					try
+					{
+						final Enumeration<NetworkInterface> nics = NetworkInterface.getNetworkInterfaces();
+						while (nics.hasMoreElements())
+						{
+							final NetworkInterface nic = nics.nextElement();
+							for (final InetAddress nicAdress : Collections.list(nic.getInetAddresses()))
+							{
+								newNICs.add(nicAdress);
+							}
+						}
+					}
+					catch (final SocketException e)
+					{
+						Log.network.error("Could not detect NetworkInterfaces!");
+					}
+
+					// IMPROVEMENT Could be improved by comparing the two lists
+					this.myNICs.clear();
+					this.myNICs.addAll(newNICs);
+
+					// Call my user to everyone as now
+				}
+			}
+		};
 	}
 
 	/**
@@ -60,20 +113,22 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 	@Override
 	public void stop()
 	{
+		// UDPCoordinator.allAdresses.removeListener(this.udpListener);
+
 		MessageBus.unregisterForReceival(this);
-		this.myUser.updatePID(ParticipantManager.UNREGISTERED);
+		UserManager.myUser.updatePID(ParticipantManager.UNREGISTERED);
 		synchronized (ParticipantManager.PARTICIPANTS)
 		{
 			ParticipantManager.PARTICIPANTS.removeListener(this);
 		}
-		this.allUsers.clear();
+		UserManager.allUsers.clear();
 		Log.network.debug("UserManager stopped!");
 	}
 
 	@Override
 	public void start()
 	{
-		this.myUser.updatePID(ParticipantManager.MY_PID.get());
+		UserManager.myUser.updatePID(ParticipantManager.MY_PID.get());
 		synchronized (ParticipantManager.PARTICIPANTS)
 		{
 			ParticipantManager.PARTICIPANTS.addListener(this);
@@ -81,14 +136,16 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 			{
 				if (pid != ParticipantManager.MY_PID.get())
 				{
-					this.allUsers.add(this.getAnonymous(pid));
+					UserManager.allUsers.add(this.getAnonymous(pid));
 				}
 			}
 		}
 		MessageBus.registerForReceival(this);
+		MessageBus.send(new UserMessage(UserManager.myUser));
 
-		MessageBus.send(new UserMessage(this.myUser));
-		Log.network.debug("UserManager started! My id: " + this.myUser.getIdentifier());
+		// UDPCoordinator.allAdresses.addListener(this.udpListener);
+
+		Log.network.debug("UserManager started! My user: " + UserManager.myUser);
 	}
 
 	@Override
@@ -96,21 +153,21 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 	{
 		if (message instanceof UserMessage)
 		{
-			synchronized (this.allUsers)
+			synchronized (UserManager.allUsers)
 			{
 				final User newUser = ((UserMessage) message).getUser();
-				if (newUser.getIdentifier().equals(this.myUser.getIdentifier()))
+				if (newUser.getIdentifier().equals(UserManager.myUser.getIdentifier()))
 				{
-					Log.network.info("Network is totally shutdown because user may exist at least twice, my user: " + this.myUser + " the other one: " + newUser);
+					Log.network.info("Network is totally shutdown because user may exist at least twice, my user: " + UserManager.myUser + " the other one: " + newUser);
 					ConnectivityManager.off();
 				}
 				else
 				{
 					Log.network.trace("Information about User received: " + newUser);
-					final User foundUser = (User) CollectionUtils.select(this.allUsers, newUser.getByPID()).iterator().next();
+					final User foundUser = (User) CollectionUtils.select(UserManager.allUsers, newUser.getByPID()).iterator().next();
 					if (foundUser != null)
 					{
-						this.allUsers.set(this.allUsers.indexOf(foundUser), (T) newUser);
+						UserManager.allUsers.set(UserManager.allUsers.indexOf(foundUser), newUser);
 					}
 					else
 					{
@@ -124,18 +181,18 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 	@Override
 	public void onChanged(final javafx.collections.ListChangeListener.Change<? extends Integer> c)
 	{
-		synchronized (this.allUsers)
+		synchronized (UserManager.allUsers)
 		{
 			while (c.next())
 			{
 				if (c.wasAdded())
 				{
-					final UserMessage message = new UserMessage(this.myUser);
+					final UserMessage message = new UserMessage(UserManager.myUser);
 					for (final int pid : c.getAddedSubList())
 					{
 						final T user = this.getAnonymous(pid);
 						Log.network.trace("New user registered: " + user);
-						this.allUsers.add(user);
+						UserManager.allUsers.add(user);
 						message.receivers.add(pid);
 					}
 					MessageBus.send(message);
@@ -145,10 +202,10 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 					{
 						for (final int pid : c.getRemoved())
 						{
-							final User foundUser = (User) CollectionUtils.select(this.allUsers, this.getAnonymous(pid).getByPID()).iterator().next();
+							final User foundUser = (User) CollectionUtils.select(UserManager.allUsers, this.getAnonymous(pid).getByPID()).iterator().next();
 							if (foundUser != null)
 							{
-								this.allUsers.remove(foundUser);
+								UserManager.allUsers.remove(foundUser);
 								Log.network.trace("User with ID " + foundUser + " lost!");
 							}
 						}

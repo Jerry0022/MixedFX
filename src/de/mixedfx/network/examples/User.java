@@ -22,12 +22,10 @@ public abstract class User implements Identifiable, Serializable
 	/**
 	 * If the user is not yet identified!
 	 */
-	protected boolean	anonym;
-	protected int		pid;
+	public int	pid;
 
 	protected User()
 	{
-		this.anonym = true;
 		this.pid = ParticipantManager.UNREGISTERED;
 	}
 
@@ -49,14 +47,14 @@ public abstract class User implements Identifiable, Serializable
 	@Override
 	public String toString()
 	{
-		return "UserID: " + this.getIdentifier() + "; PID: " + this.pid + "; Anonym: " + this.anonym;
+		return "UserID: " + this.getIdentifier() + "; PID: " + this.pid;
 	}
 
 	/**
 	 * This method is called after a User is received by the network. If a user is already in the
-	 * network this method should return false. If this method returns false, the user will be
-	 * kicked from the network. This implies that only the newest user is in the network and there
-	 * can't be a user twice.
+	 * network this method should return true. If this method returns false, the user will be kicked
+	 * from the network. This implies that only the newest user is in the network and maybe not even
+	 * him and there can't be a user twice.
 	 *
 	 * @param user
 	 * @return Returns true if the user is equal to the other user, otherwise false.
