@@ -142,6 +142,7 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 	@Override
 	public synchronized void start()
 	{
+		Log.network.trace("UserManager starts!");
 		UserManager.myUser.updatePID(ParticipantManager.MY_PID.get());
 		synchronized (ParticipantManager.PARTICIPANTS)
 		{
