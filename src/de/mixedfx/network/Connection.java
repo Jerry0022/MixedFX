@@ -201,6 +201,11 @@ public class Connection implements EventBusServiceInterface
 		if (message instanceof RegisteredMessage)
 		{
 			final RegisteredMessage regMessage = (RegisteredMessage) message;
+			while (!ParticipantManager.MY_PID.equals(ParticipantManager.UNREGISTERED))
+			{
+				;
+			}
+
 			// If it is for me or it is a broadcast and I am not the sender, publish the message
 			// internally
 			Log.network.warn("Scanning registered message!" + regMessage.receivers + regMessage.sender);
