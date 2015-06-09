@@ -125,7 +125,7 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 	}
 
 	@Override
-	public void stop()
+	public synchronized void stop()
 	{
 		// UDPCoordinator.allAdresses.removeListener(this.udpListener);
 
@@ -140,7 +140,7 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 	}
 
 	@Override
-	public void start()
+	public synchronized void start()
 	{
 		UserManager.myUser.updatePID(ParticipantManager.MY_PID.get());
 		synchronized (ParticipantManager.PARTICIPANTS)
@@ -163,8 +163,9 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 	}
 
 	@Override
-	public void receive(final RegisteredMessage message)
+	public synchronized void receive(final RegisteredMessage message)
 	{
+		Log.network.warn("RECEIVED USER MESSAGE" + message);
 		if (message instanceof UserMessage)
 		{
 			synchronized (UserManager.allUsers)
@@ -193,7 +194,7 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 	}
 
 	@Override
-	public void onChanged(final javafx.collections.ListChangeListener.Change<? extends Integer> c)
+	public synchronized void onChanged(final javafx.collections.ListChangeListener.Change<? extends Integer> c)
 	{
 		/*
 		 * If new participant is in the network add an anonymous user to the list. If one is lost,

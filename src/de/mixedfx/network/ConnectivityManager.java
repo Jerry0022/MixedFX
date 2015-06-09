@@ -76,16 +76,6 @@ public class ConnectivityManager
 			if (c.getList().size() > 0)
 			{
 				ConnectivityManager.status.set(Status.Online);
-				if (ParticipantManager.PARTICIPANTS.get(0).equals(ParticipantManager.MY_PID.get()))
-				{
-					synchronized (NetworkConfig.status)
-					{
-						if (NetworkConfig.status.get().equals(States.BoundToServer))
-						{
-							ServiceManager.client();
-						}
-					}
-				}
 			}
 		});
 

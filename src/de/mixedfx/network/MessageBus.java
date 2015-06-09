@@ -6,6 +6,7 @@ import org.bushe.swing.event.annotation.AnnotationProcessor;
 import org.bushe.swing.event.annotation.EventTopicSubscriber;
 
 import de.mixedfx.eventbus.EventBusExtended;
+import de.mixedfx.logging.Log;
 import de.mixedfx.network.messages.IdentifiedMessage;
 import de.mixedfx.network.messages.Message;
 import de.mixedfx.network.messages.RegisteredMessage;
@@ -124,6 +125,7 @@ public class MessageBus
 		{
 			for (final MessageReceiver receiver : MessageBus.receiverList)
 			{
+				Log.network.warn("RECEIVE");
 				receiver.receive((RegisteredMessage) message);
 			}
 		}

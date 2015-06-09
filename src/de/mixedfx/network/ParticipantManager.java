@@ -132,6 +132,7 @@ public class ParticipantManager
 									ParticipantManager.MY_PID.set(myID);
 									ParticipantManager.PARTICIPANTS.addAll(pMessage.ids);
 									Log.network.debug("Participant Response from Server: " + ParticipantManager.PARTICIPANTS);
+									ServiceManager.client();
 								}
 					}
 			}

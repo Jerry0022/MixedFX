@@ -16,6 +16,7 @@ import de.mixedfx.network.NetworkConfig.States;
 import de.mixedfx.network.messages.Message;
 import de.mixedfx.network.messages.ParticipantMessage;
 import de.mixedfx.network.messages.RegisteredMessage;
+import de.mixedfx.network.messages.UserMessage;
 
 public class Connection implements EventBusServiceInterface
 {
@@ -202,8 +203,11 @@ public class Connection implements EventBusServiceInterface
 			final RegisteredMessage regMessage = (RegisteredMessage) message;
 			// If it is for me or it is a broadcast and I am not the sender, publish the message
 			// internally
+			Log.network.warn("Scanning registered message!" + regMessage.receivers + regMessage.sender);
+			Log.network.warn(regMessage instanceof UserMessage);
 			if ((regMessage.receivers.contains(ParticipantManager.MY_PID.get()) || regMessage.receivers.isEmpty()) && regMessage.sender != ParticipantManager.MY_PID.get())
 			{
+				Log.network.warn("PUBLISHING!");
 				EventBusExtended.publishAsyncSafe(MessageBus.MESSAGE_RECEIVE, message); // Publish
 				// internally
 			}
