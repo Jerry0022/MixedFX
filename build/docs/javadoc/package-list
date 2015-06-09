@@ -7,6 +7,7 @@ de.mixedfx.image
 de.mixedfx.inspector
 de.mixedfx.java
 de.mixedfx.list
+de.mixedfx.logging
 de.mixedfx.network
 de.mixedfx.network.examples
 de.mixedfx.network.messages

@@ -7,9 +7,8 @@ import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 
 /**
- * Turn the Logger off by calling {@link Logger#setLevel(org.apache.logging.log4j.Level))} with
- * {@link Level#OFF}! See Level logic here: <a
- * href="http://www.tutorialspoint.com/log4j/log4j_logging_levels.htm"
+ * Turn the Logger off by calling {@link Logger#setLevel(Level)} with {@link Level#OFF}! See Level
+ * logic here: <a href="http://www.tutorialspoint.com/log4j/log4j_logging_levels.htm"
  * >http://www.tutorialspoint.com/log4j/log4j_logging_levels.htm</a>
  *
  * @author Jerry
