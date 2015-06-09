@@ -203,7 +203,15 @@ public class Connection implements EventBusServiceInterface
 			final RegisteredMessage regMessage = (RegisteredMessage) message;
 			while (!ParticipantManager.MY_PID.equals(ParticipantManager.UNREGISTERED))
 			{
-				;
+				try
+				{
+					Thread.sleep(5);
+				}
+				catch (final InterruptedException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 
 			// If it is for me or it is a broadcast and I am not the sender, publish the message
