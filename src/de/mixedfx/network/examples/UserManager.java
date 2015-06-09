@@ -143,6 +143,7 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 	public synchronized void start()
 	{
 		Log.network.trace("UserManager starts!");
+		MessageBus.registerForReceival(this);
 		UserManager.myUser.updatePID(ParticipantManager.MY_PID.get());
 		synchronized (ParticipantManager.PARTICIPANTS)
 		{
@@ -155,7 +156,6 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 			}
 			ParticipantManager.PARTICIPANTS.addListener(this);
 		}
-		MessageBus.registerForReceival(this);
 		MessageBus.send(new UserMessage(UserManager.myUser));
 
 		// UDPCoordinator.allAdresses.addListener(this.udpListener);
