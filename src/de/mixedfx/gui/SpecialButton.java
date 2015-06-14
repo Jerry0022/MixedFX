@@ -44,7 +44,9 @@ public class SpecialButton extends Button implements ChangeListener<Object>
 		this.heightProperty().addListener(this);
 
 		if (backgroundImage == null)
-			backgroundImage = new SimpleObjectProperty<>(ImageProducer.getMonoColored(new Color(226, 0, 116, 1.0), 0.6));
+		{
+			backgroundImage = new SimpleObjectProperty<>(ImageProducer.getMonoColored(new Color(226, 0, 116, 0.6)));
+		}
 
 		this.backgroundImage = backgroundImage;
 
@@ -70,11 +72,20 @@ public class SpecialButton extends Button implements ChangeListener<Object>
 	public void changed(final ObservableValue<? extends Object> observable, final Object oldValue, final Object newValue)
 	{
 		if (newValue instanceof Image)
+		{
 			this.updateBackground((Image) newValue);
-		else if (newValue instanceof Number)
-			if (this.getBackground() != null)
-				if (this.getBackground().getImages().size() > 0)
-					this.updateBackground(this.getBackground().getImages().get(0).getImage());
+		}
+		else
+			if (newValue instanceof Number)
+			{
+				if (this.getBackground() != null)
+				{
+					if (this.getBackground().getImages().size() > 0)
+					{
+						this.updateBackground(this.getBackground().getImages().get(0).getImage());
+					}
+				}
+			}
 	}
 
 	public void updateBackground(final Image image)
