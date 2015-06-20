@@ -82,7 +82,7 @@ public class ImageProducer
 	}
 
 	/**
-	 * See also {@link #getMonoColored(Color, double)}.
+	 * See also {@link #getMonoColored(Color, int, int)}.
 	 *
 	 * @param monoColor
 	 * @return Returns an image which has exactly one colored pixel.
