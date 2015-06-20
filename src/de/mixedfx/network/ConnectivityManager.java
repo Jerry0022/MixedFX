@@ -180,13 +180,15 @@ public class ConnectivityManager
 		final String id = UUID.randomUUID().toString();
 		final ExampleUser user = new ExampleUser(id.substring(id.length() - 7, id.length()));
 
-		// Register example services
+		// Register UserManager services
 		final UserManager<ExampleUser> userManager = new UserManager<ExampleUser>(user);
 		UserManager.allUsers.addListener((ListChangeListener<User>) c ->
 		{
 			Log.network.info("UserManager list changed to: " + UserManager.allUsers);
 		});
 		ServiceManager.register(userManager);
+
+		// Register example unique service
 		ServiceManager.register(new ExampleUniqueService());
 
 		// Start network activity and immediately after that start TCP as host.
