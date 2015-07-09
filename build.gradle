@@ -43,6 +43,7 @@ artifacts {
 processResources {
   from ('src') {
     include '**/*.css'
+    include '**/*.xml'
   }
 }
 

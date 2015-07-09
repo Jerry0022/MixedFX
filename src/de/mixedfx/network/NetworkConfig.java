@@ -10,7 +10,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import de.mixedfx.logging.Log;
 
-class NetworkConfig
+public class NetworkConfig
 {
 	/**
 	 * Tries amount for TCP and UDP to switch ports before they throw an (maybe fatal) Error.
@@ -35,7 +35,7 @@ class NetworkConfig
 	 * Default port is 8888 for TCP and UDP.
 	 *
 	 * If TCP port is not available (as tcp client or server) it will try automatically other ports
-	 * ({@link TCPCoordinator#PORT_TRIES}).
+	 * ({@link NetworkConfig#TRIES_AMOUNT}).
 	 *
 	 * If UDP port fails a {@link NetworkManager#NETWORK_FATALERROR} is thrown (can be thrown also
 	 * if other errors occur).
