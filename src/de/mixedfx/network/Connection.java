@@ -92,78 +92,75 @@ public class Connection implements EventBusServiceInterface
 			{
 				this.checkSend(message);
 			}
-			else
-				if (NetworkConfig.status.get().equals(States.BoundToServer))
+			else if (NetworkConfig.status.get().equals(States.BoundToServer))
+			{
+				if (message.fromServer)
 				{
-					if (message.fromServer)
+					if (this.clientID != TCPCoordinator.localNetworkMainID.get())
 					{
-						if (this.clientID != TCPCoordinator.localNetworkMainID.get())
-						{
-							this.checkSend(message);
-							if (message.goodbye)
-							{
-								this.outputConnection.sendMessage(message);
-							}
-						}
-					}
-					else
-					{
+						this.checkSend(message);
 						if (message.goodbye)
 						{
 							this.outputConnection.sendMessage(message);
 						}
-						else
-							if (this.clientID == TCPCoordinator.localNetworkMainID.get())
-							{
-								this.outputConnection.sendMessage(message);
-							}
 					}
 				}
+				else
+				{
+					if (message.goodbye)
+					{
+						this.outputConnection.sendMessage(message);
+					}
+					else if (this.clientID == TCPCoordinator.localNetworkMainID.get())
+					{
+						this.outputConnection.sendMessage(message);
+					}
+				}
+			}
 		}
-		else
-			if (topic.equals(Connection.MESSAGE_CHANNEL_RECEIVED))
+		else if (topic.equals(Connection.MESSAGE_CHANNEL_RECEIVED))
+		{
+			final Message message = (Message) this.inputConnection.getNextMessage();
+
+			if (message.goodbye)
 			{
-				final Message message = (Message) this.inputConnection.getNextMessage();
+				this.close();
+				EventBusExtended.publishSyncSafe(TCPCoordinator.CONNECTION_LOST, this.clientID);
+				return;
+			}
 
-				if (message.goodbye)
+			if (!NetworkConfig.status.get().equals(States.Server))
+			{
+				if (this.clientID == TCPCoordinator.localNetworkMainID.get())
 				{
-					this.close();
-					EventBusExtended.publishSyncSafe(TCPCoordinator.CONNECTION_LOST, this.clientID);
-					return;
-				}
-
-				if (!NetworkConfig.status.get().equals(States.Server))
-				{
-					if (this.clientID == TCPCoordinator.localNetworkMainID.get())
-					{
-						message.fromServer = true;
-						this.checkReceive(message); // May publish internally
-					}
-					else
-					{
-						message.fromServer = false;
-						// Add Participants requests to my list.
-						this.checkParticipantMessage(message);
-					}
-
-					// TODO Here you can shorten the way to the receiver if it is for example a
-					// direct file transfer
-					// FORWARD Message to other clients OR Server
-					EventBusExtended.publishSyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
+					message.fromServer = true;
+					this.checkReceive(message); // May publish internally
 				}
 				else
 				{
 					message.fromServer = false;
 					// Add Participants requests to my list.
 					this.checkParticipantMessage(message);
-					this.checkReceive(message);
 				}
+
+				// TODO Here you can shorten the way to the receiver if it is for example a
+				// direct file transfer
+				// FORWARD Message to other clients OR Server
+				EventBusExtended.publishSyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
 			}
 			else
 			{
-				this.close();
-				EventBusExtended.publishSyncSafe(TCPCoordinator.CONNECTION_LOST, this.clientID);
+				message.fromServer = false;
+				// Add Participants requests to my list.
+				this.checkParticipantMessage(message);
+				this.checkReceive(message);
 			}
+		}
+		else
+		{
+			this.close();
+			EventBusExtended.publishSyncSafe(TCPCoordinator.CONNECTION_LOST, this.clientID);
+		}
 	}
 
 	private void checkParticipantMessage(final Message message)
@@ -209,7 +206,7 @@ public class Connection implements EventBusServiceInterface
 			if ((regMessage.receivers.contains(ParticipantManager.MY_PID.get()) || regMessage.receivers.isEmpty()) && regMessage.sender != ParticipantManager.MY_PID.get())
 			{
 				Log.network.warn("PUBLISHING!");
-				EventBusExtended.publishAsyncSafe(MessageBus.MESSAGE_RECEIVE, message); // Publish
+				EventBusExtended.publishSyncSafe(MessageBus.MESSAGE_RECEIVE, message); // Publish
 				// internally
 			}
 			// Asks services to process message before forwarding
@@ -265,7 +262,8 @@ public class Connection implements EventBusServiceInterface
 			this.clientSocket.close();
 		}
 		catch (final IOException e)
-		{}
+		{
+		}
 
 		Log.network.debug(this.getClass().getSimpleName() + " closed!");
 	}

@@ -65,7 +65,7 @@ class UDPIn
 				try
 				{
 					socket.receive(receivePacket); // BLOCKING
-					UDPCoordinator.service.publishAsync(UDPCoordinator.RECEIVE, receivePacket);
+					UDPCoordinator.service.publishSync(UDPCoordinator.RECEIVE, receivePacket);
 				}
 				catch (final Exception e)
 				{

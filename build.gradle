@@ -8,7 +8,7 @@ plugins {
  * Build .jar, javadoc.jar and sources.jar from the source folder!
  */
 
-version = '0.9'
+version = '0.91'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 

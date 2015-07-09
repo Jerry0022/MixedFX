@@ -124,7 +124,8 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 					}
 				}
 				catch (final SocketException e)
-				{}
+				{
+				}
 
 				if (!ownOne)
 				{
@@ -170,14 +171,13 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 					}
 				}
 			}
-			else
-				if (topic.equals(UDPCoordinator.ERROR))
-				{
-					NetworkManager.t.stopTCPFull();
-					this.stopUDPFull();
+			else if (topic.equals(UDPCoordinator.ERROR))
+			{
+				NetworkManager.t.stopTCPFull();
+				this.stopUDPFull();
 
-					EventBusExtended.publishAsyncSafe(NetworkManager.NETWORK_FATALERROR, data);
-				}
+				EventBusExtended.publishAsyncSafe(NetworkManager.NETWORK_FATALERROR, data);
+			}
 		}
 	}
 }
