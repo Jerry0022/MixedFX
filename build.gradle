@@ -2,6 +2,7 @@ plugins {
   id 'java' // or 'groovy' Must be explicitly applied
   id 'eclipse'
   id 'com.github.johnrengelman.shadow' version '1.2.1'
+  id 'maven'
 }
 
 /*
@@ -9,6 +10,7 @@ plugins {
  */
 
 version = '0.91'
+group = 'de.lantool'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
