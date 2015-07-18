@@ -39,6 +39,7 @@ public class ProcessController
 	{
 		final FileObject program = FileObject.create().setPath(directory).setName(processName);
 		Executor.runAndWaitForOutput("wmic process call create \"" + program.getFullPath() + "\"");
+		// Executor.run(program, "");
 		while (!ProcessController.isProcessRunning(processName))
 		{
 			;
