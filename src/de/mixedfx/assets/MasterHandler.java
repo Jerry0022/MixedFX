@@ -1,12 +1,14 @@
 package de.mixedfx.assets;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javafx.scene.image.Image;
+
+import org.apache.commons.io.FileUtils;
+
 import de.mixedfx.file.DataHandler;
 import de.mixedfx.file.FileObject;
+import de.mixedfx.java.EasyGson;
 import de.mixedfx.logging.Log;
 
 /**
@@ -29,49 +31,48 @@ public class MasterHandler
 		if (type.equals(Image.class))
 		{
 			file.setPrefix(ImageHandler.prefix);
-			System.out.println(file);
 			return (T) ImageHandler.readImage(file);
 		}
 		else
-			if (type.equals(File.class))
+		{
+			try
 			{
-				try
-				{
-					file.setPrefix(CSSHandler.prefix);
-					System.out.println(file);
-					return (T) DataHandler.createOrFindFile(file);
-				}
-				catch (IOException | InterruptedException e)
-				{
-					Log.assets.error("Could not write/access file! " + file);
-					return null;
-				}
+				return (T) DataHandler.createOrFindFile(file);
 			}
-			else
+			catch (IOException | InterruptedException e)
 			{
-				try
-				{
-					return (T) DataHandler.readFile(file);
-				}
-				catch (final FileNotFoundException e)
-				{
-					Log.assets.error("File not found! " + file);
-					return null;
-				}
+				Log.assets.error("Could not read/access file! " + file);
+				return null;
 			}
-
+		}
 	}
 
-	public static void write(final FileObject path, final Object object)
+	public static void write(final FileObject file, final Object object)
 	{
 		if (object instanceof Image)
 		{
-			ImageHandler.writeImage(path, (Image) object);
+			ImageHandler.writeImage(file, (Image) object);
 		}
 		else
-			if (object instanceof File)
+		{
+			DataHandler.writeFile(file);
+			try
 			{
-				CSSHandler.write(path, (String) object);
+				FileUtils.writeStringToFile(file.toFile(), EasyGson.toGSON(object));
 			}
+			catch (final IOException e)
+			{
+				Log.assets.error("Could not write/access file! " + file);
+			}
+		}
+	}
+
+	public static void remove(final FileObject file, final Class<?> type)
+	{
+		if (type.equals(Image.class))
+		{
+			file.setPrefix(ImageHandler.prefix);
+		}
+		DataHandler.deleteFile(file);
 	}
 }

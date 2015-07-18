@@ -77,14 +77,13 @@ public class ImageHandler
 	 * Writes an image object to the destination. Overwrites existing files.
 	 *
 	 * @param destination
-	 *            The destination FileObject. The prefix and extension are overwritten with the
-	 *            default one, see also {@link #prefix} and {@link #extension}
+	 *            The destination FileObject. The extension are overwritten with the default one,
+	 *            see also {@link #prefix} and {@link #extension}
 	 * @param toWrite
 	 * @return Returns true on success or false if the image could not be saved.
 	 */
 	public static boolean writeImage(final FileObject destination, final Image toWrite)
 	{
-		destination.setPrefix(ImageHandler.prefix);
 		destination.setExtension(ImageHandler.extension);
 
 		// Delete first an existing file
@@ -147,7 +146,7 @@ public class ImageHandler
 	}
 
 	/**
-	 * Removes an image and applies the prefix.
+	 * Removes an image.
 	 *
 	 * @param destination
 	 */
