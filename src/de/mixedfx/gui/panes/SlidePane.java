@@ -1,14 +1,22 @@
 package de.mixedfx.gui.panes;
 
 import javafx.animation.Transition;
-import javafx.beans.binding.DoubleExpression;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
+import de.mixedfx.gui.RegionManipulator;
 
+/**
+ * A Pane which contains to side by side panes. First only the mainScreen is shown, after
+ * {@link #showDetailed()} is called only the detailed screen is visible. This can be undone with
+ * {@link #showMain()}. It is based on the Apple iOS 8 screen change animation.
+ *
+ * @author Jerry
+ *
+ */
 public class SlidePane extends ScrollPane
 {
 	private final Region			mainScreen;
@@ -28,8 +36,8 @@ public class SlidePane extends ScrollPane
 
 		final StackPane largePane = new StackPane();
 		largePane.setMinSize(0, 0);
-		this.bindAllHeight(largePane, this.heightProperty());
-		this.bindAllWidth(largePane, this.widthProperty());
+		RegionManipulator.bindAllHeight(largePane, this.heightProperty());
+		RegionManipulator.bindAllWidth(largePane, this.widthProperty());
 
 		this.mainScreen = mainScreen;
 		this.detailedScreen = detailedScreen;
@@ -51,7 +59,9 @@ public class SlidePane extends ScrollPane
 	{
 		this.slideAnimation.setRate(-1.0);
 		if (this.slidingFrac.get() != 0)
+		{
 			this.slideAnimation.play();
+		}
 	}
 
 	public void showDetailed()
@@ -59,21 +69,9 @@ public class SlidePane extends ScrollPane
 		this.slideAnimation.setRate(1.0);
 
 		if (this.slidingFrac.get() != 1)
+		{
 			this.slideAnimation.play();
-	}
-
-	private void bindAllWidth(final Region region, final DoubleExpression property)
-	{
-		region.minWidthProperty().bind(property);
-		region.prefWidthProperty().bind(property);
-		region.maxWidthProperty().bind(property);
-	}
-
-	private void bindAllHeight(final Region region, final DoubleExpression property)
-	{
-		region.minHeightProperty().bind(property);
-		region.prefHeightProperty().bind(property);
-		region.maxHeightProperty().bind(property);
+		}
 	}
 
 	private class SlideTransition extends Transition
