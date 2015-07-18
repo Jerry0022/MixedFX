@@ -23,7 +23,6 @@ public class CSSHandler
 	 */
 	public static String read(final FileObject fileObject)
 	{
-		fileObject.setPrefix(CSSHandler.prefix);
 		fileObject.setExtension(CSSHandler.extension);
 
 		try
@@ -47,7 +46,6 @@ public class CSSHandler
 	 */
 	public static void write(final FileObject fileObject, final String css)
 	{
-		fileObject.setPrefix(CSSHandler.prefix);
 		fileObject.setExtension(CSSHandler.extension);
 
 		try

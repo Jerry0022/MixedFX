@@ -6,17 +6,12 @@ import java.io.IOException;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
@@ -25,6 +20,7 @@ import javax.imageio.ImageIO;
 
 import de.mixedfx.file.DataHandler;
 import de.mixedfx.file.FileObject;
+import de.mixedfx.gui.RegionManipulator;
 
 public class ImageHandler
 {
@@ -162,8 +158,7 @@ public class ImageHandler
 
 	/**
 	 * Returns a {@link HBox} which has as background an image. The image is sized to the full size
-	 * of the HBox. Use {@link ImageHandler#readImage(FileObject)} or
-	 * {@link ImageHandler#readImageFormatted(FileObject)} to pass the image parameter.
+	 * of the HBox.
 	 *
 	 * @param image
 	 *            The image which should be stretched to the full background of the HBox.
@@ -173,10 +168,7 @@ public class ImageHandler
 	public static HBox getPane(final Image image)
 	{
 		final HBox hbox = new HBox();
-		hbox.heightProperty().addListener((ChangeListener<Number>) (observable, oldValue, newValue) ->
-		{
-			hbox.setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(hbox.widthProperty().get(), hbox.heightProperty().get(), false, false, false, false))));
-		});
+		RegionManipulator.bindBackground(hbox, image);
 		return hbox;
 	}
 }
