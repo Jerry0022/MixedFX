@@ -1,6 +1,5 @@
 package de.mixedfx.gui;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,12 +16,13 @@ public class LayoutTester
 		final List<LayoutElement<?>> layoutElements = new ArrayList<>();
 		final LayoutElement<Image> ll = new LayoutElement<Image>("redButton", Image.class);
 		layoutElements.add(ll);
-		final LayoutElement<File> ll2 = new LayoutElement<File>("style", File.class);
+		final LayoutElement<String> ll2 = new LayoutElement<String>("style", String.class);
 		layoutElements.add(ll2);
 
 		// Erstellen eines LayoutManagers mit dem man im LanTool dynamisch das Layout wechseln kann
-		final LayoutManager lm = new LayoutManager(FileObject.create().setPath("assets\\layouts"), layoutElements);
+		final LayoutManager lm = new LayoutManager(FileObject.create().setPath("assets\\layouts"), layoutElements, "BlueMoon");
 		lm.applyLayout("HAMMER");
+		ll2.object.set("KRASS");
 
 		// IRGENDWO IM CODE im LanTool
 		final ImageView view = new ImageView();

@@ -1,10 +1,14 @@
 package de.mixedfx.gui;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.io.FileUtils;
 
 import de.mixedfx.file.DataHandler;
 import de.mixedfx.file.FileObject;
+import de.mixedfx.logging.Log;
 
 public class LayoutManager
 {
@@ -16,12 +20,24 @@ public class LayoutManager
 	 * @param layoutDir
 	 *            The directory where the layout folders are / shall be created.
 	 */
-	public LayoutManager(final FileObject layoutDir, final List<LayoutElement<?>> layoutElements)
+	public LayoutManager(final FileObject layoutDir, final List<LayoutElement<?>> layoutElements, final String defaultLayout)
 	{
+		if (!layoutDir.toFile().exists())
+		{
+			try
+			{
+				FileUtils.forceMkdir(layoutDir.toFile());
+			}
+			catch (final IOException e)
+			{
+				Log.assets.error("Layout directory could not have been created! " + layoutDir);
+			}
+		}
 		this.layoutDir = layoutDir;
 		this.layoutElements = layoutElements;
 
-		this.applyLayout(this.getList().get(0));
+		// Apply default layout
+		this.applyLayout(defaultLayout);
 	}
 
 	/**
@@ -29,11 +45,16 @@ public class LayoutManager
 	 */
 	public List<String> getList()
 	{
-		return DataHandler.getSubFolderList(this.layoutDir);
+		final ArrayList<String> all = DataHandler.getSubFolderList(this.layoutDir);
+		if (all.size() == 0)
+		{
+			all.add("Default");
+		}
+		return all;
 	}
 
 	/**
-	 * Applies the given layout. This includes that If layout is not found layout will be created!
+	 * Applies the given layout. This includes that if layout is not found layout will be created!
 	 *
 	 * @param layout
 	 *            The name of the layout.
@@ -59,5 +80,10 @@ public class LayoutManager
 		{
 			le.update(currentLayout);
 		}
+	}
+
+	public void removeLayout(final String layout)
+	{
+		DataHandler.deleteFile(this.layoutDir.setFullName(layout));
 	}
 }

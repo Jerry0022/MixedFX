@@ -18,8 +18,9 @@ public class LayoutElement<T> implements ChangeListener<T>
 	public LayoutElement(final String name, final Class<?> type)
 	{
 		this.name = name;
-		this.object = new SimpleObjectProperty<>();
 		this.type = type;
+		this.object = new SimpleObjectProperty<>();
+		this.object.addListener(this);
 	}
 
 	@SuppressWarnings("unchecked")
