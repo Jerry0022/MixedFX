@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
@@ -29,21 +31,28 @@ public class ImageHandler
 	/**
 	 * If to use JavaFX BackgroundLoading, see also {@link Image}. Default: false
 	 */
-	public static boolean	backgroundLoading	= false;
+	public static boolean						backgroundLoading	= false;
+
+	/**
+	 * By default this is the {@link ImageProducer#getTransparentImage()}. If you change this, this
+	 * is directly applied for all new loaded images!
+	 */
+	public final static ObjectProperty<Image>	defaultImage		= new SimpleObjectProperty<>(ImageProducer.getTransparentImage());
 
 	/**
 	 * The preferred prefix. Default: "img"
 	 */
-	public static String	prefix				= "img";
+	public static String						prefix				= "img";
 
 	/**
 	 * The preferred extension (only needed for writing actions). Default: "png"
 	 */
-	public static String	extension			= "png";
+	public static String						extension			= "png";
 
 	/**
 	 * Reads an image (applying the {@link ImageHandler#prefix} is recommended). Doesn't throw an
-	 * exception because even if the image is not found it returns a transparent one (of one pixel).
+	 * exception because even if the image is not found it returns the {@link #defaultImage} or a
+	 * transparent one (1x1 pixel).
 	 *
 	 * @param fileObject
 	 *            The image to retrieve. The extension can be omitted.
@@ -57,7 +66,14 @@ public class ImageHandler
 		}
 		catch (final FileNotFoundException e)
 		{
-			return ImageProducer.getTransparentImage();
+			try
+			{
+				return new Image(DataHandler.readFile(fileObject).toURI().toString(), ImageHandler.backgroundLoading);
+			}
+			catch (final FileNotFoundException e1)
+			{
+				return ImageProducer.getTransparentImage();
+			}
 		}
 	}
 
