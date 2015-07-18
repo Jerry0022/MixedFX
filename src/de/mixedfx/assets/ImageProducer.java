@@ -1,4 +1,4 @@
-package de.mixedfx.image;
+package de.mixedfx.assets;
 
 import java.util.Random;
 

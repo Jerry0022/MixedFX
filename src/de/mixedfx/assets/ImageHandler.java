@@ -1,4 +1,4 @@
-package de.mixedfx.image;
+package de.mixedfx.assets;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -42,21 +42,8 @@ public class ImageHandler
 	public static String	extension			= "png";
 
 	/**
-	 * Same as {@link ImageHandler#readImage(FileObject)} but applies also the image prefix to the
-	 * fileObject before reading!
-	 *
-	 * @param fileObject
-	 * @return
-	 */
-	public static Image readImageFormatted(final FileObject fileObject)
-	{
-		fileObject.setPrefix(ImageHandler.prefix);
-		return ImageHandler.readImage(fileObject);
-	}
-
-	/**
-	 * Reads an image. Doesn't throw an exception because even if the image is not found it returns
-	 * a transparent one (of one pixel).
+	 * Reads an image (applying the {@link ImageHandler#prefix} is recommended). Doesn't throw an
+	 * exception because even if the image is not found it returns a transparent one (of one pixel).
 	 *
 	 * @param fileObject
 	 *            The image to retrieve. The extension can be omitted.
@@ -99,17 +86,21 @@ public class ImageHandler
 		final PixelWriter pixelWriter = writeableImage.getPixelWriter();
 
 		for (int y = 0; y < height; y++)
+		{
 			for (int x = 0; x < width; x++)
 			{
 				final Color color = pixelReader.getColor(x, y);
 				pixelWriter.setColor(x, y, color);
 			}
+		}
 
 		try
 		{
 			final File file = DataHandler.writeFile(destination);
 			if (file == null)
+			{
 				throw new IOException();
+			}
 			ImageIO.write(SwingFXUtils.fromFXImage(writeableImage, null), destination.getExtension(), file);
 		}
 		catch (final IOException e)

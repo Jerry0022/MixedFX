@@ -12,7 +12,7 @@ import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.paint.Color;
-import de.mixedfx.image.ImageProducer;
+import de.mixedfx.assets.ImageProducer;
 
 public class SpecialButton extends Button implements ChangeListener<Object>
 {
