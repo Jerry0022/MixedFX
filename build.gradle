@@ -1,14 +1,13 @@
 plugins {
   id 'java' // or 'groovy' Must be explicitly applied
   id 'eclipse'
-  id 'com.github.johnrengelman.shadow' version '1.2.1'
   id 'maven'
 }
 
 /*
  * Build .jar, javadoc.jar and sources.jar from the source folder!
  */
-
+ 
 version = '0.91'
 group = 'de.lantool'
 sourceCompatibility = 1.8
@@ -32,14 +31,9 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
-shadowJar {
-  mergeServiceFiles()
-}
-
 artifacts {
     archives sourcesJar
     archives javadocJar
-    archives shadowJar
 }
 
 processResources {
@@ -53,8 +47,6 @@ processResources {
 repositories {
     mavenCentral()
     maven {
-        url "http://dl.bintray.com/johnrengelman/gradle-plugins"
-        url "https://jitpack.io"
         url "https://repository.apache.org/content/repositories/snapshots"
     }
 }
