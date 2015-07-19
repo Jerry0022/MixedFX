@@ -18,6 +18,7 @@ public class Log
 {
 	public static final LoggerContext	CONTEXT;
 	public static final Logger			network;
+	public static final Logger			assets;
 
 	static
 	{
@@ -30,6 +31,7 @@ public class Log
 		catch (final URISyntaxException e)
 		{}
 		network = Log.CONTEXT.getLogger("Network");
+		assets = Log.CONTEXT.getLogger("Assets");
 	}
 
 	public void turnAllOn()

@@ -9,6 +9,13 @@ import javafx.util.Duration;
 import jfxtras.labs.animation.BindableTransition;
 import de.mixedfx.gui.RegionManipulator;
 
+/**
+ * A pane which contains to Regions. First only the right region is shown. After collapse is called
+ * the right region will is shrunk to its minimum size (left pane will now use the rest space).
+ *
+ * @author Jerry
+ *
+ */
 public class CollapsePane extends HBox
 {
 	public interface CollapseDoneInterface
@@ -31,7 +38,7 @@ public class CollapsePane extends HBox
 		this(left, right, "", "", CollapsePane.ANIMATION_DURATION_DEFAULT);
 	}
 
-	public CollapsePane(final Region left, Region right, Image backgroundImageLeft, Image backgroundImageRight, Duration duration)
+	public CollapsePane(final Region left, final Region right, final Image backgroundImageLeft, final Image backgroundImageRight, final Duration duration)
 	{
 		this.duration = duration;
 		this.setAlignment(Pos.CENTER_RIGHT);
@@ -60,7 +67,7 @@ public class CollapsePane extends HBox
 		this.getChildren().addAll(this.leftSide, this.rightSide);
 	}
 
-	public CollapsePane(final Region left, Region right, String cssIDLeft, String cssIDRight, Duration duration)
+	public CollapsePane(final Region left, final Region right, final String cssIDLeft, final String cssIDRight, final Duration duration)
 	{
 		this.duration = duration;
 		this.setAlignment(Pos.CENTER_RIGHT);
@@ -104,7 +111,9 @@ public class CollapsePane extends HBox
 			this.leftSide.prefWidthProperty().unbind();
 
 			if (this.doneEvent != null)
+			{
 				this.doneEvent.collapseDone();
+			}
 		});
 		this.animation.play();
 	}

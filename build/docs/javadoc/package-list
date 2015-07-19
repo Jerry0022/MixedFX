@@ -1,9 +1,9 @@
+de.mixedfx.assets
 de.mixedfx.config
 de.mixedfx.eventbus
 de.mixedfx.file
 de.mixedfx.gui
 de.mixedfx.gui.panes
-de.mixedfx.image
 de.mixedfx.inspector
 de.mixedfx.java
 de.mixedfx.list
@@ -12,3 +12,4 @@ de.mixedfx.network
 de.mixedfx.network.examples
 de.mixedfx.network.messages
 de.mixedfx.network.user
+de.mixedfx.windows

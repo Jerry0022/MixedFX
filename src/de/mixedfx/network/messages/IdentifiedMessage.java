@@ -3,8 +3,6 @@ package de.mixedfx.network.messages;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gson.annotations.Expose;
-
 import de.mixedfx.network.MessageBus;
 import de.mixedfx.network.ParticipantManager;
 import de.mixedfx.network.examples.User;
@@ -15,21 +13,16 @@ public abstract class IdentifiedMessage extends RegisteredMessage
 {
 	/**
 	 * <p>
-	 * Initially empty = broadcast.
-	 * </p>
-	 * <p>
-	 * If receivers contains no values then this message is a broadcast to everyone else except me.
-	 * <br>
+	 * If receivers contains no values then this message is a broadcast to everyone else except me
+	 * (default). <br>
 	 * If receivers contains one value or more the message is received by these participants.
 	 * </p>
 	 */
-	@Expose
 	private final List<Object>	receiverUserIDs;
 
 	/**
 	 * Senders user id, which is automatically set!
 	 */
-	@Expose
 	private Object				senderUserID;
 
 	public IdentifiedMessage()

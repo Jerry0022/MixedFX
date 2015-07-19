@@ -1,6 +1,8 @@
 package de.mixedfx.gui;
 
 import javafx.beans.binding.DoubleExpression;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
@@ -53,5 +55,22 @@ public class RegionManipulator
 	public static void bindBackground(final Region region, final Image image)
 	{
 		region.setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(1, 1, true, true, false, false))));
+	}
+
+	/**
+	 * Every Region can have a background. This method applies an image as background filling the
+	 * whole (background) area of the Region. It resizes automatically with changes of the region.
+	 *
+	 * @param region
+	 *            Region whose background shall be set.
+	 * @param image
+	 *            ImageProperty which shall be the background of the region.
+	 */
+	public static void bindBackgrond(final Region region, final ObjectProperty<Image> image)
+	{
+		image.addListener((ChangeListener<Image>) (observable, oldValue, newValue) ->
+		{
+			RegionManipulator.bindBackground(region, newValue);
+		});
 	}
 }

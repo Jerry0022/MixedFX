@@ -1,20 +1,17 @@
-package de.mixedfx.image;
+package de.mixedfx.assets;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import javafx.beans.value.ChangeListener;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
@@ -23,40 +20,35 @@ import javax.imageio.ImageIO;
 
 import de.mixedfx.file.DataHandler;
 import de.mixedfx.file.FileObject;
+import de.mixedfx.gui.RegionManipulator;
 
 public class ImageHandler
 {
 	/**
 	 * If to use JavaFX BackgroundLoading, see also {@link Image}. Default: false
 	 */
-	public static boolean	backgroundLoading	= false;
+	public static boolean						backgroundLoading	= false;
+
+	/**
+	 * By default this is the {@link ImageProducer#getTransparentImage()}. If you change this, this
+	 * is directly applied for all new loaded images!
+	 */
+	public final static ObjectProperty<Image>	defaultImage		= new SimpleObjectProperty<>(ImageProducer.getTransparentImage());
 
 	/**
 	 * The preferred prefix. Default: "img"
 	 */
-	public static String	prefix				= "img";
+	public static String						prefix				= "img";
 
 	/**
 	 * The preferred extension (only needed for writing actions). Default: "png"
 	 */
-	public static String	extension			= "png";
+	public static String						extension			= "png";
 
 	/**
-	 * Same as {@link ImageHandler#readImage(FileObject)} but applies also the image prefix to the
-	 * fileObject before reading!
-	 *
-	 * @param fileObject
-	 * @return
-	 */
-	public static Image readImageFormatted(final FileObject fileObject)
-	{
-		fileObject.setPrefix(ImageHandler.prefix);
-		return ImageHandler.readImage(fileObject);
-	}
-
-	/**
-	 * Reads an image. Doesn't throw an exception because even if the image is not found it returns
-	 * a transparent one (of one pixel).
+	 * Reads an image (applying the {@link ImageHandler#prefix} is recommended). Doesn't throw an
+	 * exception because even if the image is not found it returns the {@link #defaultImage} or a
+	 * transparent one (1x1 pixel).
 	 *
 	 * @param fileObject
 	 *            The image to retrieve. The extension can be omitted.
@@ -70,7 +62,14 @@ public class ImageHandler
 		}
 		catch (final FileNotFoundException e)
 		{
-			return ImageProducer.getTransparentImage();
+			try
+			{
+				return new Image(DataHandler.readFile(fileObject).toURI().toString(), ImageHandler.backgroundLoading);
+			}
+			catch (final FileNotFoundException e1)
+			{
+				return ImageProducer.getTransparentImage();
+			}
 		}
 	}
 
@@ -78,14 +77,13 @@ public class ImageHandler
 	 * Writes an image object to the destination. Overwrites existing files.
 	 *
 	 * @param destination
-	 *            The destination FileObject. The prefix and extension are overwritten with the
-	 *            default one, see also {@link #prefix} and {@link #extension}
+	 *            The destination FileObject. The extension are overwritten with the default one,
+	 *            see also {@link #prefix} and {@link #extension}
 	 * @param toWrite
 	 * @return Returns true on success or false if the image could not be saved.
 	 */
 	public static boolean writeImage(final FileObject destination, final Image toWrite)
 	{
-		destination.setPrefix(ImageHandler.prefix);
 		destination.setExtension(ImageHandler.extension);
 
 		// Delete first an existing file
@@ -99,17 +97,21 @@ public class ImageHandler
 		final PixelWriter pixelWriter = writeableImage.getPixelWriter();
 
 		for (int y = 0; y < height; y++)
+		{
 			for (int x = 0; x < width; x++)
 			{
 				final Color color = pixelReader.getColor(x, y);
 				pixelWriter.setColor(x, y, color);
 			}
+		}
 
 		try
 		{
 			final File file = DataHandler.writeFile(destination);
 			if (file == null)
+			{
 				throw new IOException();
+			}
 			ImageIO.write(SwingFXUtils.fromFXImage(writeableImage, null), destination.getExtension(), file);
 		}
 		catch (final IOException e)
@@ -144,7 +146,7 @@ public class ImageHandler
 	}
 
 	/**
-	 * Removes an image and applies the prefix.
+	 * Removes an image.
 	 *
 	 * @param destination
 	 */
@@ -155,8 +157,7 @@ public class ImageHandler
 
 	/**
 	 * Returns a {@link HBox} which has as background an image. The image is sized to the full size
-	 * of the HBox. Use {@link ImageHandler#readImage(FileObject)} or
-	 * {@link ImageHandler#readImageFormatted(FileObject)} to pass the image parameter.
+	 * of the HBox.
 	 *
 	 * @param image
 	 *            The image which should be stretched to the full background of the HBox.
@@ -166,10 +167,7 @@ public class ImageHandler
 	public static HBox getPane(final Image image)
 	{
 		final HBox hbox = new HBox();
-		hbox.heightProperty().addListener((ChangeListener<Number>) (observable, oldValue, newValue) ->
-		{
-			hbox.setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(hbox.widthProperty().get(), hbox.heightProperty().get(), false, false, false, false))));
-		});
+		RegionManipulator.bindBackground(hbox, image);
 		return hbox;
 	}
 }
