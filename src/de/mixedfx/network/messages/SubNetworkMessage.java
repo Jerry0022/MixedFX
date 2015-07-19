@@ -1,6 +1,6 @@
 package de.mixedfx.network.messages;
 
-public class SubNetworkMessage
+public class SubNetworkMessage extends IdentifiedMessage
 {
 
 }

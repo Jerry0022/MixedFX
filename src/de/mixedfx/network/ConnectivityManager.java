@@ -2,11 +2,6 @@ package de.mixedfx.network;
 
 import java.util.UUID;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.collections.ListChangeListener;
-
 import org.apache.logging.log4j.Level;
 import org.bushe.swing.event.annotation.AnnotationProcessor;
 import org.bushe.swing.event.annotation.EventTopicSubscriber;
@@ -18,13 +13,17 @@ import de.mixedfx.network.examples.ExampleUniqueService;
 import de.mixedfx.network.examples.ExampleUser;
 import de.mixedfx.network.examples.User;
 import de.mixedfx.network.examples.UserManager;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.collections.ListChangeListener;
 
 public class ConnectivityManager
 {
 	/**
 	 * Read-only.
 	 */
-	public static ObjectProperty<Status>	status;
+	public static ObjectProperty<Status> status;
 
 	public enum Status
 	{
