@@ -5,3 +5,4 @@
 *.umlcd
 /assets/
 /.gradle/
+/.settings/
