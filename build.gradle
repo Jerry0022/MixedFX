@@ -2,13 +2,14 @@ plugins {
   id 'java' // or 'groovy' Must be explicitly applied
   id 'eclipse'
   id 'maven'
+  id 'distribution'
 }
 
 /*
  * Build .jar, javadoc.jar and sources.jar from the source folder!
  */
  
-version = '0.91'
+version = '0.93'
 group = 'de.lantool'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8

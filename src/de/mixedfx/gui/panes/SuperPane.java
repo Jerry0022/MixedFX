@@ -46,7 +46,9 @@ public class SuperPane extends StackPane
 	{
 		Parent parent = content.getParent();
 		while (parent != null && !(parent instanceof SuperPane))
+		{
 			parent = parent.getParent();
+		}
 		return (SuperPane) parent;
 	}
 
@@ -54,14 +56,14 @@ public class SuperPane extends StackPane
 	 * OBJECT INSTANCE DESCRIPTION:
 	 */
 
-	private Node							content;
-	private Node							loadScreen;
+	private Node	content;
+	private Node	loadScreen;
 
 	/**
 	 * Indicates whether the Load Screen is open, not if a task is running (because if many short
 	 * tasks are running there is no LoadScreen)
 	 */
-	private AtomicBoolean					loading;
+	private AtomicBoolean loading;
 
 	/**
 	 * Handles all jobs which are loaded via {@link #load(Task)}! Executes three workers at the same
@@ -74,7 +76,7 @@ public class SuperPane extends StackPane
 	/**
 	 * Initializes the StackPane resizing mechanism and all task related stuff.
 	 */
-	private SuperPane()
+	public SuperPane()
 	{
 		this.setMinSize(0, 0); // Makes the children resizing to fit the parent
 
@@ -93,14 +95,20 @@ public class SuperPane extends StackPane
 			{
 				boolean allDone = true;
 				for (final Task<?> t : SuperPane.this.taskList)
+				{
 					if (!t.isDone())
+					{
 						allDone = false;
+					}
+				}
 
 				if (allDone)
+				{
 					Platform.runLater(() ->
 					{
 						SuperPane.this.closeLoadScreen();
 					});
+				}
 			}
 		};
 	}
@@ -156,6 +164,26 @@ public class SuperPane extends StackPane
 	}
 
 	/**
+	 * Set the main content node.
+	 *
+	 * @param content
+	 *            The content which shall be shown.
+	 */
+	public void setContent(final Node content)
+	{
+		if (this.getChildren().size() > 0)
+		{
+			this.getChildren().remove(0);
+		}
+		this.getChildren().add(content);
+	}
+
+	public void setLoadScreen(final Node loadScreen)
+	{
+		this.loadScreen = loadScreen;
+	}
+
+	/**
 	 * Sets the Background.
 	 *
 	 * @param background
@@ -165,7 +193,9 @@ public class SuperPane extends StackPane
 	public void setBackground(final Node background)
 	{
 		if (!this.getChildren().get(0).equals(this.content))
+		{
 			this.getChildren().remove(0);
+		}
 		this.getChildren().add(0, background);
 	}
 
@@ -199,10 +229,12 @@ public class SuperPane extends StackPane
 				// Show Load Screen only if the task was not a very short
 				// one
 				if (!task.isDone())
+				{
 					Platform.runLater(() ->
 					{
 						SuperPane.this.openLoadScreen();
 					});
+				}
 			}
 			catch (final InterruptedException e)
 			{}
@@ -218,8 +250,12 @@ public class SuperPane extends StackPane
 	{
 		// Show Load Screen only if it is not already shown
 		if (!this.loading.getAndSet(true))
+		{
 			if (this.loadScreen != null)
+			{
 				this.openDynamic(this.loadScreen);
+			}
+		}
 	}
 
 	/**
@@ -229,8 +265,12 @@ public class SuperPane extends StackPane
 	{
 		// Close Load Screen only if it is shown
 		if (this.loading.getAndSet(false))
+		{
 			if (this.loadScreen != null)
+			{
 				this.closeDynamic(this.loadScreen);
+			}
+		}
 	}
 
 	/**
@@ -265,7 +305,9 @@ public class SuperPane extends StackPane
 		this.blurAndDarkenPreLastLayer();
 
 		if (dynamic instanceof Dynamic)
+		{
 			((Dynamic) dynamic).start();
+		}
 	}
 
 	/**
@@ -282,11 +324,15 @@ public class SuperPane extends StackPane
 	public void closeDynamic(final Node dynamic)
 	{
 		if (dynamic instanceof Dynamic)
+		{
 			((Dynamic) dynamic).stop();
+		}
 
 		Node toDelete = dynamic;
 		while (toDelete != null && !this.getChildren().remove(toDelete))
+		{
 			toDelete = toDelete.getParent();
+		}
 
 		this.blurAndDarkenPreLastLayer();
 	}
@@ -302,7 +348,9 @@ public class SuperPane extends StackPane
 
 		// Remove all blur effects
 		for (int i = 0; i < this.getChildren().size(); i++)
+		{
 			this.getChildren().get(i).setEffect(null);
+		}
 
 		// Add an overlay only if the last element is not the content
 		if (!this.getChildren().get(this.getChildren().size() - 1).equals(this.content))
@@ -311,7 +359,9 @@ public class SuperPane extends StackPane
 			final BoxBlur blurBox = new BoxBlur();
 			blurBox.setIterations(3);
 			for (int i = 0; i < this.getChildren().size() - 1; i++)
+			{
 				this.getChildren().get(i).setEffect(blurBox);
+			}
 
 			// Add an (unblurred) OverlayPane (to darken) before the last
 			// element

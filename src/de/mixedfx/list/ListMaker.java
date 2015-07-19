@@ -22,5 +22,11 @@ public class ListMaker
 		}
 
 		ListLinker.link(userList, ltuserList);
+
+		System.out.println(userList.size());
+		System.out.println(ltuserList.size());
+		userList.remove(0);
+		System.out.println(userList.size());
+		System.out.println(ltuserList.size());
 	}
 }

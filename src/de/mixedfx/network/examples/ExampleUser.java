@@ -3,7 +3,7 @@ package de.mixedfx.network.examples;
 @SuppressWarnings("serial")
 public class ExampleUser extends User
 {
-	private final String	identifier;
+	private final String identifier;
 
 	public ExampleUser(final String identifier)
 	{
