@@ -1,6 +1,11 @@
 package de.mixedfx.assets;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.PrintStream;
 
 import javafx.scene.image.Image;
 
@@ -8,7 +13,6 @@ import org.apache.commons.io.FileUtils;
 
 import de.mixedfx.file.DataHandler;
 import de.mixedfx.file.FileObject;
-import de.mixedfx.java.EasyGson;
 import de.mixedfx.logging.Log;
 
 /**
@@ -16,8 +20,8 @@ import de.mixedfx.logging.Log;
  * write:
  * <ul>
  * <li>Images</li>
- * <li>CSS</li>
- * <li>others</li>
+ * <li>Strings</li>
+ * <li>Files</li>
  * </ul>
  *
  * @author Jerry
@@ -34,17 +38,44 @@ public class MasterHandler
 			return (T) ImageHandler.readImage(file);
 		}
 		else
-		{
-			try
+			if (type.equals(String.class))
 			{
-				return (T) DataHandler.createOrFindFile(file);
+				try
+				{
+					return (T) FileUtils.readFileToString(DataHandler.createOrFindFile(file));
+				}
+				catch (IOException | InterruptedException e)
+				{
+					Log.assets.error("Could not read/access file! " + file);
+					return null;
+				}
+
 			}
-			catch (IOException | InterruptedException e)
+			else
 			{
-				Log.assets.error("Could not read/access file! " + file);
-				return null;
+				try
+				{
+					final FileInputStream fileInput = new FileInputStream(DataHandler.createOrFindFile(file));
+					if (FileUtils.readFileToString(file.toFile()).isEmpty())
+					{
+						fileInput.close();
+						return null;
+					}
+					else
+					{
+						final ObjectInputStream inputStream = new ObjectInputStream(fileInput);
+						final T input = (T) inputStream.readObject();
+						inputStream.close();
+						return input;
+					}
+				}
+				catch (IOException | InterruptedException | ClassNotFoundException e)
+				{
+					Log.assets.error("Could not read/access file or class failure! " + file);
+					e.printStackTrace();
+					return null;
+				}
 			}
-		}
 	}
 
 	public static void write(final FileObject file, final Object object)
@@ -54,17 +85,33 @@ public class MasterHandler
 			ImageHandler.writeImage(file, (Image) object);
 		}
 		else
-		{
-			DataHandler.writeFile(file);
-			try
+			if (object instanceof String)
 			{
-				FileUtils.writeStringToFile(file.toFile(), EasyGson.toGSON(object));
+				try
+				{
+					final PrintStream ps = new PrintStream(new FileOutputStream(DataHandler.createOrFindFile(file)), true);
+					ps.write(((String) object).getBytes());
+					ps.close();
+				}
+				catch (final IOException | InterruptedException e)
+				{
+					Log.assets.error("Could not write/access file! " + file);
+				}
 			}
-			catch (final IOException e)
+			else
 			{
-				Log.assets.error("Could not write/access file! " + file);
+				try
+				{
+					final ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(DataHandler.createOrFindFile(file)));
+					outputStream.writeObject(object);
+					outputStream.close();
+				}
+				catch (final IOException | InterruptedException e)
+				{
+					Log.assets.error("Could not write/access file! " + file);
+				}
+
 			}
-		}
 	}
 
 	public static void remove(final FileObject file, final Class<?> type)

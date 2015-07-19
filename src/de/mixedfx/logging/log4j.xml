@@ -25,5 +25,9 @@
 			<AppenderRef ref="STDOUT" />
 			<!-- <AppenderRef ref="ASYNCFILE" /> -->
 		</Logger>
+		<Logger name="Assets" level="ALL" additivity="false">
+			<AppenderRef ref="STDOUT" />
+			<!-- <AppenderRef ref="ASYNCFILE" /> -->
+		</Logger>
 	</Loggers>
 </log4j:configuration>

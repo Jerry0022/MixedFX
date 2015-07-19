@@ -7,6 +7,7 @@ import java.util.ArrayList;
  *
  * @author Jerry
  */
+@SuppressWarnings("serial")
 public class ComplexString extends ArrayList<String>
 {
 	public ComplexString()

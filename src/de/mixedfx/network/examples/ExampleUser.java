@@ -1,5 +1,6 @@
 package de.mixedfx.network.examples;
 
+@SuppressWarnings("serial")
 public class ExampleUser extends User
 {
 	private final String	identifier;
