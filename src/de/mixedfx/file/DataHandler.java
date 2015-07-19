@@ -28,15 +28,8 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @author Jerry
  */
-public class DataHandler
+public final class DataHandler
 {
-	/**
-	 * Prevents other classes from creating an own instance of FileFolderHandler
-	 */
-	private DataHandler()
-	{
-	}
-
 	/*
 	 * LISTING METHODS
 	 */
@@ -104,7 +97,9 @@ public class DataHandler
 
 		// File creation needs sometimes some time :)
 		while (!newFile.exists() || !newFile.canWrite() || !newFile.canRead())
+		{
 			Thread.sleep(10);
+		}
 
 		return newFile;
 	}
@@ -127,10 +122,13 @@ public class DataHandler
 		File result = null;
 
 		if (fileObject.getPath().equalsIgnoreCase("") || !new File(fileObject.getPath()).exists() || !new File(fileObject.getPath()).isDirectory())
+		{
 			throw new FileNotFoundException("Path is empty!");
+		}
 
 		final String fileFolder = FilenameUtils.getName(fileObject.getFullName()).toLowerCase();
 		for (final File f : DataHandler.listFiles(fileObject))
+		{
 			if (FilenameUtils.getExtension(fileFolder) == "")
 			{
 				// fileName doesn't contain an extension
@@ -147,11 +145,16 @@ public class DataHandler
 					result = f;
 					break;
 				}
+		}
 
 		if (result != null)
+		{
 			return result;
+		}
 		else
+		{
 			throw new FileNotFoundException("File doesn't exist or is a directory!");
+		}
 	}
 
 	/**
@@ -192,26 +195,34 @@ public class DataHandler
 		final File file = new File(fullPath.getFullPath());
 
 		if (!file.exists())
+		{
 			success = true; // File doesn't exist already
+		}
 		else
 			// File exists
 			if (!file.isDirectory())
 			{
 				if (file.delete())
+				{
 					success = true;
+				}
 				else
+				{
 					success = false;
+				}
 			}
 			else
+			{
 				try
-		{
+				{
 					FileUtils.deleteDirectory(file);
 					success = true;
-		}
-		catch (final IOException e)
-		{
-			success = false;
-		}
+				}
+				catch (final IOException e)
+				{
+					success = false;
+				}
+			}
 
 		return success;
 	}
@@ -251,11 +262,19 @@ public class DataHandler
 
 		final String substring = directory.length() > 1 ? directory.substring(directory.length() - 1) : directory;
 		if (!substring.equals("\\"))
+		{
 			if (!substring.equals("/"))
+			{
 				if (StringUtils.countMatches(directory, "/") > 0)
+				{
 					directory += "/";
+				}
 				else
+				{
 					directory += "\\";
+				}
+			}
+		}
 
 		fullPath = directory + fileFolder;
 

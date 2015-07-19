@@ -8,15 +8,6 @@ public class FirewallController
 	private final static String	disableCommand	= "netsh advfirewall set allprofiles state off";
 	private final static String	statusCommand	= "netsh advfirewall show allprofiles";
 
-	public static void main(final String[] args)
-	{
-		System.out.println(FirewallController.isEnabled());
-		FirewallController.disable();
-		System.out.println(FirewallController.isEnabled());
-		FirewallController.enable();
-		System.out.println(FirewallController.isEnabled());
-	}
-
 	/**
 	 * Enables all windows firewalls.
 	 */

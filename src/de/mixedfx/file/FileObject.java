@@ -41,7 +41,7 @@ public class FileObject implements Cloneable
 	}
 
 	private String	path;		// pure path maybe without last folder
-	private String	prefix;	// without separator
+	private String	prefix;		// without separator
 	private String	name;		// pure name without sth. else
 	private String	extension;	// without separator
 
@@ -74,7 +74,9 @@ public class FileObject implements Cloneable
 		this();
 
 		if (file.isDirectory())
+		{
 			this.setPath(FilenameUtils.getFullPath(file.getAbsolutePath()));
+		}
 		else
 			if (file.isFile())
 			{
@@ -117,9 +119,13 @@ public class FileObject implements Cloneable
 	public boolean equalsNameSize(final FileObject toCompare)
 	{
 		if (this.getName().equalsIgnoreCase(toCompare.getName()) && this.size().equals(toCompare.size()))
+		{
 			return true;
+		}
 		else
+		{
 			return false;
+		}
 	}
 
 	/**
@@ -132,9 +138,13 @@ public class FileObject implements Cloneable
 	public boolean equals(final FileObject toCompare)
 	{
 		if (this.getFullPath().equalsIgnoreCase(toCompare.getFullPath()))
+		{
 			return true;
+		}
 		else
+		{
 			return false;
+		}
 	}
 
 	/**
@@ -201,9 +211,13 @@ public class FileObject implements Cloneable
 	public String getFullPath()
 	{
 		if (this.getPath().equals("") && this.getFullName().equals(""))
+		{
 			return "";
+		}
 		else
+		{
 			return DataHandler.fuse(this.getPath(), this.getFullName());
+		}
 	}
 
 	/**
@@ -230,9 +244,13 @@ public class FileObject implements Cloneable
 	public String getFullPrefix()
 	{
 		if (this.getPrefix().equals(""))
+		{
 			return this.getPrefix();
+		}
 		else
+		{
 			return this.getPrefix() + FileObject.prefixSeparator;
+		}
 	}
 
 	/**
@@ -242,9 +260,13 @@ public class FileObject implements Cloneable
 	public FileObject setPrefix(final String prefix)
 	{
 		if (prefix.endsWith(FileObject.prefixSeparator))
+		{
 			this.prefix = prefix.replaceFirst(FileObject.prefixSeparator, "");
+		}
 		else
+		{
 			this.prefix = prefix;
+		}
 		return this;
 	}
 
@@ -324,9 +346,13 @@ public class FileObject implements Cloneable
 	public String getFullExtension()
 	{
 		if (this.getExtension().equals(""))
+		{
 			return this.getExtension();
+		}
 		else
+		{
 			return FileObject.extensionSeparator + this.getExtension();
+		}
 	}
 
 	/**
@@ -336,9 +362,13 @@ public class FileObject implements Cloneable
 	public FileObject setExtension(final String extension)
 	{
 		if (extension.startsWith(FileObject.extensionSeparator))
+		{
 			this.extension = extension.replaceFirst("\\" + FileObject.extensionSeparator, "");
+		}
 		else
+		{
 			this.extension = extension;
+		}
 		return this;
 	}
 }

@@ -1,18 +1,8 @@
 package de.mixedfx.network;
 
-import java.util.UUID;
-
-import org.apache.logging.log4j.Level;
-import org.bushe.swing.event.annotation.AnnotationProcessor;
-import org.bushe.swing.event.annotation.EventTopicSubscriber;
-
 import de.mixedfx.inspector.Inspector;
 import de.mixedfx.logging.Log;
 import de.mixedfx.network.NetworkConfig.States;
-import de.mixedfx.network.examples.ExampleUniqueService;
-import de.mixedfx.network.examples.ExampleUser;
-import de.mixedfx.network.examples.User;
-import de.mixedfx.network.examples.UserManager;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -50,6 +40,9 @@ public class ConnectivityManager
 
 	static
 	{
+		// Log NetworkConfig.status
+		NetworkConfig.status.addListener((ChangeListener<States>) (observable, oldValue, newValue) -> Log.network.debug("NetworkConfig status changed from " + oldValue.toString().toUpperCase() + " to " + newValue.toString().toUpperCase()));
+
 		ConnectivityManager.status = new SimpleObjectProperty<>(Status.Offline);
 		/*
 		 * Set Establishing if connected but not yet registered as participant or searching if not
@@ -153,56 +146,5 @@ public class ConnectivityManager
 	{
 		NetworkManager.stop();
 		ConnectivityManager.status.set(Status.Offline);
-	}
-
-	public static void main(final String[] args)
-	{
-		// Log fatal errors (network reacted already to this error)
-		AnnotationProcessor.process(new ConnectivityManager());
-
-		// Log NetworkConfig.status
-		NetworkConfig.status.addListener((ChangeListener<States>) (observable, oldValue, newValue) -> Log.network.debug("NetworkConfig status changed from " + oldValue.toString().toUpperCase() + " to " + newValue.toString().toUpperCase()));
-
-		// Log Participants
-		ParticipantManager.PARTICIPANTS.addListener((ListChangeListener<Integer>) c ->
-		{
-			Log.network.info("Participants changed to: " + ParticipantManager.PARTICIPANTS);
-		});
-
-		// Log ConnectivityManager.status
-		ConnectivityManager.status.addListener((ChangeListener<Status>) (observable, oldValue, newValue) ->
-		{
-			Log.network.info("ConnectivityManager status changed from " + oldValue.toString().toUpperCase() + " to " + newValue.toString().toUpperCase());
-		});
-
-		// Create example user
-		final String id = UUID.randomUUID().toString();
-		final ExampleUser user = new ExampleUser(id.substring(id.length() - 7, id.length()));
-
-		// Register UserManager services
-		final UserManager<ExampleUser> userManager = new UserManager<ExampleUser>(user);
-		UserManager.allUsers.addListener((ListChangeListener<User>) c ->
-		{
-			Log.network.info("UserManager list changed to: " + UserManager.allUsers);
-		});
-		ServiceManager.register(userManager);
-
-		// Register example unique service
-		ServiceManager.register(new ExampleUniqueService());
-
-		// Start network activity and immediately after that start TCP as host.
-		ConnectivityManager.force();
-
-		// Don't let the application stop itself!
-		while (true)
-		{
-			;
-		}
-	}
-
-	@EventTopicSubscriber(topic = NetworkManager.NETWORK_FATALERROR)
-	public void error(final String topic, final Exception exception)
-	{
-		Log.network.catching(Level.ERROR, exception);
 	}
 }

@@ -4,20 +4,11 @@ import de.mixedfx.java.ComplexString;
 
 public class NetworkAdapterController
 {
-	private static final String	placeHolder		= "_";
+	private static final String placeHolder = "_";
 
 	public static final String	enableCommand	= "netsh interface set interface " + NetworkAdapterController.placeHolder + " enabled";
 	public static final String	disableCommand	= "netsh interface set interface " + NetworkAdapterController.placeHolder + " disabled";
 	public static final String	statusCommand	= "netsh interface show interface " + NetworkAdapterController.placeHolder;
-
-	public static void main(final String[] args)
-	{
-		System.out.println(NetworkAdapterController.isAdapterEnabled("HAMACHI"));
-		NetworkAdapterController.enableAdapter("HAMACHI");
-		System.out.println(NetworkAdapterController.isAdapterEnabled("HAMACHI"));
-		NetworkAdapterController.disableAdaptar("HAMACHI");
-		System.out.println(NetworkAdapterController.isAdapterEnabled("HAMACHI"));
-	}
 
 	public static void disableAdaptar(final String name)
 	{

@@ -1,25 +1,10 @@
 package de.mixedfx.windows;
 
-import de.mixedfx.file.FileObject;
 import de.mixedfx.java.ComplexString;
 
 public class ProcessController
 {
-	public static final String	HAMACHIPROCESSNAME	= "Hamachi-2.exe";
-
-	public static void main(final String[] args)
-	{
-		final String processName = "ts3client_win64.exe";
-
-		System.out.println(ProcessController.isProcessRunning(processName));
-		ProcessController.runProcess("C:\\Program Files\\TeamSpeak 3 Client\\", processName);
-
-		// System.out.println(ProcessController.isProcessRunning(processName));
-		// ProcessController.stopProcess(processName);
-		// System.out.println(ProcessController.isProcessRunning(processName));
-	}
-
-	public static boolean isProcessRunning(final String processName)
+	public static boolean isProcessRunning(final Program program)
 	{
 		final String[] commands = { "WMIC", "process", "list", "brief" };
 
@@ -27,7 +12,7 @@ public class ProcessController
 
 		for (final String s : complexString)
 		{
-			if (s.toUpperCase().contains(processName.toUpperCase()))
+			if (s.toUpperCase().contains(program.processName.toUpperCase()))
 			{
 				return true;
 			}
@@ -35,12 +20,11 @@ public class ProcessController
 		return false;
 	}
 
-	public static void runProcess(final String directory, final String processName)
+	public static void runProcess(final Program program)
 	{
-		final FileObject program = FileObject.create().setPath(directory).setName(processName);
-		Executor.runAndWaitForOutput("wmic process call create \"" + program.getFullPath() + "\"");
+		Executor.runAndWaitForOutput("wmic process call create \"" + program.path.setName(program.processName).getFullPath() + "\"");
 		// Executor.run(program, "");
-		while (!ProcessController.isProcessRunning(processName))
+		while (!ProcessController.isProcessRunning(program))
 		{
 			;
 		}
@@ -52,10 +36,10 @@ public class ProcessController
 	 * @param processName
 	 *            E. g. "xxx.exe" The name of the process plus the extension
 	 */
-	public static void stopProcess(final String processName)
+	public static void stopProcess(final Program program)
 	{
-		Executor.runAndWaitForOutput("taskkill /F /IM " + processName);
-		while (ProcessController.isProcessRunning(processName))
+		Executor.runAndWaitForOutput("taskkill /F /IM " + program.processName);
+		while (ProcessController.isProcessRunning(program))
 		{
 			;
 		}
