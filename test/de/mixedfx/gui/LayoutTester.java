@@ -7,12 +7,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import de.mixedfx.file.FileObject;
 
-public class LayoutTester
-{
-	public static void main(final String[] args)
-	{
+public class LayoutTester {
+	public static void main(final String[] args) {
+		System.out.println("Damit jerre merge muss");
 		// INITIALISIERUNG IM LANTOOL
-		// Feststellen, welche Elemente das LanTool hat, z. B. Bilder für Buttons
+		// Feststellen, welche Elemente das LanTool hat, z. B. Bilder für
+		// Buttons
 		final List<LayoutElement<?>> layoutElements = new ArrayList<>();
 
 		final LayoutElement<Image> ll = new LayoutElement<>("redButton", Image.class);
@@ -22,9 +22,11 @@ public class LayoutTester
 		final LayoutElement<Integer> color = new LayoutElement<>("meineFarbe", Integer.class);
 		layoutElements.add(color);
 
-		// Erstellen eines LayoutManagers mit dem man im LanTool dynamisch das Layout wechseln kann
-		final LayoutManager lm = new LayoutManager(FileObject.create().setPath("assets\\layouts"), layoutElements, "BlueMoon");
-
+		// Erstellen eines LayoutManagers mit dem man im LanTool dynamisch das
+		// Layout wechseln kann
+		final LayoutManager lm = new LayoutManager(FileObject.create().setPath("assets\\layouts"),
+				layoutElements, "BlueMoon");
+		System.err.println("HUHUU");
 		// Wenn man das Layout ändert
 		color.set(new Integer(5));
 		lm.applyLayout("HAMMER");
