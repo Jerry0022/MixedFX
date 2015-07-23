@@ -70,7 +70,7 @@ public class ImageProducer
 	 *
 	 * @return Returns an image which has exactly one transparent pixel (rgba = 0).
 	 */
-	public static Image getTransparentImage()
+	public static Image getTransparent()
 	{
 		final WritableImage writeableImage = new WritableImage(1, 1);
 		final PixelWriter pixelWriter = writeableImage.getPixelWriter();

@@ -1,13 +1,14 @@
 package de.mixedfx.gui;
 
+import java.io.IOException;
 import java.io.Serializable;
 
+import de.mixedfx.assets.MasterHandler;
+import de.mixedfx.file.FileObject;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
-import de.mixedfx.assets.MasterHandler;
-import de.mixedfx.file.FileObject;
 
 /**
  * A ObjectProperty representing a GUI element. If you set this property the change is immediately
@@ -20,9 +21,9 @@ import de.mixedfx.file.FileObject;
  *
  * @author Jerry
  */
-public class LayoutElement<T> extends SimpleObjectProperty<T> implements ChangeListener<T>
+public class LayoutElement<T> extends SimpleObjectProperty<T>implements ChangeListener<T>
 {
-	public final String		name;
+	public final String name;
 
 	private final Class<?>	type;
 	private FileObject		lastLayoutPath;
@@ -51,6 +52,13 @@ public class LayoutElement<T> extends SimpleObjectProperty<T> implements ChangeL
 	@Override
 	public void changed(final ObservableValue<? extends T> observable, final T oldValue, final T newValue)
 	{
-		MasterHandler.write(this.lastLayoutPath.clone().setName(this.name), newValue);
+		try
+		{
+			MasterHandler.write(this.lastLayoutPath.clone().setName(this.name), newValue);
+		}
+		catch (final IOException e)
+		{
+			// TODO Exception?
+		}
 	}
 }

@@ -1,9 +1,13 @@
 package de.mixedfx.assets;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import javax.imageio.ImageIO;
+
+import de.mixedfx.file.DataHandler;
+import de.mixedfx.file.FileObject;
+import de.mixedfx.gui.RegionManipulator;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.embed.swing.SwingFXUtils;
@@ -16,34 +20,28 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 
-import javax.imageio.ImageIO;
-
-import de.mixedfx.file.DataHandler;
-import de.mixedfx.file.FileObject;
-import de.mixedfx.gui.RegionManipulator;
-
 public class ImageHandler
 {
 	/**
 	 * If to use JavaFX BackgroundLoading, see also {@link Image}. Default: false
 	 */
-	public static boolean						backgroundLoading	= false;
+	public static boolean backgroundLoading = false;
 
 	/**
-	 * By default this is the {@link ImageProducer#getTransparentImage()}. If you change this, this
+	 * By default this is the {@link ImageProducer#getTransparent()}. If you change this, this
 	 * is directly applied for all new loaded images!
 	 */
-	public final static ObjectProperty<Image>	defaultImage		= new SimpleObjectProperty<>(ImageProducer.getTransparentImage());
+	public final static ObjectProperty<Image> defaultImage = new SimpleObjectProperty<>(ImageProducer.getTransparent());
 
 	/**
 	 * The preferred prefix. Default: "img"
 	 */
-	public static String						prefix				= "img";
+	public static String prefix = "img";
 
 	/**
 	 * The preferred extension (only needed for writing actions). Default: "png"
 	 */
-	public static String						extension			= "png";
+	public static String extension = "png";
 
 	/**
 	 * Reads an image (applying the {@link ImageHandler#prefix} is recommended). Doesn't throw an
@@ -62,14 +60,7 @@ public class ImageHandler
 		}
 		catch (final FileNotFoundException e)
 		{
-			try
-			{
-				return new Image(DataHandler.readFile(fileObject).toURI().toString(), ImageHandler.backgroundLoading);
-			}
-			catch (final FileNotFoundException e1)
-			{
-				return ImageProducer.getTransparentImage();
-			}
+			return ImageHandler.defaultImage.get() != null ? ImageHandler.defaultImage.get() : ImageProducer.getTransparent();
 		}
 	}
 
@@ -82,44 +73,31 @@ public class ImageHandler
 	 * @param toWrite
 	 * @return Returns true on success or false if the image could not be saved.
 	 */
-	public static boolean writeImage(final FileObject destination, final Image toWrite)
+	public static void writeImage(final FileObject destination, final Image toWrite) throws IOException
 	{
-		destination.setExtension(ImageHandler.extension);
-
-		// Delete first an existing file
-		DataHandler.deleteFile(destination);
-
-		final PixelReader pixelReader = toWrite.getPixelReader();
-		final int width = (int) toWrite.getWidth();
-		final int height = (int) toWrite.getHeight();
-
-		final WritableImage writeableImage = new WritableImage(width, height);
-		final PixelWriter pixelWriter = writeableImage.getPixelWriter();
-
-		for (int y = 0; y < height; y++)
+		if (toWrite != null)
 		{
-			for (int x = 0; x < width; x++)
+			destination.setExtension(ImageHandler.extension);
+
+			final PixelReader pixelReader = toWrite.getPixelReader();
+			final int width = (int) toWrite.getWidth();
+			final int height = (int) toWrite.getHeight();
+
+			final WritableImage writeableImage = new WritableImage(width, height);
+			final PixelWriter pixelWriter = writeableImage.getPixelWriter();
+			for (int y = 0; y < height; y++)
 			{
-				final Color color = pixelReader.getColor(x, y);
-				pixelWriter.setColor(x, y, color);
+				for (int x = 0; x < width; x++)
+				{
+					final Color color = pixelReader.getColor(x, y);
+					pixelWriter.setColor(x, y, color);
+				}
 			}
-		}
 
-		try
-		{
-			final File file = DataHandler.writeFile(destination);
-			if (file == null)
-			{
-				throw new IOException();
-			}
-			ImageIO.write(SwingFXUtils.fromFXImage(writeableImage, null), destination.getExtension(), file);
+			// Delete first an existing file
+			DataHandler.deleteFile(destination);
+			ImageIO.write(SwingFXUtils.fromFXImage(writeableImage, null), destination.getExtension(), destination.toFile());
 		}
-		catch (final IOException e)
-		{
-			return false;
-		}
-
-		return true;
 	}
 
 	/**
@@ -129,7 +107,7 @@ public class ImageHandler
 	 * @param source
 	 * @param destination
 	 */
-	public static void copyImage(final FileObject source, final FileObject destination)
+	public static void copyImage(final FileObject source, final FileObject destination) throws IOException
 	{
 		ImageHandler.writeImage(destination, ImageHandler.readImage(source));
 	}

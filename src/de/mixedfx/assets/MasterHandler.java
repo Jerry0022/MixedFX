@@ -7,13 +7,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 
-import javafx.scene.image.Image;
-
 import org.apache.commons.io.FileUtils;
 
 import de.mixedfx.file.DataHandler;
 import de.mixedfx.file.FileObject;
 import de.mixedfx.logging.Log;
+import javafx.scene.image.Image;
 
 /**
  * Additionally to the other Handler this Handler applies the prefix before reading / writing. Can
@@ -78,7 +77,7 @@ public class MasterHandler
 			}
 	}
 
-	public static void write(final FileObject file, final Object object)
+	public static void write(final FileObject file, final Object object) throws IOException
 	{
 		if (object instanceof Image)
 		{
