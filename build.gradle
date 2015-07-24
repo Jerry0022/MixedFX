@@ -52,17 +52,6 @@ distributions {
     }
 }
 
-install {
-    repositories.mavenInstaller {
-        pom.project {
-          parent { 
-            groupId 'de.lantool'
-            artifactId 'MixedFX'
-            version "${project.version}"
-          }
-        }
-    }
-}
 
 uploadArchives {
     repositories {
