@@ -77,11 +77,18 @@ public class MasterHandler
 			}
 	}
 
-	public static void write(final FileObject file, final Object object) throws IOException
+	public static void write(final FileObject file, final Object object)
 	{
 		if (object instanceof Image)
 		{
-			ImageHandler.writeImage(file, (Image) object);
+			try
+			{
+				ImageHandler.writeImage(file, (Image) object);
+			}
+			catch (final IOException e)
+			{
+				Log.assets.error("Could not write/access file! " + file);
+			}
 		}
 		else
 			if (object instanceof String)

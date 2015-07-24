@@ -1,6 +1,5 @@
 package de.mixedfx.gui;
 
-import java.io.IOException;
 import java.io.Serializable;
 
 import de.mixedfx.assets.MasterHandler;
@@ -52,13 +51,6 @@ public class LayoutElement<T> extends SimpleObjectProperty<T>implements ChangeLi
 	@Override
 	public void changed(final ObservableValue<? extends T> observable, final T oldValue, final T newValue)
 	{
-		try
-		{
-			MasterHandler.write(this.lastLayoutPath.clone().setName(this.name), newValue);
-		}
-		catch (final IOException e)
-		{
-			// TODO Exception?
-		}
+		MasterHandler.write(this.lastLayoutPath.clone().setName(this.name), newValue);
 	}
 }
