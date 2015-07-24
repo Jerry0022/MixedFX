@@ -28,8 +28,8 @@ public class ImageHandler
 	public static boolean backgroundLoading = false;
 
 	/**
-	 * By default this is the {@link ImageProducer#getTransparent()}. If you change this, this
-	 * is directly applied for all new loaded images!
+	 * By default this is the {@link ImageProducer#getTransparent()}. If you change this, this is
+	 * directly applied for all new loaded images!
 	 */
 	public final static ObjectProperty<Image> defaultImage = new SimpleObjectProperty<>(ImageProducer.getTransparent());
 
@@ -71,7 +71,6 @@ public class ImageHandler
 	 *            The destination FileObject. The extension are overwritten with the default one,
 	 *            see also {@link #prefix} and {@link #extension}
 	 * @param toWrite
-	 * @return Returns true on success or false if the image could not be saved.
 	 */
 	public static void writeImage(final FileObject destination, final Image toWrite) throws IOException
 	{

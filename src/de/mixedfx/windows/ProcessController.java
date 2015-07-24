@@ -33,7 +33,7 @@ public class ProcessController
 	/**
 	 * Stops ALL process with the processName!
 	 *
-	 * @param processName
+	 * @param program
 	 *            E. g. "xxx.exe" The name of the process plus the extension
 	 */
 	public static void stopProcess(final Program program)
