@@ -95,6 +95,7 @@ public class ImageHandler
 
 			// Delete first an existing file
 			DataHandler.deleteFile(destination);
+			DataHandler.createFolder(destination);
 			ImageIO.write(SwingFXUtils.fromFXImage(writeableImage, null), destination.getExtension(), destination.toFile());
 		}
 	}

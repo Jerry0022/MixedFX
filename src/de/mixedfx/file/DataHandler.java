@@ -228,7 +228,7 @@ public final class DataHandler
 	}
 
 	/**
-	 * Creates a folder from a FileObject.
+	 * Creates a folder including all parent directories from a FileObject.
 	 *
 	 * @param folder
 	 *            A representation of the folder which shall be created.
@@ -238,7 +238,11 @@ public final class DataHandler
 	 */
 	public static FileObject createFolder(final FileObject folder) throws IOException
 	{
-		FileUtils.forceMkdir(folder.toFile());
+		final File file = folder.toFile();
+		if (!file.mkdirs())
+		{
+			throw new IOException("Can't create parent directories");
+		}
 		return folder;
 	}
 
