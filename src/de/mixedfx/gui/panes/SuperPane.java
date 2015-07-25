@@ -18,7 +18,8 @@ import javafx.scene.layout.StackPane;
 
 /**
  * <p>
- * This class can be instantiated to get an advanced very flexible and lightweight pane.
+ * This class can be instantiated to get an advanced very flexible and
+ * lightweight pane.
  * </p>
  *
  * @author JerryMobil
@@ -30,17 +31,18 @@ public class SuperPane extends StackPane
 	 */
 	private final static int	taskMaxParallel			= 3;
 	/**
-	 * Indicates after how many milliseconds a running task shall request to open the LoadScreen
+	 * Indicates after how many milliseconds a running task shall request to
+	 * open the LoadScreen
 	 */
 	private final static int	taskLoadScreenDelayMS	= 400;
 
 	/**
-	 * Retrieves and returns the first found parent SuperPane (which doesn't have to be the direct
-	 * parent node).
+	 * Retrieves and returns the first found parent SuperPane (which doesn't
+	 * have to be the direct parent node).
 	 *
 	 * @param content
-	 * @return Returns the SuperPane requested or returns null if there is no SuperPane as (direct
-	 *         or indirect) parent
+	 * @return Returns the SuperPane requested or returns null if there is no
+	 *         SuperPane as (direct or indirect) parent
 	 */
 	public final static SuperPane getMySP(final Node content)
 	{
@@ -60,14 +62,14 @@ public class SuperPane extends StackPane
 	private Node	loadScreen;
 
 	/**
-	 * Indicates whether the Load Screen is open, not if a task is running (because if many short
-	 * tasks are running there is no LoadScreen)
+	 * Indicates whether the Load Screen is open, not if a task is running
+	 * (because if many short tasks are running there is no LoadScreen)
 	 */
 	private AtomicBoolean loading;
 
 	/**
-	 * Handles all jobs which are loaded via {@link #load(Task)}! Executes three workers at the same
-	 * time. Others have to wait.
+	 * Handles all jobs which are loaded via {@link #load(Task)}! Executes three
+	 * workers at the same time. Others have to wait.
 	 */
 	private ExecutorService					taskCollector;
 	private ArrayList<Task<?>>				taskList;
@@ -91,7 +93,8 @@ public class SuperPane extends StackPane
 		});
 		this.taskDoneHandler = event ->
 		{
-			if (event.getEventType().equals(WorkerStateEvent.WORKER_STATE_FAILED) || event.getEventType().equals(WorkerStateEvent.WORKER_STATE_SUCCEEDED) || event.getEventType().equals(WorkerStateEvent.WORKER_STATE_CANCELLED))
+			if (event.getEventType().equals(WorkerStateEvent.WORKER_STATE_FAILED) || event.getEventType().equals(WorkerStateEvent.WORKER_STATE_SUCCEEDED)
+					|| event.getEventType().equals(WorkerStateEvent.WORKER_STATE_CANCELLED))
 			{
 				boolean allDone = true;
 				for (final Task<?> t : SuperPane.this.taskList)
@@ -118,8 +121,9 @@ public class SuperPane extends StackPane
 	 *
 	 * @param content
 	 * @param loadScreen
-	 *            Can be a {@link Dynamic} to be informed about its lifecycle. The Load Screen is
-	 *            not part of the scene graph until {SuperPane {@link #load(Task)} is called.
+	 *            Can be a {@link Dynamic} to be informed about its lifecycle.
+	 *            The Load Screen is not part of the scene graph until
+	 *            {SuperPane {@link #load(Task)} is called.
 	 */
 	public SuperPane(final Node content, final Node loadScreen)
 	{
@@ -149,8 +153,8 @@ public class SuperPane extends StackPane
 	 * Lifecycle:
 	 * <ol>
 	 * <li>Content is saved at instantiation</li>
-	 * <li>Others are only part of the object and therefore the scene graph as long as they are
-	 * visible</li>
+	 * <li>Others are only part of the object and therefore the scene graph as
+	 * long as they are visible</li>
 	 * </ol>
 	 *
 	 * The LoadScreen is null = No LoadScreen is shown while loading...
@@ -187,8 +191,9 @@ public class SuperPane extends StackPane
 	 * Sets the Background.
 	 *
 	 * @param background
-	 *            In contrast to {@link Region#setBackground(javafx.scene.layout.Background)} this
-	 *            can be any Node.
+	 *            In contrast to
+	 *            {@link Region#setBackground(javafx.scene.layout.Background)}
+	 *            this can be any Node.
 	 */
 	public void setBackground(final Node background)
 	{
@@ -200,14 +205,16 @@ public class SuperPane extends StackPane
 	}
 
 	/**
-	 * Loads a task asynchronously and shows a stopping task animation as an overlay if the task is
-	 * running longer than {@link SuperPane#taskMaxParallel}. In each case the content is
+	 * Loads a task asynchronously and shows a stopping task animation as an
+	 * overlay if the task is running longer than
+	 * {@link SuperPane#taskLoadScreenDelayMS}. In each case the content is
 	 * unclickable for the time. Doesn't have to be called via FXThread.
 	 *
 	 * @param task
-	 *            The task which shall be executed. Maybe it is not executed immediately because
-	 *            more than {@link SuperPane#taskMaxParallel} are running in parallel. But the Load
-	 *            Screen is shown all over the time.
+	 *            The task which shall be executed. Maybe it is not executed
+	 *            immediately because more than
+	 *            {@link SuperPane#taskMaxParallel} are running in parallel. But
+	 *            the Load Screen is shown all over the time.
 	 */
 	public void load(final Task<?> task)
 	{
@@ -237,7 +244,8 @@ public class SuperPane extends StackPane
 				}
 			}
 			catch (final InterruptedException e)
-			{}
+			{
+			}
 		});
 		t.setDaemon(true);
 		t.start();
@@ -275,12 +283,19 @@ public class SuperPane extends StackPane
 
 	/**
 	 * Opens a new dialogue. Works if a dialogue is opened or not.
+	 * 
+	 * @param dialogue
+	 *            The dialoge to open.
 	 */
 	public void openDialogue(final Node dialogue)
 	{
-		this.openDynamic(dialogue);
+		this.openDynamic(new SuperDialogueWrapper(dialogue));
 	}
 
+	/**
+	 * @param dialogue
+	 *            The dialogue to close.
+	 */
 	public void closeDialogue(final Node dialogue)
 	{
 		this.closeDynamic(dialogue);
@@ -291,13 +306,13 @@ public class SuperPane extends StackPane
 	 * Opens a Dynamic.
 	 * </p>
 	 * <p>
-	 * Only if the direct node implements {@link Dynamic} it will be informed about the start (after
-	 * it was added to the scene graph).
+	 * Only if the direct node implements {@link Dynamic} it will be informed
+	 * about the start (after it was added to the scene graph).
 	 * </p>
 	 *
 	 * @param dynamic
-	 *            The node (if {@link Dynamic} it will be informed) which shall be shown on top of
-	 *            the SuperPane
+	 *            The node (if {@link Dynamic} it will be informed) which shall
+	 *            be shown on top of the SuperPane
 	 */
 	public void openDynamic(final Node dynamic)
 	{
@@ -311,15 +326,16 @@ public class SuperPane extends StackPane
 	}
 
 	/**
-	 * Closes a Dynamic or if a parent was added to this SuperPane it closes this one.
+	 * Closes a Dynamic or if a parent was added to this SuperPane it closes
+	 * this one.
 	 * <p>
-	 * If the Dynamic implements {@link Dynamic} it will be informed about the stop (before it will
-	 * be removed from the scene graph).
+	 * If the Dynamic implements {@link Dynamic} it will be informed about the
+	 * stop (before it will be removed from the scene graph).
 	 * </p>
 	 *
 	 * @param dynamic
-	 *            The node (if {@link Dynamic} it will be informed) which shall be shown on top of
-	 *            the SuperPane
+	 *            The node (if {@link Dynamic} it will be informed) which shall
+	 *            be shown on top of the SuperPane
 	 */
 	public void closeDynamic(final Node dynamic)
 	{
@@ -338,8 +354,9 @@ public class SuperPane extends StackPane
 	}
 
 	/**
-	 * Blurs and darkens the whole StackPane. First it removes all old overlays. Then maybe adds a
-	 * new Overlay as forelast element (only in case the last element is not the content).
+	 * Blurs and darkens the whole StackPane. First it removes all old overlays.
+	 * Then maybe adds a new Overlay as forelast element (only in case the last
+	 * element is not the content).
 	 */
 	private void blurAndDarkenPreLastLayer()
 	{

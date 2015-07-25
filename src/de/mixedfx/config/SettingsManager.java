@@ -2,6 +2,12 @@ package de.mixedfx.config;
 
 import de.mixedfx.file.FileObject;
 
+/**
+ * A singleton wrapper of {@link ConfigMaker}.
+ * 
+ * @author Jerry
+ *
+ */
 public class SettingsManager
 {
 	public static String		fileName	= "settings";
@@ -16,9 +22,10 @@ public class SettingsManager
 	}
 
 	/**
-	 * Usually should not be used. Only e. g. if you want to write Colors with ConfigHandler.
+	 * Usually should not be used. Only e. g. if you want to write Colors with
+	 * ConfigHandler.
 	 *
-	 * @return
+	 * @return Returns the used unique ConfigMaker.
 	 */
 	public static ConfigMaker getConfigMaker()
 	{
@@ -26,35 +33,41 @@ public class SettingsManager
 	}
 
 	/**
-	 * Sets a default value or reads out the written value and returns the maybe modified correct
-	 * value. Write and read
+	 * Sets a default value or reads out the written value and returns the maybe
+	 * modified correct value. Write and read
 	 *
 	 * @param section
+	 *            The section without brackets. E.g. "General" is in the config
+	 *            file "[General]"
 	 * @param key
+	 *            The identifier of this key-value-pair in the config file.
 	 * @param defaultValue
-	 * @return
+	 *            The default value of this section specific key-value-pair in
+	 *            the config file.
+	 * @return Returns the value or if something is corrupt or value is simply
+	 *         empty it returns the specified defaultValue.
 	 */
 	public static String getValue(final String section, final String key, final String defaultValue)
 	{
-		final ConfigItem item = new ConfigItem(section, key);
 
-		if (SettingsManager.configMaker.getValue(item).equals(""))
-			SettingsManager.configMaker.setConfigItem(item.setValue(defaultValue));
-		else
-			SettingsManager.configMaker.setConfigItem(item.setValue(SettingsManager.configMaker.getValue(item)));
-
-		return item.getValue();
+		return SettingsManager.configMaker.getValue(section, key, defaultValue);
 	}
 
 	/**
-	 * Writes the value into the config from now it is usable with the read methods.
+	 * Writes the value into the config from now it is usable with the read
+	 * methods.
 	 *
 	 * @param section
+	 *            The section without brackets. E.g. "General" is in the config
+	 *            file "[General]"
 	 * @param key
+	 *            The identifier of this key-value-pair in the config file.
 	 * @param value
+	 *            The value of this section specific key-value-pair in the
+	 *            config file.
 	 */
 	public static void setValue(final String section, final String key, final String value)
 	{
-		SettingsManager.configMaker.setConfigItem(new ConfigItem(section, key, value));
+		SettingsManager.configMaker.setValue(section, key, value);
 	}
 }

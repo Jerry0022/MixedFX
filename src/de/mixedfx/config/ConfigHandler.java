@@ -45,7 +45,7 @@ public class ConfigHandler
 	 */
 	public static void writeColor(final ConfigMaker configMaker, final ConfigItem configItem, final Color color)
 	{
-		configMaker.setConfigItem(configItem.setValue(ColorConverter.toRGBA(color)));
+		configMaker.writeConfigItem(configItem.setValue(ColorConverter.toRGBA(color)));
 	}
 
 	/**
@@ -60,7 +60,7 @@ public class ConfigHandler
 		Color c;
 		try
 		{
-			c = ColorConverter.fromRGBA(configMaker.getValue(configItem));
+			c = ColorConverter.fromRGBA(configMaker.readValue(configItem));
 		}
 		catch (final Exception e)
 		{
