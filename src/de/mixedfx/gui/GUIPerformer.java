@@ -8,23 +8,22 @@ import javafx.stage.Stage;
 public class GUIPerformer
 {
 	/**
-	 * Usually if you set minimum size and you start the application you can reduce the size of the
-	 * GUI. Set the real minimum size of the GUI. A scene is automatically created, added and as
-	 * content the rootNode is set.
+	 * ATTENTION: Works but produces a binding issue, see console
+	 * 
+	 * Usually if you set minimum size and you start the application you can reduce the size of the GUI. Set the real minimum size of the GUI. A scene
+	 * is automatically created, added and as content the rootNode is set.
 	 *
 	 * @param stage
-	 *            The minWidthProperty() and minHeightProperty() are bound and
-	 *            {@link Stage#setScene(Scene)} is called.
+	 *            The minWidthProperty() and minHeightProperty() are bound and {@link Stage#setScene(Scene)} is called.
 	 * @param rootNode
 	 *            The minSize of the root node is set once to minWidth and minHeight.
 	 * @param minWidth
-	 *            The starting minimum width. If you want to change the minimum width later call
-	 *            rootNode.setMinSize() or bind it.
+	 *            The starting minimum width. If you want to change the minimum width later call rootNode.setMinSize() or bind it.
 	 * @param minHeight
-	 *            The starting minimum height. If you want to change the minimum height later call
-	 *            rootNode.setMinSize() or bind it.
+	 *            The starting minimum height. If you want to change the minimum height later call rootNode.setMinSize() or bind it.
 	 * @return Returns the automatically created and added scene.
 	 */
+	@Deprecated
 	public static Scene setMinSizeAndScene(final Stage stage, final Region rootNode, final double minWidth, final double minHeight)
 	{
 		rootNode.setMinSize(minWidth, minHeight);

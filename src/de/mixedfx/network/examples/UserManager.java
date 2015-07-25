@@ -9,10 +9,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import javafx.beans.property.SimpleListProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-
 import org.apache.commons.collections.CollectionUtils;
 
 import de.mixedfx.logging.Log;
@@ -24,28 +20,30 @@ import de.mixedfx.network.ServiceManager.P2PService;
 import de.mixedfx.network.UDPDetected;
 import de.mixedfx.network.messages.RegisteredMessage;
 import de.mixedfx.network.messages.UserMessage;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 
 @SuppressWarnings({ "unchecked", "serial" })
 public class UserManager<T extends User> implements P2PService, MessageReceiver, ListChangeListener<Integer>
 {
 	/**
-	 * MyUser which can't be changed until {@link ConnectivityManager#off()} is called and a new
-	 * UserManager with a new myUser is registered to the network and
-	 * {@link ConnectivityManager#on()} is called.
+	 * MyUser which can't be changed until {@link ConnectivityManager#off()} is called and a new UserManager with a new myUser is registered to the
+	 * network and {@link ConnectivityManager#on()} is called.
 	 */
-	public static User								myUser;
+	public static User myUser;
 
 	/**
 	 * All current online users except {@link UserManager#myUser}!
 	 */
-	public static SimpleListProperty<User>			allUsers;
+	public static SimpleListProperty<User> allUsers;
 
 	private final List<InetAddress>					myNICs;
 	private final ListChangeListener<UDPDetected>	udpListener;
 
 	public UserManager(final T myUser)
 	{
-		UserManager.allUsers = new SimpleListProperty<>(FXCollections.observableArrayList());
+		UserManager.allUsers = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
 		UserManager.myUser = myUser;
 		this.myNICs = new ArrayList<InetAddress>();
 		this.udpListener = c ->
@@ -97,8 +95,8 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 	}
 
 	/**
-	 * An anonymous user does only have a PID by default and the identifier is null. May overwrite
-	 * this method to let an not yet identified user have also other predefined attributes.
+	 * An anonymous user does only have a PID by default and the identifier is null. May overwrite this method to let an not yet identified user have
+	 * also other predefined attributes.
 	 *
 	 * @return Returns a representation of a ghost user.
 	 */
@@ -198,8 +196,7 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 	public synchronized void onChanged(final javafx.collections.ListChangeListener.Change<? extends Integer> c)
 	{
 		/*
-		 * If new participant is in the network add an anonymous user to the list. If one is lost,
-		 * remove him from this list.
+		 * If new participant is in the network add an anonymous user to the list. If one is lost, remove him from this list.
 		 */
 		synchronized (UserManager.allUsers)
 		{
@@ -218,23 +215,22 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 					}
 					MessageBus.send(message);
 				}
-				else
-					if (c.wasRemoved())
+				else if (c.wasRemoved())
+				{
+					for (final int pid : c.getRemoved())
 					{
-						for (final int pid : c.getRemoved())
+						try
 						{
-							try
-							{
-								Log.network.trace("!!!Lost PID: " + pid);
-								final User foundUser = (User) CollectionUtils.select(UserManager.allUsers, this.getAnonymous(pid).getByPID()).iterator().next();
-								UserManager.allUsers.remove(foundUser);
-							}
-							catch (final NoSuchElementException e)
-							{
-								Log.network.warn("UserMessage of user with pid " + pid + " received but there is no participant with this PID!");
-							}
+							Log.network.trace("!!!Lost PID: " + pid);
+							final User foundUser = (User) CollectionUtils.select(UserManager.allUsers, this.getAnonymous(pid).getByPID()).iterator().next();
+							UserManager.allUsers.remove(foundUser);
+						}
+						catch (final NoSuchElementException e)
+						{
+							Log.network.warn("UserMessage of user with pid " + pid + " received but there is no participant with this PID!");
 						}
 					}
+				}
 			}
 		}
 	}
