@@ -28,6 +28,8 @@ public class ColorConverter
 	 * @param color
 	 *            E. g. a string like "rgba(102, 76, 76, 0.30)"
 	 * @return Returns the JavaFX Color or throws Exception
+	 * @exception Exception
+	 *                Throws exception if String is malformed and/or color can't be recognized.
 	 */
 	public static Color fromRGBA(final String color) throws Exception
 	{

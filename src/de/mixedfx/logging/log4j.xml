@@ -9,7 +9,7 @@
 	<Appenders>
 		<Console name="STDOUT">
 			<PatternLayout
-				pattern="%-8date{HH:mm:ss}{GMT+2} %-10.10c %highlight{%-5.5p} - %-35.35enc{(%class{1}.java:%L)} : %m%n" />
+				pattern="%-8date{HH:mm:ss}{GMT+2} %-20.20c %highlight{%-5.5p} - %-35.35enc{(%class{1}.java:%L)} : %m%n" />
 		</Console>
 		<File name="FILE" fileName="${logFolder}\${logFileName}" append="false">
 			<PatternLayout
@@ -20,14 +20,16 @@
 		</Async>
 	</Appenders>
 
+
 	<Loggers>
+		<root level="ALL" additivity="false">
+			<AppenderRef ref="STDOUT" />
+			<!-- <AppenderRef ref="ASYNCFILE" /> -->
+		</root>
+		<!-- 
 		<Logger name="Network" level="ALL" additivity="false">
-			<AppenderRef ref="STDOUT" />
-			<!-- <AppenderRef ref="ASYNCFILE" /> -->
+			<AppenderRef ref="ASYNCFILE" />
 		</Logger>
-		<Logger name="Assets" level="ALL" additivity="false">
-			<AppenderRef ref="STDOUT" />
-			<!-- <AppenderRef ref="ASYNCFILE" /> -->
-		</Logger>
+		-->
 	</Loggers>
 </log4j:configuration>
