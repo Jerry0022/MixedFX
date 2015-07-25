@@ -11,12 +11,14 @@ import javafx.scene.layout.StackPane;
  */
 public class SuperDialogueWrapper extends StackPane implements Dynamic
 {
-	private Node child;
+	private Node	child;
+	private boolean	resizable;
 
-	public SuperDialogueWrapper(Node child)
+	public SuperDialogueWrapper(Node child, boolean resize)
 	{
 		this.child = child;
 		this.getChildren().add(this.child);
+		this.resizable = resize;
 	}
 
 	@Override
@@ -31,5 +33,11 @@ public class SuperDialogueWrapper extends StackPane implements Dynamic
 	{
 		if (this.child instanceof Dynamic)
 			((Dynamic) this.child).stop();
+	}
+
+	@Override
+	public boolean isResizable()
+	{
+		return resizable;
 	}
 }
