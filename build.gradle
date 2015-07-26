@@ -9,7 +9,7 @@ plugins {
  * Build .jar, javadoc.jar and sources.jar from the source folder!
  */
  
-version = '0.94'
+version = '0.95'
 group = 'de.lantool'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
