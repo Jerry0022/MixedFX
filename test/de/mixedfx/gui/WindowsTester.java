@@ -12,16 +12,10 @@ public class WindowsTester
 	public static void main(final String[] args)
 	{
 		System.out.println(FirewallController.isEnabled());
-		FirewallController.disable();
-		System.out.println(FirewallController.isEnabled());
 		FirewallController.enable();
 		System.out.println(FirewallController.isEnabled());
-
-		System.out.println(NetworkAdapterController.isAdapterEnabled("HAMACHI"));
-		NetworkAdapterController.enableAdapter("HAMACHI");
-		System.out.println(NetworkAdapterController.isAdapterEnabled("HAMACHI"));
-		NetworkAdapterController.disableAdaptar("HAMACHI");
-		System.out.println(NetworkAdapterController.isAdapterEnabled("HAMACHI"));
+		FirewallController.disable();
+		System.out.println(FirewallController.isEnabled());
 
 		System.out.println(ProcessController.isProcessRunning(DefaultPrograms.HAMACHI));
 		ProcessController.runProcess(DefaultPrograms.HAMACHI);
@@ -34,6 +28,12 @@ public class WindowsTester
 		ServiceController.runService(DefaultPrograms.HAMACHI);
 		System.out.println(ServiceController.isServiceRunning(DefaultPrograms.HAMACHI));
 		ServiceController.stopService(DefaultPrograms.HAMACHI);
+
+		System.out.println(NetworkAdapterController.isAdapterEnabled("HAMACHI"));
+		NetworkAdapterController.enableAdapter("HAMACHI");
+		System.out.println(NetworkAdapterController.isAdapterEnabled("HAMACHI"));
+		NetworkAdapterController.disableAdaptar("HAMACHI");
+		System.out.println(NetworkAdapterController.isAdapterEnabled("HAMACHI"));
 	}
 
 }
