@@ -11,10 +11,8 @@ import de.mixedfx.network.ConnectivityManager;
 import de.mixedfx.network.NetworkManager;
 import de.mixedfx.network.ParticipantManager;
 import de.mixedfx.network.ServiceManager;
-import de.mixedfx.network.examples.ExampleUniqueService;
-import de.mixedfx.network.examples.ExampleUser;
-import de.mixedfx.network.examples.User;
-import de.mixedfx.network.examples.UserManager;
+import de.mixedfx.network.user.User;
+import de.mixedfx.network.user.UserManager;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 

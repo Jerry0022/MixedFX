@@ -5,8 +5,8 @@ import java.util.List;
 
 import de.mixedfx.network.MessageBus;
 import de.mixedfx.network.ParticipantManager;
-import de.mixedfx.network.examples.User;
-import de.mixedfx.network.examples.UserManager;
+import de.mixedfx.network.user.User;
+import de.mixedfx.network.user.UserManager;
 
 @SuppressWarnings("serial")
 public abstract class IdentifiedMessage extends RegisteredMessage

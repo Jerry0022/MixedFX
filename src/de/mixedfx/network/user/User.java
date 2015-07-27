@@ -1,83 +1,54 @@
 package de.mixedfx.network.user;
 
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.io.Serializable;
 
-import javafx.scene.paint.Color;
+import org.apache.commons.collections.Predicate;
 
-public class User
+import de.mixedfx.java.ApacheTools;
+import de.mixedfx.list.Identifiable;
+import de.mixedfx.network.ParticipantManager;
+
+/**
+ * A user shall represent a person. A user is identified world unique and ... After initializing the network connection and having a unique pid the
+ * instance of myUser is published to the other network participants.
+ *
+ * @author Jerry
+ *
+ */
+@SuppressWarnings("serial")
+public abstract class User implements Identifiable, Serializable
 {
-	private final static String	ADMIN_NAME		= "admin";
-	private final static String	ADMIN_PASSWORD	= "password";
-
-	public final String			hash;
-	public final boolean		myProfile;
-	public final String			name;
-
-	public Color				color;
-
 	/**
-	 * @param myProfile
-	 *            Defines if it is the User profile of this application or another.
-	 * @param name
-	 *            The user name.
-	 * @param password
-	 *            The password is not stored but calculated to the hash.
+	 * If the user is not yet identified!
 	 */
-	public User(final boolean myProfile, final String name, final String password)
-	{
-		this.myProfile = true;
-		this.name = name;
+	public int pid;
 
-		this.hash = this.calculateHash(name, password);
+	protected User()
+	{
+		this.pid = ParticipantManager.UNREGISTERED;
+	}
+
+	protected Predicate getByPID()
+	{
+		return ApacheTools.convert(t -> ((User) t).pid == this.pid);
+	}
+
+	@Override
+	public String toString()
+	{
+		return "UserID: " + this.getIdentifier() + "; PID: " + this.pid;
 	}
 
 	/**
-	 * Checks if name and password (as hash) equal the saved hash from instantiation.
+	 * This method is called after a User is received by the network. If a user is already in the network this method should return true. If this
+	 * method returns false, the user will be kicked from the network. This implies that only the newest user is in the network and maybe not even him
+	 * and there can't be a user twice.
 	 *
-	 * @param name
-	 *            The user name.
-	 * @param password
-	 *            The password.
-	 * @return Returns true if the parameter were correct, else wrong.
+	 * @param user
+	 * @return Returns true if the user is equal to the other user, otherwise false.
 	 */
-	public boolean check(final String name, final String password)
+	public boolean equals(final User user)
 	{
-		final String requestHash = this.calculateHash(name, password);
-
-		if (this.myProfile && this.calculateHash(User.ADMIN_NAME, User.ADMIN_PASSWORD).equals(requestHash))
-		{
-
-			return true;
-		}
-		else
-			return this.hash.equals(requestHash);
-	}
-
-	private String calculateHash(final String name, final String password)
-	{
-		return this.getSHA256(this.getSHA256(name).concat(this.getSHA256(password)));
-	}
-
-	/**
-	 *
-	 * @param text
-	 *            The String to hash.
-	 * @return Returns the hash of the string.
-	 */
-	private String getSHA256(final String text)
-	{
-		String result = "";
-		try
-		{
-			final MessageDigest md = MessageDigest.getInstance("SHA-256");
-			md.update(this.name.getBytes("UTF-8"));
-			final byte[] digest = md.digest();
-			result = new String(digest);
-		}
-		catch (final UnsupportedEncodingException | NoSuchAlgorithmException e)
-		{}
-		return result;
-	}
+		return this.getIdentifier().equals(user.getIdentifier());
+	};
 }

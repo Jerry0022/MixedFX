@@ -1,4 +1,6 @@
-package de.mixedfx.network.examples;
+package de.mixedfx.gui;
+
+import de.mixedfx.network.user.User;
 
 @SuppressWarnings("serial")
 public class ExampleUser extends User

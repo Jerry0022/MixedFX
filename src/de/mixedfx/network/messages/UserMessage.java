@@ -1,6 +1,6 @@
 package de.mixedfx.network.messages;
 
-import de.mixedfx.network.examples.User;
+import de.mixedfx.network.user.User;
 
 @SuppressWarnings("serial")
 public class UserMessage extends RegisteredMessage

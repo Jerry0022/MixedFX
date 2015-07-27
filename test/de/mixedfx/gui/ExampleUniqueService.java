@@ -1,4 +1,4 @@
-package de.mixedfx.network.examples;
+package de.mixedfx.gui;
 
 import de.mixedfx.logging.Log;
 import de.mixedfx.network.ServiceManager.UniqueService;

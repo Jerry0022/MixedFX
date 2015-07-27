@@ -1,4 +1,4 @@
-package de.mixedfx.network.examples;
+package de.mixedfx.network.user;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -128,7 +128,7 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 		// UDPCoordinator.allAdresses.removeListener(this.udpListener);
 
 		MessageBus.unregisterForReceival(this);
-		UserManager.myUser.updatePID(ParticipantManager.UNREGISTERED);
+		UserManager.myUser.pid = ParticipantManager.UNREGISTERED;
 		synchronized (ParticipantManager.PARTICIPANTS)
 		{
 			ParticipantManager.PARTICIPANTS.removeListener(this);
@@ -142,7 +142,7 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 	{
 		Log.network.trace("UserManager starts!");
 		MessageBus.registerForReceival(this);
-		UserManager.myUser.updatePID(ParticipantManager.MY_PID.get());
+		UserManager.myUser.pid = ParticipantManager.MY_PID.get();
 		synchronized (ParticipantManager.PARTICIPANTS)
 		{
 			for (final Integer pid : ParticipantManager.PARTICIPANTS)
@@ -170,7 +170,7 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 			synchronized (UserManager.allUsers)
 			{
 				final User newUser = ((UserMessage) message).getUser();
-				if (newUser.getIdentifier().equals(UserManager.myUser.getIdentifier()))
+				if (newUser.pid != UserManager.myUser.pid && newUser.getIdentifier().equals(UserManager.myUser.getIdentifier()))
 				{
 					Log.network.info("Network is totally shutdown because user may exist at least twice, my user: " + UserManager.myUser + " the other one: " + newUser);
 					ConnectivityManager.off();
