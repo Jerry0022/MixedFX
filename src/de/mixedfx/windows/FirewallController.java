@@ -9,32 +9,7 @@ public class FirewallController
 	private final static String	statusCommand	= "netsh advfirewall show allprofiles";
 
 	/**
-	 * Enables all windows firewalls.
-	 */
-	public static void enable()
-	{
-		Executor.runAndWaitForOutput(FirewallController.enableCommand);
-		while (!FirewallController.isEnabled())
-		{
-			;
-		}
-	}
-
-	/**
-	 * Disables all windows firewalls.
-	 */
-	public static void disable()
-	{
-		Executor.runAndWaitForOutput(FirewallController.disableCommand);
-		while (FirewallController.isEnabled())
-		{
-			;
-		}
-	}
-
-	/**
-	 * @return False if all firewalls are disabled or status could not be retrieved! True if at
-	 *         least one firewall is online.
+	 * @return False if all firewalls are disabled or status could not be retrieved! True if at least one firewall is online.
 	 */
 	public static boolean isEnabled()
 	{
@@ -47,6 +22,34 @@ public class FirewallController
 		catch (final Exception e)
 		{
 			return false;
+		}
+	}
+
+	/**
+	 * Enables all windows firewalls.
+	 */
+	public static void enable()
+	{
+		if (FirewallController.isEnabled())
+			return;
+		Executor.runAndWaitForOutput(FirewallController.enableCommand);
+		while (!FirewallController.isEnabled())
+		{
+			;
+		}
+	}
+
+	/**
+	 * Disables all windows firewalls.
+	 */
+	public static void disable()
+	{
+		if (!FirewallController.isEnabled())
+			return;
+		Executor.runAndWaitForOutput(FirewallController.disableCommand);
+		while (FirewallController.isEnabled())
+		{
+			;
 		}
 	}
 }

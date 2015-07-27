@@ -4,27 +4,10 @@ import de.mixedfx.java.ComplexString;
 
 public class ServiceController
 {
-	public static void runService(final Program program)
-	{
-		Executor.runAndWaitForOutput("sc start " + program.serviceName);
-		while (!ServiceController.isServiceRunning(program))
-		{
-			;
-		}
-	}
 
-	public static void stopService(final Program program)
+	public static boolean isRunning(final Program service)
 	{
-		Executor.runAndWaitForOutput("sc stop " + program.serviceName);
-		while (ServiceController.isServiceRunning(program))
-		{
-			;
-		}
-	}
-
-	public static boolean isServiceRunning(final Program program)
-	{
-		final ComplexString result = Executor.runAndWaitForOutput("sc query " + program.serviceName);
+		final ComplexString result = Executor.runAndWaitForOutput("sc query " + service.serviceName);
 
 		try
 		{
@@ -33,6 +16,28 @@ public class ServiceController
 		catch (final Exception e)
 		{
 			return false;
+		}
+	}
+
+	public static void run(final Program service)
+	{
+		if (ServiceController.isRunning(service))
+			return;
+		Executor.runAndWaitForOutput("sc start " + service.serviceName);
+		while (!ServiceController.isRunning(service))
+		{
+			;
+		}
+	}
+
+	public static void stop(final Program service)
+	{
+		if (!ServiceController.isRunning(service))
+			return;
+		Executor.runAndWaitForOutput("sc stop " + service.serviceName);
+		while (ServiceController.isRunning(service))
+		{
+			;
 		}
 	}
 }

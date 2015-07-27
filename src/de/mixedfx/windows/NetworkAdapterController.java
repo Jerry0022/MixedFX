@@ -10,27 +10,15 @@ public class NetworkAdapterController
 	public static final String	disableCommand	= "netsh interface set interface " + NetworkAdapterController.placeHolder + " disabled";
 	public static final String	statusCommand	= "netsh interface show interface " + NetworkAdapterController.placeHolder;
 
-	public static void disableAdaptar(final String name)
+	/**
+	 * Returns the state of a windows network adapter (/interface).
+	 * 
+	 * @param adapterName
+	 *            The name of the adapter (attention this name may is user specific)!
+	 */
+	public static boolean isEnabled(final String adapterName)
 	{
-		Executor.runAndWaitForOutput(NetworkAdapterController.disableCommand.replace(NetworkAdapterController.placeHolder, name));
-		while (NetworkAdapterController.isAdapterEnabled(name))
-		{
-			;
-		}
-	}
-
-	public static void enableAdapter(final String name)
-	{
-		Executor.runAndWaitForOutput(NetworkAdapterController.enableCommand.replace(NetworkAdapterController.placeHolder, name));
-		while (!NetworkAdapterController.isAdapterEnabled(name))
-		{
-			;
-		}
-	}
-
-	public static boolean isAdapterEnabled(final String name)
-	{
-		final ComplexString response = Executor.runAndWaitForOutput(NetworkAdapterController.statusCommand.replace(NetworkAdapterController.placeHolder, name));
+		final ComplexString response = Executor.runAndWaitForOutput(NetworkAdapterController.statusCommand.replace(NetworkAdapterController.placeHolder, adapterName));
 
 		try
 		{
@@ -39,6 +27,40 @@ public class NetworkAdapterController
 		catch (final Exception e)
 		{
 			return false;
+		}
+	}
+
+	/**
+	 * Disables a windows network adapter (/interface).
+	 * 
+	 * @param adapterName
+	 *            The name of the adapter (attention this name may is user specific)!
+	 */
+	public static void disable(final String adapterName)
+	{
+		if (!NetworkAdapterController.isEnabled(adapterName))
+			return;
+		Executor.runAndWaitForOutput(NetworkAdapterController.disableCommand.replace(NetworkAdapterController.placeHolder, adapterName));
+		while (NetworkAdapterController.isEnabled(adapterName))
+		{
+			;
+		}
+	}
+
+	/**
+	 * Enables a windows network adapter (/interface).
+	 * 
+	 * @param adapterName
+	 *            The name of the adapter (attention this name may is user specific)!
+	 */
+	public static void enable(final String adapterName)
+	{
+		if (NetworkAdapterController.isEnabled(adapterName))
+			return;
+		Executor.runAndWaitForOutput(NetworkAdapterController.enableCommand.replace(NetworkAdapterController.placeHolder, adapterName));
+		while (!NetworkAdapterController.isEnabled(adapterName))
+		{
+			;
 		}
 	}
 }

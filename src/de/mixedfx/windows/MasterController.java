@@ -9,8 +9,8 @@ public class MasterController
 	 */
 	public static void disableAll(Program program)
 	{
-		ProcessController.stopProcess(program);
-		ServiceController.stopService(program);
+		ProcessController.stop(program);
+		ServiceController.stop(program);
 	}
 
 	/**
@@ -24,7 +24,7 @@ public class MasterController
 	public static void disableAll(Program program, String networkAdapter)
 	{
 		disableAll(program);
-		NetworkAdapterController.disableAdaptar(networkAdapter);
+		NetworkAdapterController.disable(networkAdapter);
 	}
 
 	/**
@@ -35,8 +35,8 @@ public class MasterController
 	 */
 	public static void enableAll(Program program)
 	{
-		ProcessController.runProcess(program);
-		ServiceController.runService(program);
+		ProcessController.run(program);
+		ServiceController.run(program);
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class MasterController
 	public static void enableAll(Program program, String networkAdapter)
 	{
 		enableAll(program);
-		NetworkAdapterController.enableAdapter(networkAdapter);
+		NetworkAdapterController.enable(networkAdapter);
 	}
 
 	/**

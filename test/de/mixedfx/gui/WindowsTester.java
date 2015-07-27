@@ -1,5 +1,6 @@
 package de.mixedfx.gui;
 
+import de.mixedfx.windows.DefaultNetworkAdapter;
 import de.mixedfx.windows.DefaultPrograms;
 import de.mixedfx.windows.FirewallController;
 import de.mixedfx.windows.NetworkAdapterController;
@@ -17,23 +18,22 @@ public class WindowsTester
 		FirewallController.disable();
 		System.out.println(FirewallController.isEnabled());
 
-		System.out.println(ProcessController.isProcessRunning(DefaultPrograms.HAMACHI));
-		ProcessController.runProcess(DefaultPrograms.HAMACHI);
+		System.out.println(ProcessController.isProcessRunning(DefaultPrograms.TUNNGLE));
+		ProcessController.run(DefaultPrograms.TUNNGLE);
+		System.out.println(ProcessController.isProcessRunning(DefaultPrograms.TUNNGLE));
+		ProcessController.stop(DefaultPrograms.TUNNGLE);
+		System.out.println(ProcessController.isProcessRunning(DefaultPrograms.TUNNGLE));
 
-		System.out.println(ProcessController.isProcessRunning(DefaultPrograms.HAMACHI));
-		ProcessController.stopProcess(DefaultPrograms.HAMACHI);
-		System.out.println(ProcessController.isProcessRunning(DefaultPrograms.HAMACHI));
+		System.out.println(ServiceController.isRunning(DefaultPrograms.TUNNGLE));
+		ServiceController.run(DefaultPrograms.TUNNGLE);
+		System.out.println(ServiceController.isRunning(DefaultPrograms.TUNNGLE));
+		ServiceController.stop(DefaultPrograms.TUNNGLE);
 
-		System.out.println(ServiceController.isServiceRunning(DefaultPrograms.HAMACHI));
-		ServiceController.runService(DefaultPrograms.HAMACHI);
-		System.out.println(ServiceController.isServiceRunning(DefaultPrograms.HAMACHI));
-		ServiceController.stopService(DefaultPrograms.HAMACHI);
-
-		System.out.println(NetworkAdapterController.isAdapterEnabled("HAMACHI"));
-		NetworkAdapterController.enableAdapter("HAMACHI");
-		System.out.println(NetworkAdapterController.isAdapterEnabled("HAMACHI"));
-		NetworkAdapterController.disableAdaptar("HAMACHI");
-		System.out.println(NetworkAdapterController.isAdapterEnabled("HAMACHI"));
+		System.out.println(NetworkAdapterController.isEnabled(DefaultNetworkAdapter.TUNNGLE));
+		NetworkAdapterController.enable(DefaultNetworkAdapter.TUNNGLE);
+		System.out.println(NetworkAdapterController.isEnabled(DefaultNetworkAdapter.TUNNGLE));
+		NetworkAdapterController.disable(DefaultNetworkAdapter.TUNNGLE);
+		System.out.println(NetworkAdapterController.isEnabled(DefaultNetworkAdapter.TUNNGLE));
 	}
 
 }
