@@ -51,6 +51,7 @@ public class MasterController
 	{
 		enableAll(program);
 		NetworkAdapterController.enable(networkAdapter);
+		NetworkPriorityController.toTop(networkAdapter);
 	}
 
 	/**

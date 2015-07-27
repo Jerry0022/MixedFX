@@ -2,6 +2,8 @@ package de.mixedfx.java;
 
 import java.util.ArrayList;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Each Row of the String should be an element.
  *
@@ -15,21 +17,15 @@ public class ComplexString extends ArrayList<String>
 	}
 
 	/**
-	 *
-	 * If at least one of theses matched lines doesn't contain the needle it returns false,
-	 * otherwise true;
+	 * Goes through all lines. Each line which content matches the indicator the line must contain also all the needles.
 	 *
 	 * @param indicator
-	 * @param needle
-	 * @return
-	 */
-	/**
-	 * Goes through all lines. Each line which content matches the indicator must contain also the .
-	 *
-	 * @param indicator
+	 *            The indicator which is ALWAYS present. (case insensitive)
 	 * @param needles
-	 * @return
+	 *            All strings which shall be in a line with the indicator. (case insensitive)
+	 * @return Returns true if indicator found and all needles, too. Returns false if at least in one line with the indicator has not all needles.
 	 * @throws Exception
+	 *             If indicator can't be found.
 	 */
 	public boolean containsAllRows(final String indicator, final String... needles) throws Exception
 	{
@@ -38,12 +34,12 @@ public class ComplexString extends ArrayList<String>
 		boolean hasIndicator = false;
 		for (final String s : this)
 		{
-			if (s.contains(indicator))
+			if (StringUtils.containsIgnoreCase(s, indicator))
 			{
 				hasIndicator = true;
 				for (final String needle : needles)
 				{
-					if (!s.contains(needle))
+					if (!StringUtils.containsIgnoreCase(s, needle))
 					{
 						return result = false;
 					}
@@ -56,6 +52,15 @@ public class ComplexString extends ArrayList<String>
 			new Exception("Didn't find indicator! Indicator: " + indicator).printStackTrace();
 		}
 
+		return result;
+	}
+
+	@Override
+	public String toString()
+	{
+		String result = "";
+		for (String line : this)
+			result += line + "\n";
 		return result;
 	}
 }

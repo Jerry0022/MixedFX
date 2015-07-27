@@ -30,7 +30,9 @@ public class Executor
 			in.close();
 		}
 		catch (final Exception e)
-		{}
+		{
+			e.printStackTrace();
+		}
 		return result;
 	}
 
@@ -57,7 +59,9 @@ public class Executor
 			in.close();
 		}
 		catch (final Exception e)
-		{}
+		{
+			e.printStackTrace();
+		}
 		return result;
 	}
 
