@@ -30,7 +30,7 @@ public abstract class User implements Identifiable, Serializable
 	/**
 	 * A list of current networks of the user to which this local client is directly connected.
 	 */
-	public MapProperty<InetAddress, Long> networks;
+	public transient MapProperty<InetAddress, Long> networks;
 
 	protected User()
 	{
