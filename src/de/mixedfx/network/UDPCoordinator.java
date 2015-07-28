@@ -155,7 +155,7 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 									UDPCoordinator.allAdresses.set(UDPCoordinator.allAdresses.indexOf(localDetected), localDetected);
 								}
 								// Register change in NIC for this participant
-								updatePIDNetworks(newDetected.pid, newDetected.address);
+								// updatePIDNetworks(newDetected.pid, newDetected.address);
 							}
 							else
 							{
@@ -167,7 +167,7 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 					{
 						// New UDP message of unknown NIC
 						UDPCoordinator.allAdresses.add(newDetected);
-						updatePIDNetworks(newDetected.pid, newDetected.address);
+						// updatePIDNetworks(newDetected.pid, newDetected.address);
 					}
 
 					/*
