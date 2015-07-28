@@ -9,11 +9,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -200,8 +197,10 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 	 */
 	private void updatePIDNetworks(int gotPID, InetAddress address)
 	{
+		// Return if I'm the host
 		if (gotPID == ParticipantManager.UNREGISTERED)
 			return;
+
 		User anonymousUser = new User()
 		{
 			{
@@ -220,7 +219,16 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 				return user.getIdentifier().equals(this.getIdentifier());
 			}
 		};
-		final User foundUser = (User) CollectionUtils.select(UserManager.allUsers, anonymousUser.getByPID()).iterator().next();
+
+		User foundUser = null;
+		try
+		{
+			foundUser = (User) CollectionUtils.select(UserManager.allUsers, anonymousUser.getByPID()).iterator().next();
+		}
+		catch (NoSuchElementException e)
+		{
+			return;
+		}
 
 		// Remove old networks
 		for (InetAddress inetAddress : foundUser.networks.keySet())
@@ -232,10 +240,5 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 
 		// Update current or add it to list
 		foundUser.networks.put(address, new Date().getTime());
-	}
-
-	private static <T, E> Set<T> getKeysByValue(Map<T, E> map, E value)
-	{
-		return map.entrySet().stream().filter(entry -> Objects.equals(entry.getValue(), value)).map(Map.Entry::getKey).collect(Collectors.toSet());
 	}
 }
