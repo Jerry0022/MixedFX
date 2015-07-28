@@ -13,11 +13,11 @@ import de.mixedfx.logging.Log;
 
 class UDPOut
 {
-	private DatagramSocket	socket;
+	private DatagramSocket socket;
 
 	/**
-	 * Asynchronous broadcasting on {@link NetworkConfig#TRIES_AMOUNT} available ports! If no
-	 * broadcast socket couldn't be opened throws {@link UDPCoordinator#ERROR}!
+	 * Asynchronous broadcasting on {@link NetworkConfig#TRIES_AMOUNT} available ports! If no broadcast socket couldn't be opened throws
+	 * {@link UDPCoordinator#ERROR}!
 	 */
 	public synchronized void start()
 	{
@@ -54,7 +54,8 @@ class UDPOut
 				final byte[] sendData;
 				synchronized (NetworkConfig.status)
 				{
-					sendData = (new Date().toInstant().toString() + "!" + NetworkConfig.status.get().toString() + "!" + NetworkConfig.statusChangeTime.get().toInstant().toString()).getBytes();
+					sendData = (new Date().toInstant().toString() + "!" + NetworkConfig.status.get().toString() + "!" + NetworkConfig.statusChangeTime.get().toInstant().toString() + "!"
+							+ ParticipantManager.MY_PID.get()).getBytes();
 				}
 
 				/*
@@ -64,7 +65,8 @@ class UDPOut
 				{
 					try
 					{
-						final DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("255.255.255.255"), NetworkConfig.PORT.get() + i * NetworkConfig.TRIES_STEPS);
+						final DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("255.255.255.255"),
+								NetworkConfig.PORT.get() + i * NetworkConfig.TRIES_STEPS);
 						this.socket.send(sendPacket);
 						worked = true;
 					}

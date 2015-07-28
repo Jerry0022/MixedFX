@@ -1,12 +1,5 @@
 package de.mixedfx.network.user;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -17,7 +10,6 @@ import de.mixedfx.network.MessageBus;
 import de.mixedfx.network.MessageBus.MessageReceiver;
 import de.mixedfx.network.ParticipantManager;
 import de.mixedfx.network.ServiceManager.P2PService;
-import de.mixedfx.network.UDPDetected;
 import de.mixedfx.network.messages.RegisteredMessage;
 import de.mixedfx.network.messages.UserMessage;
 import javafx.beans.property.SimpleListProperty;
@@ -38,60 +30,10 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 	 */
 	public static SimpleListProperty<User> allUsers;
 
-	private final List<InetAddress>					myNICs;
-	private final ListChangeListener<UDPDetected>	udpListener;
-
 	public UserManager(final T myUser)
 	{
 		UserManager.allUsers = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
 		UserManager.myUser = myUser;
-		this.myNICs = new ArrayList<InetAddress>();
-		this.udpListener = c ->
-		{
-			while (c.next())
-			{
-				// If added or updated:
-				if (c.wasAdded())
-				{
-					// TODO Do this also at the beginning
-					for (final UDPDetected detected : c.getAddedSubList())
-					{
-						final InetAddress otherOnesAddress = detected.address;
-						// TODO Request as broadcast who has this NIC address? With my UserID and my
-						// NIC address :)
-						// TODO If such a request got => Do I have the NIC address? If yes, Get user
-						// by got UserID and update the recognized related networks! Send back
-						// response with same content but changed NIC addresses and set my User as
-						// related one. Mark as response to not have a loop.
-					}
-
-					// Update list of all NIC addresses
-					final ArrayList<InetAddress> newNICs = new ArrayList<>();
-					try
-					{
-						final Enumeration<NetworkInterface> nics = NetworkInterface.getNetworkInterfaces();
-						while (nics.hasMoreElements())
-						{
-							final NetworkInterface nic = nics.nextElement();
-							for (final InetAddress nicAdress : Collections.list(nic.getInetAddresses()))
-							{
-								newNICs.add(nicAdress);
-							}
-						}
-					}
-					catch (final SocketException e)
-					{
-						Log.network.error("Could not detect NetworkInterfaces!");
-					}
-
-					// IMPROVEMENT Could be improved by comparing the two lists
-					this.myNICs.clear();
-					this.myNICs.addAll(newNICs);
-
-					// Call my user to everyone as now
-				}
-			}
-		};
 	}
 
 	/**
@@ -125,8 +67,6 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 	@Override
 	public synchronized void stop()
 	{
-		// UDPCoordinator.allAdresses.removeListener(this.udpListener);
-
 		MessageBus.unregisterForReceival(this);
 		UserManager.myUser.pid = ParticipantManager.UNREGISTERED;
 		synchronized (ParticipantManager.PARTICIPANTS)
@@ -155,8 +95,6 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 			ParticipantManager.PARTICIPANTS.addListener(this);
 		}
 		MessageBus.send(new UserMessage(UserManager.myUser));
-
-		// UDPCoordinator.allAdresses.addListener(this.udpListener);
 
 		Log.network.debug("UserManager started! My user: " + UserManager.myUser);
 	}

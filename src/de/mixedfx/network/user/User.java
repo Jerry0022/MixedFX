@@ -1,12 +1,16 @@
 package de.mixedfx.network.user;
 
 import java.io.Serializable;
+import java.net.InetAddress;
 
 import org.apache.commons.collections.Predicate;
 
 import de.mixedfx.java.ApacheTools;
 import de.mixedfx.list.Identifiable;
 import de.mixedfx.network.ParticipantManager;
+import javafx.beans.property.MapProperty;
+import javafx.beans.property.SimpleMapProperty;
+import javafx.collections.FXCollections;
 
 /**
  * A user shall represent a person. A user is identified world unique and ... After initializing the network connection and having a unique pid the
@@ -23,12 +27,18 @@ public abstract class User implements Identifiable, Serializable
 	 */
 	public int pid;
 
+	/**
+	 * A list of current networks of the user to which this local client is directly connected.
+	 */
+	public MapProperty<InetAddress, Long> networks;
+
 	protected User()
 	{
 		this.pid = ParticipantManager.UNREGISTERED;
+		this.networks = new SimpleMapProperty<>(FXCollections.observableHashMap());
 	}
 
-	protected Predicate getByPID()
+	public Predicate getByPID()
 	{
 		return ApacheTools.convert(t -> ((User) t).pid == this.pid);
 	}

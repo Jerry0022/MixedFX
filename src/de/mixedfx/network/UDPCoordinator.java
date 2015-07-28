@@ -9,10 +9,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
-
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.collections.FXCollections;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -22,30 +23,34 @@ import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.eventbus.EventBusService;
 import de.mixedfx.java.ApacheTools;
 import de.mixedfx.network.NetworkConfig.States;
+import de.mixedfx.network.user.User;
+import de.mixedfx.network.user.UserManager;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
 
 public class UDPCoordinator implements EventTopicSubscriber<Object>
 {
-	public static final String				RECEIVE	= "RECEIVE";
-	public static final String				ERROR	= "ERROR";
+	public static final String	RECEIVE	= "RECEIVE";
+	public static final String	ERROR	= "ERROR";
 
-	public static final EventBusService		service	= new EventBusService("UDPCoordinator");
+	public static final EventBusService service = new EventBusService("UDPCoordinator");
 
 	/**
-	 * Just a list of all who made them known at least once (maybe aren't still active). An replaced
-	 * event to the listener is only submitted if the state changed, not if the last contact was
-	 * updated. This list isn't cleared as long as the udp connection is running!
+	 * Just a list of all who made them known at least once (maybe aren't still active). An replaced event to the listener is only submitted if the
+	 * state changed, not if the last contact was updated. This list isn't cleared as long as the udp connection is running!
 	 */
-	public static ListProperty<UDPDetected>	allAdresses;
+	public static ListProperty<UDPDetected> allAdresses;
 
 	static
 	{
 		UDPCoordinator.allAdresses = new SimpleListProperty<>(FXCollections.observableArrayList(new ArrayList<>()));
 	}
 
-	private boolean							running;
+	private boolean running;
 
-	private final UDPIn						in;
-	private final UDPOut					out;
+	private final UDPIn		in;
+	private final UDPOut	out;
 
 	public UDPCoordinator()
 	{
@@ -132,7 +137,8 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 					/*
 					 * Register / Update the client in local list of UDP contacts.
 					 */
-					final UDPDetected newDetected = new UDPDetected(packet.getAddress(), Date.from(Instant.parse(packetMessage.split("\\!")[0])), NetworkConfig.States.valueOf(packetMessage.split("\\!")[1]), Date.from(Instant.parse(packetMessage.split("\\!")[2])));
+					final UDPDetected newDetected = new UDPDetected(packet.getAddress(), Date.from(Instant.parse(packetMessage.split("\\!")[0])),
+							NetworkConfig.States.valueOf(packetMessage.split("\\!")[1]), Date.from(Instant.parse(packetMessage.split("\\!")[2])), Integer.valueOf(packetMessage.split("\\!")[3]));
 
 					// Add all sending NICs to list
 					final Predicate predicate = ApacheTools.convert(UDPDetected.getByAddress(newDetected.address));
@@ -143,12 +149,16 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 							final UDPDetected localDetected = (UDPDetected) t;
 							if (newDetected.timeStamp.after(localDetected.timeStamp))
 							{
+								// New UDP message of known NIC
+								// Register change of stae for this participant
 								final States oldStatus = States.valueOf(localDetected.status.toString());
 								localDetected.update(newDetected.status, newDetected.timeStamp);
 								if (!oldStatus.equals(newDetected.status))
 								{
 									UDPCoordinator.allAdresses.set(UDPCoordinator.allAdresses.indexOf(localDetected), localDetected);
 								}
+								// Register change in NIC for this participant
+								updatePIDNetworks(newDetected.pid, newDetected.address);
 							}
 							else
 							{
@@ -158,12 +168,13 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 					}
 					else
 					{
+						// New UDP message of unknown NIC
 						UDPCoordinator.allAdresses.add(newDetected);
+						updatePIDNetworks(newDetected.pid, newDetected.address);
 					}
 
 					/*
-					 * If I'm searching and the other one is a server or bound to server then let's
-					 * connect
+					 * If I'm searching and the other one is a server or bound to server then let's connect
 					 */
 					if (NetworkConfig.status.get().equals(States.Unbound) && (newDetected.status.equals(NetworkConfig.States.Server) || newDetected.status.equals(NetworkConfig.States.BoundToServer)))
 					{
@@ -179,5 +190,52 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 				EventBusExtended.publishAsyncSafe(NetworkManager.NETWORK_FATALERROR, data);
 			}
 		}
+	}
+
+	/**
+	 * 
+	 * 
+	 * @param gotPID
+	 * @param address
+	 */
+	private void updatePIDNetworks(int gotPID, InetAddress address)
+	{
+		if (gotPID == ParticipantManager.UNREGISTERED)
+			return;
+		User anonymousUser = new User()
+		{
+			{
+				this.pid = gotPID;
+			}
+
+			@Override
+			public Object getIdentifier()
+			{
+				return null;
+			}
+
+			@Override
+			public boolean equals(final User user)
+			{
+				return user.getIdentifier().equals(this.getIdentifier());
+			}
+		};
+		final User foundUser = (User) CollectionUtils.select(UserManager.allUsers, anonymousUser.getByPID()).iterator().next();
+
+		// Remove old networks
+		for (InetAddress inetAddress : foundUser.networks.keySet())
+		{
+			long lastUpdate = foundUser.networks.get(inetAddress);
+			if (TimeUnit.MILLISECONDS.convert((new Date()).getTime() - lastUpdate, TimeUnit.SECONDS) > NetworkConfig.BROADCAST_INTERVAL * NetworkConfig.RECONNECT_TOLERANCE)
+				foundUser.networks.remove(inetAddress);
+		}
+
+		// Update current or add it to list
+		foundUser.networks.put(address, new Date().getTime());
+	}
+
+	private static <T, E> Set<T> getKeysByValue(Map<T, E> map, E value)
+	{
+		return map.entrySet().stream().filter(entry -> Objects.equals(entry.getValue(), value)).map(Map.Entry::getKey).collect(Collectors.toSet());
 	}
 }

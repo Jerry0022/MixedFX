@@ -1,5 +1,6 @@
 package de.mixedfx.gui;
 
+import java.net.InetAddress;
 import java.util.UUID;
 
 import org.apache.logging.log4j.Level;
@@ -15,6 +16,7 @@ import de.mixedfx.network.user.User;
 import de.mixedfx.network.user.UserManager;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
+import javafx.collections.MapChangeListener;
 
 public class NetworkTester
 {
@@ -44,6 +46,22 @@ public class NetworkTester
 		final UserManager<ExampleUser> userManager = new UserManager<ExampleUser>(user);
 		UserManager.allUsers.addListener((ListChangeListener<User>) c ->
 		{
+			while (c.next())
+			{
+				if (c.wasAdded())
+				{
+					c.getAddedSubList().get(0).networks.addListener(new MapChangeListener<InetAddress, Long>()
+					{
+						@Override
+						public void onChanged(javafx.collections.MapChangeListener.Change<? extends InetAddress, ? extends Long> change)
+						{
+							Log.network.info("Network was " + (change.wasAdded() == true ? "added" : "removed") + " for user " + c.getAddedSubList().get(0) + " with following data: " + change.getKey()
+									+ " " + change.getValueAdded());
+						}
+					});
+				}
+			}
+
 			Log.network.info("UserManager list changed to: " + UserManager.allUsers);
 		});
 		ServiceManager.register(userManager);
