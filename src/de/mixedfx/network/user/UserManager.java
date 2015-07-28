@@ -30,9 +30,13 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 	 */
 	public static SimpleListProperty<User> allUsers;
 
-	public UserManager(final T myUser)
+	static
 	{
 		UserManager.allUsers = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
+	}
+
+	public UserManager(final T myUser)
+	{
 		UserManager.myUser = myUser;
 	}
 
