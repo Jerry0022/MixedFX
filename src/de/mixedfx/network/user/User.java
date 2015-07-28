@@ -1,5 +1,6 @@
 package de.mixedfx.network.user;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.net.InetAddress;
 
@@ -41,6 +42,12 @@ public abstract class User implements Identifiable, Serializable
 	public Predicate getByPID()
 	{
 		return ApacheTools.convert(t -> ((User) t).pid == this.pid);
+	}
+
+	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
+	{
+		User user = (User) in.readObject();
+		user.networks = new SimpleMapProperty<>(FXCollections.observableHashMap());
 	}
 
 	@Override
