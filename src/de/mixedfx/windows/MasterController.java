@@ -49,9 +49,9 @@ public class MasterController
 	 */
 	public static void enableAll(Program program, String networkAdapter)
 	{
-		enableAll(program);
 		NetworkAdapterController.enable(networkAdapter);
 		NetworkPriorityController.toTop(networkAdapter);
+		enableAll(program);
 	}
 
 	/**

@@ -22,7 +22,7 @@ public class ComplexString extends ArrayList<String>
 	 * @param indicator
 	 *            The indicator which is ALWAYS present. (case insensitive)
 	 * @param needles
-	 *            All strings which shall be in a line with the indicator. (case insensitive)
+	 *            All strings which shall be in a line with the indicator. (case sensitive)
 	 * @return Returns true if indicator found and all needles, too. Returns false if at least in one line with the indicator has not all needles.
 	 * @throws Exception
 	 *             If indicator can't be found.
@@ -39,7 +39,7 @@ public class ComplexString extends ArrayList<String>
 				hasIndicator = true;
 				for (final String needle : needles)
 				{
-					if (!StringUtils.containsIgnoreCase(s, needle))
+					if (!s.contains(needle))
 					{
 						return result = false;
 					}
