@@ -26,13 +26,25 @@ public class UserManager<T extends User> implements P2PService, MessageReceiver,
 	public static User myUser;
 
 	/**
-	 * All current online users except {@link UserManager#myUser}!
+	 * All current online users except {@link UserManager#myUser}! BUT the user are first put in this list unidentified ({@link User#getIdentifier()}
+	 * returns null) and later replaced! Use {@link UserManager#isIdentified(User)}} to prevent exceptions!
 	 */
 	public static SimpleListProperty<User> allUsers;
 
 	static
 	{
 		UserManager.allUsers = new SimpleListProperty<>(FXCollections.synchronizedObservableList(FXCollections.observableArrayList()));
+	}
+
+	/**
+	 * @param user
+	 *            The user which shall be checked.
+	 * @return Returns true if the identifier of the user is not null! Returns false if the user joins the network, a few moments later he should be
+	 *         identified!
+	 */
+	public static boolean isIdentified(User user)
+	{
+		return user.getIdentifier() != null;
 	}
 
 	public UserManager(final T myUser)

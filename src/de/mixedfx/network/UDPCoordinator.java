@@ -233,6 +233,10 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 			return;
 		}
 
+		// Return if user is not yet identified
+		if (!UserManager.isIdentified(foundUser))
+			return;
+
 		// Remove old networks
 		for (InetAddress inetAddress : foundUser.networks.keySet())
 		{
