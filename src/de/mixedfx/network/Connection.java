@@ -20,25 +20,25 @@ import de.mixedfx.network.messages.UserMessage;
 
 public class Connection implements EventBusServiceInterface
 {
-	protected static final String			MESSAGE_CHANNEL_SEND		= "MESSAGE_CHANNEL_SEND";
-	protected static final String			MESSAGE_CHANNEL_RECEIVED	= "MESSAGE_CHANNEL_RECEIVED";
-	protected static final String			CONNECTION_CHANNEL_LOST		= "CONNECTION_CHANNEL_LOST";
+	protected static final String	MESSAGE_CHANNEL_SEND		= "MESSAGE_CHANNEL_SEND";
+	protected static final String	MESSAGE_CHANNEL_RECEIVED	= "MESSAGE_CHANNEL_RECEIVED";
+	protected static final String	CONNECTION_CHANNEL_LOST		= "CONNECTION_CHANNEL_LOST";
 
 	/**
 	 * A mapping of all going through uids to pids, whereby the pid value may be null.
 	 */
-	public final HashMap<String, Integer>	uid_pid_map;
+	public final HashMap<String, Integer> uid_pid_map;
 
 	/**
 	 * Represents the local connection ID
 	 */
-	public final int						clientID;
+	public final int clientID;
 
-	private final Socket					clientSocket;
-	private final ConnectionOutput			outputConnection;
-	private final ConnectionInput			inputConnection;
+	private final Socket			clientSocket;
+	private final ConnectionOutput	outputConnection;
+	private final ConnectionInput	inputConnection;
 
-	private EventBusService					eventBus;
+	private EventBusService eventBus;
 
 	public Connection(final int clientID, final Socket clientSocket) throws IOException
 	{

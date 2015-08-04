@@ -13,9 +13,9 @@ import de.mixedfx.logging.Log;
 
 public class ConnectionInput implements Runnable
 {
-	private static final Class<?>			parentClass	= Connection.class;
+	private static final Class<?> parentClass = Connection.class;
 
-	private volatile boolean				isRunning	= true;
+	private volatile boolean isRunning = true;
 
 	private final ObjectInputStream			objectInputStream;
 	private final ArrayList<Serializable>	inputMessageCache;
@@ -82,14 +82,16 @@ public class ConnectionInput implements Runnable
 				}
 			}
 			catch (final EOFException e)
-			{} // Nothing received, still waiting
+			{
+			} // Nothing received, still waiting
 			catch (ClassNotFoundException | IOException e)
 			{
+				e.printStackTrace();
 				if (this.isRunning)
 				{
 					if (e instanceof NotSerializableException || e.getCause() instanceof NotSerializableException)
 					{
-						Log.network.error(new Exception("A class is not serializable! Implement Serializable Interface!"));
+						Log.network.error(new Exception("A class is not serializable! Implement Serializable interface!"));
 					}
 
 					synchronized (this.inputMessageCache)
@@ -118,7 +120,8 @@ public class ConnectionInput implements Runnable
 				this.objectInputStream.close();
 			}
 			catch (final IOException e)
-			{}
+			{
+			}
 			Log.network.trace(this.getClass().getSimpleName() + " terminated!");
 			return true;
 		}
