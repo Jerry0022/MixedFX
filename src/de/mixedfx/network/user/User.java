@@ -8,7 +8,6 @@ import org.apache.commons.collections.Predicate;
 
 import de.mixedfx.java.ApacheTools;
 import de.mixedfx.list.Identifiable;
-import de.mixedfx.logging.Log;
 import de.mixedfx.network.ParticipantManager;
 import javafx.beans.property.MapProperty;
 import javafx.beans.property.SimpleMapProperty;
@@ -45,11 +44,10 @@ public abstract class User implements Identifiable, Serializable
 		return ApacheTools.convert(t -> ((User) t).pid == this.pid);
 	}
 
-	public void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
+	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
 		in.defaultReadObject();
-		User user = (User) in.readObject();
-		Log.network.error("CALLED");
+		// User user = (User) in.readObject();
 		this.networks = new SimpleMapProperty<>(FXCollections.observableHashMap());
 	}
 

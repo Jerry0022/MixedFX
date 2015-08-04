@@ -86,7 +86,6 @@ public class ConnectionInput implements Runnable
 			} // Nothing received, still waiting
 			catch (ClassNotFoundException | IOException e)
 			{
-				e.printStackTrace();
 				if (this.isRunning)
 				{
 					if (e instanceof NotSerializableException || e.getCause() instanceof NotSerializableException)
