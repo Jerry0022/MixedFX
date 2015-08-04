@@ -48,7 +48,7 @@ public class NetworkTester
 		{
 			while (c.next())
 			{
-				if (c.wasAdded() && !c.wasReplaced())
+				if (c.wasAdded() && c.wasReplaced())
 				{
 					c.getAddedSubList().get(0).networks.addListener(new MapChangeListener<InetAddress, Long>()
 					{

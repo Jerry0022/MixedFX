@@ -247,5 +247,7 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 
 		// Update current or add it to list
 		foundUser.networks.put(address, new Date().getTime());
+
+		Log.network.debug("Updated networks " + foundUser.networks + " of user " + foundUser);
 	}
 }
