@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -241,7 +240,7 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 		for (InetAddress inetAddress : foundUser.networks.keySet())
 		{
 			long lastUpdate = foundUser.networks.get(inetAddress);
-			if (TimeUnit.MILLISECONDS.convert((new Date()).getTime() - lastUpdate, TimeUnit.SECONDS) > NetworkConfig.BROADCAST_INTERVAL * NetworkConfig.RECONNECT_TOLERANCE)
+			if ((new Date().getTime() - lastUpdate) > NetworkConfig.BROADCAST_INTERVAL * NetworkConfig.RECONNECT_TOLERANCE)
 				foundUser.networks.remove(inetAddress);
 		}
 
