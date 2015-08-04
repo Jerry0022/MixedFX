@@ -19,6 +19,7 @@ import org.bushe.swing.event.EventTopicSubscriber;
 import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.eventbus.EventBusService;
 import de.mixedfx.java.ApacheTools;
+import de.mixedfx.logging.Log;
 import de.mixedfx.network.NetworkConfig.States;
 import de.mixedfx.network.user.User;
 import de.mixedfx.network.user.UserManager;
@@ -154,8 +155,6 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 								{
 									UDPCoordinator.allAdresses.set(UDPCoordinator.allAdresses.indexOf(localDetected), localDetected);
 								}
-								// Register change in NIC for this participant
-								// updatePIDNetworks(newDetected.pid, newDetected.address);
 							}
 							else
 							{
@@ -167,8 +166,10 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 					{
 						// New UDP message of unknown NIC
 						UDPCoordinator.allAdresses.add(newDetected);
-						// updatePIDNetworks(newDetected.pid, newDetected.address);
 					}
+
+					// Register change in NIC for this participant
+					updatePIDNetworks(newDetected.pid, newDetected.address);
 
 					/*
 					 * If I'm searching and the other one is a server or bound to server then let's connect
@@ -198,6 +199,7 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 	private void updatePIDNetworks(int gotPID, InetAddress address)
 	{
 		// Return if I'm the host
+		Log.network.trace("Got udp message with PID: " + gotPID);
 		if (gotPID == ParticipantManager.UNREGISTERED)
 			return;
 
@@ -227,6 +229,7 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 		}
 		catch (NoSuchElementException e)
 		{
+			Log.network.debug("User with pid " + gotPID + " not found! See also: " + UserManager.allUsers);
 			return;
 		}
 
