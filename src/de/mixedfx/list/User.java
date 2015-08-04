@@ -2,7 +2,7 @@ package de.mixedfx.list;
 
 public class User implements Identifiable
 {
-	int	i;
+	int i;
 
 	public User(final int i)
 	{

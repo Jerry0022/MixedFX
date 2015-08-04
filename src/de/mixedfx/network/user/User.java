@@ -44,7 +44,7 @@ public abstract class User implements Identifiable, Serializable
 		return ApacheTools.convert(t -> ((User) t).pid == this.pid);
 	}
 
-	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
+	public void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
 		User user = (User) in.readObject();
 		user.networks = new SimpleMapProperty<>(FXCollections.observableHashMap());
