@@ -201,8 +201,7 @@ public class Connection implements EventBusServiceInterface
 
 			// If it is for me or it is a broadcast and I am not the sender, publish the message
 			// internally
-			Log.network.warn("Scanning registered message!" + regMessage.receivers + regMessage.sender);
-			Log.network.warn(regMessage instanceof UserMessage);
+			Log.network.warn("Scanning registered message!" + regMessage.receivers + regMessage.sender + " UserMessage: " + (regMessage instanceof UserMessage));
 			if ((regMessage.receivers.contains(ParticipantManager.MY_PID.get()) || regMessage.receivers.isEmpty()) && regMessage.sender != ParticipantManager.MY_PID.get())
 			{
 				Log.network.warn("PUBLISHING!");

@@ -48,7 +48,7 @@ public abstract class User implements Identifiable, Serializable
 	{
 		in.defaultReadObject();
 		User user = (User) in.readObject();
-		user.networks = new SimpleMapProperty<>(FXCollections.observableHashMap());
+		this.networks = new SimpleMapProperty<>(FXCollections.observableHashMap());
 	}
 
 	@Override

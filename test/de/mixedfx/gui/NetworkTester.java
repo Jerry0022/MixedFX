@@ -50,6 +50,7 @@ public class NetworkTester
 			{
 				if (c.wasAdded())
 				{
+					Log.network.error("ATTENTION: " + c.getAddedSubList().get(0));
 					c.getAddedSubList().get(0).networks.addListener(new MapChangeListener<InetAddress, Long>()
 					{
 						@Override
