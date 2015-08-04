@@ -48,9 +48,9 @@ public class NetworkTester
 		{
 			while (c.next())
 			{
-				if (c.wasAdded())
+				if (c.wasAdded() && !c.wasReplaced())
 				{
-					Log.network.error("ATTENTION: " + c.getAddedSubList().get(0));
+					Log.network.error("ATTENTION: " + c.getAddedSubList().get(0).networks);
 					c.getAddedSubList().get(0).networks.addListener(new MapChangeListener<InetAddress, Long>()
 					{
 						@Override

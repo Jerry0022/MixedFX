@@ -8,6 +8,7 @@ import org.apache.commons.collections.Predicate;
 
 import de.mixedfx.java.ApacheTools;
 import de.mixedfx.list.Identifiable;
+import de.mixedfx.logging.Log;
 import de.mixedfx.network.ParticipantManager;
 import javafx.beans.property.MapProperty;
 import javafx.beans.property.SimpleMapProperty;
@@ -48,6 +49,7 @@ public abstract class User implements Identifiable, Serializable
 	{
 		in.defaultReadObject();
 		User user = (User) in.readObject();
+		Log.network.error("CALLED");
 		this.networks = new SimpleMapProperty<>(FXCollections.observableHashMap());
 	}
 
