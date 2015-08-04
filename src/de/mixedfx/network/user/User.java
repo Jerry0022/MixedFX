@@ -46,6 +46,7 @@ public abstract class User implements Identifiable, Serializable
 
 	public void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
+		in.defaultReadObject();
 		User user = (User) in.readObject();
 		user.networks = new SimpleMapProperty<>(FXCollections.observableHashMap());
 	}
