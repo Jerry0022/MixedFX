@@ -1,6 +1,5 @@
 package de.mixedfx.network;
 
-import de.mixedfx.inspector.Inspector;
 import de.mixedfx.logging.Log;
 import de.mixedfx.network.NetworkConfig.States;
 import javafx.beans.property.ObjectProperty;
@@ -41,14 +40,14 @@ public class ConnectivityManager
 	static
 	{
 		// Log NetworkConfig.status
-		NetworkConfig.status.addListener((ChangeListener<States>) (observable, oldValue, newValue) -> Log.network.debug("NetworkConfig status changed from " + oldValue.toString().toUpperCase() + " to " + newValue.toString().toUpperCase()));
+		NetworkConfig.STATUS.addListener((ChangeListener<States>) (observable, oldValue,
+				newValue) -> Log.network.debug("NetworkConfig status changed from " + oldValue.toString().toUpperCase() + " to " + newValue.toString().toUpperCase()));
 
 		ConnectivityManager.status = new SimpleObjectProperty<>(Status.Offline);
 		/*
-		 * Set Establishing if connected but not yet registered as participant or searching if not
-		 * connected but searching for a network.
+		 * Set Establishing if connected but not yet registered as participant or searching if not connected but searching for a network.
 		 */
-		NetworkConfig.status.addListener((ChangeListener<States>) (observable, oldValue, newValue) ->
+		NetworkConfig.STATUS.addListener((ChangeListener<States>) (observable, oldValue, newValue) ->
 		{
 			if (newValue.equals(States.Server) || newValue.equals(States.BoundToServer))
 			{
@@ -69,33 +68,6 @@ public class ConnectivityManager
 			{
 				ConnectivityManager.status.set(Status.Online);
 			}
-		});
-
-		/*
-		 * Leave network if host my host is newer than another one and connect to this one.
-		 */
-		// Show all directly found applications host and all directly found Server (Not the
-		// bound to server ones) which were once online while this application was online.
-		UDPCoordinator.allAdresses.addListener((ListChangeListener<UDPDetected>) c ->
-		{
-			c.next();
-			final UDPDetected detected = c.getAddedSubList().get(0);
-			synchronized (NetworkConfig.status)
-			{
-				// If another server makes itself known, check if it was created before my Server
-				// and if
-				// so reconnect to it!
-				if (NetworkConfig.status.get().equals(NetworkConfig.States.Server) && detected.status.equals(States.Server) && NetworkConfig.statusChangeTime.get().after(detected.statusSince))
-				{
-					// Force reconnect
-					Log.network.info("Older server detected on " + detected.address.getHostAddress() + " => Force reconnect to this server!");
-					Inspector.runNowAsDaemon(() ->
-					{
-						ConnectivityManager.force();
-					});
-				}
-			}
-			Log.network.debug("A new or updated NIC was detected: " + c.getAddedSubList().get(0).address + "!" + c.getAddedSubList().get(0).status + "!" + c.getAddedSubList().get(0).statusSince);
 		});
 	}
 
@@ -124,12 +96,13 @@ public class ConnectivityManager
 			ConnectivityManager.on();
 		}
 
-		switch (NetworkConfig.status.get())
+		switch (NetworkConfig.STATUS.get())
 		{
 			case Unbound:
 				NetworkManager.host();
 				break;
 			case BoundToServer:
+				// Force immediately to be a server
 				NetworkManager.leave();
 				NetworkManager.host();
 				break;

@@ -13,10 +13,10 @@ import de.mixedfx.eventbus.EventBusServiceInterface;
 import de.mixedfx.inspector.Inspector;
 import de.mixedfx.logging.Log;
 import de.mixedfx.network.NetworkConfig.States;
+import de.mixedfx.network.messages.GoodByeMessage;
 import de.mixedfx.network.messages.Message;
 import de.mixedfx.network.messages.ParticipantMessage;
 import de.mixedfx.network.messages.RegisteredMessage;
-import de.mixedfx.network.messages.UserMessage;
 
 public class Connection implements EventBusServiceInterface
 {
@@ -77,7 +77,7 @@ public class Connection implements EventBusServiceInterface
 		{
 			final Message message = (Message) event;
 
-			if (NetworkConfig.status.get().equals(States.Server))
+			if (NetworkConfig.STATUS.get().equals(States.Server))
 			{
 				message.fromServer = true;
 			}
@@ -88,50 +88,60 @@ public class Connection implements EventBusServiceInterface
 				this.checkParticipantMessage(message);
 			}
 
-			if (NetworkConfig.status.get().equals(States.Server))
+			if (NetworkConfig.STATUS.get().equals(States.Server))
 			{
 				this.checkSend(message);
 			}
-			else if (NetworkConfig.status.get().equals(States.BoundToServer))
+			else if (NetworkConfig.STATUS.get().equals(States.BoundToServer))
 			{
 				if (message.fromServer)
 				{
-					if (this.clientID != TCPCoordinator.localNetworkMainID.get())
+					// Don't send it back to server if it comes from the server! Just forward it!
+					if (this.clientID != TCPCoordinator.localNetworkMainID)
 					{
 						this.checkSend(message);
-						if (message.goodbye)
+						if (message instanceof GoodByeMessage)
 						{
 							this.outputConnection.sendMessage(message);
+							// This connection is closed in TCPCoordinator!
 						}
 					}
 				}
 				else
 				{
-					if (message.goodbye)
+					if (message instanceof GoodByeMessage)
 					{
 						this.outputConnection.sendMessage(message);
+						// This connection is closed in TCPCoordinator!
 					}
-					else if (this.clientID == TCPCoordinator.localNetworkMainID.get())
+					else if (this.clientID == TCPCoordinator.localNetworkMainID)
 					{
-						this.outputConnection.sendMessage(message);
+						checkSend(message);
 					}
 				}
 			}
+			// Else can't exist. Because this connection only exists if I'm part of the network.
 		}
 		else if (topic.equals(Connection.MESSAGE_CHANNEL_RECEIVED))
 		{
 			final Message message = (Message) this.inputConnection.getNextMessage();
 
-			if (message.goodbye)
+			if (message instanceof GoodByeMessage)
 			{
 				this.close();
 				EventBusExtended.publishSyncSafe(TCPCoordinator.CONNECTION_LOST, this.clientID);
 				return;
 			}
 
-			if (!NetworkConfig.status.get().equals(States.Server))
+			if (NetworkConfig.STATUS.get().equals(States.Server))
 			{
-				if (this.clientID == TCPCoordinator.localNetworkMainID.get())
+				message.fromServer = false;
+				this.checkParticipantMessage(message);
+				this.checkReceive(message);
+			}
+			else
+			{
+				if (this.clientID == TCPCoordinator.localNetworkMainID)
 				{
 					message.fromServer = true;
 					this.checkReceive(message); // May publish internally
@@ -143,17 +153,7 @@ public class Connection implements EventBusServiceInterface
 					this.checkParticipantMessage(message);
 				}
 
-				// TODO Here you can shorten the way to the receiver if it is for example a
-				// direct file transfer
-				// FORWARD Message to other clients OR Server
 				EventBusExtended.publishSyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
-			}
-			else
-			{
-				message.fromServer = false;
-				// Add Participants requests to my list.
-				this.checkParticipantMessage(message);
-				this.checkReceive(message);
 			}
 		}
 		else
@@ -163,6 +163,10 @@ public class Connection implements EventBusServiceInterface
 		}
 	}
 
+	/**
+	 * @param message
+	 *            The message which shall be checked!
+	 */
 	private void checkParticipantMessage(final Message message)
 	{
 		if (message instanceof ParticipantMessage)
@@ -173,10 +177,12 @@ public class Connection implements EventBusServiceInterface
 			{
 				if (pMessage.ids.isEmpty())
 				{
+					// PID request of a client. Create entry.
 					this.uid_pid_map.put(pMessage.uID, null);
 				}
 				else
 				{
+					// PID response from server. Update entry.
 					if (this.uid_pid_map.containsKey(pMessage.uID) && this.uid_pid_map.get(pMessage.uID) == null)
 					{
 						this.uid_pid_map.replace(pMessage.uID, pMessage.ids.get(0));
@@ -185,14 +191,22 @@ public class Connection implements EventBusServiceInterface
 			}
 			else
 			{
+				// Some PIDs, connected to other clients, were lost
 				for (final int lost : pMessage.ids)
 				{
-					this.uid_pid_map.remove(lost);
+					this.uid_pid_map.values().remove(lost);
 				}
 			}
+			Log.network.info("This is my connection id: " + clientID + " and I have the following pids connected: " + uid_pid_map.values());
 		}
 	}
 
+	/**
+	 * If not RegisteredMessage publish message immediately!
+	 * 
+	 * @param message
+	 *            A message which shall be received.
+	 */
 	private void checkReceive(final Message message)
 	{
 		if (message instanceof RegisteredMessage)
@@ -201,15 +215,13 @@ public class Connection implements EventBusServiceInterface
 
 			// If it is for me or it is a broadcast and I am not the sender, publish the message
 			// internally
-			Log.network.warn("Scanning registered message!" + regMessage.receivers + regMessage.sender + " UserMessage: " + (regMessage instanceof UserMessage));
 			if ((regMessage.receivers.contains(ParticipantManager.MY_PID.get()) || regMessage.receivers.isEmpty()) && regMessage.sender != ParticipantManager.MY_PID.get())
 			{
-				Log.network.warn("PUBLISHING!");
-				EventBusExtended.publishSyncSafe(MessageBus.MESSAGE_RECEIVE, message); // Publish
-				// internally
+				Log.network.warn("Pubslishing message internally, created on: " + regMessage.creationTime);
+				EventBusExtended.publishSyncSafe(MessageBus.MESSAGE_RECEIVE, message); // Publish internally
 			}
 			// Asks services to process message before forwarding
-			if (NetworkConfig.status.get().equals(States.Server))
+			if (NetworkConfig.STATUS.get().equals(States.Server))
 			{
 				ServiceManager.hostCheckMessage(regMessage);
 			}
@@ -221,9 +233,16 @@ public class Connection implements EventBusServiceInterface
 		}
 	}
 
+	/**
+	 * If it is not a RegisteredMessage just send! If the sender is registered (has a pid) then check if I'm a connection where a receiver of the
+	 * message is connected to. If no relevant receiver is connected to just do nothing! If broadcast send it immediately
+	 * 
+	 * @param message
+	 *            A message which shall be sent.
+	 */
 	private void checkSend(final Message message)
 	{
-		if (message instanceof RegisteredMessage)
+		if (message instanceof RegisteredMessage && !((RegisteredMessage) message).receivers.isEmpty())
 		{
 			boolean atLeastOne = false;
 			for (final Integer receiver : ((RegisteredMessage) message).receivers)
@@ -233,7 +252,7 @@ public class Connection implements EventBusServiceInterface
 					atLeastOne = true;
 				}
 			}
-			if (atLeastOne || ((RegisteredMessage) message).receivers.isEmpty())
+			if (atLeastOne)
 			{
 				this.outputConnection.sendMessage(message);
 			}

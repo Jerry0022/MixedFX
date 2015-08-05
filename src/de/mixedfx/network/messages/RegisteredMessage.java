@@ -9,7 +9,7 @@ import com.google.gson.annotations.Expose;
 import de.mixedfx.network.ParticipantManager;
 
 /**
- * All NOT network messages shall inherit this class for increased performance!
+ * All NOT network messages shall inherit this class for increased performance! It is a message from an identified user!
  *
  * @author Jerry
  *

@@ -8,7 +8,7 @@ import java.net.UnknownHostException;
 
 class TCPClient
 {
-	public Connection	connection;
+	public Connection connection;
 
 	public void start(final InetAddress ip) throws IOException
 	{
@@ -19,7 +19,7 @@ class TCPClient
 			try
 			{
 				socket = new Socket(ip, NetworkConfig.PORT.get() + i * NetworkConfig.TRIES_STEPS);
-				this.connection = new Connection(TCPCoordinator.localNetworkMainID.get(), socket);
+				this.connection = new Connection(TCPCoordinator.localNetworkMainID, socket);
 				break;
 			}
 			catch (final SocketException | UnknownHostException e)

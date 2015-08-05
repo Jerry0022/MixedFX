@@ -1,10 +1,12 @@
 package de.mixedfx.network;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -17,6 +19,7 @@ import org.bushe.swing.event.EventTopicSubscriber;
 
 import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.eventbus.EventBusService;
+import de.mixedfx.inspector.Inspector;
 import de.mixedfx.java.ApacheTools;
 import de.mixedfx.logging.Log;
 import de.mixedfx.network.NetworkConfig.States;
@@ -44,8 +47,6 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 		UDPCoordinator.allAdresses = new SimpleListProperty<>(FXCollections.observableArrayList(new ArrayList<>()));
 	}
 
-	private boolean running;
-
 	private final UDPIn		in;
 	private final UDPOut	out;
 
@@ -66,21 +67,21 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 
 	public synchronized void startUDPFull()
 	{
-		this.running = true;
+		UDPCoordinator.allAdresses.clear();
 
-		NetworkConfig.statusChangeTime.set(new Date());
-
-		this.in.start();
-		if (this.running)
+		try
 		{
+			this.in.start();
 			this.out.start();
+		}
+		catch (Exception e)
+		{
+			service.publishSync(UDPCoordinator.ERROR, e);
 		}
 	}
 
 	public synchronized void stopUDPFull()
 	{
-		this.running = false;
-
 		if (this.out != null)
 		{
 			this.out.close();
@@ -89,22 +90,17 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 		{
 			this.in.close();
 		}
-
-		UDPCoordinator.allAdresses.clear();
-
-		NetworkConfig.statusChangeTime.set(new Date());
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public synchronized void onEvent(final String topic, final Object data)
 	{
-		synchronized (NetworkConfig.status)
+		synchronized (NetworkConfig.STATUS)
 		{
 			if (topic.equals(UDPCoordinator.RECEIVE))
 			{
 				final DatagramPacket packet = (DatagramPacket) data;
-				final String packetMessage = new String(packet.getData(), 0, packet.getLength());
 
 				/*
 				 * Check all interfaces if it was a broadcast to myself!
@@ -128,14 +124,21 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 				catch (final SocketException e)
 				{
 				}
+				if (ownOne)
+					return;
 
-				if (!ownOne)
+				/*
+				 * Read packet!
+				 */
+				ByteArrayInputStream in = new ByteArrayInputStream(packet.getData());
+				try
 				{
+					ObjectInputStream is = new ObjectInputStream(in);
+					UDPDetected newDetected = (UDPDetected) is.readObject();
+					newDetected.address = packet.getAddress();
 					/*
 					 * Register / Update the client in local list of UDP contacts.
 					 */
-					final UDPDetected newDetected = new UDPDetected(packet.getAddress(), Date.from(Instant.parse(packetMessage.split("\\!")[0])),
-							NetworkConfig.States.valueOf(packetMessage.split("\\!")[1]), Date.from(Instant.parse(packetMessage.split("\\!")[2])), Integer.valueOf(packetMessage.split("\\!")[3]));
 
 					// Add all sending NICs to list
 					final Predicate predicate = ApacheTools.convert(UDPDetected.getByAddress(newDetected.address));
@@ -144,16 +147,12 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 						CollectionUtils.select(UDPCoordinator.allAdresses, predicate).forEach(t ->
 						{
 							final UDPDetected localDetected = (UDPDetected) t;
-							if (newDetected.timeStamp.after(localDetected.timeStamp))
+							if (newDetected.getStatus().getStateSince().after(localDetected.getStatus().getStateSince()))
 							{
 								// New UDP message of known NIC
-								// Register change of stae for this participant
-								final States oldStatus = States.valueOf(localDetected.status.toString());
-								localDetected.update(newDetected.status, newDetected.timeStamp);
-								if (!oldStatus.equals(newDetected.status))
-								{
-									UDPCoordinator.allAdresses.set(UDPCoordinator.allAdresses.indexOf(localDetected), localDetected);
-								}
+								// Register change of state for this participant
+								localDetected.update(newDetected.getTimeStamp(), newDetected.getStatus());
+								UDPCoordinator.allAdresses.set(UDPCoordinator.allAdresses.indexOf(localDetected), localDetected);
 							}
 							else
 							{
@@ -165,18 +164,38 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 					{
 						// New UDP message of unknown NIC
 						UDPCoordinator.allAdresses.add(newDetected);
+						Log.network.debug("New UDP member detected: " + newDetected);
 					}
 
 					// Register change in NIC for this participant
-					updatePIDNetworks(newDetected.pid, newDetected.address);
+					updatePIDNetworks(newDetected.getPid(), newDetected.address);
 
-					/*
-					 * If I'm searching and the other one is a server or bound to server then let's connect
-					 */
-					if (NetworkConfig.status.get().equals(States.Unbound) && (newDetected.status.equals(NetworkConfig.States.Server) || newDetected.status.equals(NetworkConfig.States.BoundToServer)))
+					boolean remoteIsOnline = newDetected.getStatus().equals(NetworkConfig.States.Server) || newDetected.getStatus().equals(NetworkConfig.States.BoundToServer);
+					if (!remoteIsOnline)
+						return;
+					if (NetworkConfig.STATUS.get().equals(States.Unbound))
 					{
-						NetworkManager.t.startFullTCP(packet.getAddress());
+						// If I'm searching and the other one is a server or bound to server then let's connect
+						Log.network.trace("UDP found another one to which I can connect!");
+						NetworkManager.t.startFullTCP(newDetected.address);
 					}
+					else
+					{
+						// Is the other one maybe in an older network? Then reconnect!
+						if (!newDetected.getStatus().equals(States.Unbound) && newDetected.getNetworkSince() != null && newDetected.getNetworkSince().before(NetworkConfig.networkExistsSince.get()))
+						{
+							// Force reconnect
+							Log.network.info("Older server detected on " + newDetected.address.getHostAddress() + " => Force reconnect to this server!");
+							Inspector.runNowAsDaemon(() ->
+							{
+								ConnectivityManager.force();
+							});
+						}
+					}
+				}
+				catch (IOException | ClassNotFoundException e)
+				{
+					UDPCoordinator.service.publishSync(UDPCoordinator.ERROR, e);
 				}
 			}
 			else if (topic.equals(UDPCoordinator.ERROR))
@@ -189,6 +208,7 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 		}
 	}
 
+	// TODO! Shift to somewhere else!
 	/**
 	 * 
 	 * 
@@ -240,7 +260,7 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 		for (InetAddress inetAddress : foundUser.networks.keySet())
 		{
 			long lastUpdate = foundUser.networks.get(inetAddress);
-			if ((new Date().getTime() - lastUpdate) > NetworkConfig.BROADCAST_INTERVAL * NetworkConfig.RECONNECT_TOLERANCE)
+			if ((new Date().getTime() - lastUpdate) > NetworkConfig.UDP_BROADCAST_INTERVAL * NetworkConfig.RECONNECT_TOLERANCE)
 				foundUser.networks.remove(inetAddress);
 		}
 

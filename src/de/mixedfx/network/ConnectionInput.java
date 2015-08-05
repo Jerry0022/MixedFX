@@ -48,14 +48,6 @@ public class ConnectionInput implements Runnable
 		}
 	}
 
-	protected boolean isMessageRemaining()
-	{
-		synchronized (this.inputMessageCache)
-		{
-			return !this.inputMessageCache.isEmpty();
-		}
-	}
-
 	@Override
 	public void run()
 	{
@@ -98,7 +90,7 @@ public class ConnectionInput implements Runnable
 						this.inputMessageCache.clear();
 						this.terminate();
 						Log.network.trace(this.getClass().getSimpleName() + " lost stream!");
-						this.eventBusParent.publishAsync(Connection.CONNECTION_CHANNEL_LOST, this);
+						this.eventBusParent.publishSync(Connection.CONNECTION_CHANNEL_LOST, this);
 					}
 				}
 			}

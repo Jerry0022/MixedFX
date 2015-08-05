@@ -4,11 +4,8 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
-
-import javafx.beans.value.ChangeListener;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.bushe.swing.event.annotation.AnnotationProcessor;
@@ -19,32 +16,39 @@ import de.mixedfx.inspector.Inspector;
 import de.mixedfx.java.ApacheTools;
 import de.mixedfx.logging.Log;
 import de.mixedfx.network.NetworkConfig.States;
-import de.mixedfx.network.messages.Message;
+import de.mixedfx.network.messages.GoodByeMessage;
 import de.mixedfx.network.messages.ParticipantMessage;
+import javafx.beans.value.ChangeListener;
 
 public class TCPCoordinator
 {
-	public static final String	CONNECTION_LOST	= "TCP_CONNECTION_LOST";
+	public static final String CONNECTION_LOST = "TCP_CONNECTION_LOST";
 
 	/**
-	 * In case of not being the {@link NetworkConfig.States#Server} this is the ID of the connection
-	 * which is directly or indirectly bound to the server.
+	 * In case of not being the {@link NetworkConfig.States#Server} this is the ID of the connection which is directly or indirectly bound to the
+	 * server.
 	 */
-	public static AtomicInteger	localNetworkMainID;
+	public static int localNetworkMainID;
+
+	/**
+	 * The id of the first connection!
+	 */
+	public static int localNetworkFirstID;
 
 	/**
 	 * This is the incremental ID of the connections to initiated from other clients.
 	 */
-	public static AtomicInteger	localNetworkID;
+	public static AtomicInteger localNetworkID;
 
 	static
 	{
-		TCPCoordinator.localNetworkMainID = new AtomicInteger(0);
+		TCPCoordinator.localNetworkMainID = 0;
+		TCPCoordinator.localNetworkFirstID = 1;
 		TCPCoordinator.localNetworkID = new AtomicInteger(1);
 	}
 
-	private final TCPServer		tcpServer;
-	private final TCPClient		tcpClient;
+	private final TCPServer	tcpServer;
+	private final TCPClient	tcpClient;
 
 	public TCPCoordinator()
 	{
@@ -54,11 +58,10 @@ public class TCPCoordinator
 		this.tcpServer = new TCPServer();
 		this.tcpClient = new TCPClient();
 
-		// Add listener to NetworkConfig.status to force starting TCP Server.
-		NetworkConfig.status.addListener((ChangeListener<States>) (observable, oldValue, newValue) ->
+		// Add listener to NetworkConfig.status to force starting or stopping all TCP connections.
+		NetworkConfig.STATUS.addListener((ChangeListener<States>) (observable, oldValue, newValue) ->
 		{
-			NetworkConfig.statusChangeTime.set(new Date());
-			synchronized (NetworkConfig.status)
+			synchronized (NetworkConfig.STATUS)
 			{
 				// Switch Server on if requested
 				if (newValue.equals(States.Server))
@@ -74,16 +77,16 @@ public class TCPCoordinator
 					try
 					{
 						this.tcpServer.start();
-
 					}
 					catch (final IOException e)
 					{
+						Log.network.fatal("Error occured while starting TCP server: " + e.getCause().getMessage());
 						// If failed to start server set status back to Unbound
 						Inspector.runNowAsDaemon(() ->
 						{
-							synchronized (NetworkConfig.status)
+							synchronized (NetworkConfig.STATUS)
 							{
-								NetworkConfig.status.set(States.Unbound);
+								NetworkConfig.STATUS.set(States.Unbound);
 							}
 						});
 					}
@@ -99,16 +102,17 @@ public class TCPCoordinator
 	}
 
 	@EventTopicSubscriber(topic = TCPCoordinator.CONNECTION_LOST)
-	public synchronized void lostConnection(final String topic, final Integer clientID)
+	public void lostConnection(final String topic, final Integer clientID)
 	{
-		synchronized (NetworkConfig.status)
+		synchronized (NetworkConfig.STATUS)
 		{
-			Log.network.debug("Participant lost, is my connection to the server: " + clientID.equals(TCPCoordinator.localNetworkMainID.get()) + clientID);
+			Log.network.debug("Participant with pid " + clientID + " lost! Is my connection directly to the server? " + clientID.equals(TCPCoordinator.localNetworkMainID));
+
 			// Check if this connection is my main connection to the server
-			if (clientID.equals(TCPCoordinator.localNetworkMainID.get()))
+			if (clientID.equals(TCPCoordinator.localNetworkMainID))
 			{
 				this.stopTCPFull();
-				ParticipantManager.PARTICIPANTS.clear();
+				ParticipantManager.stop();
 			}
 			else
 			{
@@ -124,8 +128,9 @@ public class TCPCoordinator
 				final ParticipantMessage pMessage = new ParticipantMessage();
 				pMessage.uID = "";
 				pMessage.ids.addAll(allParticipated);
+
 				// Send or publish depending on PID distribution power
-				if (!NetworkConfig.status.get().equals(NetworkConfig.States.Server))
+				if (!NetworkConfig.STATUS.get().equals(NetworkConfig.States.Server))
 				{
 					EventBusExtended.publishSyncSafe(MessageBus.MESSAGE_SEND, pMessage);
 				}
@@ -138,14 +143,13 @@ public class TCPCoordinator
 	}
 
 	/**
-	 * Usually called by {@link UDPCoordinator}. This starts the client connection from me to the
-	 * BoundToServer or directly to the Server.
+	 * Usually called by {@link UDPCoordinator}. This starts the client connection from me to the BoundToServer or directly to the Server.
 	 *
 	 * @param ip
 	 */
-	public synchronized void startFullTCP(final InetAddress ip)
+	public void startFullTCP(final InetAddress ip)
 	{
-		synchronized (NetworkConfig.status)
+		synchronized (NetworkConfig.STATUS)
 		{
 			if (!NetworkManager.running)
 			{
@@ -161,6 +165,7 @@ public class TCPCoordinator
 			}
 			catch (final IOException e)
 			{
+				Log.network.error("Error occured while starting TCP client: " + e.getCause().getMessage());
 				return;
 			}
 
@@ -170,11 +175,12 @@ public class TCPCoordinator
 			}
 			catch (final IOException e)
 			{
+				Log.network.fatal("Error occured while starting TCP server: " + e.getCause().getMessage());
 				this.stopTCPFull();
 				return;
 			}
 
-			NetworkConfig.status.set(States.BoundToServer);
+			NetworkConfig.STATUS.set(States.BoundToServer);
 		}
 	}
 
@@ -183,13 +189,12 @@ public class TCPCoordinator
 	 */
 	public synchronized void stopTCPFull()
 	{
-		synchronized (NetworkConfig.status)
+		synchronized (NetworkConfig.STATUS)
 		{
 			Log.network.info("Stop TCP connection!");
 
 			// Send a GoodBye to everyone who is still available to avoid ghost connections.
-			final Message goodbyeMessage = new Message();
-			goodbyeMessage.goodbye = true;
+			final GoodByeMessage goodbyeMessage = new GoodByeMessage();
 			EventBusExtended.publishSyncSafe(Connection.MESSAGE_CHANNEL_SEND, goodbyeMessage);
 
 			// Stop first client, which is the connection to the server and afterwards all my bound
@@ -197,9 +202,10 @@ public class TCPCoordinator
 			this.tcpClient.stop();
 			this.tcpServer.stop();
 
-			TCPCoordinator.localNetworkID.set(1);
+			TCPCoordinator.localNetworkID.set(localNetworkFirstID);
 
-			NetworkConfig.status.set(States.Unbound);
+			// May force this method to run twice but this has no performace influence! See constructor for more information.
+			NetworkConfig.STATUS.set(States.Unbound);
 		}
 	}
 }

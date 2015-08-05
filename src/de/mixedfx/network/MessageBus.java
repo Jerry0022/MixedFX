@@ -1,5 +1,6 @@
 package de.mixedfx.network;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import org.bushe.swing.event.annotation.AnnotationProcessor;
@@ -34,7 +35,7 @@ public class MessageBus
 	 * String for the {@link EventBusExtended}. Please submit a {@link RegisteredMessage} object.
 	 * Only for NOT {@link RegisteredMessage}!
 	 */
-	protected static final String	MESSAGE_SEND	= Connection.MESSAGE_CHANNEL_SEND;
+	protected static final String MESSAGE_SEND = Connection.MESSAGE_CHANNEL_SEND;
 
 	/**
 	 * String for the {@link EventBusExtended}. You will receive a {@link RegisteredMessage} object.
@@ -44,7 +45,7 @@ public class MessageBus
 	 * sender (this is because of the network architecture and the message size).
 	 * </pre>
 	 */
-	public static final String		MESSAGE_RECEIVE	= "MESSAGE_RECEIVE";
+	public static final String MESSAGE_RECEIVE = "MESSAGE_RECEIVE";
 
 	public interface MessageReceiver
 	{
@@ -57,14 +58,13 @@ public class MessageBus
 		public void receive(RegisteredMessage message);
 	}
 
-	private static MessageBus					intermediateReceiver;
-	private static ArrayList<MessageReceiver>	receiverList	= new ArrayList<>();
+	private static MessageBus									intermediateReceiver;
+	private static ArrayList<WeakReference<MessageReceiver>>	receiverList	= new ArrayList<>();
 
 	/**
 	 * <b>Sends a message asynchronously! Updates sender id if the message is an
 	 * {@link IdentifiedMessage}.</b> Furthermore internally: {@link Message#fromServer} will be set
-	 * to true if this application is the {@link NetworkConfig.States#Server}. If application is
-	 * {@link NetworkConfig.States#BoundToServer} then it will be internally automatically forwarded
+	 * to true if this application is the {@link NetworkConfig.States#Server}. Message will be internally automatically forwarded
 	 * - no manual forwarding is required.
 	 *
 	 * @param message
@@ -80,7 +80,7 @@ public class MessageBus
 	}
 
 	/**
-	 * To undo this use {@link MessageBus#unregisterForReceival(MessageReceiver)}.
+	 * To undo this use {@link MessageBus#unregisterForReceival(MessageReceiver)}. Done with {@link WeakReference}.
 	 *
 	 * @param receiver
 	 *            Receiver will be informed asynchronously!
@@ -93,11 +93,11 @@ public class MessageBus
 			AnnotationProcessor.process(MessageBus.intermediateReceiver);
 		}
 
-		MessageBus.receiverList.add(receiver);
+		MessageBus.receiverList.add(new WeakReference<MessageBus.MessageReceiver>(receiver));
 	}
 
 	/**
-	 * Works silent. If receiver is not registered this method returns without throwing an
+	 * Works silently. If receiver is not registered this method returns without throwing an
 	 * exception.
 	 *
 	 * @param receiver
@@ -123,10 +123,11 @@ public class MessageBus
 	{
 		if (message instanceof RegisteredMessage)
 		{
-			for (final MessageReceiver receiver : MessageBus.receiverList)
+			for (final WeakReference<MessageReceiver> receiver : MessageBus.receiverList)
 			{
 				Log.network.warn("RECEIVE");
-				receiver.receive((RegisteredMessage) message);
+				if (receiver.get() != null)
+					receiver.get().receive((RegisteredMessage) message);
 			}
 		}
 	}

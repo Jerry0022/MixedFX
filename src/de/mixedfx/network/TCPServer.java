@@ -7,16 +7,16 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import de.mixedfx.logging.Log;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
-import de.mixedfx.logging.Log;
 
 class TCPServer
 {
-	public ListProperty<Connection>	connectionList;
+	public ListProperty<Connection> connectionList;
 
-	private Registrar				registrar;
+	private Registrar registrar;
 
 	public void start() throws IOException
 	{
@@ -59,13 +59,12 @@ class TCPServer
 	 */
 	private class Registrar implements Runnable
 	{
-		public volatile ListProperty<Connection>	connectionList;
+		public volatile ListProperty<Connection> connectionList;
 
 		/**
-		 * Is needed to wait for connection. If someone tries to connect to serverSocket,
-		 * serverSocket returns a normal Socket.
+		 * Is needed to wait for connection. If someone tries to connect to serverSocket, serverSocket returns a normal Socket.
 		 */
-		private final ServerSocket					serverSocket;
+		private final ServerSocket serverSocket;
 
 		/**
 		 * @throws IOException
@@ -87,11 +86,12 @@ class TCPServer
 				{
 					final Socket clientSocket = this.serverSocket.accept();
 					this.connectionList.add(new Connection(TCPCoordinator.localNetworkID.getAndIncrement(), clientSocket));
-					Log.network.debug("Registrar registered client!");
+					Log.network.debug("TCP Registrar registered client!");
 				}
 				catch (final IOException e)
 				{
 					// In case of termination or connection failure => nothing to do!
+					Log.network.debug(this.getClass().getSimpleName() + " closed");
 				}
 			}
 		}

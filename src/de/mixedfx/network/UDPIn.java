@@ -4,11 +4,15 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.List;
+
+import de.mixedfx.inspector.Inspector;
 
 class UDPIn
 {
-	private final ArrayList<DatagramSocket>	sockets;
+	private final List<DatagramSocket> sockets;
 
 	protected UDPIn()
 	{
@@ -16,33 +20,34 @@ class UDPIn
 	}
 
 	/**
-	 * Asynchronous listening on 1 to {@link NetworkConfig#TRIES_AMOUNT} ports. If can't listen on
-	 * at least one port and wasn't stopped by user, it throws an {@link UDPCoordinator#ERROR} with
-	 * the (last) exception!
+	 * Asynchronous listening on 1 to {@link NetworkConfig#TRIES_AMOUNT} ports. If can't listen on at least one port and wasn't stopped by user, it
+	 * throws an {@link UDPCoordinator#ERROR} with the (last) exception!
+	 * 
+	 * @throws Exception
+	 *             Last exception if no sockets could be initialized.
 	 */
-	public synchronized void start()
+	public synchronized void start() throws Exception
 	{
 		Exception lastException = null;
 
-		// Listen on 5 ports! If can't listen on
+		// Listen on 5 ports! At least one must work!
 		for (int i = 0; i < NetworkConfig.TRIES_AMOUNT; i++)
 		{
+			DatagramSocket datagramSocket;
 			try
 			{
-				final DatagramSocket datagramSocket = new DatagramSocket(NetworkConfig.PORT.get() + i * NetworkConfig.TRIES_STEPS, InetAddress.getByName("0.0.0.0"));
+				datagramSocket = new DatagramSocket(NetworkConfig.PORT.get() + i * NetworkConfig.TRIES_STEPS, InetAddress.getByName("0.0.0.0"));
 				this.sockets.add(datagramSocket);
 				this.listen(datagramSocket);
 			}
-			catch (final Exception e)
+			catch (SocketException | UnknownHostException e)
 			{
 				lastException = e;
 			}
 		}
 
 		if (this.sockets.isEmpty())
-		{
-			UDPCoordinator.service.publishSync(UDPCoordinator.ERROR, lastException);
-		}
+			throw lastException;
 	}
 
 	public synchronized void close()
@@ -56,12 +61,13 @@ class UDPIn
 
 	private void listen(final DatagramSocket socket)
 	{
-		final Thread thread = new Thread(() ->
+		Inspector.runNowAsDaemon(() ->
 		{
 			while (true)
 			{
-				final byte[] recvBuf = new byte[15000];
+				final byte[] recvBuf = new byte[UDPDetected.getEstimatedMaxSize()];
 				final DatagramPacket receivePacket = new DatagramPacket(recvBuf, recvBuf.length);
+
 				try
 				{
 					socket.receive(receivePacket); // BLOCKING
@@ -88,7 +94,5 @@ class UDPIn
 				}
 			}
 		});
-		thread.setDaemon(true);
-		thread.start();
 	}
 }

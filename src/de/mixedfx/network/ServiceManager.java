@@ -18,14 +18,12 @@ public class ServiceManager
 	{
 		/**
 		 * <p>
-		 * Every time {@link NetworkConfig#status} is set to {@link NetworkConfig.States#Unbound}
-		 * this method is called synchronously.
+		 * Every time {@link NetworkConfig#STATUS} is set to {@link NetworkConfig.States#Unbound} this method is called synchronously.
 		 * </p>
 		 * <p>
-		 * Is called before {@link ParticipantManager} is stopped. Therefore the content of
-		 * {@link ParticipantManager#PARTICIPANTS} and {@link ParticipantManager#MY_PID} depends on
-		 * if this application was a network host or client (PARTICIPANTS is maybe empty and MY_PID
-		 * may contain 0 = not yet identified).
+		 * Is called before {@link ParticipantManager} is stopped. Therefore the content of {@link ParticipantManager#PARTICIPANTS} and
+		 * {@link ParticipantManager#MY_PID} depends on if this application was a network host or client (PARTICIPANTS is maybe empty and MY_PID may
+		 * contain 0 = not yet identified).
 		 * </p>
 		 *
 		 * <p>
@@ -36,10 +34,9 @@ public class ServiceManager
 	}
 
 	/**
-	 * A service which exists from the start to the end of a network if the service is registered by
-	 * calling {@link ServiceManager#register(Stoppable)}! Whereby {@link UniqueService#host()} is
-	 * only called once in the network and {@link UniqueService#client()} is called on all the other
-	 * applications!
+	 * A service which exists from the start to the end of a network if the service is registered by calling
+	 * {@link ServiceManager#register(Stoppable)}! Whereby {@link UniqueService#host()} is only called once in the network and
+	 * {@link UniqueService#client()} is called on all the other applications!
 	 *
 	 * @author Jerry
 	 */
@@ -47,12 +44,10 @@ public class ServiceManager
 	{
 		/**
 		 * <p>
-		 * Every time {@link NetworkConfig#status} is set to
-		 * {@link NetworkConfig.States#BoundToServer} this method is called synchronously.
+		 * Every time {@link NetworkConfig#STATUS} is set to {@link NetworkConfig.States#BoundToServer} this method is called synchronously.
 		 * </p>
 		 * <p>
-		 * The {@link ParticipantManager} already has a pid and all other participants currently
-		 * registered!
+		 * The {@link ParticipantManager} already has a pid and all other participants currently registered!
 		 * </p>
 		 * <p>
 		 * DON'T EXECUTE LONG RUNNING TASKS HERE, since it blocks the network activity!
@@ -62,12 +57,10 @@ public class ServiceManager
 
 		/**
 		 * <p>
-		 * Every time {@link NetworkConfig#status} is set to {@link NetworkConfig.States#Server}
-		 * this method is called synchronously.
+		 * Every time {@link NetworkConfig#STATUS} is set to {@link NetworkConfig.States#Server} this method is called synchronously.
 		 * </p>
 		 * <p>
-		 * Is called after {@link ParticipantManager} was started. Therefore
-		 * {@link ParticipantManager#MY_PID} is set to 1 and already added to the
+		 * Is called after {@link ParticipantManager} was started. Therefore {@link ParticipantManager#MY_PID} is set to 1 and already added to the
 		 * {@link ParticipantManager#PARTICIPANTS}.
 		 * </p>
 		 * <p>
@@ -78,19 +71,19 @@ public class ServiceManager
 
 		/**
 		 * <p>
-		 * Default behavior is returning null (for all UniqueServices) - message will be forwarded.
-		 * If at least one UniqueService returns a message object, which will be sent directly, the
-		 * original message won't be forwarded.
+		 * Default behavior is returning null (for all UniqueServices) - message will be forwarded. If at least one UniqueService returns a message
+		 * object, which will be sent directly via this method, the original message won't be forwarded. This is only executed on one (random) network
+		 * participant who is the so called network "server".
 		 * </p>
 		 * <p>
 		 * DON'T EXECUTE LONG RUNNING TASKS HERE, since it blocks the network activity!
 		 * </p>
 		 *
 		 * @param message
-		 * @return If return null there is no interest in this message - no special action will be
-		 *         taken. If it returns a message this message will be sent to the receivers.
+		 * @return If return null there is no interest in this message - no special action will be taken. If it returns a message this message will be
+		 *         sent to the receivers.
 		 */
-		public RegisteredMessage receive(RegisteredMessage message);
+		public RegisteredMessage hostReceive(RegisteredMessage message);
 	}
 
 	/**
@@ -102,14 +95,13 @@ public class ServiceManager
 	{
 		/**
 		 * <p>
-		 * Every time {@link NetworkConfig#status} is set to
-		 * {@link NetworkConfig.States#BoundToServer} this method is called synchronously.
+		 * Every time {@link NetworkConfig#STATUS} is set to {@link NetworkConfig.States#BoundToServer} this method is called synchronously.
 		 * </p>
 		 */
 		public void start();
 	}
 
-	private static List<Stoppable>	list	= Collections.synchronizedList(new ArrayList<Stoppable>());
+	private static List<Stoppable> list = Collections.synchronizedList(new ArrayList<Stoppable>());
 
 	protected static void client()
 	{
@@ -121,11 +113,10 @@ public class ServiceManager
 				{
 					((UniqueService) synced).client();
 				}
-				else
-					if (synced instanceof P2PService)
-					{
-						((P2PService) synced).start();
-					}
+				else if (synced instanceof P2PService)
+				{
+					((P2PService) synced).start();
+				}
 			}
 		}
 	}
@@ -140,11 +131,10 @@ public class ServiceManager
 				{
 					((UniqueService) service).host();
 				}
-				else
-					if (service instanceof P2PService)
-					{
-						((P2PService) service).start();
-					}
+				else if (service instanceof P2PService)
+				{
+					((P2PService) service).start();
+				}
 			}
 		}
 	}
@@ -158,7 +148,7 @@ public class ServiceManager
 			{
 				if (service instanceof UniqueService)
 				{
-					final RegisteredMessage forwardMessage = ((UniqueService) service).receive(message);
+					final RegisteredMessage forwardMessage = ((UniqueService) service).hostReceive(message);
 					if (forwardMessage != null)
 					{
 						atLeastOne = true;

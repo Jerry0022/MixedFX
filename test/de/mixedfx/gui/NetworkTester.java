@@ -23,6 +23,10 @@ public class NetworkTester
 
 	public static void main(final String[] args)
 	{
+		/*
+		 * Set up logging!
+		 */
+
 		// Log fatal errors (network reacted already to this error)
 		AnnotationProcessor.process(new ConnectivityManager());
 
@@ -37,6 +41,10 @@ public class NetworkTester
 		{
 			Log.network.info("ConnectivityManager status changed from " + oldValue.toString().toUpperCase() + " to " + newValue.toString().toUpperCase());
 		});
+
+		/*
+		 * Set up network!
+		 */
 
 		// Create example user
 		final String id = UUID.randomUUID().toString();

@@ -1,5 +1,7 @@
 package de.mixedfx.network;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -9,6 +11,7 @@ import java.net.SocketException;
 import java.util.Date;
 import java.util.Enumeration;
 
+import de.mixedfx.inspector.Inspector;
 import de.mixedfx.logging.Log;
 
 class UDPOut
@@ -18,19 +21,14 @@ class UDPOut
 	/**
 	 * Asynchronous broadcasting on {@link NetworkConfig#TRIES_AMOUNT} available ports! If no broadcast socket couldn't be opened throws
 	 * {@link UDPCoordinator#ERROR}!
+	 * 
+	 * @throws SocketException
 	 */
-	public synchronized void start()
+	public synchronized void start() throws SocketException
 	{
-		try
-		{
-			UDPOut.this.socket = new DatagramSocket();
-			UDPOut.this.socket.setBroadcast(true);
-			UDPOut.this.broadcast();
-		}
-		catch (final SocketException e)
-		{
-			UDPCoordinator.service.publishSync(UDPCoordinator.ERROR, e);
-		}
+		UDPOut.this.socket = new DatagramSocket();
+		UDPOut.this.socket.setBroadcast(true);
+		UDPOut.this.broadcast();
 	}
 
 	public synchronized void close()
@@ -40,22 +38,33 @@ class UDPOut
 		this.socket = null;
 	}
 
-	private synchronized void broadcast()
+	private void broadcast()
 	{
-		final Thread thread = new Thread(() ->
+		Inspector.runNowAsDaemon(() ->
 		{
 			boolean worked = true;
-			Exception exception = new Exception();
+			Exception exception = new Exception("No exception occured!");
 
 			while (worked)
 			{
 				worked = false;
 
-				final byte[] sendData;
-				synchronized (NetworkConfig.status)
+				byte[] sendData = null;
+				synchronized (NetworkConfig.STATUS)
 				{
-					sendData = (new Date().toInstant().toString() + "!" + NetworkConfig.status.get().toString() + "!" + NetworkConfig.statusChangeTime.get().toInstant().toString() + "!"
-							+ ParticipantManager.MY_PID.get()).getBytes();
+					UDPDetected me = new UDPDetected(new Date(), NetworkConfig.STATUS.get(), NetworkConfig.networkExistsSince.get(), ParticipantManager.MY_PID.get());
+
+					ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+					try
+					{
+						ObjectOutputStream os = new ObjectOutputStream(outputStream);
+						os.writeObject(me);
+						sendData = outputStream.toByteArray();
+					}
+					catch (Exception e)
+					{
+						UDPCoordinator.service.publishSync(UDPCoordinator.ERROR, e);
+					}
 				}
 
 				/*
@@ -132,10 +141,11 @@ class UDPOut
 
 				try
 				{
-					Thread.sleep(NetworkConfig.BROADCAST_INTERVAL);
+					Thread.sleep(NetworkConfig.UDP_BROADCAST_INTERVAL);
 				}
 				catch (final Exception e)
 				{
+					Log.network.fatal("UDP broadcast interval could not be applied!");
 				}
 			}
 
@@ -145,7 +155,5 @@ class UDPOut
 				UDPCoordinator.service.publishSync(UDPCoordinator.ERROR, new Exception("No network device suitable for UDP broadcast."));
 			}
 		});
-		thread.setDaemon(true);
-		thread.start();
 	}
 }

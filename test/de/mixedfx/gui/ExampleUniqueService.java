@@ -28,7 +28,7 @@ public class ExampleUniqueService implements UniqueService
 	}
 
 	@Override
-	public RegisteredMessage receive(final RegisteredMessage message)
+	public RegisteredMessage hostReceive(final RegisteredMessage message)
 	{
 		return null;
 	}

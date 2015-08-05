@@ -5,8 +5,8 @@ import java.io.Serializable;
 import com.google.gson.annotations.Expose;
 
 /**
- * Master Message object which contains the information whether the message was sent by the server.
- * All sub classes must declare {@link Expose} to let the fields being serialized.
+ * Master Message object which contains the information whether the message was sent by the server. All sub classes must declare {@link Expose} to let
+ * the fields being serialized.
  *
  * @author Jerry
  */
@@ -18,14 +18,10 @@ public class Message implements Serializable
 	 */
 
 	@Expose
-	public boolean	fromServer;
-
-	@Expose
-	public boolean	goodbye;
+	public boolean fromServer;
 
 	public Message()
 	{
 		this.fromServer = false;
-		this.goodbye = false;
 	}
 }

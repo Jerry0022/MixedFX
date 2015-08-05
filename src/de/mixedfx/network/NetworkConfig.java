@@ -9,6 +9,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 public class NetworkConfig
 {
@@ -25,9 +26,17 @@ public class NetworkConfig
 	/**
 	 * {@link UDPOut} broadcast interval in milliseconds.
 	 */
-	public static final int BROADCAST_INTERVAL = 1000;
+	public static final int UDP_BROADCAST_INTERVAL = 1000;
 
+	/**
+	 * How often I shall wait for the broadcast interval. After that a reconnect is done.
+	 */
 	public static final int RECONNECT_TOLERANCE = 3;
+
+	/**
+	 * For which interval in milliseconds one of the TCP connection shall wait until continue sending the next object.
+	 */
+	public static final int TCP_UNICAST_INTERVAL = 10;
 
 	/**
 	 * <p>
@@ -40,12 +49,28 @@ public class NetworkConfig
 	 */
 	public static IntegerProperty PORT = new SimpleIntegerProperty(8888);
 
-	protected static ObjectProperty<States> status = new SimpleObjectProperty<>(States.Unbound);
+	/**
+	 * Is set to {@link States#Server} only from outside the {@link TCPCoordinator} to force starting network! Is set to {@link States#Unbound} in the
+	 * same way! {@link States#BoundToServer} can only be set from the inner network automatically!
+	 */
+	protected static ObjectProperty<States> STATUS = new SimpleObjectProperty<>(States.Unbound);
 
-	protected static AtomicReference<Date> statusChangeTime = new AtomicReference<>(new Date());
+	/**
+	 * Is null if no date was published by the service.
+	 */
+	protected static AtomicReference<Date> networkExistsSince = new AtomicReference<>(null);
 
 	static
 	{
+		STATUS.addListener(new ChangeListener<NetworkConfig.States>()
+		{
+			@Override
+			public void changed(ObservableValue<? extends States> observable, States oldValue, States newValue)
+			{
+				newValue.stateSince = new Date().getTime();
+			}
+		});
+
 		NetworkConfig.PORT.addListener((ChangeListener<Number>) (observable, oldValue, newValue) ->
 		{
 			if (newValue.intValue() + NetworkConfig.TRIES_AMOUNT * NetworkConfig.TRIES_STEPS > Integer.MAX_VALUE || newValue.intValue() <= 0)
@@ -59,5 +84,23 @@ public class NetworkConfig
 	public enum States
 	{
 		Server, BoundToServer, Unbound;
+
+		/**
+		 * Updated the every time the status is set active!
+		 */
+		public long stateSince = new Date().getTime();
+
+		public Date getStateSince()
+		{
+			return new Date(stateSince);
+		}
+
+		public boolean equals(States object)
+		{
+			if (object == null || !(object instanceof States))
+				return false;
+			else
+				return this.toString().equals(object.toString());
+		}
 	}
 }

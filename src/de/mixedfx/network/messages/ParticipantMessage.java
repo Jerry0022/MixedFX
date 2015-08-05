@@ -18,9 +18,12 @@ import java.util.UUID;
 @SuppressWarnings("serial")
 public class ParticipantMessage extends Message
 {
-	public String			uID;
+	public String uID;
 
-	public List<Integer>	ids;
+	/**
+	 * The first one, index of 0, is my PID!
+	 */
+	public List<Integer> ids;
 
 	public ParticipantMessage()
 	{
