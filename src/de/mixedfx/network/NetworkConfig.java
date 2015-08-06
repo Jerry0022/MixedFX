@@ -92,7 +92,7 @@ public class NetworkConfig
 
 		public Date getStateSince()
 		{
-			return new Date(stateSince);
+			return stateSince == 0 ? null : new Date(stateSince);
 		}
 
 		public boolean equals(States object)
