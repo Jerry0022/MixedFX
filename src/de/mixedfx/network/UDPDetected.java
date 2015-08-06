@@ -47,6 +47,16 @@ public class UDPDetected implements Serializable
 		this.status = status.toString();
 	}
 
+	@Override
+	public String toString()
+	{
+		return "UDP member message sent " + getTimeStamp() + " with status " + getStatus() + " since " + getStatus().stateSince + " with PID " + pid;
+	}
+
+	/*
+	 * GETTER
+	 */
+
 	public Date getTimeStamp()
 	{
 		return new Date(timeStamp);

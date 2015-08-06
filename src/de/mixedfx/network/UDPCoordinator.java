@@ -168,6 +168,8 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 						Log.network.debug("New UDP member detected: " + newDetected);
 					}
 
+					Log.network.debug("This is the UDP member: " + newDetected);
+
 					// Register change in NIC for this participant if in same network!
 					if (NetworkConfig.networkExistsSince.equals(newDetected.getNetworkSince()))
 						updatePIDNetworks(newDetected.getPid(), newDetected.address);
