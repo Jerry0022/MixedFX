@@ -56,7 +56,7 @@ public class NetworkConfig
 	protected static ObjectProperty<States> STATUS = new SimpleObjectProperty<>(States.Unbound);
 
 	/**
-	 * Is null if no date was published by the service.
+	 * Is null if no date was published by the service. May need some time to get this value filled if I'm a client!
 	 */
 	protected static AtomicReference<Date> networkExistsSince = new AtomicReference<>(null);
 

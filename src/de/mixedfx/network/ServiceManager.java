@@ -73,7 +73,7 @@ public class ServiceManager
 		 * <p>
 		 * Default behavior is returning null (for all UniqueServices) - message will be forwarded. If at least one UniqueService returns a message
 		 * object, which will be sent directly via this method, the original message won't be forwarded. This is only executed on one (random) network
-		 * participant who is the so called network "server".
+		 * participant who is the so called network "server". The message is maybe already published internally to other services.
 		 * </p>
 		 * <p>
 		 * DON'T EXECUTE LONG RUNNING TASKS HERE, since it blocks the network activity!

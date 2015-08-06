@@ -29,8 +29,9 @@ public class NetworkManager
 	static
 	{
 		NetworkManager.t = new TCPCoordinator();
-
 		NetworkManager.u = new UDPCoordinator();
+
+		ServiceManager.register(new NetworkSinceService());
 
 		NetworkConfig.STATUS.addListener((ChangeListener<States>) (observable, oldValue, newValue) ->
 		{

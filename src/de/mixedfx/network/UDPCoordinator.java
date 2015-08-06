@@ -23,6 +23,7 @@ import de.mixedfx.inspector.Inspector;
 import de.mixedfx.java.ApacheTools;
 import de.mixedfx.logging.Log;
 import de.mixedfx.network.NetworkConfig.States;
+import de.mixedfx.network.messages.GoodByeMessage;
 import de.mixedfx.network.user.User;
 import de.mixedfx.network.user.UserManager;
 import javafx.beans.property.ListProperty;
@@ -167,12 +168,14 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 						Log.network.debug("New UDP member detected: " + newDetected);
 					}
 
-					// Register change in NIC for this participant
-					updatePIDNetworks(newDetected.getPid(), newDetected.address);
+					// Register change in NIC for this participant if in same network!
+					if (NetworkConfig.networkExistsSince.equals(newDetected.getNetworkSince()))
+						updatePIDNetworks(newDetected.getPid(), newDetected.address);
 
-					boolean remoteIsOnline = newDetected.getStatus().equals(NetworkConfig.States.Server) || newDetected.getStatus().equals(NetworkConfig.States.BoundToServer);
-					if (!remoteIsOnline)
+					// Is remote online? If not, no action!
+					if (newDetected.getStatus().equals(NetworkConfig.States.Unbound))
 						return;
+
 					if (NetworkConfig.STATUS.get().equals(States.Unbound))
 					{
 						// If I'm searching and the other one is a server or bound to server then let's connect
@@ -182,12 +185,14 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 					else
 					{
 						// Is the other one maybe in an older network? Then reconnect!
-						if (!newDetected.getStatus().equals(States.Unbound) && newDetected.getNetworkSince() != null && newDetected.getNetworkSince().before(NetworkConfig.networkExistsSince.get()))
+						if (NetworkConfig.networkExistsSince.get() != null && newDetected.getNetworkSince() != null && newDetected.getNetworkSince().before(NetworkConfig.networkExistsSince.get()))
 						{
 							// Force reconnect
 							Log.network.info("Older server detected on " + newDetected.address.getHostAddress() + " => Force reconnect to this server!");
+							EventBusExtended.publishSyncSafe(MessageBus.MESSAGE_SEND, new GoodByeMessage());
 							Inspector.runNowAsDaemon(() ->
 							{
+								// Shutdown every participant in this network and force reconnect immediately
 								ConnectivityManager.force();
 							});
 						}
