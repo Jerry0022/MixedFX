@@ -74,7 +74,7 @@ public class UDPDetected implements Serializable
 	 */
 	public Date getNetworkSince()
 	{
-		return new Date(networkSince);
+		return networkSince == 0 ? null : new Date(networkSince);
 	}
 
 	public int getPid()
