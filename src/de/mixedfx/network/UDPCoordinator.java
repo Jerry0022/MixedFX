@@ -1,7 +1,6 @@
 package de.mixedfx.network;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
@@ -93,6 +92,8 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 		}
 	}
 
+	private boolean oldMessage = false;
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public synchronized void onEvent(final String topic, final Object data)
@@ -158,7 +159,7 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 							else
 							{
 								Log.network.trace("Old UDP message received!");
-								return; // Old UDP Packet, newer one was already received!
+								oldMessage = true;
 							}
 						});
 					}
@@ -167,6 +168,12 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 						// New UDP message of unknown NIC
 						UDPCoordinator.allAdresses.add(newDetected);
 						Log.network.debug("New " + newDetected);
+					}
+
+					if (oldMessage)
+					{
+						oldMessage = false;
+						return; // Old UDP Packet, newer one was already received!
 					}
 
 					Log.network.trace("This is the " + newDetected);
@@ -201,7 +208,7 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 						}
 					}
 				}
-				catch (IOException | ClassNotFoundException e)
+				catch (Exception e)
 				{
 					UDPCoordinator.service.publishSync(UDPCoordinator.ERROR, e);
 				}
