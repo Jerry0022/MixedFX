@@ -12,6 +12,8 @@ import de.mixedfx.network.ConnectivityManager;
 import de.mixedfx.network.NetworkManager;
 import de.mixedfx.network.ParticipantManager;
 import de.mixedfx.network.ServiceManager;
+import de.mixedfx.network.UDPCoordinator;
+import de.mixedfx.network.UDPDetected;
 import de.mixedfx.network.user.User;
 import de.mixedfx.network.user.UserManager;
 import javafx.beans.value.ChangeListener;
@@ -29,6 +31,17 @@ public class NetworkTester
 
 		// Log fatal errors (network reacted already to this error)
 		AnnotationProcessor.process(new ConnectivityManager());
+
+		// Log UDP member
+		UDPCoordinator.allAdresses.addListener(new ListChangeListener<UDPDetected>()
+		{
+			@Override
+			public void onChanged(javafx.collections.ListChangeListener.Change<? extends UDPDetected> c)
+			{
+				c.next();
+				Log.network.trace("AllAddresses updated: " + c.getAddedSubList().get(0));
+			}
+		});
 
 		// Log Participants
 		ParticipantManager.PARTICIPANTS.addListener((ListChangeListener<Integer>) c ->

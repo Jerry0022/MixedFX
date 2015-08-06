@@ -165,7 +165,7 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 					{
 						// New UDP message of unknown NIC
 						UDPCoordinator.allAdresses.add(newDetected);
-						Log.network.debug("New UDP member detected: " + newDetected);
+						Log.network.debug("New " + newDetected);
 					}
 
 					Log.network.trace("This is the " + newDetected);
