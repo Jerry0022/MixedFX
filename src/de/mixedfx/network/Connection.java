@@ -195,7 +195,7 @@ public class Connection implements EventBusServiceInterface
 					this.uid_pid_map.values().remove(lost);
 				}
 			}
-			Log.network.info("This is my connection id: " + clientID + " and I have the following pids connected: " + uid_pid_map.values());
+			Log.network.info("This is my client id: " + clientID + " and I have the following pids connected: " + uid_pid_map.values());
 		}
 	}
 
