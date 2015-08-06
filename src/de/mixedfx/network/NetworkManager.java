@@ -16,7 +16,7 @@ public class NetworkManager
 	/**
 	 * Register for this event over {@link EventBusExtended} if you want to be informed that there was a network error which closed the entire
 	 * network. Further information: This error does <b>relate to the UDP Server in most cases</b> (but not in case of if {@link NetworkConfig#STATUS}
-	 * = {@link NetworkConfig.States#Server}). The cause is probably the port. React to that <b>port error with NetworkManager#setPort(int)</b> with
+	 * = {@link NetworkConfig.States#SERVER}). The cause is probably the port. React to that <b>port error with NetworkManager#setPort(int)</b> with
 	 * the recommendation to choose a random number between 10 000 and 60 000!
 	 */
 	public static final String NETWORK_FATALERROR = "NETWORK_FATALERROR";
@@ -37,7 +37,7 @@ public class NetworkManager
 		{
 			switch (newValue)
 			{
-				case Unbound:
+				case UNBOUND:
 					ServiceManager.stop();
 					/*
 					 * Auto reconnect: Situation: Fall back from Server or BoundToServer to Unbound. Just let it happen but reconnect after an
@@ -59,7 +59,7 @@ public class NetworkManager
 						synchronized (NetworkConfig.STATUS)
 						{
 							Log.network.debug("Try reconnect only if this status is not already 'BoundToServer': " + NetworkConfig.STATUS.get());
-							if (!NetworkConfig.STATUS.get().equals(States.BoundToServer))
+							if (!NetworkConfig.STATUS.get().equals(States.BOUNDTOSERVER))
 							{
 								Log.network.info("Autostart Server!");
 								NetworkManager.host();
@@ -67,12 +67,12 @@ public class NetworkManager
 						}
 					} , waitTime);
 					break;
-				case BoundToServer:
+				case BOUNDTOSERVER:
 					ParticipantManager.start().connect();
 					// See ParticipantManager for the start of client() in ConnectivityManager
 					// ServiceManager shall be first client() if I got my PID from the server back!
 					break;
-				case Server:
+				case SERVER:
 					// Add me as server also as participant
 					ParticipantManager.MY_PID.set(ParticipantManager.PARTICIPANT_NUMBER);
 					ParticipantManager.PARTICIPANTS.add(ParticipantManager.PARTICIPANT_NUMBER++);
@@ -101,7 +101,7 @@ public class NetworkManager
 	{
 		if (NetworkManager.running)
 		{
-			NetworkConfig.STATUS.set(States.Server);
+			NetworkConfig.STATUS.set(States.SERVER);
 		}
 	}
 

@@ -25,7 +25,7 @@ public class TCPCoordinator
 	public static final String CONNECTION_LOST = "TCP_CONNECTION_LOST";
 
 	/**
-	 * In case of not being the {@link NetworkConfig.States#Server} this is the ID of the connection which is directly or indirectly bound to the
+	 * In case of not being the {@link NetworkConfig.States#SERVER} this is the ID of the connection which is directly or indirectly bound to the
 	 * server.
 	 */
 	public static int localNetworkMainID;
@@ -64,10 +64,10 @@ public class TCPCoordinator
 			synchronized (NetworkConfig.STATUS)
 			{
 				// Switch Server on if requested
-				if (newValue.equals(States.Server))
+				if (newValue.equals(States.SERVER))
 				{
 					// If already connected to server stop connection
-					if (oldValue.equals(States.BoundToServer))
+					if (oldValue.equals(States.BOUNDTOSERVER))
 					{
 						this.stopTCPFull(); // => Stops also TCP Server && set to unbound; see
 						// below
@@ -86,14 +86,14 @@ public class TCPCoordinator
 						{
 							synchronized (NetworkConfig.STATUS)
 							{
-								NetworkConfig.STATUS.set(States.Unbound);
+								NetworkConfig.STATUS.set(States.UNBOUND);
 							}
 						});
 					}
 				}
 
 				// Switch off
-				if (oldValue.equals(States.Server) || oldValue.equals(States.BoundToServer))
+				if (oldValue.equals(States.SERVER) || oldValue.equals(States.BOUNDTOSERVER))
 				{
 					this.stopTCPFull();
 				}
@@ -130,7 +130,7 @@ public class TCPCoordinator
 				pMessage.ids.addAll(allParticipated);
 
 				// Send or publish depending on PID distribution power
-				if (!NetworkConfig.STATUS.get().equals(NetworkConfig.States.Server))
+				if (!NetworkConfig.STATUS.get().equals(NetworkConfig.States.SERVER))
 				{
 					EventBusExtended.publishSyncSafe(MessageBus.MESSAGE_SEND, pMessage);
 				}
@@ -180,7 +180,7 @@ public class TCPCoordinator
 				return;
 			}
 
-			NetworkConfig.STATUS.set(States.BoundToServer);
+			NetworkConfig.STATUS.set(States.BOUNDTOSERVER);
 		}
 	}
 
@@ -205,7 +205,7 @@ public class TCPCoordinator
 			TCPCoordinator.localNetworkID.set(localNetworkFirstID);
 
 			// May force this method to run twice but this has no performace influence! See constructor for more information.
-			NetworkConfig.STATUS.set(States.Unbound);
+			NetworkConfig.STATUS.set(States.UNBOUND);
 		}
 	}
 }

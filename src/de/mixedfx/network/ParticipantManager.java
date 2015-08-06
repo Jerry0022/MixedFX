@@ -86,7 +86,7 @@ public class ParticipantManager
 			{
 				final ParticipantMessage pMessage = (ParticipantMessage) message;
 
-				if (pMessage.uID.equals("") && NetworkConfig.STATUS.get().equals(NetworkConfig.States.Server))
+				if (pMessage.uID.equals("") && NetworkConfig.STATUS.get().equals(NetworkConfig.States.SERVER))
 				{
 					// PIDs were lost
 					for (final Integer i : pMessage.ids)

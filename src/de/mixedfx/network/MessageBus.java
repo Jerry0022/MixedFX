@@ -64,7 +64,7 @@ public class MessageBus
 	/**
 	 * <b>Sends a message asynchronously! Updates sender id if the message is an
 	 * {@link IdentifiedMessage}.</b> Furthermore internally: {@link Message#fromServer} will be set
-	 * to true if this application is the {@link NetworkConfig.States#Server}. Message will be internally automatically forwarded
+	 * to true if this application is the {@link NetworkConfig.States#SERVER}. Message will be internally automatically forwarded
 	 * - no manual forwarding is required.
 	 *
 	 * @param message

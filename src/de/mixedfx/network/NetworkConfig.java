@@ -50,10 +50,10 @@ public class NetworkConfig
 	public static IntegerProperty PORT = new SimpleIntegerProperty(8888);
 
 	/**
-	 * Is set to {@link States#Server} only from outside the {@link TCPCoordinator} to force starting network! Is set to {@link States#Unbound} in the
-	 * same way! {@link States#BoundToServer} can only be set from the inner network automatically!
+	 * Is set to {@link States#SERVER} only from outside the {@link TCPCoordinator} to force starting network! Is set to {@link States#UNBOUND} in the
+	 * same way! {@link States#BOUNDTOSERVER} can only be set from the inner network automatically!
 	 */
-	protected static ObjectProperty<States> STATUS = new SimpleObjectProperty<>(States.Unbound);
+	protected static ObjectProperty<States> STATUS = new SimpleObjectProperty<>(States.UNBOUND);
 
 	/**
 	 * Is null if no date was published by the service. May need some time to get this value filled if I'm a client!
@@ -83,7 +83,7 @@ public class NetworkConfig
 
 	public enum States
 	{
-		Server, BoundToServer, Unbound;
+		SERVER, BOUNDTOSERVER, UNBOUND;
 
 		/**
 		 * Updated the every time the status is set active!

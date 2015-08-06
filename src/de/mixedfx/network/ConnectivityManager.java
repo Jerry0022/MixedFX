@@ -49,7 +49,7 @@ public class ConnectivityManager
 		 */
 		NetworkConfig.STATUS.addListener((ChangeListener<States>) (observable, oldValue, newValue) ->
 		{
-			if (newValue.equals(States.Server) || newValue.equals(States.BoundToServer))
+			if (newValue.equals(States.SERVER) || newValue.equals(States.BOUNDTOSERVER))
 			{
 				ConnectivityManager.status.set(Status.Establishing);
 			}
@@ -98,15 +98,15 @@ public class ConnectivityManager
 
 		switch (NetworkConfig.STATUS.get())
 		{
-			case Unbound:
+			case UNBOUND:
 				NetworkManager.host();
 				break;
-			case BoundToServer:
+			case BOUNDTOSERVER:
 				// Force immediately to be a server
 				NetworkManager.leave();
 				NetworkManager.host();
 				break;
-			case Server:
+			case SERVER:
 				NetworkManager.leave();
 				break;
 		}

@@ -155,6 +155,7 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 								// Register change of state for this participant
 								localDetected.update(newDetected.getTimeStamp(), newDetected.getStatus());
 								UDPCoordinator.allAdresses.set(UDPCoordinator.allAdresses.indexOf(localDetected), localDetected);
+								Log.network.trace("Updated " + newDetected);
 							}
 							else
 							{
@@ -176,17 +177,15 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 						return; // Old UDP Packet, newer one was already received!
 					}
 
-					Log.network.trace("This is the " + newDetected);
-
 					// Register change in NIC for this participant if in same network!
 					if (NetworkConfig.networkExistsSince.equals(newDetected.getNetworkSince()))
 						updatePIDNetworks(newDetected.getPid(), newDetected.address);
 
 					// Is remote online? If not, no action!
-					if (newDetected.getStatus().equals(NetworkConfig.States.Unbound))
+					if (newDetected.getStatus().equals(NetworkConfig.States.UNBOUND))
 						return;
 
-					if (NetworkConfig.STATUS.get().equals(States.Unbound))
+					if (NetworkConfig.STATUS.get().equals(States.UNBOUND))
 					{
 						// If I'm searching and the other one is a server or bound to server then let's connect
 						Log.network.trace("UDP found another one to which I can connect!");

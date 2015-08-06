@@ -18,7 +18,7 @@ public class ServiceManager
 	{
 		/**
 		 * <p>
-		 * Every time {@link NetworkConfig#STATUS} is set to {@link NetworkConfig.States#Unbound} this method is called synchronously.
+		 * Every time {@link NetworkConfig#STATUS} is set to {@link NetworkConfig.States#UNBOUND} this method is called synchronously.
 		 * </p>
 		 * <p>
 		 * Is called before {@link ParticipantManager} is stopped. Therefore the content of {@link ParticipantManager#PARTICIPANTS} and
@@ -44,7 +44,7 @@ public class ServiceManager
 	{
 		/**
 		 * <p>
-		 * Every time {@link NetworkConfig#STATUS} is set to {@link NetworkConfig.States#BoundToServer} this method is called synchronously.
+		 * Every time {@link NetworkConfig#STATUS} is set to {@link NetworkConfig.States#BOUNDTOSERVER} this method is called synchronously.
 		 * </p>
 		 * <p>
 		 * The {@link ParticipantManager} already has a pid and all other participants currently registered!
@@ -57,7 +57,7 @@ public class ServiceManager
 
 		/**
 		 * <p>
-		 * Every time {@link NetworkConfig#STATUS} is set to {@link NetworkConfig.States#Server} this method is called synchronously.
+		 * Every time {@link NetworkConfig#STATUS} is set to {@link NetworkConfig.States#SERVER} this method is called synchronously.
 		 * </p>
 		 * <p>
 		 * Is called after {@link ParticipantManager} was started. Therefore {@link ParticipantManager#MY_PID} is set to 1 and already added to the
@@ -95,7 +95,7 @@ public class ServiceManager
 	{
 		/**
 		 * <p>
-		 * Every time {@link NetworkConfig#STATUS} is set to {@link NetworkConfig.States#BoundToServer} this method is called synchronously.
+		 * Every time {@link NetworkConfig#STATUS} is set to {@link NetworkConfig.States#BOUNDTOSERVER} this method is called synchronously.
 		 * </p>
 		 */
 		public void start();

@@ -77,7 +77,7 @@ public class Connection implements EventBusServiceInterface
 		{
 			final Message message = (Message) event;
 
-			if (NetworkConfig.STATUS.get().equals(States.Server))
+			if (NetworkConfig.STATUS.get().equals(States.SERVER))
 			{
 				message.fromServer = true;
 			}
@@ -88,11 +88,11 @@ public class Connection implements EventBusServiceInterface
 				this.checkParticipantMessage(message);
 			}
 
-			if (NetworkConfig.STATUS.get().equals(States.Server))
+			if (NetworkConfig.STATUS.get().equals(States.SERVER))
 			{
 				this.checkSend(message);
 			}
-			else if (NetworkConfig.STATUS.get().equals(States.BoundToServer))
+			else if (NetworkConfig.STATUS.get().equals(States.BOUNDTOSERVER))
 			{
 				if (message.fromServer)
 				{
@@ -129,7 +129,7 @@ public class Connection implements EventBusServiceInterface
 				return;
 			}
 
-			if (NetworkConfig.STATUS.get().equals(States.Server))
+			if (NetworkConfig.STATUS.get().equals(States.SERVER))
 			{
 				message.fromServer = false;
 				this.checkParticipantMessage(message);
@@ -219,7 +219,7 @@ public class Connection implements EventBusServiceInterface
 				EventBusExtended.publishSyncSafe(MessageBus.MESSAGE_RECEIVE, message); // Publish internally
 			}
 			// Asks services to process message before forwarding
-			if (NetworkConfig.STATUS.get().equals(States.Server))
+			if (NetworkConfig.STATUS.get().equals(States.SERVER))
 			{
 				ServiceManager.hostCheckMessage(regMessage);
 			}
