@@ -159,7 +159,6 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 							}
 							else
 							{
-								Log.network.trace("Old UDP message received!");
 								oldMessage = true;
 							}
 						});
@@ -173,14 +172,13 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 
 					if (oldMessage)
 					{
+						Log.network.trace("Old UDP message received!");
 						oldMessage = false;
 						return; // Old UDP Packet, newer one was already received!
 					}
 
-					// Register change in NIC for this participant if in same network!
-					if (NetworkConfig.networkExistsSince.equals(newDetected.getNetworkSince()))
-						updatePIDNetworks(newDetected.getPid(), newDetected.address);
-
+					Log.network.fatal("FATAL? " + newDetected.getStatus() + " " + NetworkConfig.States.UNBOUND);
+					Log.network.fatal("FATAL2? " + NetworkConfig.STATUS.get());
 					// Is remote online? If not, no action!
 					if (newDetected.getStatus().equals(NetworkConfig.States.UNBOUND))
 						return;
@@ -193,8 +191,13 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 					}
 					else
 					{
+						// Register change in NIC for this participant if in same network!
+						boolean notNull = NetworkConfig.networkExistsSince.get() != null && newDetected.getNetworkSince() != null;
+						if (notNull && NetworkConfig.networkExistsSince.get().equals(newDetected.getNetworkSince()))
+							updatePIDNetworks(newDetected.getPid(), newDetected.address);
+
 						// Is the other one maybe in an older network? Then reconnect!
-						if (NetworkConfig.networkExistsSince.get() != null && newDetected.getNetworkSince() != null && newDetected.getNetworkSince().before(NetworkConfig.networkExistsSince.get()))
+						if (newDetected.getNetworkSince() != null && newDetected.getNetworkSince().before(NetworkConfig.networkExistsSince.get()))
 						{
 							// Force reconnect
 							Log.network.info("Older server detected on " + newDetected.address.getHostAddress() + " => Force reconnect to this server!");

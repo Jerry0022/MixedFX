@@ -97,7 +97,7 @@ public class NetworkConfig
 
 		public boolean equals(States object)
 		{
-			if (object == null || !(object instanceof States))
+			if (object == null)
 				return false;
 			else
 				return this.toString().equals(object.toString());
