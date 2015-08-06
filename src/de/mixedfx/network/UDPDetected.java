@@ -50,7 +50,7 @@ public class UDPDetected implements Serializable
 	@Override
 	public String toString()
 	{
-		return "UDPDetected: " + getTimeStamp() + " with status " + getStatus() + " since " + new Date(getStatus().stateSince) + " with PID " + pid;
+		return "UDPDetected: " + getTimeStamp() + " with status " + getStatus() + " since " + getStatus().getStateSince() + " with PID " + pid;
 	}
 
 	/*

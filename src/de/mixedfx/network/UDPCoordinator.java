@@ -157,6 +157,7 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 							}
 							else
 							{
+								Log.network.trace("Old UDP message received!");
 								return; // Old UDP Packet, newer one was already received!
 							}
 						});
