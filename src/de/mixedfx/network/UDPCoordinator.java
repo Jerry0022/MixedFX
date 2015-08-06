@@ -149,7 +149,7 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 						CollectionUtils.select(UDPCoordinator.allAdresses, predicate).forEach(t ->
 						{
 							final UDPDetected localDetected = (UDPDetected) t;
-							if (newDetected.getStatus().getStateSince().after(localDetected.getStatus().getStateSince()))
+							if (newDetected.getTimeStamp().after(localDetected.getTimeStamp()))
 							{
 								// New UDP message of known NIC
 								// Register change of state for this participant
