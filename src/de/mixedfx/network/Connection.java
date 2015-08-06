@@ -108,10 +108,6 @@ public class Connection implements EventBusServiceInterface
 					if (this.clientID == TCPCoordinator.localNetworkMainID)
 					{
 						checkSend(message);
-					}
-					else if (message instanceof GoodByeMessage)
-					{
-						this.outputConnection.sendMessage(message);
 						// If GoodbyeMessage this connection is closed in TCP- or UDPCoordinator!
 					}
 				}

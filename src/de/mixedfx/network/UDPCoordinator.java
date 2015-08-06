@@ -177,8 +177,6 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 						return; // Old UDP Packet, newer one was already received!
 					}
 
-					Log.network.fatal("FATAL? " + newDetected.getStatus() + " " + NetworkConfig.States.UNBOUND);
-					Log.network.fatal("FATAL2? " + NetworkConfig.STATUS.get());
 					// Is remote online? If not, no action!
 					if (newDetected.getStatus().equals(NetworkConfig.States.UNBOUND))
 						return;
