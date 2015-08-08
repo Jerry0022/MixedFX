@@ -3,9 +3,11 @@ package de.mixedfx.windows;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 import de.mixedfx.file.FileObject;
 import de.mixedfx.java.ComplexString;
+import de.mixedfx.logging.Log;
 
 public class Executor
 {
@@ -16,6 +18,7 @@ public class Executor
 	 */
 	public static ComplexString runAndWaitForOutput(final String command)
 	{
+		Log.windows.trace("Run following command and wait for output: " + command);
 		final ComplexString result = new ComplexString();
 		try
 		{
@@ -45,6 +48,7 @@ public class Executor
 	 */
 	public static ComplexString runAndWaitForOutput(final String[] commands)
 	{
+		Log.windows.trace("Run following command and wait for output: " + Arrays.asList(commands));
 		final ComplexString result = new ComplexString();
 		try
 		{
@@ -76,6 +80,7 @@ public class Executor
 	{
 		try
 		{
+			Log.windows.trace("Run following file: " + fullPath + " with following parameter: " + parameter);
 			Runtime.getRuntime().exec(fullPath.getFullPath().concat(" " + parameter));
 			return true;
 		}

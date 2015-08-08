@@ -1,6 +1,7 @@
 package de.mixedfx.windows;
 
 import de.mixedfx.java.ComplexString;
+import de.mixedfx.logging.Log;
 
 public class NetworkAdapterController
 {
@@ -22,10 +23,12 @@ public class NetworkAdapterController
 
 		try
 		{
-			return response.containsAllRows("Verwaltungsstatus", "Aktiviert");
+			Log.windows.debug("NetworkAdapter " + adapterName + " is " + (response.containsAllRows("Verwaltungsstatus", "Aktiviert")?"enabled!":"disabled!"));
+			return response.containsAllRows("Verwaltungsstatus:", "Aktiviert");
 		}
 		catch (final Exception e)
 		{
+			Log.windows.debug("NetworkAdapter " + adapterName + " status couldn't be determined!");
 			return false;
 		}
 	}
@@ -45,6 +48,7 @@ public class NetworkAdapterController
 		{
 			;
 		}
+		Log.windows.debug("NetworkAdapter " + adapterName + " was disabled!");
 	}
 
 	/**
@@ -62,5 +66,6 @@ public class NetworkAdapterController
 		{
 			;
 		}
+		Log.windows.debug("NetworkAdapter " + adapterName + " was enabled!");
 	}
 }

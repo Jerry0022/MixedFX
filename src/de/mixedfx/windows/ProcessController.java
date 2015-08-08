@@ -1,6 +1,7 @@
 package de.mixedfx.windows;
 
 import de.mixedfx.java.ComplexString;
+import de.mixedfx.logging.Log;
 
 public class ProcessController
 {
@@ -13,9 +14,11 @@ public class ProcessController
 		{
 			if (s.toUpperCase().contains(process.processName.toUpperCase()))
 			{
+				Log.windows.debug("Process " + process.processName + " is enabled!");
 				return true;
 			}
 		}
+		Log.windows.debug("Process " + process.processName + " is disabled!");
 		return false;
 	}
 
@@ -28,6 +31,7 @@ public class ProcessController
 		{
 			;
 		}
+		Log.windows.debug("Process " + process.processName + " was started!");
 	}
 
 	/**
@@ -45,5 +49,6 @@ public class ProcessController
 		{
 			;
 		}
+		Log.windows.debug("Process " + process.processName + " was stopped!");
 	}
 }

@@ -1,14 +1,19 @@
 package de.mixedfx.gui;
 
+import de.mixedfx.windows.DefaultNetworkAdapter;
 import de.mixedfx.windows.MasterController;
+import de.mixedfx.windows.NetworkPriorityController;
 
 public class WindowsTester
 {
 
 	public static void main(final String[] args)
 	{
-		MasterController.enableTunngle();
-
+		System.out.println(MasterController.isRunningAsAdmin());
+		System.out.println(MasterController.hasCurrentUserAdminRights());
+//		MasterController.enableTunngle();
+		NetworkPriorityController.toTop(DefaultNetworkAdapter.TUNNGLE);
+		
 		// System.out.println(FirewallController.isEnabled());
 		// FirewallController.enable();
 		// System.out.println(FirewallController.isEnabled());

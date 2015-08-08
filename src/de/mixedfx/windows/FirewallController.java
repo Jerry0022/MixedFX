@@ -1,6 +1,7 @@
 package de.mixedfx.windows;
 
 import de.mixedfx.java.ComplexString;
+import de.mixedfx.logging.Log;
 
 public class FirewallController
 {
@@ -14,13 +15,14 @@ public class FirewallController
 	public static boolean isEnabled()
 	{
 		final ComplexString response = Executor.runAndWaitForOutput(FirewallController.statusCommand);
-
 		try
 		{
+			Log.windows.debug("Windows Firewalls are " + (response.containsAllRows("Status", "EIN")?"enabled!":"disabled!"));
 			return response.containsAllRows("Status", "EIN");
 		}
 		catch (final Exception e)
 		{
+			Log.windows.debug("Windows Firewall is disabled!");
 			return false;
 		}
 	}
@@ -37,6 +39,7 @@ public class FirewallController
 		{
 			;
 		}
+		Log.windows.debug("Windows Firewalls were enabled!");
 	}
 
 	/**
@@ -51,5 +54,6 @@ public class FirewallController
 		{
 			;
 		}
+		Log.windows.debug("Windows Firewalls were disabled!");
 	}
 }

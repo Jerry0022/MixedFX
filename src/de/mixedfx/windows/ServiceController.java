@@ -1,6 +1,7 @@
 package de.mixedfx.windows;
 
 import de.mixedfx.java.ComplexString;
+import de.mixedfx.logging.Log;
 
 public class ServiceController
 {
@@ -11,10 +12,12 @@ public class ServiceController
 
 		try
 		{
+			Log.windows.debug("Process " + service.processName + " is " + (result.containsAllRows("STATE", "RUNNING", "4")?"enabled!":"disabled!"));
 			return result.containsAllRows("STATE", "RUNNING", "4");
 		}
 		catch (final Exception e)
 		{
+			Log.windows.debug("Service " + service.processName + " status couldn't be determined!");
 			return false;
 		}
 	}
@@ -28,6 +31,7 @@ public class ServiceController
 		{
 			;
 		}
+		Log.windows.debug("Service " + service.processName + " was started!");
 	}
 
 	public static void stop(final Program service)
@@ -39,5 +43,6 @@ public class ServiceController
 		{
 			;
 		}
+		Log.windows.debug("Service " + service.processName + " was stopped!");
 	}
 }

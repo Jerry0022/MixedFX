@@ -9,6 +9,7 @@ import org.apache.commons.io.FileUtils;
 
 import de.mixedfx.file.FileObject;
 import de.mixedfx.java.ComplexString;
+import de.mixedfx.logging.Log;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
@@ -18,6 +19,7 @@ public class NetworkPriorityController
 	private static BooleanProperty	result	= new SimpleBooleanProperty(false);
 
 	/**
+	 * DOES NOT WORK IF USER DOES NOT USE THE PREDEFINED ADMIN ACCOUNT IN WINDOWS!
 	 * @param adapterName
 	 *            The name of the network adapter, may be user specific.
 	 * @return A property which is false but turns to true or invalidates false if the async thread is finished (the thread waits for a dialogue to
@@ -41,10 +43,11 @@ public class NetworkPriorityController
 							File nvspbind = new File(NetworkPriorityController.class.getResource("nvspbind.exe").toURI());
 							FileUtils.copyInputStreamToFile(new FileInputStream(nvspbind), tempFullPath.toFile());
 						}
-						String command = "cmd /c start /b \"\" \"" + tempFullPath + "\"" + " /++ \"" + adapterName + "\" \"" + "ms_tcpip\"";
+						String command = "cmd /c start \"\" \"" + tempFullPath + "\"" + " /++ \"" + adapterName + "\" \"" + "ms_tcpip\"";
 						ComplexString string = Executor.runAndWaitForOutput(command);
 						result.set(string.containsAllRows("finished", "(0)") || string.containsAllRows("finished", "(14)"));
 						t = null;
+						Log.windows.debug("NetworkAdapter " + adapterName + " was set to top!");
 						return null;
 					}
 					catch (Exception e)
