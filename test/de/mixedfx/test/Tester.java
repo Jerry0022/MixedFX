@@ -1,3 +1,4 @@
+package de.mixedfx.test;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -13,7 +14,7 @@ public class Tester {
 
 	public static void main(String[] args) {
 		try {
-			GSpeechDuplex dup = new GSpeechDuplex("AIzaSyAMImL-1NJ70mY7q7gI85v5UByq3Tgup30");// Instantiate the API
+			GSpeechDuplex dup = new GSpeechDuplex("APIKEY");// Instantiate the API
 			dup.setLanguage("de-de");
 			dup.addResponseListener(new GSpeechResponseListener() {// Adds the listener
 				public void onResponse(GoogleResponse gr) {
