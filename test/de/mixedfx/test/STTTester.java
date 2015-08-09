@@ -10,11 +10,11 @@ import com.darkprograms.speech.recognizer.GoogleResponse;
 
 import javaFlacEncoder.FLACFileWriter;
 
-public class Tester {
+public class STTTester {
 
 	public static void main(String[] args) {
 		try {
-			GSpeechDuplex dup = new GSpeechDuplex("APIKEY");// Instantiate the API
+			GSpeechDuplex dup = new GSpeechDuplex("AIzaSyAMImL-1NJ70mY7q7gI85v5UByq3Tgup30");// Instantiate the API
 			dup.setLanguage("de-de");
 			dup.addResponseListener(new GSpeechResponseListener() {// Adds the listener
 				public void onResponse(GoogleResponse gr) {
