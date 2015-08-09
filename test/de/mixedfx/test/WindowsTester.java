@@ -1,4 +1,4 @@
-package de.mixedfx.gui;
+package de.mixedfx.test;
 
 import de.mixedfx.windows.AdminRequiredException;
 import de.mixedfx.windows.MasterController;

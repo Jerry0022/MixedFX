@@ -1,4 +1,4 @@
-package de.mixedfx.gui;
+package de.mixedfx.test;
 
 //Pooo
 public class LayoutTester {

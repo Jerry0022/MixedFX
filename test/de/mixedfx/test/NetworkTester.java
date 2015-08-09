@@ -1,4 +1,4 @@
-package de.mixedfx.gui;
+package de.mixedfx.test;
 
 import java.net.InetAddress;
 import java.util.UUID;
