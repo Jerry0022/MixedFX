@@ -1,10 +1,10 @@
 package de.mixedfx.windows;
 
-public class WindowsAdminException extends Exception {
+public class AdminRequiredException extends Exception {
 	/**
 	 * May start Eclipse as Admin!
 	 */
-	public WindowsAdminException() {
+	public AdminRequiredException() {
 		super("This program must be started as admin in ordert to work!");
 	}
 }

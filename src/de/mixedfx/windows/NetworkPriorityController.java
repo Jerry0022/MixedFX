@@ -13,33 +13,29 @@ import de.mixedfx.logging.Log;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
-public class NetworkPriorityController
-{
-	private static FutureTask<Void>	t;
-	private static BooleanProperty	result	= new SimpleBooleanProperty(false);
+public class NetworkPriorityController {
+	private static FutureTask<Void> t;
+	private static BooleanProperty result = new SimpleBooleanProperty(false);
 
 	/**
 	 * DOES NOT WORK IF USER DOES NOT USE THE PREDEFINED ADMIN ACCOUNT IN WINDOWS!
+	 * 
 	 * @param adapterName
 	 *            The name of the network adapter, may be user specific.
-	 * @return A property which is false but turns to true or invalidates false if the async thread is finished (the thread waits for a dialogue to
-	 *         close, if there is the default windows dialogue to set this priority open). (The async thread is not a daemon and only called once,
-	 *         doesn't matter how often this method is called)
+	 * @return A property which is false but turns to true or invalidates false if the async thread is finished (the thread waits for a dialogue to close, if there is the default windows dialogue to
+	 *         set this priority open). (The async thread is not a daemon and only called once, doesn't matter how often this method is called)
+	 * @throws NetworkAdapterNotFoundException
 	 */
-	public static BooleanProperty toTop(String adapterName)
-	{
-		if (t == null)
-		{
-			t = new FutureTask<Void>(new Callable<Void>()
-			{
+	public static BooleanProperty toTop(String adapterName) throws NetworkAdapterNotFoundException {
+		if (!NetworkAdapterController.exists(adapterName))
+			throw new NetworkAdapterNotFoundException(adapterName);
+		if (t == null) {
+			t = new FutureTask<Void>(new Callable<Void>() {
 				@Override
-				public Void call() throws Exception
-				{
-					try
-					{
+				public Void call() throws Exception {
+					try {
 						FileObject tempFullPath = FileObject.create().setPath(File.createTempFile("temp-file", "tmp").getParent()).setFullName("nvspbind.exe");
-						if (!tempFullPath.toFile().exists())
-						{
+						if (!tempFullPath.toFile().exists()) {
 							File nvspbind = new File(NetworkPriorityController.class.getResource("nvspbind.exe").toURI());
 							FileUtils.copyInputStreamToFile(new FileInputStream(nvspbind), tempFullPath.toFile());
 						}
@@ -49,9 +45,7 @@ public class NetworkPriorityController
 						t = null;
 						Log.windows.debug("NetworkAdapter " + adapterName + " was set to top!");
 						return null;
-					}
-					catch (Exception e)
-					{
+					} catch (Exception e) {
 						result.set(false);
 						t = null;
 						return null;
