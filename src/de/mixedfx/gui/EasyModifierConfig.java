@@ -1,15 +1,9 @@
 package de.mixedfx.gui;
 
 import javafx.scene.Parent;
-import javafx.scene.input.KeyCode;
 
 public class EasyModifierConfig
 {
-	/**
-	 * Holding this key triggers the dynamic change. Default is {@link KeyCode#CONTROL}. Null means every key.
-	 */
-	public KeyCode trigger;
-
 	/**
 	 * The style class which marks all the {@link Parent} who shall be modifiable. Default is "modifiable".
 	 */
@@ -23,7 +17,6 @@ public class EasyModifierConfig
 
 	public EasyModifierConfig()
 	{
-		this.trigger = KeyCode.CONTROL;
 		this.staticClass = "modifiable";
 		this.dynamicClass = "modifying";
 	}

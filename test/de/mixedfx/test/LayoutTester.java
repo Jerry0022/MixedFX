@@ -2,8 +2,8 @@ package de.mixedfx.test;
 
 import de.mixedfx.assets.ImageHandler;
 import de.mixedfx.assets.ImageProducer;
-import de.mixedfx.gui.EasyModifier;
 import de.mixedfx.gui.EasyModifierConfig;
+import de.mixedfx.gui.Layouter;
 import de.mixedfx.gui.panes.SuperPane;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -65,7 +65,7 @@ public class LayoutTester extends Application
 		root.getStylesheets().add(this.getClass().getResource("LayoutStyle.css").toExternalForm());
 		Scene scene = new Scene(root, 600, 400);
 		LayoutTester.scene = scene;
-		EasyModifier.setLayoutable(superPane, root, new EasyModifierConfig());
+		Layouter.setLayoutable(superPane, root, new EasyModifierConfig());
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}

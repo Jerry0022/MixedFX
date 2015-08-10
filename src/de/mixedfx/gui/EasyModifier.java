@@ -1,184 +1,24 @@
 package de.mixedfx.gui;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.controlsfx.control.PopOver.ArrowLocation;
-
-import de.mixedfx.assets.ImageHandler;
-import de.mixedfx.file.FileObject;
-import de.mixedfx.gui.panes.SuperPane;
 import de.mixedfx.logging.Log;
-import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
-import javafx.stage.FileChooser;
 
 public class EasyModifier
 {
-
-	public static void setLayoutable(SuperPane pane, EasyModifierConfig config)
-	{
-		setLayoutable(pane, pane, config);
-	}
-
 	/**
-	 * Should be called after all initializations of the scene graphs' nodes are done. Otherwise may buttons and clickable elements still work! Makes a root and all of its children which have some
-	 * config modifiable! Other nodes are not clickable while in modifying mode!
+	 * Trigger to go in modifying mode is a boolean change!
 	 * 
-	 * @param paneToShowSaving
-	 *            On this pane load() is called if a new layout background is saved!
-	 * @param root
-	 *            Itself and all of its children are scanned if they are layoutables!
-	 * @param config
-	 *            The config for this layout!
-	 */
-	public static void setLayoutable(SuperPane paneToShowSaving, Parent root, EasyModifierConfig config)
-	{
-		/*
-		 * Set up PopOver
-		 */
-		LayoutPopOver popOver = new LayoutPopOver();
-		popOver.setArrowLocation(ArrowLocation.TOP_CENTER);
-		popOver.setAutoHide(true);
-		popOver.setAutoFix(true);
-		popOver.setDetachable(false);
-		popOver.showingProperty().addListener(new ChangeListener<Boolean>()
-		{
-			@Override
-			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue)
-			{
-				Platform.runLater(() ->
-				{
-					Region parent = (Region) popOver.getOwnerNode();
-					// Just save if background changed!
-					if (!newValue && !parent.getBackground().equals(popOver.lastBackground))
-					{
-						paneToShowSaving.load(new Task<Void>()
-						{
-							@Override
-							protected Void call() throws Exception
-							{
-								System.out.println("BACKGROUND CHANGED! Save it by using Superpane.load()!");
-								Thread.sleep(4000);
-								return null;
-							}
-						});
-					}
-				});
-			}
-		});
-
-		/*
-		 * Let PopOver disappear as soon as somewhere else is clicked!
-		 */
-		root.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>()
-		{
-			@Override
-			public void handle(MouseEvent event)
-			{
-				if (popOver.isShowing())
-					popOver.hide();
-			}
-		});
-
-		EasyModifierHandler handler = new EasyModifierHandler()
-		{
-			@Override
-			public void modify(Parent parent, boolean doIt)
-			{
-				if (!(parent instanceof Region))
-				{
-					Log.assets.warn("Can layout only Regions but this Parent is marked with the style class but not a Region: " + parent);
-					return;
-				}
-
-				Region region = (Region) parent;
-
-				EventHandler<MouseEvent> event = new EventHandler<MouseEvent>()
-				{
-					@Override
-					public void handle(MouseEvent event)
-					{
-						Log.assets.trace("Clicked on a dynamically modifable element!");
-
-						/*
-						 * Initialize PopOver content!
-						 */
-						HBox toolBox = new HBox();
-						Button button = new Button("Bild auswählen!");
-						ColorPicker picker = new ColorPicker();
-						picker.showingProperty().addListener(new ChangeListener<Boolean>()
-						{
-							@Override
-							public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue)
-							{
-								popOver.setAutoHide(!newValue);
-							}
-						});
-						picker.setOnAction(new EventHandler<ActionEvent>()
-						{
-							@Override
-							public void handle(ActionEvent event)
-							{
-								region.setBackground(new Background(new BackgroundFill(picker.getValue(), CornerRadii.EMPTY, Insets.EMPTY)));
-							}
-						});
-						toolBox.getChildren().addAll(picker, button);
-						popOver.setContentNode(toolBox);
-						button.setOnAction(new EventHandler<ActionEvent>()
-						{
-							@Override
-							public void handle(ActionEvent event)
-							{
-								popOver.setAutoHide(false);
-								FileChooser imageChooser = new FileChooser();
-								imageChooser.setTitle("Bild auswählen!");
-								File selected = imageChooser.showOpenDialog(popOver);
-								RegionManipulator.bindBackground(region, ImageHandler.readImage(FileObject.create(selected)));
-								popOver.setAutoHide(true);
-							}
-						});
-
-						/*
-						 * Show PopOver!
-						 */
-						popOver.lastBackground = region.getBackground();
-						popOver.show(region, event.getScreenX(), event.getScreenY());
-						event.consume();
-					}
-				};
-
-				if (doIt)
-				{
-					region.setOnMouseClicked(new EasyModifierEventHandler(region.getOnMouseClicked(), event));
-				} else
-				{
-					region.setOnMouseClicked(((EasyModifierEventHandler) region.getOnMouseClicked()).getOldEventHandler());
-				}
-			}
-		};
-
-		EasyModifier.init(root, config, handler);
-	}
-
-	/**
 	 * @param root
 	 *            The root to manipulate, all listeners and events of all sub nodes will still work.
 	 * @param config
@@ -186,7 +26,7 @@ public class EasyModifier
 	 * @param handler
 	 *            The handler which shall apply as long as the root is in modifying node! DoIt signalizes if the Parent is in modifying mode ({@link EasyModifierConfig#trigger} is constantly pressed).
 	 */
-	public static void init(Parent root, EasyModifierConfig config, EasyModifierHandler handler)
+	public static void init(Parent root, BooleanProperty trigger, EasyModifierConfig config, EasyModifierHandler handler)
 	{
 		EasyModifierHandler styleHandler = new EasyModifierHandler()
 		{
@@ -203,13 +43,40 @@ public class EasyModifier
 			}
 		};
 
+		trigger.addListener(new ChangeListener<Boolean>()
+		{
+			@Override
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue)
+			{
+				runOnAllSubNodes(root, config.staticClass, newValue, styleHandler, handler);
+			}
+		});
+	}
+
+	/**
+	 * Trigger to go in modifying mode is a key pressed or released on the full root!
+	 * 
+	 * @param root
+	 *            The root to manipulate, all listeners and events of all sub nodes will still work.
+	 * @param triggerKey
+	 *            The key which shall trigger this action! Null means any key.
+	 * @param config
+	 *            The config to be used!
+	 * @param handler
+	 *            The handler which shall apply as long as the root is in modifying node! DoIt signalizes if the Parent is in modifying mode ({@link EasyModifierConfig#trigger} is constantly pressed).
+	 */
+	public static void init(Parent root, EasyModifierConfig config, EasyModifierHandler handler, KeyCode triggerKey)
+	{
+		BooleanProperty trigger = new SimpleBooleanProperty();
+		EasyModifier.init(root, trigger, config, handler);
+
 		root.setOnKeyPressed(new EventHandler<KeyEvent>()
 		{
 			public void handle(KeyEvent ke)
 			{
-				if (config.trigger == null || ke.getCode().equals(config.trigger))
+				if (triggerKey == null || ke.getCode().equals(triggerKey))
 				{
-					runOnAllSubNodes(root, config.staticClass, true, styleHandler, handler);
+					trigger.set(true);
 				}
 			}
 		});
@@ -217,9 +84,9 @@ public class EasyModifier
 		{
 			public void handle(KeyEvent ke)
 			{
-				if (config.trigger == null || ke.getCode().equals(config.trigger))
+				if (triggerKey == null || ke.getCode().equals(triggerKey))
 				{
-					runOnAllSubNodes(root, config.staticClass, false, styleHandler, handler);
+					trigger.set(false);
 				}
 			}
 		});
