@@ -12,19 +12,23 @@ import org.apache.logging.log4j.core.LoggerContext;
  *
  * @author Jerry
  */
-public class Log {
+public class Log
+{
 	public static final LoggerContext CONTEXT;
 	public static final Logger DEFAULT;
 	public static final Logger network;
 	public static final Logger assets;
 	public static final Logger windows;
 
-	static {
+	static
+	{
 		CustomSysOutErr.init(true);
 		CONTEXT = new LoggerContext("MixedFX");
-		try {
+		try
+		{
 			Log.CONTEXT.setConfigLocation(Log.class.getResource("log4j.xml").toURI());
-		} catch (final URISyntaxException e) {
+		} catch (final URISyntaxException e)
+		{
 		}
 		DEFAULT = Log.CONTEXT.getLogger("Default");
 		network = Log.CONTEXT.getLogger("Network");
@@ -32,14 +36,18 @@ public class Log {
 		windows = Log.CONTEXT.getLogger("Windows");
 	}
 
-	public void turnAllOn() {
-		for (final Logger l : Log.CONTEXT.getLoggers()) {
+	public void turnAllOn()
+	{
+		for (final Logger l : Log.CONTEXT.getLoggers())
+		{
 			l.setLevel(Level.ALL);
 		}
 	}
 
-	public void turnAllOff() {
-		for (final Logger l : Log.CONTEXT.getLoggers()) {
+	public void turnAllOff()
+	{
+		for (final Logger l : Log.CONTEXT.getLoggers())
+		{
 			l.setLevel(Level.OFF);
 		}
 	}

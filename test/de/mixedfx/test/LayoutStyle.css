@@ -1,8 +1,13 @@
-.lay {
+.modifiable {
 }
 
-.layoutable:hover {
+.modifying {
 	-fx-border-color: #2e8b57;
     -fx-border-width: 5px;
     -fx-cursor: crosshair;
+}
+
+.modifying:hover {
+	-fx-border-color: yellow;
+    -fx-border-width: 5px;
 }
