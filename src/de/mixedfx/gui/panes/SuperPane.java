@@ -28,11 +28,11 @@ public class SuperPane extends StackPane
 	/**
 	 * Says how many tasks can be run in parallel. Other tasks will wait.
 	 */
-	private final static int	taskMaxParallel			= 3;
+	private final static int taskMaxParallel = 3;
 	/**
 	 * Indicates after how many milliseconds a running task shall request to open the LoadScreen
 	 */
-	private final static int	taskLoadScreenDelayMS	= 400;
+	private final static int taskLoadScreenDelayMS = 400;
 
 	/**
 	 * Retrieves and returns the first found parent SuperPane (which doesn't have to be the direct parent node).
@@ -54,8 +54,8 @@ public class SuperPane extends StackPane
 	 * OBJECT INSTANCE DESCRIPTION:
 	 */
 
-	private Node	content;
-	private Node	loadScreen;
+	private Node content;
+	private Node loadScreen;
 
 	/**
 	 * Indicates whether the Load Screen is open, not if a task is running (because if many short tasks are running there is no LoadScreen)
@@ -65,9 +65,9 @@ public class SuperPane extends StackPane
 	/**
 	 * Handles all jobs which are loaded via {@link #load(Task)}! Executes three workers at the same time. Others have to wait.
 	 */
-	private ExecutorService					taskCollector;
-	private ArrayList<Task<?>>				taskList;
-	private EventHandler<WorkerStateEvent>	taskDoneHandler;
+	private ExecutorService taskCollector;
+	private ArrayList<Task<?>> taskList;
+	private EventHandler<WorkerStateEvent> taskDoneHandler;
 
 	/**
 	 * Initializes the StackPane resizing mechanism and all task related stuff.
@@ -115,16 +115,18 @@ public class SuperPane extends StackPane
 	 *
 	 * @param content
 	 * @param loadScreen
-	 *            Can be a {@link Dynamic} to be informed about its lifecycle. The Load Screen is not part of the scene graph until {SuperPane
-	 *            {@link #load(Task)} is called.
+	 *            Can be a {@link Dynamic} to be informed about its lifecycle. The Load Screen is not part of the scene graph until {SuperPane {@link #load(Task)} is called.
 	 */
 	public SuperPane(final Node content, final Node loadScreen)
 	{
 		this();
 
-		// Add content to the pane
-		this.content = content;
-		this.getChildren().add(this.content);
+		if (content != null)
+		{
+			// Add content to the pane
+			this.content = content;
+			this.getChildren().add(this.content);
+		}
 
 		// Set Load Screen (is visible if load() is called)
 		this.loadScreen = loadScreen;
@@ -195,12 +197,12 @@ public class SuperPane extends StackPane
 	}
 
 	/**
-	 * Loads a task asynchronously and shows a stopping task animation as an overlay if the task is running longer than
-	 * {@link SuperPane#taskLoadScreenDelayMS}. In each case the content is unclickable for the time. Doesn't have to be called via FXThread.
+	 * Loads a task asynchronously and shows a stopping task animation as an overlay if the task is running longer than {@link SuperPane#taskLoadScreenDelayMS}. In each case the content is unclickable
+	 * for the time. Doesn't have to be called via FXThread.
 	 *
 	 * @param task
-	 *            The task which shall be executed. Maybe it is not executed immediately because more than {@link SuperPane#taskMaxParallel} are
-	 *            running in parallel. But the Load Screen is shown all over the time.
+	 *            The task which shall be executed. Maybe it is not executed immediately because more than {@link SuperPane#taskMaxParallel} are running in parallel. But the Load Screen is shown all
+	 *            over the time.
 	 */
 	public void load(final Task<?> task)
 	{
@@ -216,9 +218,11 @@ public class SuperPane extends StackPane
 		{
 			try
 			{
-				SuperPane.this.content.setMouseTransparent(true);
+				if (SuperPane.this.content != null)
+					SuperPane.this.content.setMouseTransparent(true);
 				Thread.sleep(SuperPane.taskLoadScreenDelayMS);
-				SuperPane.this.content.setMouseTransparent(false);
+				if (SuperPane.this.content != null)
+					SuperPane.this.content.setMouseTransparent(false);
 				// Show Load Screen only if the task was not a very short
 				// one
 				if (!task.isDone())
@@ -228,8 +232,7 @@ public class SuperPane extends StackPane
 						SuperPane.this.openLoadScreen();
 					});
 				}
-			}
-			catch (final InterruptedException e)
+			} catch (final InterruptedException e)
 			{
 			}
 		});
@@ -346,8 +349,7 @@ public class SuperPane extends StackPane
 	}
 
 	/**
-	 * Blurs and darkens the whole StackPane. First it removes all old overlays. Then maybe adds a new Overlay as forelast element (only in case the
-	 * last element is not the content).
+	 * Blurs and darkens the whole StackPane. First it removes all old overlays. Then maybe adds a new Overlay as forelast element (only in case the last element is not the content).
 	 */
 	private void blurAndDarkenPreLastLayer()
 	{
@@ -361,7 +363,7 @@ public class SuperPane extends StackPane
 		}
 
 		// Add an overlay only if the last element is not the content
-		if (!this.getChildren().get(this.getChildren().size() - 1).equals(this.content))
+		if (content != null && !this.getChildren().get(this.getChildren().size() - 1).equals(this.content))
 		{
 			// Blur all layer except the last one
 			final BoxBlur blurBox = new BoxBlur();

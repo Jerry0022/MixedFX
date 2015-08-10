@@ -4,6 +4,7 @@ import de.mixedfx.assets.ImageHandler;
 import de.mixedfx.assets.ImageProducer;
 import de.mixedfx.gui.EasyModifier;
 import de.mixedfx.gui.EasyModifierConfig;
+import de.mixedfx.gui.panes.SuperPane;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -54,7 +55,8 @@ public class LayoutTester extends Application
 				System.out.println("yesButton was clicked!");
 			}
 		});
-		subBox.getChildren().addAll(subColouredPane, new Label("COOL"), yesButton);
+		SuperPane superPane = new SuperPane(null, new LayoutLoadScreen());
+		subBox.getChildren().addAll(subColouredPane, new Label("COOL"), yesButton, superPane);
 
 		box.getChildren().addAll(colouredPane, subBox);
 		StackPane root = new StackPane();
@@ -63,7 +65,7 @@ public class LayoutTester extends Application
 		root.getStylesheets().add(this.getClass().getResource("LayoutStyle.css").toExternalForm());
 		Scene scene = new Scene(root, 600, 400);
 		LayoutTester.scene = scene;
-		EasyModifier.setLayoutable(scene.getRoot(), new EasyModifierConfig());
+		EasyModifier.setLayoutable(superPane, root, new EasyModifierConfig());
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
