@@ -17,7 +17,8 @@ import org.apache.commons.io.FilenameUtils;
  *
  * @author Jerry
  */
-public class FileObject implements Cloneable {
+public class FileObject implements Cloneable
+{
 	/**
 	 * The separator between the prefix and the name in the file name. As soon as this parameter is modified, all actions taken on a FileObject will deal with the new one. Default: "###"
 	 */
@@ -27,11 +28,13 @@ public class FileObject implements Cloneable {
 	 */
 	public static String extensionSeparator = ".";
 
-	public static FileObject create() {
+	public static FileObject create()
+	{
 		return new FileObject();
 	}
 
-	public static FileObject create(final File file) {
+	public static FileObject create(final File file)
+	{
 		return new FileObject(file);
 	}
 
@@ -56,7 +59,8 @@ public class FileObject implements Cloneable {
 	 * {@link #setParameter(String)}
 	 * </pre>
 	 */
-	public FileObject() {
+	public FileObject()
+	{
 		this.clear();
 	}
 
@@ -66,12 +70,18 @@ public class FileObject implements Cloneable {
 	 * @param file
 	 *            The file or folder which shall be used to create the FileObject
 	 */
-	public FileObject(final File file) {
+	public FileObject(final File file)
+	{
 		this();
 
-		if (file.isDirectory()) {
+		if (file == null)
+			return;
+
+		if (file.isDirectory())
+		{
 			this.setPath(FilenameUtils.getFullPath(file.getAbsolutePath()));
-		} else if (file.isFile()) {
+		} else if (file.isFile())
+		{
 			this.setPath(FilenameUtils.getFullPath(file.getAbsolutePath()));
 			this.setFullName(FilenameUtils.getName(file.getAbsolutePath()));
 		}
@@ -80,21 +90,24 @@ public class FileObject implements Cloneable {
 	/**
 	 * @return Returns the size of the file or folder as {@link BigInteger} in Bytes
 	 */
-	public BigInteger size() {
+	public BigInteger size()
+	{
 		return FileUtils.sizeOfAsBigInteger(this.toFile());
 	}
 
 	/**
 	 * @return Returns the corresponding {@link File} even if the file is not valid / created
 	 */
-	public File toFile() {
+	public File toFile()
+	{
 		return new File(this.getFullPath());
 	}
 
 	/**
 	 * @return Returns the URI representation of this FileObject
 	 */
-	public String toURI() {
+	public String toURI()
+	{
 		return new File(this.getFullPath()).toURI().toString();
 	}
 
@@ -104,10 +117,13 @@ public class FileObject implements Cloneable {
 	 * @param toCompare
 	 * @return Returns true if size and name is equal.
 	 */
-	public boolean equalsNameSize(final FileObject toCompare) {
-		if (this.getName().equalsIgnoreCase(toCompare.getName()) && this.size().equals(toCompare.size())) {
+	public boolean equalsNameSize(final FileObject toCompare)
+	{
+		if (this.getName().equalsIgnoreCase(toCompare.getName()) && this.size().equals(toCompare.size()))
+		{
 			return true;
-		} else {
+		} else
+		{
 			return false;
 		}
 	}
@@ -119,10 +135,13 @@ public class FileObject implements Cloneable {
 	 *            The FileObject to compare.
 	 * @return Returns true if the FileObject is the same ignoring case.
 	 */
-	public boolean equals(final FileObject toCompare) {
-		if (this.getFullPath().equalsIgnoreCase(toCompare.getFullPath())) {
+	public boolean equals(final FileObject toCompare)
+	{
+		if (this.getFullPath().equalsIgnoreCase(toCompare.getFullPath()))
+		{
 			return true;
-		} else {
+		} else
+		{
 			return false;
 		}
 	}
@@ -132,23 +151,28 @@ public class FileObject implements Cloneable {
 	 *
 	 * @return boolean True if it fulfills the criterias, false if not.
 	 */
-	public boolean isValid() {
-		try {
+	public boolean isValid()
+	{
+		try
+		{
 			final File toTest = new File(this.getFullPath());
 			toTest.getCanonicalPath();
 			return true;
-		} catch (final IOException e) {
+		} catch (final IOException e)
+		{
 			return false;
 		}
 	}
 
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		return this.getFullPath();
 	}
 
 	@Override
-	public FileObject clone() {
+	public FileObject clone()
+	{
 		// Works because Strings are immutuable
 		return FileObject.create().setPath(this.getPath()).setFullName(this.getFullName());
 	}
@@ -158,7 +182,8 @@ public class FileObject implements Cloneable {
 	/**
 	 * All set attributes are deleted.
 	 */
-	public void clear() {
+	public void clear()
+	{
 		this.path = "";
 		this.prefix = "";
 		this.name = "";
@@ -171,7 +196,8 @@ public class FileObject implements Cloneable {
 	 *
 	 * @return Returns only the path!
 	 */
-	public String getPath() {
+	public String getPath()
+	{
 		return this.path;
 	}
 
@@ -180,10 +206,13 @@ public class FileObject implements Cloneable {
 	 *
 	 * @return
 	 */
-	public String getFullPath() {
-		if (this.getPath().equals("") && this.getFullName().equals("")) {
+	public String getFullPath()
+	{
+		if (this.getPath().equals("") && this.getFullName().equals(""))
+		{
 			return "";
-		} else {
+		} else
+		{
 			return DataHandler.fuse(this.getPath(), this.getFullName());
 		}
 	}
@@ -191,7 +220,8 @@ public class FileObject implements Cloneable {
 	/**
 	 * @return Returns {@link #getFullPath()} plus {@link #getParameter()}!
 	 */
-	public String getFullPathWithParameter() {
+	public String getFullPathWithParameter()
+	{
 		StringBuilder builder = new StringBuilder();
 		for (String parameter : getParameter())
 			builder.append(" " + parameter);
@@ -202,7 +232,8 @@ public class FileObject implements Cloneable {
 	 * @param path
 	 *            Set the path (excluding file)
 	 */
-	public FileObject setPath(final String path) {
+	public FileObject setPath(final String path)
+	{
 		this.path = path;
 		return this;
 	}
@@ -210,17 +241,21 @@ public class FileObject implements Cloneable {
 	/**
 	 * @return Returns only the prefix.
 	 */
-	public String getPrefix() {
+	public String getPrefix()
+	{
 		return this.prefix;
 	}
 
 	/**
 	 * @return Returns the prefix plus separator
 	 */
-	public String getFullPrefix() {
-		if (this.getPrefix().equals("")) {
+	public String getFullPrefix()
+	{
+		if (this.getPrefix().equals(""))
+		{
 			return this.getPrefix();
-		} else {
+		} else
+		{
 			return this.getPrefix() + FileObject.prefixSeparator;
 		}
 	}
@@ -229,10 +264,13 @@ public class FileObject implements Cloneable {
 	 * @param prefix
 	 *            Set the prefix with/without separator
 	 */
-	public FileObject setPrefix(final String prefix) {
-		if (prefix.endsWith(FileObject.prefixSeparator)) {
+	public FileObject setPrefix(final String prefix)
+	{
+		if (prefix.endsWith(FileObject.prefixSeparator))
+		{
 			this.prefix = prefix.replaceFirst(FileObject.prefixSeparator, "");
-		} else {
+		} else
+		{
 			this.prefix = prefix;
 		}
 		return this;
@@ -241,7 +279,8 @@ public class FileObject implements Cloneable {
 	/**
 	 * @return Returns the name without prefix and without extension
 	 */
-	public String getName() {
+	public String getName()
+	{
 		return this.name;
 	}
 
@@ -251,7 +290,8 @@ public class FileObject implements Cloneable {
 	 * @param name
 	 *            File/Folder name without prefix without extension
 	 */
-	public FileObject setName(final String name) {
+	public FileObject setName(final String name)
+	{
 		this.name = name;
 		return this;
 	}
@@ -259,14 +299,16 @@ public class FileObject implements Cloneable {
 	/**
 	 * @return Returns the name with prefix and without extension and without parameters!
 	 */
-	public String getFullNameWithoutExtension() {
+	public String getFullNameWithoutExtension()
+	{
 		return this.getFullPrefix() + this.getName();
 	}
 
 	/**
 	 * @return Returns the name with prefix and with extension and without parameters!
 	 */
-	public String getFullName() {
+	public String getFullName()
+	{
 		return this.getFullNameWithoutExtension() + this.getFullExtension();
 	}
 
@@ -276,15 +318,18 @@ public class FileObject implements Cloneable {
 	 * @param name
 	 *            File/Folder name with/without prefix with/without extension, but without the (parent) directory and without parameters!
 	 */
-	public FileObject setFullName(String name) {
+	public FileObject setFullName(String name)
+	{
 		this.setExtension(FilenameUtils.getExtension(name));
 
 		name = FilenameUtils.getBaseName(name);
 		final String prefix = name.split(FileObject.prefixSeparator)[0];
-		if (!prefix.equals(name)) {
+		if (!prefix.equals(name))
+		{
 			this.setPrefix(prefix);
 			this.setName(name.substring(prefix.length() + FileObject.prefixSeparator.length()));
-		} else {
+		} else
+		{
 			this.setName(name);
 			this.prefix = "";
 		}
@@ -294,17 +339,21 @@ public class FileObject implements Cloneable {
 	/**
 	 * @return Returns the extension without separator
 	 */
-	public String getExtension() {
+	public String getExtension()
+	{
 		return this.extension;
 	}
 
 	/**
 	 * @return Returns separator + extension
 	 */
-	public String getFullExtension() {
-		if (this.getExtension().equals("")) {
+	public String getFullExtension()
+	{
+		if (this.getExtension().equals(""))
+		{
 			return this.getExtension();
-		} else {
+		} else
+		{
 			return FileObject.extensionSeparator + this.getExtension();
 		}
 	}
@@ -313,10 +362,13 @@ public class FileObject implements Cloneable {
 	 * @param extension
 	 *            Set the file extension with/without separator, e. g. ".png" or only "png"
 	 */
-	public FileObject setExtension(final String extension) {
-		if (extension.startsWith(FileObject.extensionSeparator)) {
+	public FileObject setExtension(final String extension)
+	{
+		if (extension.startsWith(FileObject.extensionSeparator))
+		{
 			this.extension = extension.replaceFirst("\\" + FileObject.extensionSeparator, "");
-		} else {
+		} else
+		{
 			this.extension = extension;
 		}
 		return this;
@@ -329,7 +381,8 @@ public class FileObject implements Cloneable {
 	 *            Parameters to apply without leading space. Default is an empty String.
 	 * @return Returns this.
 	 */
-	public FileObject setParameter(String... parameter) {
+	public FileObject setParameter(String... parameter)
+	{
 		this.parameter = parameter;
 		return this;
 	}
@@ -337,7 +390,8 @@ public class FileObject implements Cloneable {
 	/**
 	 * @return Returns the parameter of this file.
 	 */
-	public String[] getParameter() {
+	public String[] getParameter()
+	{
 		return this.parameter;
 	}
 }

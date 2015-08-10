@@ -1,12 +1,15 @@
 package de.mixedfx.gui;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.controlsfx.control.PopOver;
 import org.controlsfx.control.PopOver.ArrowLocation;
 
+import de.mixedfx.assets.ImageHandler;
+import de.mixedfx.file.FileObject;
 import de.mixedfx.logging.Log;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -39,18 +42,33 @@ public class EasyModifier
 		/*
 		 * Set up PopOver
 		 */
-		PopOver popOver = new PopOver();
+		LayoutPopOver popOver = new LayoutPopOver();
 		popOver.setArrowLocation(ArrowLocation.TOP_CENTER);
 		popOver.setAutoHide(true);
 		popOver.setAutoFix(true);
 		popOver.setDetachable(false);
+		popOver.showingProperty().addListener(new ChangeListener<Boolean>()
+		{
+			@Override
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue)
+			{
+				Platform.runLater(() ->
+				{
+					Region parent = (Region) popOver.getOwnerNode();
+					// Just save if background changed!
+					if (!newValue && !parent.getBackground().equals(popOver.lastBackground))
+					{
+						System.out.println("BACKGROUND CHANGED! Save it by using Superpane.load()!");
+					}
+				});
+			}
+		});
 
 		/*
 		 * Initialize PopOver content!
 		 */
 		HBox toolBox = new HBox();
 		ColorPicker picker = new ColorPicker();
-
 		picker.showingProperty().addListener(new ChangeListener<Boolean>()
 		{
 			@Override
@@ -88,10 +106,6 @@ public class EasyModifier
 					{
 						Log.assets.trace("Clicked on a dynamically modifable element!");
 
-						/*
-						 * TODO Save better old Background and compare with new one if the popOver is hided! Otherwise performance overload!
-						 */
-
 						picker.setOnAction(new EventHandler<ActionEvent>()
 						{
 							@Override
@@ -100,7 +114,6 @@ public class EasyModifier
 								if (parent instanceof Parent)
 								{
 									((Region) parent).setBackground(new Background(new BackgroundFill(picker.getValue(), CornerRadii.EMPTY, Insets.EMPTY)));
-									// TODO Save to Layout with parent
 								} else
 									Log.assets.warn("Could not style: " + parent);
 							}
@@ -113,8 +126,8 @@ public class EasyModifier
 								popOver.setAutoHide(false);
 								FileChooser imageChooser = new FileChooser();
 								imageChooser.setTitle("Bild auswählen!");
-								imageChooser.showOpenDialog(popOver);
-								// TODO Save to Layout with parent
+								File selected = imageChooser.showOpenDialog(popOver);
+								RegionManipulator.bindBackground((Region) parent, ImageHandler.readImage(FileObject.create(selected)));
 								popOver.setAutoHide(true);
 							}
 						});
@@ -122,27 +135,20 @@ public class EasyModifier
 						/*
 						 * Show PopOver!
 						 */
-						popOver.showingProperty().addListener(new ChangeListener<Boolean>()
-						{
-							@Override
-							public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue)
-							{
-								Log.assets.fatal("DO: " + newValue);
-							}
-						});
+						popOver.lastBackground = ((Region) parent).getBackground();
 						popOver.show(parent, event.getScreenX(), event.getScreenY());
 						event.consume();
-						Log.assets.warn("CLICKED");
 					}
 				};
 
-				if (doIt)
-				{
-					parent.setOnMouseClicked(new EasyModifierEventHandler(parent.getOnMouseClicked(), event));
-				} else
-				{
-					parent.setOnMouseClicked(((EasyModifierEventHandler) parent.getOnMouseClicked()).getOldEventHandler());
-				}
+				if (parent instanceof Region)
+					if (doIt)
+					{
+						parent.setOnMouseClicked(new EasyModifierEventHandler(parent.getOnMouseClicked(), event));
+					} else
+					{
+						parent.setOnMouseClicked(((EasyModifierEventHandler) parent.getOnMouseClicked()).getOldEventHandler());
+					}
 			}
 		};
 

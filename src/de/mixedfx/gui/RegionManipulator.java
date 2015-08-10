@@ -44,8 +44,7 @@ public class RegionManipulator
 	}
 
 	/**
-	 * Every Region can have a background. This method applies an image as background filling the
-	 * whole (background) area of the Region. It resizes automatically with changes of the region.
+	 * Every Region can have a background. This method applies an image as background filling the whole (background) area of the Region. It resizes automatically with changes of the region.
 	 *
 	 * @param region
 	 *            Region whose background shall be set.
@@ -54,12 +53,12 @@ public class RegionManipulator
 	 */
 	public static void bindBackground(final Region region, final Image image)
 	{
-		region.setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(1, 1, true, true, false, false))));
+		region.setBackground(
+				new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(1, 1, true, true, false, false))));
 	}
 
 	/**
-	 * Every Region can have a background. This method applies an image as background filling the
-	 * whole (background) area of the Region. It resizes automatically with changes of the region.
+	 * Every Region can have a background. This method applies an image as background filling the whole (background) area of the Region. It resizes automatically with changes of the region.
 	 *
 	 * @param region
 	 *            Region whose background shall be set.
