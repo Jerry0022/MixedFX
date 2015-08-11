@@ -3,6 +3,11 @@ package de.mixedfx.java;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * An Arraylist of String which doesn't look on the case if you call {@link #contains(Object)}.
+ * 
+ * @author Jerry
+ */
 @SuppressWarnings("serial")
 public class StringArrayList extends ArrayList<String>
 {

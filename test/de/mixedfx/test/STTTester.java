@@ -1,50 +1,43 @@
 package de.mixedfx.test;
 
-import java.io.File;
-import java.nio.file.Files;
-
-import com.darkprograms.speech.microphone.Microphone;
-import com.darkprograms.speech.recognizer.GSpeechDuplex;
 import com.darkprograms.speech.recognizer.GSpeechResponseListener;
 import com.darkprograms.speech.recognizer.GoogleResponse;
 
-import javaFlacEncoder.FLACFileWriter;
+import de.mixedfx.logging.Log;
+import de.mixedfx.textandspeech.SpeechToText;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
-public class STTTester {
+public class STTTester
+{
 
-	public static void main(String[] args) {
-		try {
-			GSpeechDuplex dup = new GSpeechDuplex("");// Instantiate the API
-			dup.setLanguage("de-de");
-			dup.addResponseListener(new GSpeechResponseListener() {// Adds the listener
-				public void onResponse(GoogleResponse gr) {
-					System.out.println("Google thinks you said: " + gr.getResponse());
-					System.out.println("with " + ((gr.getConfidence() != null) ? (Double.parseDouble(gr.getConfidence()) * 100) : null) + "% confidence.");
-					System.out.println("Google also thinks that you might have said:" + gr.getOtherPossibleResponses());
-				}
-			});
+	public static void main(String[] args)
+	{
+		BooleanProperty bol = new SimpleBooleanProperty(false);
 
-			Microphone mic = new Microphone(FLACFileWriter.FLAC);// Instantiate microphone and have
-			// it record FLAC file.
-			File file = new File("CRAudioTest.flac");// The File to record the buffer to.
-			// You can also create your own buffer using the getTargetDataLine() method.
-			while (true) {
-				try {
-					mic.captureAudioToFile(file);// Begins recording
-					Thread.sleep(10000);// Records for 10 seconds
-					mic.close();// Stops recording
-					// Sends 10 second voice recording to Google
-					byte[] data = Files.readAllBytes(mic.getAudioFile().toPath());// Saves data into memory.
-					dup.recognize(data, (int) mic.getAudioFormat().getSampleRate());
-					mic.getAudioFile().delete();// Deletes Buffer file
-					// REPEAT
-				} catch (Exception ex) {
-					ex.printStackTrace();// Prints an error if something goes wrong.
-				}
+		SpeechToText.startListening("", bol, new GSpeechResponseListener()
+		{
+			@Override
+			public void onResponse(GoogleResponse gr)
+			{
+				System.out.println("Google thinks you said: " + gr.getResponse());
+				System.out.println("with " + ((gr.getConfidence() != null) ? (Double.parseDouble(gr.getConfidence()) * 100) : null) + "% confidence.");
+				System.out.println("Google also thinks that you might have said:" + gr.getOtherPossibleResponses());
 			}
-		} catch (Exception e) {
-			System.out.println("No microphone found!");
+		});
+
+		Log.textAndSpeech.info("Start listening!");
+		bol.set(true);
+		try
+		{
+			Thread.sleep(8000);
+		} catch (InterruptedException e)
+		{
 		}
+		bol.set(false);
+		Log.textAndSpeech.info("Stop listening!");
+		while (true)
+			;
 	}
 
 }

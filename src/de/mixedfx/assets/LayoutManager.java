@@ -94,7 +94,7 @@ public class LayoutManager
 		final StringArrayList all = new StringArrayList(DataHandler.getSubFolderList(this.layoutDir));
 		if (all.size() == 0)
 		{
-			all.add("Default");
+			applyLayout(null);
 		}
 		return all;
 	}
