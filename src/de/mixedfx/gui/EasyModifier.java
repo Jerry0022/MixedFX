@@ -65,7 +65,7 @@ public class EasyModifier
 	 * @param handler
 	 *            The handler which shall apply as long as the root is in modifying node! DoIt signalizes if the Parent is in modifying mode ({@link EasyModifierConfig#trigger} is constantly pressed).
 	 */
-	public static void init(Parent root, EasyModifierConfig config, EasyModifierHandler handler, KeyCode triggerKey)
+	public static void init(Parent root, KeyCode triggerKey, EasyModifierConfig config, EasyModifierHandler handler)
 	{
 		BooleanProperty trigger = new SimpleBooleanProperty();
 		EasyModifier.init(root, trigger, config, handler);

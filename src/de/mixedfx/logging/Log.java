@@ -19,6 +19,7 @@ public class Log
 	public static final Logger network;
 	public static final Logger assets;
 	public static final Logger windows;
+	public static final Logger textAndSpeech;
 
 	static
 	{
@@ -34,6 +35,7 @@ public class Log
 		network = Log.CONTEXT.getLogger("Network");
 		assets = Log.CONTEXT.getLogger("Assets");
 		windows = Log.CONTEXT.getLogger("Windows");
+		textAndSpeech = Log.CONTEXT.getLogger("TextAndSpeech");
 	}
 
 	public void turnAllOn()

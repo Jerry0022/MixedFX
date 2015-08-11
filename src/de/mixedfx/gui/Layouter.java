@@ -19,6 +19,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -180,6 +181,6 @@ public class Layouter
 			}
 		};
 
-		EasyModifier.init(root, config, handler, null);
+		EasyModifier.init(root, KeyCode.CONTROL, config, handler);
 	}
 }
