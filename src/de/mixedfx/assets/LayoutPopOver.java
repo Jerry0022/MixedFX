@@ -1,4 +1,4 @@
-package de.mixedfx.gui;
+package de.mixedfx.assets;
 
 import org.controlsfx.control.PopOver;
 

@@ -1,4 +1,4 @@
-package de.mixedfx.gui;
+package de.mixedfx.assets;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
-import de.mixedfx.assets.MasterHandler;
 import de.mixedfx.file.DataHandler;
 import de.mixedfx.file.FileObject;
+import de.mixedfx.gui.RegionManipulator;
 import de.mixedfx.java.StringArrayList;
 import de.mixedfx.logging.Log;
 import javafx.application.Platform;

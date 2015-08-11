@@ -1,12 +1,15 @@
-package de.mixedfx.gui;
+package de.mixedfx.assets;
 
 import java.io.File;
 
 import org.controlsfx.control.PopOver.ArrowLocation;
 
-import de.mixedfx.assets.ImageHandler;
-import de.mixedfx.assets.ImageProducer;
 import de.mixedfx.file.FileObject;
+import de.mixedfx.gui.EasyModifier;
+import de.mixedfx.gui.EasyModifierConfig;
+import de.mixedfx.gui.EasyModifierEventHandler;
+import de.mixedfx.gui.EasyModifierHandler;
+import de.mixedfx.gui.RegionManipulator;
 import de.mixedfx.gui.panes.SuperPane;
 import de.mixedfx.logging.Log;
 import javafx.application.Platform;
