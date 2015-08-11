@@ -32,7 +32,7 @@ public class Layouter
 	 *            Superpane which will be used for load() tasks while saving and as root for all children which might can be layouted!
 	 * @param config
 	 */
-	public static void setLayoutable(SuperPane pane, LayoutManager2 layoutManager, EasyModifierConfig config)
+	public static void setLayoutable(SuperPane pane, LayoutManager layoutManager, EasyModifierConfig config)
 	{
 		Layouter.setLayoutable(pane, pane, layoutManager, config);
 	}
@@ -48,7 +48,7 @@ public class Layouter
 	 * @param config
 	 *            The config for this layout!
 	 */
-	public static void setLayoutable(SuperPane paneToShowSaving, Parent root, LayoutManager2 layoutManager, EasyModifierConfig config)
+	public static void setLayoutable(SuperPane paneToShowSaving, Parent root, LayoutManager layoutManager, EasyModifierConfig config)
 	{
 		if (layoutManager.root == null)
 			layoutManager.root = root;
