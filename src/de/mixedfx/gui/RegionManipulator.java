@@ -65,7 +65,7 @@ public class RegionManipulator
 	 * @param image
 	 *            ImageProperty which shall be the background of the region.
 	 */
-	public static void bindBackgrond(final Region region, final ObjectProperty<Image> image)
+	public static void bindBackground(final Region region, final ObjectProperty<Image> image)
 	{
 		image.addListener((ChangeListener<Image>) (observable, oldValue, newValue) ->
 		{

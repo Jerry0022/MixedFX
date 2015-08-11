@@ -2,7 +2,9 @@ package de.mixedfx.test;
 
 import de.mixedfx.assets.ImageHandler;
 import de.mixedfx.assets.ImageProducer;
+import de.mixedfx.file.FileObject;
 import de.mixedfx.gui.EasyModifierConfig;
+import de.mixedfx.gui.LayoutManager2;
 import de.mixedfx.gui.Layouter;
 import de.mixedfx.gui.panes.SuperPane;
 import javafx.application.Application;
@@ -20,8 +22,6 @@ import javafx.stage.Stage;
 
 public class LayoutTester extends Application
 {
-	public static Scene scene;
-
 	@Override
 	public void start(Stage primaryStage) throws Exception
 	{
@@ -30,6 +30,7 @@ public class LayoutTester extends Application
 
 		HBox colouredPane = ImageHandler.getPane(ImageProducer.getMonoColored(Color.RED));
 		colouredPane.setPrefSize(100, 100);
+		colouredPane.setId("ColouredPane");
 		colouredPane.getStyleClass().add("modifiable");
 		colouredPane.setOnMouseClicked(new EventHandler<MouseEvent>()
 		{
@@ -44,6 +45,7 @@ public class LayoutTester extends Application
 		HBox.setHgrow(subBox, Priority.ALWAYS);
 		subBox.setPrefSize(50, 50);
 		HBox subColouredPane = ImageHandler.getPane(ImageProducer.getMonoColored(Color.BLUE));
+		subColouredPane.setId("SubColouredPane");
 		subColouredPane.getStyleClass().add("modifiable");
 		subColouredPane.setPrefSize(40, 40);
 		Button yesButton = new Button("YEAH!");
@@ -64,8 +66,8 @@ public class LayoutTester extends Application
 
 		root.getStylesheets().add(this.getClass().getResource("LayoutStyle.css").toExternalForm());
 		Scene scene = new Scene(root, 600, 400);
-		LayoutTester.scene = scene;
-		Layouter.setLayoutable(superPane, root, new EasyModifierConfig());
+		LayoutManager2 lm = new LayoutManager2(root, FileObject.create().setPath("assets\\layouts"));
+		Layouter.setLayoutable(superPane, root, lm, new EasyModifierConfig());
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}

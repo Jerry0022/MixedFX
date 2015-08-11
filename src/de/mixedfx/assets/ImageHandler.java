@@ -28,8 +28,7 @@ public class ImageHandler
 	public static boolean backgroundLoading = false;
 
 	/**
-	 * By default this is the {@link ImageProducer#getTransparent()}. If you change this, this is
-	 * directly applied for all new loaded images!
+	 * By default this is the {@link ImageProducer#getTransparent()}. If you change this, this is directly applied for all new loaded images!
 	 */
 	public final static ObjectProperty<Image> defaultImage = new SimpleObjectProperty<>(ImageProducer.getTransparent());
 
@@ -44,9 +43,14 @@ public class ImageHandler
 	public static String extension = "png";
 
 	/**
-	 * Reads an image (applying the {@link ImageHandler#prefix} is recommended). Doesn't throw an
-	 * exception because even if the image is not found it returns the {@link #defaultImage} or a
-	 * transparent one (1x1 pixel).
+	 * The supported extensions of {@link Image}. Only important for {@link #writeImage(FileObject, Image)}!
+	 */
+	public static String[] supportedExtensions =
+	{ "BMP", "GIF", "JPEG", "JPG", "PNG" };
+
+	/**
+	 * Reads an image (applying the {@link ImageHandler#prefix} is recommended). Doesn't throw an exception because even if the image is not found it returns the {@link #defaultImage} or a transparent
+	 * one (1x1 pixel).
 	 *
 	 * @param fileObject
 	 *            The image to retrieve. The extension can be omitted.
@@ -57,8 +61,7 @@ public class ImageHandler
 		try
 		{
 			return new Image(DataHandler.readFile(fileObject).toURI().toString(), ImageHandler.backgroundLoading);
-		}
-		catch (final FileNotFoundException e)
+		} catch (final FileNotFoundException e)
 		{
 			return ImageHandler.defaultImage.get() != null ? ImageHandler.defaultImage.get() : ImageProducer.getTransparent();
 		}
@@ -68,15 +71,19 @@ public class ImageHandler
 	 * Writes an image object to the destination. Overwrites existing files.
 	 *
 	 * @param destination
-	 *            The destination FileObject. The extension are overwritten with the default one,
-	 *            see also {@link #prefix} and {@link #extension}
+	 *            The destination FileObject. The extension may be overwritten with the default one if {@link Image} doesn't support it! See also {@link #prefix} and {@link #extension}
 	 * @param toWrite
 	 */
 	public static void writeImage(final FileObject destination, final Image toWrite) throws IOException
 	{
 		if (toWrite != null)
 		{
-			destination.setExtension(ImageHandler.extension);
+			boolean supported = false;
+			for (String s : supportedExtensions)
+				if (s.equalsIgnoreCase(destination.getExtension()))
+					supported = true;
+			if (!supported)
+				destination.setExtension(ImageHandler.extension);
 
 			final PixelReader pixelReader = toWrite.getPixelReader();
 			final int width = (int) toWrite.getWidth();
@@ -101,8 +108,7 @@ public class ImageHandler
 	}
 
 	/**
-	 * Copies image by reading the source {@link #readImage(FileObject)} and writing it to the
-	 * destination. See also {@link #writeImage(FileObject, Image)}
+	 * Copies image by reading the source {@link #readImage(FileObject)} and writing it to the destination. See also {@link #writeImage(FileObject, Image)}
 	 *
 	 * @param source
 	 * @param destination
@@ -134,13 +140,11 @@ public class ImageHandler
 	}
 
 	/**
-	 * Returns a {@link HBox} which has as background an image. The image is sized to the full size
-	 * of the HBox.
+	 * Returns a {@link HBox} which has as background an image. The image is sized to the full size of the HBox.
 	 *
 	 * @param image
 	 *            The image which should be stretched to the full background of the HBox.
-	 * @return Returns a HBox with the image put into {@link Region#setBackground(Background)} of
-	 *         the HBox.
+	 * @return Returns a HBox with the image put into {@link Region#setBackground(Background)} of the HBox.
 	 */
 	public static HBox getPane(final Image image)
 	{

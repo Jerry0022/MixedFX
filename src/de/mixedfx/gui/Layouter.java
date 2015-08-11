@@ -5,6 +5,7 @@ import java.io.File;
 import org.controlsfx.control.PopOver.ArrowLocation;
 
 import de.mixedfx.assets.ImageHandler;
+import de.mixedfx.assets.ImageProducer;
 import de.mixedfx.file.FileObject;
 import de.mixedfx.gui.panes.SuperPane;
 import de.mixedfx.logging.Log;
@@ -14,14 +15,11 @@ import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
@@ -34,9 +32,9 @@ public class Layouter
 	 *            Superpane which will be used for load() tasks while saving and as root for all children which might can be layouted!
 	 * @param config
 	 */
-	public static void setLayoutable(SuperPane pane, EasyModifierConfig config)
+	public static void setLayoutable(SuperPane pane, LayoutManager2 layoutManager, EasyModifierConfig config)
 	{
-		Layouter.setLayoutable(pane, pane, config);
+		Layouter.setLayoutable(pane, pane, layoutManager, config);
 	}
 
 	/**
@@ -50,8 +48,11 @@ public class Layouter
 	 * @param config
 	 *            The config for this layout!
 	 */
-	public static void setLayoutable(SuperPane paneToShowSaving, Parent root, EasyModifierConfig config)
+	public static void setLayoutable(SuperPane paneToShowSaving, Parent root, LayoutManager2 layoutManager, EasyModifierConfig config)
 	{
+		if (layoutManager.root == null)
+			layoutManager.root = root;
+
 		/*
 		 * Set up PopOver
 		 */
@@ -65,25 +66,27 @@ public class Layouter
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue)
 			{
-				Platform.runLater(() ->
-				{
-					Region parent = (Region) popOver.getOwnerNode();
-					// Just save if background changed!
-					if (!newValue && !parent.getBackground().equals(popOver.lastBackground))
+				if (!newValue)
+					Platform.runLater(() ->
 					{
-						paneToShowSaving.load(new Task<Void>()
+						Region parent = (Region) popOver.getOwnerNode();
+						// Just save if background changed!
+						if (!parent.getBackground().equals(popOver.lastBackground))
 						{
-							@Override
-							protected Void call() throws Exception
+							Image image = parent.getBackground().getImages().get(0).getImage();
+							paneToShowSaving.load(new Task<Void>()
 							{
-								System.out.println("BACKGROUND CHANGED! Save it by using Superpane.load()!");
-								Thread.sleep(4000);
-								System.out.println("BACKGROUND SAVED!");
-								return null;
-							}
-						});
-					}
-				});
+								@Override
+								protected Void call() throws Exception
+								{
+									System.out.println("BACKGROUND CHANGED! Save it by using Superpane.load()!");
+									layoutManager.saveElement(parent.getId(), image);
+									System.out.println("BACKGROUND SAVED!");
+									return null;
+								}
+							});
+						}
+					});
 			}
 		});
 
@@ -139,7 +142,7 @@ public class Layouter
 							@Override
 							public void handle(ActionEvent event)
 							{
-								region.setBackground(new Background(new BackgroundFill(picker.getValue(), CornerRadii.EMPTY, Insets.EMPTY)));
+								RegionManipulator.bindBackground(region, ImageProducer.getMonoColored(picker.getValue()));
 							}
 						});
 						toolBox.getChildren().addAll(picker, button);

@@ -53,9 +53,11 @@ public final class DataHandler
 	 * @param fileObject
 	 * @return Returns a list of files which are directly in the folder.
 	 */
-	public static Collection<File> listFiles(final FileObject fileObject)
+	public static Collection<File> listFiles(FileObject fileObject)
 	{
-		return FileUtils.listFiles(new File(fileObject.getPath()), TrueFileFilter.TRUE, null);
+		if (!fileObject.toFile().isDirectory())
+			return FileUtils.listFiles(new File(FilenameUtils.getFullPath(fileObject.toFile().getAbsolutePath())), TrueFileFilter.TRUE, null);
+		return FileUtils.listFiles(fileObject.toFile(), TrueFileFilter.TRUE, null);
 	}
 
 	/**
@@ -105,13 +107,11 @@ public final class DataHandler
 	}
 
 	/**
-	 * Finds a file by retrieving it only with its name. The extension is NOT needed but can be
-	 * available.
+	 * Finds a file by retrieving it only with its name. The extension is NOT needed but can be available.
 	 *
 	 * @param fileObject
-	 *            The fileName with or without extension! If without extension it finds first a file
-	 *            with equal file name which has no extension, otherwise the first file with equal
-	 *            file name with extension, otherwise the file is not found.
+	 *            The fileName with or without extension! If without extension it finds first a file with equal file name which has no extension, otherwise the first file with equal file name with
+	 *            extension, otherwise the file is not found.
 	 * @return Returns the found file.
 	 * @throws FileNotFoundException
 	 *             Throws exception if file doesn't exist
@@ -137,21 +137,19 @@ public final class DataHandler
 					result = f;
 					break;
 				}
-			}
-			else
+			} else
 				// fileName does contain an extension
 				if (FilenameUtils.getName(f.toString()).toString().toLowerCase().equals(fileFolder))
-				{
-					result = f;
-					break;
-				}
+			{
+				result = f;
+				break;
+			}
 		}
 
 		if (result != null)
 		{
 			return result;
-		}
-		else
+		} else
 		{
 			throw new FileNotFoundException("File doesn't exist or is a directory!");
 		}
@@ -169,12 +167,10 @@ public final class DataHandler
 		try
 		{
 			return DataHandler.createOrFindFile(data);
-		}
-		catch (final IOException e)
+		} catch (final IOException e)
 		{
 			e.printStackTrace();
-		}
-		catch (final InterruptedException e)
+		} catch (final InterruptedException e)
 		{
 			e.printStackTrace();
 		}
@@ -197,32 +193,28 @@ public final class DataHandler
 		if (!file.exists())
 		{
 			success = true; // File doesn't exist already
-		}
-		else
+		} else
 			// File exists
 			if (!file.isDirectory())
+		{
+			if (file.delete())
 			{
-				if (file.delete())
-				{
-					success = true;
-				}
-				else
-				{
-					success = false;
-				}
-			}
-			else
+				success = true;
+			} else
 			{
-				try
-				{
-					FileUtils.deleteDirectory(file);
-					success = true;
-				}
-				catch (final IOException e)
-				{
-					success = false;
-				}
+				success = false;
 			}
+		} else
+		{
+			try
+			{
+				FileUtils.deleteDirectory(file);
+				success = true;
+			} catch (final IOException e)
+			{
+				success = false;
+			}
+		}
 
 		return success;
 	}
@@ -254,8 +246,7 @@ public final class DataHandler
 	 * Fuses directory and file to one full path.
 	 *
 	 * @param directory
-	 *            Should contain only \\ or / as folder separator. Last char as \\ or / is not
-	 *            needed.
+	 *            Should contain only \\ or / as folder separator. Last char as \\ or / is not needed.
 	 * @param fileFolder
 	 *            The file or folder which should be fused.
 	 * @return Returns a full string containing the directory and file or folder
@@ -272,8 +263,7 @@ public final class DataHandler
 				if (StringUtils.countMatches(directory, "/") > 0)
 				{
 					directory += "/";
-				}
-				else
+				} else
 				{
 					directory += "\\";
 				}

@@ -113,7 +113,7 @@ public class EasyModifier
 	private static List<Parent> runOnAllSubNodes(Parent root, String styleClass, boolean doIt, List<Parent> emptyList, EasyModifierHandler... modifier)
 	{
 		if (root.getStyleClass().contains(styleClass))
-			if (root.getId() != "")
+			if (root.getId() != "" && root.getId() != null)
 			{
 				if (modifier != null)
 					for (EasyModifierHandler mod : modifier)

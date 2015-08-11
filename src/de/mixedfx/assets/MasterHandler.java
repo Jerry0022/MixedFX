@@ -15,8 +15,7 @@ import de.mixedfx.logging.Log;
 import javafx.scene.image.Image;
 
 /**
- * Additionally to the other Handler this Handler applies the prefix before reading / writing. Can
- * write:
+ * Additionally to the other Handler this Handler applies the prefix before reading / writing. Can write:
  * <ul>
  * <li>Images</li>
  * <li>Strings</li>
@@ -28,96 +27,89 @@ import javafx.scene.image.Image;
  */
 public class MasterHandler
 {
-	@SuppressWarnings("unchecked")
+	/**
+	 * @param file
+	 * @param type
+	 *            Supports {@link Image}, {@link String} or other.
+	 * @return
+	 */
 	public static <T extends Object> T read(final FileObject file, final Class<? extends T> type)
 	{
 		if (type.equals(Image.class))
 		{
-			file.setPrefix(ImageHandler.prefix);
 			return (T) ImageHandler.readImage(file);
-		}
-		else
-			if (type.equals(String.class))
+		} else if (type.equals(String.class))
+		{
+			try
 			{
-				try
-				{
-					return (T) FileUtils.readFileToString(DataHandler.createOrFindFile(file));
-				}
-				catch (IOException | InterruptedException e)
-				{
-					Log.assets.error("Could not read/access file! " + file);
-					return null;
-				}
+				return (T) FileUtils.readFileToString(DataHandler.createOrFindFile(file));
+			} catch (IOException | InterruptedException e)
+			{
+				Log.assets.error("Could not read/access file! " + file);
+				return null;
+			}
 
-			}
-			else
+		} else
+		{
+			try
 			{
-				try
+				final FileInputStream fileInput = new FileInputStream(DataHandler.createOrFindFile(file));
+				if (FileUtils.readFileToString(file.toFile()).isEmpty())
 				{
-					final FileInputStream fileInput = new FileInputStream(DataHandler.createOrFindFile(file));
-					if (FileUtils.readFileToString(file.toFile()).isEmpty())
-					{
-						fileInput.close();
-						return null;
-					}
-					else
-					{
-						final ObjectInputStream inputStream = new ObjectInputStream(fileInput);
-						final T input = (T) inputStream.readObject();
-						inputStream.close();
-						return input;
-					}
-				}
-				catch (IOException | InterruptedException | ClassNotFoundException e)
-				{
-					Log.assets.error("Could not read/access file or class failure! " + file);
-					e.printStackTrace();
+					fileInput.close();
 					return null;
+				} else
+				{
+					final ObjectInputStream inputStream = new ObjectInputStream(fileInput);
+					final T input = (T) inputStream.readObject();
+					inputStream.close();
+					return input;
 				}
+			} catch (IOException | InterruptedException | ClassNotFoundException e)
+			{
+				Log.assets.error("Could not read/access file or class failure! " + file);
+				e.printStackTrace();
+				return null;
 			}
+		}
 	}
 
 	public static void write(final FileObject file, final Object object)
 	{
+		DataHandler.deleteFile(file);
 		if (object instanceof Image)
 		{
 			try
 			{
 				ImageHandler.writeImage(file, (Image) object);
-			}
-			catch (final IOException e)
+			} catch (final IOException e)
 			{
 				Log.assets.error("Could not write/access file! " + file);
 			}
-		}
-		else
-			if (object instanceof String)
+		} else if (object instanceof String)
+		{
+			try
 			{
-				try
-				{
-					final PrintStream ps = new PrintStream(new FileOutputStream(DataHandler.createOrFindFile(file)), true);
-					ps.write(((String) object).getBytes());
-					ps.close();
-				}
-				catch (final IOException | InterruptedException e)
-				{
-					Log.assets.error("Could not write/access file! " + file);
-				}
+				final PrintStream ps = new PrintStream(new FileOutputStream(DataHandler.createOrFindFile(file)), true);
+				ps.write(((String) object).getBytes());
+				ps.close();
+			} catch (final IOException | InterruptedException e)
+			{
+				Log.assets.error("Could not write/access file! " + file);
 			}
-			else
+		} else
+		{
+			try
 			{
-				try
-				{
-					final ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(DataHandler.createOrFindFile(file)));
-					outputStream.writeObject(object);
-					outputStream.close();
-				}
-				catch (final IOException | InterruptedException e)
-				{
-					Log.assets.error("Could not write/access file! " + file);
-				}
+				final ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(DataHandler.createOrFindFile(file)));
+				outputStream.writeObject(object);
+				outputStream.close();
+			} catch (final IOException | InterruptedException e)
+			{
+				Log.assets.error("Could not write/access file! " + file);
+			}
 
-			}
+		}
 	}
 
 	public static void remove(final FileObject file, final Class<?> type)
