@@ -6,6 +6,12 @@ public class TTSTester
 {
 	public static void main(String[] args)
 	{
-		TextToSpeech.say("Was denkst du was am Besten für dich ist?");
+		String text = "Ok Commander, wie geht es weiter mit Battlefield 2?";
+		text = "Ok Commander, what's going on with Battlefield 2?";
+
+		boolean male = true;
+		male = false;
+
+		TextToSpeech.sayAuto(text, true, male);
 	}
 }
