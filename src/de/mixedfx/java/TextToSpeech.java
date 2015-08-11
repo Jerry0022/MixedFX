@@ -78,11 +78,6 @@ public class TextToSpeech
 		return Languages.values();
 	}
 
-	public static void main(String[] args)
-	{
-		say("Was denkst du was am Besten für dich ist?");
-	}
-
 	/**
 	 * Speaks a text in the given language {@link Languages#GERMAN_FEMALE}! Is much faster if {@link #init()} was called before!
 	 * 

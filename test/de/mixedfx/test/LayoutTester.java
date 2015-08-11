@@ -2,10 +2,10 @@ package de.mixedfx.test;
 
 import de.mixedfx.assets.ImageHandler;
 import de.mixedfx.assets.ImageProducer;
+import de.mixedfx.assets.LayoutManager;
+import de.mixedfx.assets.Layouter;
 import de.mixedfx.file.FileObject;
 import de.mixedfx.gui.EasyModifierConfig;
-import de.mixedfx.gui.LayoutManager;
-import de.mixedfx.gui.Layouter;
 import de.mixedfx.gui.panes.SuperPane;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
