@@ -11,13 +11,12 @@ import net.tomp2p.storage.Data;
 
 public class TomP2PTest
 {
-
 	final private Peer peer;
 
 	public TomP2PTest(int peerId) throws Exception
 	{
 		peer = new PeerMaker(Number160.createHash(peerId)).setPorts(4000 + peerId).makeAndListen();
-		FutureBootstrap fb = peer.bootstrap().setBroadcast().setPorts(4001).start();
+		FutureBootstrap fb = peer.bootstrap().setBroadcast().setPorts(4002).start(); // Should be the port of the other one
 		fb.awaitUninterruptibly();
 		if (fb.getBootstrapTo() != null)
 		{
@@ -28,7 +27,7 @@ public class TomP2PTest
 	public static void main(String[] args) throws NumberFormatException, Exception
 	{
 		String[] errorSoon =
-		{ "2", "testme" };
+		{ "1", "testme", "0.0.0.0" };
 
 		TomP2PTest dns = new TomP2PTest(Integer.parseInt(errorSoon[0]));
 		if (errorSoon.length == 3)
