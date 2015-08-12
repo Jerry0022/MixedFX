@@ -11,6 +11,7 @@ import net.tomp2p.storage.Data;
 
 public class TomP2PTest
 {
+
 	final private Peer peer;
 
 	public TomP2PTest(int peerId) throws Exception
@@ -26,14 +27,17 @@ public class TomP2PTest
 
 	public static void main(String[] args) throws NumberFormatException, Exception
 	{
-		TomP2PTest dns = new TomP2PTest(5001);
-		if (args.length == 3)
+		String[] errorSoon =
+		{ "2", "testme" };
+
+		TomP2PTest dns = new TomP2PTest(Integer.parseInt(errorSoon[0]));
+		if (errorSoon.length == 3)
 		{
-			dns.store(args[1], args[2]);
+			dns.store(errorSoon[1], errorSoon[2]);
 		}
-		if (args.length == 2)
+		if (errorSoon.length == 2)
 		{
-			System.out.println("Name:" + args[1] + " IP:" + dns.get(args[1]));
+			System.out.println("Name:" + errorSoon[1] + " IP:" + dns.get(errorSoon[1]));
 		}
 	}
 
