@@ -36,7 +36,6 @@ public class Starter
 	 */
 	public Starter(int bindport, InetSocketAddress bootaddress, int numNodes, Environment env) throws Exception
 	{
-
 		// Generate the NodeIds Randomly
 		NodeIdFactory nidFactory = new RandomNodeIdFactory(env);
 
@@ -80,8 +79,6 @@ public class Starter
 
 		Listener foo = (Listener) apps.get(0);
 		System.out.println(((PastryNode) foo.getNode()).getRoutingTable().printSelf());
-
-		System.exit(0);
 
 		// route 10 messages
 		for (int i = 0; i < 10; i++)

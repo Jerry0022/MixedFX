@@ -63,7 +63,6 @@ public class SpeechToText
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue)
 			{
 				listening = newValue;
-
 				if (newValue)
 				{
 					Inspector.runNowAsDaemon(() ->

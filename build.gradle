@@ -64,6 +64,9 @@ uploadArchives {
 repositories {
     mavenCentral()
     maven {
+    	url "http://tomp2p.net/dev/mvn/"
+    }
+    maven {
         url "https://repository.apache.org/content/repositories/snapshots"
     }
 }
@@ -80,5 +83,6 @@ dependencies {
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'org.apache.commons:commons-configuration2:2.0-alpha1-SNAPSHOT'
     compile 'com.detectlanguage:detectlanguage:1.0.5'
+   	compile	'net.tomp2p:TomP2P:4.4'
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
