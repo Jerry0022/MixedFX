@@ -13,10 +13,8 @@ import de.mixedfx.eventbus.EventBusService;
 import de.mixedfx.eventbus.EventBusServiceInterface;
 import de.mixedfx.inspector.Inspector;
 import de.mixedfx.logging.Log;
-import de.mixedfx.network.NetworkConfig.States;
 import de.mixedfx.network.ParticipantManager;
 import de.mixedfx.network.messages.Message;
-import de.mixedfx.network.messages.ParticipantMessage;
 import de.mixedfx.network.messages.RegisteredMessage;
 
 public class Connection implements EventBusServiceInterface
@@ -61,7 +59,8 @@ public class Connection implements EventBusServiceInterface
 	@Override
 	public void initilizeEventBusAndSubscriptions()
 	{
-		this.eventBus = new EventBusService(this.getClass() + this.clientSocket.getRemoteSocketAddress().toString());
+		System.out.println(this.getClass() + this.clientSocket.getRemoteSocketAddress().toString().split(":")[0]);
+		this.eventBus = new EventBusService(this.getClass() + this.clientSocket.getRemoteSocketAddress().toString().split(":")[0]);
 		this.eventBus.subscribe(Connection.MESSAGE_CHANNEL_RECEIVED, this);
 		this.eventBus.subscribe(Connection.CONNECTION_CHANNEL_LOST, this);
 		AnnotationProcessor.process(this);
@@ -86,7 +85,6 @@ public class Connection implements EventBusServiceInterface
 			EventBusExtended.publishSyncSafe(TCPCoordinator.CONNECTION_LOST, this);
 		}
 	}
-
 
 	/**
 	 * If not RegisteredMessage publish message immediately!
