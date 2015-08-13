@@ -132,11 +132,17 @@ public class TCPCoordinator
 			Log.network.info("Stop TCP connection!");
 
 			// Send a GoodBye to everyone who is still available to avoid ghost connections.
-			final GoodByeMessage goodbyeMessage = new GoodByeMessage();
-			EventBusExtended.publishSyncSafe(Connection.MESSAGE_CHANNEL_SEND, goodbyeMessage);
+			for (TCPClient tcp : tcpClients)
+			{
+				final GoodByeMessage goodbyeMessage = new GoodByeMessage();
+				goodbyeMessage.setToIP(tcp.remoteAddress);
+				EventBusExtended.publishSyncSafe(Connection.MESSAGE_CHANNEL_SEND, goodbyeMessage);
+			}
 
 			for (TCPClient tcp : tcpClients)
+				// Then stop it!
 				tcp.stop();
+
 			tcpClients.clear();
 
 			this.tcpServer.stop();
