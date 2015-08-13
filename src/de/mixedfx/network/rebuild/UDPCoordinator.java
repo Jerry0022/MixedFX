@@ -174,12 +174,10 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 			}
 		} else if (topic.equals(UDPCoordinator.ERROR))
 		{
-			((Exception) data).printStackTrace();
+			NetworkManager.t.stopTCPFull();
+			this.stopUDPFull();
 
-			// NetworkManager.t.stopTCPFull();
-			// this.stopUDPFull();
-
-			EventBusExtended.publishAsyncSafe(NetworkManager.NETWORK_FATALERROR, data);
+			EventBusExtended.publishSyncSafe(NetworkManager.NETWORK_FATALERROR, data);
 		}
 	}
 }

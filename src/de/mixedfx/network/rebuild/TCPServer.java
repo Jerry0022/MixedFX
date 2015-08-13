@@ -80,7 +80,8 @@ class TCPServer
 		@Override
 		public void run()
 		{
-			while (true)
+			boolean running = true;
+			while (running)
 			{
 				try
 				{
@@ -94,6 +95,7 @@ class TCPServer
 				{
 					// In case of termination or connection failure => nothing to do!
 					Log.network.debug(this.getClass().getSimpleName() + " closed");
+					running = false;
 				}
 			}
 		}

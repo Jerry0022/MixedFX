@@ -7,6 +7,7 @@ import org.bushe.swing.event.annotation.AnnotationProcessor;
 import org.bushe.swing.event.annotation.EventTopicSubscriber;
 
 import de.mixedfx.logging.Log;
+import de.mixedfx.network.rebuild.ConnectivityManager;
 import de.mixedfx.network.rebuild.NetworkManager;
 import de.mixedfx.network.rebuild.TCPClient;
 import de.mixedfx.network.rebuild.UDPDetected;
@@ -27,7 +28,8 @@ public class NetworkTesterRebuild
 		// Log.network.setLevel(Level.DEBUG);
 
 		// Log fatal errors (network reacted already to this error)
-		AnnotationProcessor.process(new NetworkTesterRebuild());
+		NetworkTesterRebuild rebuild = new NetworkTesterRebuild();
+		AnnotationProcessor.process(rebuild);
 
 		// Log UDP members
 		NetworkManager.u.allAdresses.addListener(new ListChangeListener<UDPDetected>()
@@ -48,9 +50,11 @@ public class NetworkTesterRebuild
 			{
 				c.next();
 				if (c.wasRemoved())
-					Log.network.trace("TCP removed: " + c.getRemoved().get(0));
+					for (TCPClient tcp : c.getRemoved())
+						Log.network.trace("TCP removed: " + tcp);
 				else if (c.wasAdded())
-					Log.network.debug("TCP added: " + c.getAddedSubList().get(0));
+					for (TCPClient tcp : c.getAddedSubList())
+						Log.network.debug("TCP added: " + tcp);
 			}
 		});
 
@@ -85,7 +89,14 @@ public class NetworkTesterRebuild
 			Log.network.info("UserManager list changed to: " + UserManager.allUsers);
 		});
 
-		NetworkManager.start();
+		ConnectivityManager.start();
+		try
+		{
+			Thread.sleep(10000);
+		} catch (InterruptedException e)
+		{
+		}
+		ConnectivityManager.stop();
 		while (true)
 			;
 	}
@@ -93,7 +104,7 @@ public class NetworkTesterRebuild
 	@EventTopicSubscriber(topic = NetworkManager.NETWORK_FATALERROR)
 	public void on(String topic, Exception data)
 	{
-		data.printStackTrace();
+		Log.network.fatal("NETWORK FATAL ERROR: " + data);
 	}
 
 }
