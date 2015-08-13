@@ -59,6 +59,7 @@ public class ConnectivityManager
 			@Override
 			public boolean shouldVeto(String topic, Message data)
 			{
+				Log.network.debug("UserMessage received: " + data);
 				if (data instanceof UserMessage)
 				{
 					UserMessage userMessage = (UserMessage) data;
