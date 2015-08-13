@@ -1,6 +1,5 @@
 package de.mixedfx.test;
 
-import java.net.InetAddress;
 import java.util.UUID;
 
 import org.bushe.swing.event.annotation.AnnotationProcessor;
@@ -11,10 +10,8 @@ import de.mixedfx.network.rebuild.ConnectivityManager;
 import de.mixedfx.network.rebuild.NetworkManager;
 import de.mixedfx.network.rebuild.TCPClient;
 import de.mixedfx.network.rebuild.UDPDetected;
-import de.mixedfx.network.user.User;
-import de.mixedfx.network.user.UserManager;
+import de.mixedfx.network.rebuild.user.User;
 import javafx.collections.ListChangeListener;
-import javafx.collections.MapChangeListener;
 
 public class NetworkTesterRebuild
 {
@@ -66,33 +63,17 @@ public class NetworkTesterRebuild
 		final String id = UUID.randomUUID().toString();
 		final ExampleUser user = new ExampleUser(id.substring(id.length() - 7, id.length()));
 
-		// Register UserManager services
-		final UserManager<ExampleUser> userManager = new UserManager<ExampleUser>(user);
-		UserManager.allUsers.addListener((ListChangeListener<User>) c ->
+		ConnectivityManager.start(new User()
 		{
-			while (c.next())
+			@Override
+			public Object getIdentifier()
 			{
-				if (c.wasAdded() && c.wasReplaced())
-				{
-					c.getAddedSubList().get(0).networks.addListener(new MapChangeListener<InetAddress, Long>()
-					{
-						@Override
-						public void onChanged(javafx.collections.MapChangeListener.Change<? extends InetAddress, ? extends Long> change)
-						{
-							Log.network.info("Network was " + (change.wasAdded() == true ? "added" : "removed") + " for user " + c.getAddedSubList().get(0) + " with following data: " + change.getKey()
-									+ " " + change.getValueAdded());
-						}
-					});
-				}
+				return UUID.randomUUID().toString();
 			}
-
-			Log.network.info("UserManager list changed to: " + UserManager.allUsers);
 		});
-
-		ConnectivityManager.start();
 		try
 		{
-			Thread.sleep(10000);
+			Thread.sleep(20000);
 		} catch (InterruptedException e)
 		{
 		}

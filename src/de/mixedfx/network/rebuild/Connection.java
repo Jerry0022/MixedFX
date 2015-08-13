@@ -13,8 +13,8 @@ import de.mixedfx.eventbus.EventBusService;
 import de.mixedfx.eventbus.EventBusServiceInterface;
 import de.mixedfx.inspector.Inspector;
 import de.mixedfx.logging.Log;
-import de.mixedfx.network.messages.GoodByeMessage;
-import de.mixedfx.network.messages.Message;
+import de.mixedfx.network.rebuild.messages.GoodByeMessage;
+import de.mixedfx.network.rebuild.messages.Message;
 
 public class Connection implements EventBusServiceInterface
 {
@@ -71,10 +71,12 @@ public class Connection implements EventBusServiceInterface
 		if (topic.equals(Connection.MESSAGE_CHANNEL_SEND))
 		{
 			final Message message = (Message) event;
-			this.outputConnection.sendMessage(message);
+			if (message.getToIP().equals(this.ip))
+				this.outputConnection.sendMessage(message);
 		} else if (topic.equals(Connection.MESSAGE_CHANNEL_RECEIVED))
 		{
 			final Message message = (Message) this.inputConnection.getNextMessage();
+			message.setFromIP(this.ip);
 			if (message instanceof GoodByeMessage)
 				this.close();
 			else
