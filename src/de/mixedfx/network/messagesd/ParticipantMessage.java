@@ -1,4 +1,4 @@
-package de.mixedfx.network.messages;
+package de.mixedfx.network.messagesd;
 
 import java.util.ArrayList;
 import java.util.List;

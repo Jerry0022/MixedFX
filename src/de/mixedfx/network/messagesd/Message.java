@@ -1,4 +1,4 @@
-package de.mixedfx.network.messages;
+package de.mixedfx.network.messagesd;
 
 import java.io.Serializable;
 

@@ -1,4 +1,4 @@
-package de.mixedfx.network;
+package de.mixedfx.networkd;
 
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;

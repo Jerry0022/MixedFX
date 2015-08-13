@@ -1,4 +1,4 @@
-package de.mixedfx.network;
+package de.mixedfx.networkd;
 
 import de.mixedfx.logging.Log;
 import de.mixedfx.network.NetworkConfig.States;

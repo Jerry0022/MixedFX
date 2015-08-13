@@ -8,7 +8,7 @@ import org.bushe.swing.event.annotation.EventTopicSubscriber;
 
 import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.logging.Log;
-import de.mixedfx.network.messages.GoodByeMessage;
+import de.mixedfx.network.rebuild.messages.GoodByeMessage;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;

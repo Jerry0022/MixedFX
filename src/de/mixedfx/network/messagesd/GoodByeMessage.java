@@ -1,4 +1,4 @@
-package de.mixedfx.network.messages;
+package de.mixedfx.network.messagesd;
 
 public class GoodByeMessage extends Message
 {
