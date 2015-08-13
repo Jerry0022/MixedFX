@@ -45,11 +45,12 @@ class TCPServer
 	/**
 	 * Stops the {@link Registrar} and all bound connections.
 	 */
-	public synchronized void stop()
+	public void stop()
 	{
 		if (this.registrar != null)
 		{
 			this.registrar.terminate();
+			this.registrar = null;
 		}
 	}
 

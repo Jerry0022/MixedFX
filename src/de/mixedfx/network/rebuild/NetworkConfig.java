@@ -23,12 +23,7 @@ public class NetworkConfig
 	/**
 	 * {@link UDPOut} broadcast interval in milliseconds.
 	 */
-	public static final int UDP_BROADCAST_INTERVAL = 1000;
-
-	/**
-	 * How often I shall wait for the broadcast interval. After that a reconnect is done.
-	 */
-	public static final int RECONNECT_TOLERANCE = 3;
+	public static final int UDP_BROADCAST_INTERVAL = 3000;
 
 	/**
 	 * For which interval in milliseconds one of the TCP connection shall wait until continue sending the next object.

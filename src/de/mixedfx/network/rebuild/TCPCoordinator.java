@@ -38,19 +38,19 @@ public class TCPCoordinator
 	@EventTopicSubscriber(topic = TCPCoordinator.CONNECTION_LOST)
 	public void lostConnection(final String topic, final Connection connection)
 	{
-		Log.network.debug("User " + connection.ip + " lost!");
+		Log.network.debug("TCP Connection with IP " + connection.ip + " lost!");
 
 		synchronized (tcpClients)
 		{
+			TCPClient toRemove = null;
 			for (TCPClient tcp : tcpClients)
 				if (tcp.remoteAddress.equals(connection.ip))
-					tcpClients.remove(connection);
+					toRemove = tcp;
+			tcpClients.remove(toRemove);
 		}
-
-		// TODO Inform others!
 	}
 
-	public void startServer()
+	public synchronized void startServer()
 	{
 		try
 		{
@@ -86,9 +86,9 @@ public class TCPCoordinator
 	 *
 	 * @param ip
 	 */
-	public synchronized void startFullTCP(final InetAddress ip)
+	public void startFullTCP(final InetAddress ip)
 	{
-		// Maybe a UDP request was still catched.
+		// Maybe a UDP request was still caught.
 		if (!NetworkManager.running)
 		{
 			return;
@@ -105,42 +105,40 @@ public class TCPCoordinator
 					return;
 				}
 			}
-		}
 
-		try
-		{
-			Log.network.info("Start TCP connection to: " + ip.getHostAddress());
-			synchronized (tcpClients)
+			try
 			{
-				this.tcpClients.add(new TCPClient().start(ip));
+				Log.network.info("Start TCP connection to: " + ip.getHostAddress());
+				synchronized (tcpClients)
+				{
+					this.tcpClients.add(new TCPClient().start(ip));
+				}
+			} catch (final IOException e)
+			{
+				Log.network.info("Error occured while starting TCP client: " + e);
+				return;
 			}
-		} catch (final IOException e)
-		{
-			Log.network.error("Error occured while starting TCP client: " + e.getCause().getMessage());
-			return;
 		}
 	}
 
 	/**
 	 * Can be called from outside to stop all TCP connections and the listening TCP Server!
 	 */
-	public synchronized void stopTCPFull()
+	public void stopTCPFull()
 	{
-		Log.network.info("Stop TCP connection!");
-
-		// Send a GoodBye to everyone who is still available to avoid ghost connections.
-		final GoodByeMessage goodbyeMessage = new GoodByeMessage();
-		EventBusExtended.publishSyncSafe(Connection.MESSAGE_CHANNEL_SEND, goodbyeMessage);
-
 		synchronized (tcpClients)
 		{
-			// Stop first client, which is the connection to the server and afterwards all my bound
-			// clients.
+			Log.network.info("Stop TCP connection!");
+
+			// Send a GoodBye to everyone who is still available to avoid ghost connections.
+			final GoodByeMessage goodbyeMessage = new GoodByeMessage();
+			EventBusExtended.publishSyncSafe(Connection.MESSAGE_CHANNEL_SEND, goodbyeMessage);
+
 			for (TCPClient tcp : tcpClients)
 				tcp.stop();
 			tcpClients.clear();
-		}
 
-		this.tcpServer.stop();
+			this.tcpServer.stop();
+		}
 	}
 }

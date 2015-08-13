@@ -47,7 +47,10 @@ public class NetworkTesterRebuild
 			public void onChanged(javafx.collections.ListChangeListener.Change<? extends TCPClient> c)
 			{
 				c.next();
-				Log.network.trace("TCP updated: " + c.getAddedSubList().get(0));
+				if (c.wasRemoved())
+					Log.network.trace("TCP removed: " + c.getRemoved().get(0));
+				else if (c.wasAdded())
+					Log.network.debug("TCP added: " + c.getAddedSubList().get(0));
 			}
 		});
 

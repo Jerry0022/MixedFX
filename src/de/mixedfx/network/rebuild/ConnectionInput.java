@@ -24,7 +24,6 @@ public class ConnectionInput implements Runnable
 
 	protected ConnectionInput(final InputStream inputStream, InetAddress ip) throws IOException
 	{
-		System.out.println(ConnectionInput.parentClass + ip.toString());
 		this.eventBusParent = EventBusService.getEventBus(ConnectionInput.parentClass + ip.toString());
 		this.objectInputStream = new ObjectInputStream(inputStream);
 

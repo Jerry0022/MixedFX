@@ -59,7 +59,6 @@ public class Connection implements EventBusServiceInterface
 	@Override
 	public void initilizeEventBusAndSubscriptions()
 	{
-		System.out.println(this.getClass() + this.clientSocket.getRemoteSocketAddress().toString().split(":")[0]);
 		this.eventBus = new EventBusService(this.getClass() + this.clientSocket.getRemoteSocketAddress().toString().split(":")[0]);
 		this.eventBus.subscribe(Connection.MESSAGE_CHANNEL_RECEIVED, this);
 		this.eventBus.subscribe(Connection.CONNECTION_CHANNEL_LOST, this);
