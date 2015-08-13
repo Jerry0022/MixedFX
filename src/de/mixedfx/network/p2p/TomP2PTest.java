@@ -5,8 +5,10 @@ import java.io.IOException;
 import net.tomp2p.futures.FutureBootstrap;
 import net.tomp2p.futures.FutureDHT;
 import net.tomp2p.p2p.Peer;
+import net.tomp2p.p2p.PeerListener;
 import net.tomp2p.p2p.PeerMaker;
 import net.tomp2p.peers.Number160;
+import net.tomp2p.peers.PeerAddress;
 import net.tomp2p.storage.Data;
 
 public class TomP2PTest
@@ -16,6 +18,27 @@ public class TomP2PTest
 	public TomP2PTest(int peerId) throws Exception
 	{
 		peer = new PeerMaker(Number160.createHash(peerId)).setPorts(4000 + peerId).makeAndListen();
+		peer.addPeerListener(new PeerListener()
+		{
+			@Override
+			public void serverAddressChanged(PeerAddress peerAddress, PeerAddress reporter, boolean tcp)
+			{
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void notifyOnStart()
+			{
+				System.out.println("Pear started!");
+			}
+
+			@Override
+			public void notifyOnShutdown()
+			{
+				System.out.println("Pear shut down!");
+			}
+		});
 		FutureBootstrap fb = peer.bootstrap().setBroadcast().setPorts(4002).start(); // Should be the port of the other one
 		fb.awaitUninterruptibly();
 		if (fb.getBootstrapTo() != null)
