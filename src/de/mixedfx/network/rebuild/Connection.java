@@ -13,9 +13,8 @@ import de.mixedfx.eventbus.EventBusService;
 import de.mixedfx.eventbus.EventBusServiceInterface;
 import de.mixedfx.inspector.Inspector;
 import de.mixedfx.logging.Log;
-import de.mixedfx.network.ParticipantManager;
+import de.mixedfx.network.messages.GoodByeMessage;
 import de.mixedfx.network.messages.Message;
-import de.mixedfx.network.messages.RegisteredMessage;
 
 public class Connection implements EventBusServiceInterface
 {
@@ -72,71 +71,18 @@ public class Connection implements EventBusServiceInterface
 		if (topic.equals(Connection.MESSAGE_CHANNEL_SEND))
 		{
 			final Message message = (Message) event;
-			System.out.println("Message sent!");
+			this.outputConnection.sendMessage(message);
 		} else if (topic.equals(Connection.MESSAGE_CHANNEL_RECEIVED))
 		{
 			final Message message = (Message) this.inputConnection.getNextMessage();
-			System.out.println("Message received");
-			EventBusExtended.publishSyncSafe(MessageBus.MESSAGE_RECEIVE, message);
+			if (message instanceof GoodByeMessage)
+				this.close();
+			else
+				EventBusExtended.publishSyncSafe(MessageBus.MESSAGE_RECEIVE, message);
 		} else
 		{
 			this.close();
 			EventBusExtended.publishSyncSafe(TCPCoordinator.CONNECTION_LOST, this);
-		}
-	}
-
-	/**
-	 * If not RegisteredMessage publish message immediately!
-	 * 
-	 * @param message
-	 *            A message which shall be received.
-	 */
-	private void checkReceive(final Message message)
-	{
-		if (message instanceof RegisteredMessage)
-		{
-			final RegisteredMessage regMessage = (RegisteredMessage) message;
-
-			// If it is for me or it is a broadcast and I am not the sender, publish the message
-			// internally
-			if ((regMessage.receivers.contains(ParticipantManager.MY_PID.get()) || regMessage.receivers.isEmpty()) && regMessage.sender != ParticipantManager.MY_PID.get())
-			{
-				Log.network.warn("Pubslishing message internally, created on: " + regMessage.creationTime);
-				EventBusExtended.publishSyncSafe(MessageBus.MESSAGE_RECEIVE, message); // Publish internally
-			}
-		} else
-		{
-			EventBusExtended.publishSyncSafe(MessageBus.MESSAGE_RECEIVE, message); // Publish
-			// internally
-		}
-	}
-
-	/**
-	 * If it is not a RegisteredMessage just send! If the sender is registered (has a pid) then check if I'm a connection where a receiver of the message is connected to. If no relevant receiver is
-	 * connected to just do nothing! If broadcast send it immediately
-	 * 
-	 * @param message
-	 *            A message which shall be sent.
-	 */
-	private void checkSend(final Message message)
-	{
-		if (message instanceof RegisteredMessage && !((RegisteredMessage) message).receivers.isEmpty())
-		{
-			boolean atLeastOne = false;
-			for (final Integer receiver : ((RegisteredMessage) message).receivers)
-			{
-				if (this.uid_pid_map.containsValue(receiver))
-				{
-					atLeastOne = true;
-				}
-			}
-			if (atLeastOne)
-			{
-				this.outputConnection.sendMessage(message);
-			}
-		} else
-		{
-			this.outputConnection.sendMessage(message);
 		}
 	}
 
