@@ -9,14 +9,14 @@ public class UserMessage extends Message
 {
 	private final boolean		lostUser;
 	private final User			myUser;
-	private final List<Object>	users;
+	private final List<Object>	userIDs;
 
 	public UserMessage(User myUser)
 	{
 		this.lostUser = false;
 		this.myUser = myUser;
-		this.users = new ArrayList<>();
-		this.users.add(myUser.getIdentifier());
+		this.userIDs = new ArrayList<>();
+		this.userIDs.add(myUser.getIdentifier());
 	}
 
 	public User getOriginalUser()
@@ -24,9 +24,9 @@ public class UserMessage extends Message
 		return this.myUser;
 	}
 
-	public void addHop(User myUser)
+	public void addHop(Object userIdentifier)
 	{
-		this.users.add(myUser.getIdentifier());
+		this.userIDs.add(userIdentifier);
 	}
 
 	/**
@@ -34,6 +34,15 @@ public class UserMessage extends Message
 	 */
 	public List<Object> getList()
 	{
-		return this.users;
+		return this.userIDs;
+	}
+
+	@Override
+	public String toString()
+	{
+		StringBuilder builder = new StringBuilder();
+		for (Object id : getList())
+			builder.append(id + ", ");
+		return "UserIDs: " + builder.toString();
 	}
 }

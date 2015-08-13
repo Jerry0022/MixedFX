@@ -6,6 +6,7 @@ import java.util.Hashtable;
 import org.bushe.swing.event.VetoTopicEventListener;
 
 import de.mixedfx.eventbus.EventBusExtended;
+import de.mixedfx.logging.Log;
 import de.mixedfx.network.rebuild.messages.Message;
 import de.mixedfx.network.rebuild.messages.UserMessage;
 import de.mixedfx.network.rebuild.user.User;
@@ -27,16 +28,29 @@ public class ConnectivityManager
 			{
 				while (c.next())
 				{
-					if (c.wasAdded())
-						for (TCPClient tcp : c.getAddedSubList())
+					if (c.wasRemoved())
+						for (TCPClient tcp : c.getRemoved())
+						{
+							tcp_user_map.remove(tcp.remoteAddress);
+							Log.network.debug("Removed user message from list: " + tcp.remoteAddress);
+						}
+
+					for (TCPClient tcp : c.getAddedSubList())
+					{
+						synchronized (NetworkManager.t.tcpClients)
 						{
 							UserMessage message = new UserMessage(ConnectivityManager.myUniqueUser);
+							for (InetAddress inet : tcp_user_map.keySet())
+							{
+								if (!inet.equals(tcp.remoteAddress))
+									for (Object ids : tcp_user_map.get(inet).getList())
+										message.addHop(ids);
+							}
 							message.setToIP(tcp.remoteAddress);
 							MessageBus.send(message);
+							Log.network.debug("Sending UserMessage " + message + " to " + tcp.remoteAddress);
 						}
-					else if (c.wasRemoved())
-						for (TCPClient tcp : c.getRemoved())
-							; // TODO Inform others
+					}
 				}
 			}
 		});
@@ -54,6 +68,7 @@ public class ConnectivityManager
 						{
 							// Update mapping
 							tcp_user_map.put(userMessage.getFromIP(), userMessage);
+							Log.network.debug("Put UserMessage " + userMessage + " from ip " + userMessage.getFromIP() + " to my list!");
 							// Go through all other available connections
 							for (InetAddress inet : tcp_user_map.keySet())
 							{
@@ -61,12 +76,13 @@ public class ConnectivityManager
 								if (!inet.equals(userMessage.getFromIP()))
 								{
 									// Does the other ones know already the original? If yes don't forward
-									UserMessage alreadyAvailable = tcp_user_map.get(inet);
-									// Don't send to clients who already have a path to this user.
-									if (alreadyAvailable.getList().contains(userMessage.getOriginalUser().getIdentifier()))
+									// Don't send to clients who already have a path to the original user.
+									if (!tcp_user_map.get(inet).getList().contains(userMessage.getOriginalUser().getIdentifier()))
 									{
-										userMessage.addHop(ConnectivityManager.myUniqueUser);
+										userMessage.addHop(ConnectivityManager.myUniqueUser.getIdentifier());
+										userMessage.setToIP(inet);
 										MessageBus.send(userMessage);
+										Log.network.debug("Forward message " + userMessage + " to " + inet);
 									}
 								}
 							}
