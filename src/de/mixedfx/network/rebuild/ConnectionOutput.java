@@ -58,7 +58,7 @@ public class ConnectionOutput implements Runnable
 						this.outputMessageCache.clear();
 						if (this.terminate())
 						{
-							Log.network.trace("OutputStream lost!");
+							Log.network.debug("OutputStream lost!");
 							this.eventBusParent.publishSync(Connection.CONNECTION_CHANNEL_LOST, this);
 						}
 					}

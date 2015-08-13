@@ -3,7 +3,6 @@ package de.mixedfx.test;
 import java.net.InetAddress;
 import java.util.UUID;
 
-import org.apache.logging.log4j.Level;
 import org.bushe.swing.event.annotation.AnnotationProcessor;
 import org.bushe.swing.event.annotation.EventTopicSubscriber;
 
@@ -25,7 +24,7 @@ public class NetworkTesterRebuild
 		 * Set up logging!
 		 */
 
-		Log.network.setLevel(Level.DEBUG);
+		// Log.network.setLevel(Level.DEBUG);
 
 		// Log fatal errors (network reacted already to this error)
 		AnnotationProcessor.process(new NetworkTesterRebuild());

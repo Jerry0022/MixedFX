@@ -87,7 +87,7 @@ public class ConnectionInput implements Runnable
 					{
 						this.inputMessageCache.clear();
 						this.terminate();
-						Log.network.trace(this.getClass().getSimpleName() + " lost stream!");
+						Log.network.debug(this.getClass().getSimpleName() + " lost stream!");
 						this.eventBusParent.publishSync(Connection.CONNECTION_CHANNEL_LOST, this);
 					}
 				}
