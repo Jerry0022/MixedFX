@@ -88,7 +88,7 @@ public class ConnectionInput implements Runnable
 						this.inputMessageCache.clear();
 						this.terminate();
 						Log.network.debug(this.getClass().getSimpleName() + " lost stream!");
-						if (!this.eventBusParent.equals(null))
+						if (this.eventBusParent != null)
 							this.eventBusParent.publishSync(Connection.CONNECTION_CHANNEL_LOST, this);
 					}
 				}
