@@ -80,7 +80,7 @@ public class Connection implements EventBusServiceInterface
 			if (message instanceof GoodByeMessage)
 				this.close();
 			else
-				EventBusExtended.publishSyncSafe(MessageBus.MESSAGE_RECEIVE, message);
+				EventBusExtended.publishAsyncSafe(MessageBus.MESSAGE_RECEIVE, message);
 		} else
 		{
 			this.close();

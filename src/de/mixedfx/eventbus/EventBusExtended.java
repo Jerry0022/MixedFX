@@ -10,8 +10,7 @@ import org.bushe.swing.event.annotation.ProxyTopicSubscriber;
 public class EventBusExtended extends EventBus
 {
 	/**
-	 * Offers a synchronous thread safe topic synchronously publish() extending the EventBus by
-	 * bushee. Does only work with Annotations?!
+	 * Offers a synchronous thread safe topic synchronously publish() extending the EventBus by bushee. Does only work with Annotations?!
 	 *
 	 * @param topic
 	 *            The topic to reach the subscribers of this topic
@@ -28,8 +27,7 @@ public class EventBusExtended extends EventBus
 			try
 			{
 				subscriber.getSubscriptionMethod().invoke(subscriber.getProxiedSubscriber().getClass().cast(subscriber.getProxiedSubscriber()), topic, eventObject);
-			}
-			catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | SecurityException e)
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | SecurityException e)
 			{
 				e.printStackTrace();
 				System.out.println(101);
@@ -38,8 +36,7 @@ public class EventBusExtended extends EventBus
 	}
 
 	/**
-	 * Offers a synchronous thread safe topic asynchronously (on a new thread for each subscriber)
-	 * publish() extending the EventBus by bushee. Does only work with Annotations?!
+	 * Offers a synchronous thread safe topic asynchronously (on a new thread for each subscriber) publish() extending the EventBus by bushee. Does only work with Annotations?!
 	 *
 	 * @param topic
 	 *            The topic to reach the subscribers of this topic
@@ -66,13 +63,11 @@ public class EventBusExtended extends EventBus
 						// else should throw a programming failure exception OR asking sth. like
 						// ignore?
 					}
-				}
-				catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | SecurityException e1)
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | SecurityException e1)
 				{
 					e1.printStackTrace();
 					System.out.println(101);
-				}
-				catch (final ClassCastException e2)
+				} catch (final ClassCastException e2)
 				{
 					e2.printStackTrace();
 					System.out.println("It was because of: " + proxySubscriber.getClass().getSimpleName());

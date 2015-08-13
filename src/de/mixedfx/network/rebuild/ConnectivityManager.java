@@ -3,10 +3,8 @@ package de.mixedfx.network.rebuild;
 import java.net.InetAddress;
 import java.util.Hashtable;
 
-import org.bushe.swing.event.VetoTopicEventListener;
-
-import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.logging.Log;
+import de.mixedfx.network.rebuild.MessageBus.MessageReceiver;
 import de.mixedfx.network.rebuild.messages.Message;
 import de.mixedfx.network.rebuild.messages.UserMessage;
 import de.mixedfx.network.rebuild.user.User;
@@ -54,15 +52,14 @@ public class ConnectivityManager
 				}
 			}
 		});
-		EventBusExtended.subscribeVetoListener(MessageBus.MESSAGE_RECEIVE, new VetoTopicEventListener<Message>()
+		MessageBus.registerForReceival(new MessageReceiver()
 		{
-			@Override
-			public boolean shouldVeto(String topic, Message data)
+			public void receive(Message message)
 			{
-				Log.network.debug("UserMessage received: " + data);
-				if (data instanceof UserMessage)
+				if (message instanceof UserMessage)
 				{
-					UserMessage userMessage = (UserMessage) data;
+					Log.network.debug("UserMessage received: " + message);
+					UserMessage userMessage = (UserMessage) message;
 					// Prevent death circles if more than one connection exist to the same client
 					if (!userMessage.getOriginalUser().equals(ConnectivityManager.myUniqueUser))
 						synchronized (NetworkManager.t.tcpClients)
@@ -88,11 +85,9 @@ public class ConnectivityManager
 								}
 							}
 						}
-					return true;
-				} else
-					return false;
+				}
 			}
-		});
+		}, true);
 	}
 
 	public static void start(User myUniqueUser)

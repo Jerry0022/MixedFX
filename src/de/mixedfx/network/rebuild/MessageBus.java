@@ -15,7 +15,7 @@ import de.mixedfx.network.rebuild.messages.Message;
  */
 public class MessageBus
 {
-	protected static final String MESSAGE_RECEIVE = "MESSAGE_RECEIVE";
+	public static final String MESSAGE_RECEIVE = "MESSAGE_RECEIVE";
 
 	public interface MessageReceiver
 	{
@@ -27,8 +27,8 @@ public class MessageBus
 		public void receive(Message message);
 	}
 
-	private static MessageBus									intermediateReceiver;
-	private static ArrayList<WeakReference<MessageReceiver>>	receiverList	= new ArrayList<>();
+	private static MessageBus			intermediateReceiver;
+	private static ArrayList<Object>	receiverList	= new ArrayList<>();
 
 	/**
 	 * <b>Sends a message asynchronously! Updates sender id if the message is an {@link IdentifiedMessage}.</b> Furthermore internally: {@link Message#fromServer} will be set to true if this
@@ -52,8 +52,10 @@ public class MessageBus
 	 *
 	 * @param receiver
 	 *            Receiver will be informed asynchronously!
+	 * @param strongly
+	 *            Set true if you want to use this as an Anonymous Inner Object!
 	 */
-	public static synchronized void registerForReceival(final MessageReceiver receiver)
+	public static synchronized void registerForReceival(final MessageReceiver receiver, boolean strongly)
 	{
 		if (MessageBus.receiverList.isEmpty())
 		{
@@ -61,7 +63,10 @@ public class MessageBus
 			AnnotationProcessor.process(MessageBus.intermediateReceiver);
 		}
 
-		MessageBus.receiverList.add(new WeakReference<MessageBus.MessageReceiver>(receiver));
+		if (strongly)
+			MessageBus.receiverList.add(receiver);
+		else
+			MessageBus.receiverList.add(new WeakReference<MessageBus.MessageReceiver>(receiver));
 	}
 
 	/**
@@ -88,10 +93,12 @@ public class MessageBus
 	@EventTopicSubscriber(topic = MessageBus.MESSAGE_RECEIVE)
 	public void getMessage(final String topic, final Message message)
 	{
-		for (final WeakReference<MessageReceiver> receiver : MessageBus.receiverList)
+		for (final Object receiver : MessageBus.receiverList)
 		{
-			if (receiver.get() != null)
-				receiver.get().receive(message);
+			if (receiver instanceof MessageReceiver)
+				((MessageReceiver) receiver).receive(message);
+			else if ((receiver instanceof WeakReference) && ((WeakReference<MessageReceiver>) receiver).get() != null)
+				((WeakReference<MessageReceiver>) receiver).get().receive(message);
 		}
 	}
 }
