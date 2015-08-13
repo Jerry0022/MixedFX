@@ -129,7 +129,7 @@ class UDPOut
 					break;
 				}
 
-				Log.network.trace("Sent UDP message!");
+				Log.network.trace("Sent UDP message! " + me.getTimeStamp());
 
 				try
 				{

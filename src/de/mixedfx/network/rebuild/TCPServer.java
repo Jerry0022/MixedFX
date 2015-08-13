@@ -88,7 +88,7 @@ class TCPServer
 					{
 						this.connectionList.add(new TCPClient().start(clientSocket));
 					}
-					Log.network.debug("TCP Registrar registered client!");
+					Log.network.debug("TCP Registrar successfully registered client!");
 				} catch (final IOException e)
 				{
 					// In case of termination or connection failure => nothing to do!
