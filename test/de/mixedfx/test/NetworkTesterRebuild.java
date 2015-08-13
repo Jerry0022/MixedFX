@@ -60,9 +60,6 @@ public class NetworkTesterRebuild
 		 */
 
 		// Create example user
-		final String id = UUID.randomUUID().toString();
-		final ExampleUser user = new ExampleUser(id.substring(id.length() - 7, id.length()));
-
 		ConnectivityManager.start(new User()
 		{
 			private String id;
