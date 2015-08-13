@@ -2,8 +2,6 @@ package de.mixedfx.network.rebuild;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.bushe.swing.event.annotation.AnnotationProcessor;
 import org.bushe.swing.event.annotation.EventTopicSubscriber;
@@ -11,6 +9,9 @@ import org.bushe.swing.event.annotation.EventTopicSubscriber;
 import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.logging.Log;
 import de.mixedfx.network.messages.GoodByeMessage;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 
 public class TCPCoordinator
@@ -22,8 +23,8 @@ public class TCPCoordinator
 	 */
 	public static int CONNECTION_ID = 1;
 
-	private final TCPServer			tcpServer;
-	public final List<TCPClient>	tcpClients;
+	private final TCPServer					tcpServer;
+	public final ListProperty<TCPClient>	tcpClients;
 
 	public TCPCoordinator()
 	{
@@ -31,7 +32,7 @@ public class TCPCoordinator
 		AnnotationProcessor.process(this);
 
 		this.tcpServer = new TCPServer();
-		this.tcpClients = new ArrayList<>();
+		this.tcpClients = new SimpleListProperty<>(FXCollections.observableArrayList());
 	}
 
 	@EventTopicSubscriber(topic = TCPCoordinator.CONNECTION_LOST)

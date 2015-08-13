@@ -3,12 +3,13 @@ package de.mixedfx.test;
 import java.net.InetAddress;
 import java.util.UUID;
 
+import org.apache.logging.log4j.Level;
 import org.bushe.swing.event.annotation.AnnotationProcessor;
 import org.bushe.swing.event.annotation.EventTopicSubscriber;
 
 import de.mixedfx.logging.Log;
 import de.mixedfx.network.rebuild.NetworkManager;
-import de.mixedfx.network.rebuild.UDPCoordinator;
+import de.mixedfx.network.rebuild.TCPClient;
 import de.mixedfx.network.rebuild.UDPDetected;
 import de.mixedfx.network.user.User;
 import de.mixedfx.network.user.UserManager;
@@ -24,14 +25,27 @@ public class NetworkTesterRebuild
 		 * Set up logging!
 		 */
 
+		Log.network.setLevel(Level.DEBUG);
+
 		// Log fatal errors (network reacted already to this error)
 		AnnotationProcessor.process(new NetworkTesterRebuild());
 
-		// Log UDP member
-		UDPCoordinator.allAdresses.addListener(new ListChangeListener<UDPDetected>()
+		// Log UDP members
+		NetworkManager.u.allAdresses.addListener(new ListChangeListener<UDPDetected>()
 		{
 			@Override
 			public void onChanged(javafx.collections.ListChangeListener.Change<? extends UDPDetected> c)
+			{
+				c.next();
+				Log.network.trace("AllAddresses updated: " + c.getAddedSubList().get(0));
+			}
+		});
+
+		// Log TCP members
+		NetworkManager.t.tcpClients.addListener(new ListChangeListener<TCPClient>()
+		{
+			@Override
+			public void onChanged(javafx.collections.ListChangeListener.Change<? extends TCPClient> c)
 			{
 				c.next();
 				Log.network.trace("AllAddresses updated: " + c.getAddedSubList().get(0));

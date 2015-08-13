@@ -14,12 +14,12 @@ import org.apache.logging.log4j.core.LoggerContext;
  */
 public class Log
 {
-	public static final LoggerContext CONTEXT;
-	public static final Logger DEFAULT;
-	public static final Logger network;
-	public static final Logger assets;
-	public static final Logger windows;
-	public static final Logger textAndSpeech;
+	public static final LoggerContext	CONTEXT;
+	public static final Logger			DEFAULT;
+	public static final Logger			network;
+	public static final Logger			assets;
+	public static final Logger			windows;
+	public static final Logger			textAndSpeech;
 
 	static
 	{
@@ -38,7 +38,7 @@ public class Log
 		textAndSpeech = Log.CONTEXT.getLogger("TextAndSpeech");
 	}
 
-	public void turnAllOn()
+	public static void turnAllOn()
 	{
 		for (final Logger l : Log.CONTEXT.getLoggers())
 		{
@@ -46,7 +46,7 @@ public class Log
 		}
 	}
 
-	public void turnAllOff()
+	public static void turnAllOff()
 	{
 		for (final Logger l : Log.CONTEXT.getLoggers())
 		{

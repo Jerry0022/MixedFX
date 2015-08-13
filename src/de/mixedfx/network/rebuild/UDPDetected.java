@@ -35,7 +35,7 @@ public class UDPDetected implements Serializable
 	@Override
 	public String toString()
 	{
-		return "UDPDetected with lastContact on " + getTimeStamp() + "!";
+		return "UDPDetected with ip " + address + " with lastContact on " + getTimeStamp() + "!";
 	}
 
 	/*

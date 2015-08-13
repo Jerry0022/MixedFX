@@ -6,7 +6,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-class TCPClient
+public class TCPClient
 {
 	public InetAddress	remoteAddress;
 	private Connection	connection;
@@ -48,5 +48,11 @@ class TCPClient
 			this.connection.close();
 		}
 		return this.connection;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "TCPClient ip=" + remoteAddress;
 	}
 }

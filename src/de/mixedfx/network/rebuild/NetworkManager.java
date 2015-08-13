@@ -13,8 +13,8 @@ public class NetworkManager
 
 	protected static volatile boolean running;
 
-	protected static TCPCoordinator	t;
-	private static UDPCoordinator	u;
+	public static TCPCoordinator	t;
+	public static UDPCoordinator	u;
 
 	static
 	{
