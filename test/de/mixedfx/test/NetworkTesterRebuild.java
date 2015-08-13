@@ -65,10 +65,16 @@ public class NetworkTesterRebuild
 
 		ConnectivityManager.start(new User()
 		{
+			private String id;
+
+			{
+				this.id = UUID.randomUUID().toString();
+			}
+
 			@Override
 			public Object getIdentifier()
 			{
-				return UUID.randomUUID().toString();
+				return id;
 			}
 		});
 		try
