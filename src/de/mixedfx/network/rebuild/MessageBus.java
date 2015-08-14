@@ -8,6 +8,7 @@ import org.bushe.swing.event.annotation.AnnotationProcessor;
 import org.bushe.swing.event.annotation.EventTopicSubscriber;
 
 import de.mixedfx.eventbus.EventBusExtended;
+import de.mixedfx.inspector.Inspector;
 import de.mixedfx.network.rebuild.messages.IdentifiedMessage;
 import de.mixedfx.network.rebuild.messages.Message;
 
@@ -40,35 +41,42 @@ public class MessageBus
 	 */
 	public static synchronized void send(final Message message)
 	{
-		if (message instanceof IdentifiedMessage)
+		Runnable run = () ->
 		{
-			IdentifiedMessage idMessage = (IdentifiedMessage) message;
-			synchronized (ConnectivityManager.tcp_user_map)
+			if (message instanceof IdentifiedMessage)
 			{
-				if (idMessage.getToUserIDs().isEmpty())
-					for (InetAddress ip : ConnectivityManager.tcp_user_map.keySet())
-					{
-						message.setToIP(ip);
-						EventBusExtended.publishAsyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
-					}
-				else
+				IdentifiedMessage idMessage = (IdentifiedMessage) message;
+				synchronized (ConnectivityManager.tcp_user_map)
 				{
-					for (Object id : idMessage.getToUserIDs())
-					{
-						FindIP: for (InetAddress ip : ConnectivityManager.tcp_user_map.keySet())
+					if (idMessage.getToUserIDs().isEmpty())
+						for (InetAddress ip : ConnectivityManager.tcp_user_map.keySet())
 						{
-							if (ConnectivityManager.tcp_user_map.get(ip).getOriginalUser().getIdentifier().equals(id))
+							message.setToIP(ip);
+							EventBusExtended.publishAsyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
+						}
+					else
+					{
+						for (Object id : idMessage.getToUserIDs())
+						{
+							FindIP: for (InetAddress ip : ConnectivityManager.tcp_user_map.keySet())
 							{
-								message.setToIP(ip);
-								EventBusExtended.publishAsyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
-								break FindIP; // Avoid double sending!
+								if (ConnectivityManager.tcp_user_map.get(ip).getOriginalUser().getIdentifier().equals(id))
+								{
+									message.setToIP(ip);
+									EventBusExtended.publishAsyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
+									break FindIP; // Avoid double sending!
+								}
 							}
 						}
 					}
 				}
-			}
-		} else
-			EventBusExtended.publishAsyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
+			} else
+				EventBusExtended.publishAsyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
+		};
+		if (Thread.holdsLock(ConnectivityManager.tcp_user_map))
+			Inspector.runNowAsDaemon(run);
+		else
+			run.run();
 	}
 
 	/**
