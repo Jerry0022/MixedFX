@@ -79,7 +79,9 @@ public class NetworkTesterRebuild
 					// + " " + change.getValueAdded());
 					// }
 					// });
-					MessageBus.send(new WelcomeMessage());
+					WelcomeMessage message = new WelcomeMessage();
+					message.setReceivers(c.getAddedSubList().get(0));
+					MessageBus.send(message);
 				} else if (c.wasRemoved())
 					Log.network.info("Removed User: " + c.getRemoved().get(0));
 			}
