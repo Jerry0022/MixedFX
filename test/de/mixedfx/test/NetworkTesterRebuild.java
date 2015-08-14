@@ -11,6 +11,7 @@ import de.mixedfx.network.rebuild.NetworkManager;
 import de.mixedfx.network.rebuild.TCPClient;
 import de.mixedfx.network.rebuild.UDPDetected;
 import de.mixedfx.network.rebuild.user.User;
+import de.mixedfx.network.user.UserManager;
 import javafx.collections.ListChangeListener;
 
 public class NetworkTesterRebuild
@@ -55,6 +56,31 @@ public class NetworkTesterRebuild
 					for (TCPClient tcp : c.getAddedSubList())
 						Log.network.debug("TCP added: " + tcp);
 			}
+		});
+
+		// Log users
+		ConnectivityManager.otherUsers.addListener((ListChangeListener<User>) c ->
+		{
+			while (c.next())
+			{
+				if (c.wasAdded())
+				{
+					Log.network.info(!c.wasUpdated() ? "New" : "Updated" + " User: " + c.getAddedSubList().get(0));
+
+					// c.getAddedSubList().get(0).networks.addListener(new MapChangeListener<InetAddress, Long>()
+					// {
+					// @Override
+					// public void onChanged(javafx.collections.MapChangeListener.Change<? extends InetAddress, ? extends Long> change)
+					// {
+					// Log.network.info("Network was " + (change.wasAdded() == true ? "added" : "removed") + " for user " + c.getAddedSubList().get(0) + " with following data: " + change.getKey()
+					// + " " + change.getValueAdded());
+					// }
+					// });
+				} else if (c.wasRemoved())
+					Log.network.info("Removed User: " + c.getRemoved().get(0));
+			}
+
+			Log.network.info("UserManager list changed to: " + UserManager.allUsers);
 		});
 
 		/*

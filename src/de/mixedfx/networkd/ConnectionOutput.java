@@ -23,6 +23,7 @@ public class ConnectionOutput implements Runnable
 	{
 		this.eventBusParent = EventBusService.getEventBus(ConnectionOutput.parentClass, clientID);
 		this.objectOutputStream = new ObjectOutputStream(outputStream);
+		this.objectOutputStream.flush();
 		this.outputMessageCache = new ArrayList<Serializable>();
 
 		Log.network.trace(this.getClass().getSimpleName() + " initialized!");
@@ -52,8 +53,7 @@ public class ConnectionOutput implements Runnable
 						this.objectOutputStream.writeObject(this.outputMessageCache.get(0));
 						this.outputMessageCache.remove(0);
 						Log.network.trace(this.getClass().getSimpleName() + " message successfully sent!");
-					}
-					catch (final IOException e)
+					} catch (final IOException e)
 					{
 						this.outputMessageCache.clear();
 						if (this.terminate())
@@ -68,8 +68,7 @@ public class ConnectionOutput implements Runnable
 			try
 			{
 				Thread.sleep(NetworkConfig.TCP_UNICAST_INTERVAL);
-			}
-			catch (final InterruptedException e)
+			} catch (final InterruptedException e)
 			{
 				Log.network.fatal("TCP unicast interval could not be applied!");
 			}
@@ -85,8 +84,7 @@ public class ConnectionOutput implements Runnable
 				try
 				{
 					Thread.sleep(50);
-				}
-				catch (final InterruptedException e)
+				} catch (final InterruptedException e)
 				{
 				}
 			}
@@ -97,8 +95,7 @@ public class ConnectionOutput implements Runnable
 			try
 			{
 				this.objectOutputStream.close();
-			}
-			catch (final IOException e)
+			} catch (final IOException e)
 			{
 				// In rare cases could be called twice, therefore soft
 				// Exception is needed, no impact!
@@ -106,8 +103,7 @@ public class ConnectionOutput implements Runnable
 			}
 			Log.network.trace(this.getClass().getSimpleName() + " terminated!");
 			return true;
-		}
-		else
+		} else
 		{
 			return false;
 		}

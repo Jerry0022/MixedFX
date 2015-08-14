@@ -47,9 +47,11 @@ public class Connection implements EventBusServiceInterface
 		this.initilizeEventBusAndSubscriptions();
 
 		this.outputConnection = new ConnectionOutput(clientSocket.getOutputStream(), ip);
+		Log.network.trace("Starting output connection!");
 		Inspector.runNowAsDaemon(this.outputConnection);
 
 		this.inputConnection = new ConnectionInput(clientSocket.getInputStream(), ip);
+		Log.network.trace("Starting input connection!");
 		Inspector.runNowAsDaemon(this.inputConnection);
 
 		Log.network.debug(this.getClass().getSimpleName() + " initialized!");

@@ -49,8 +49,12 @@ public abstract class User implements Identifiable, Serializable
 	 * @param user
 	 * @return Returns true if the user is equal to the other user, otherwise false.
 	 */
-	public boolean equals(final User user)
+	@Override
+	public boolean equals(Object user)
 	{
-		return this.getIdentifier().equals(user.getIdentifier());
+		if (user instanceof User)
+			return this.getIdentifier().equals(((User) user).getIdentifier());
+		else
+			return false;
 	};
 }
