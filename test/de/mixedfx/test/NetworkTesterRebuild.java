@@ -42,7 +42,8 @@ public class NetworkTesterRebuild
 			public void onChanged(javafx.collections.ListChangeListener.Change<? extends UDPDetected> c)
 			{
 				c.next();
-				Log.network.trace("AllAddresses updated: " + c.getAddedSubList().get(0));
+				if (c.wasAdded())
+					Log.network.trace("AllAddresses updated: " + c.getAddedSubList().get(0));
 			}
 		});
 
@@ -81,7 +82,7 @@ public class NetworkTesterRebuild
 						{
 							c.next();
 							if (c.wasAdded())
-								Log.network.info("User joined over other network: " + c.getAddedSubList().get(0));
+								Log.network.info("User joined over other network: " + c.getAddedSubList().get(0) + " so that he is now in following networks: " + user.networks);
 							else
 								Log.network.info("User left over this network: " + c.getRemoved().get(0) + " but is still in: " + user.networks);
 						}
