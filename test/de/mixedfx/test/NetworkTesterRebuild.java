@@ -139,25 +139,7 @@ public class NetworkTesterRebuild
 		{
 		}
 		ConnectivityManager.stop();
-		ConnectivityManager.start(new User()
-		{
-			private String id;
-
-			{
-				this.id = UUID.randomUUID().toString();
-			}
-
-			@Override
-			public Object getIdentifier()
-			{
-				return id;
-			}
-
-			@Override
-			public void mergeMe(User newUser)
-			{
-			}
-		});
+		// ConnectivityManager.restart();
 		while (true)
 			;
 	}

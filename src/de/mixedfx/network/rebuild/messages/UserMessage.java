@@ -16,6 +16,17 @@ public class UserMessage extends Message
 		return this.myUser;
 	}
 
+	public boolean equals(Object userMessage)
+	{
+		if (!(userMessage instanceof UserMessage))
+			return false;
+		else
+		{
+			UserMessage message = (UserMessage) userMessage;
+			return this.getOriginalUser().equals(message.getOriginalUser());
+		}
+	}
+
 	@Override
 	public String toString()
 	{

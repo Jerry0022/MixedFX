@@ -55,11 +55,14 @@ public class ConnectivityManager
 								if (tcp_user_map.contains(tcp.remoteAddress))
 								{
 									User oldUser = tcp_user_map.get(tcp.remoteAddress).getOriginalUser();
+									tcp_user_map.remove(tcp.remoteAddress);
 									synchronized (otherUsers)
 									{
-										otherUsers.remove(oldUser);
+										if (!tcp_user_map.containsValue(new UserMessage(oldUser)))
+											otherUsers.remove(oldUser);
+										else
+											Log.network.info("User is still available over other connection!");
 									}
-									tcp_user_map.remove(tcp.remoteAddress);
 									Log.network.debug("Removed user message from list: " + tcp.remoteAddress);
 									if (tcp_user_map.keySet().isEmpty())
 										state.set(State.SEARCHING);
