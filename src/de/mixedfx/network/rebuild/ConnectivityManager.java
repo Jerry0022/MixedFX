@@ -90,7 +90,6 @@ public class ConnectivityManager
 			{
 				if (message instanceof UserMessage)
 				{
-
 					Log.network.debug("UserMessage received: " + message);
 					UserMessage userMessage = (UserMessage) message;
 					if (!userMessage.getOriginalUser().equals(ConnectivityManager.myUniqueUser))

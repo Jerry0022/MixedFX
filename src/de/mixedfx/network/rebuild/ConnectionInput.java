@@ -78,7 +78,6 @@ public class ConnectionInput implements Runnable
 			{
 				if (this.isRunning)
 				{
-					e.printStackTrace();
 					if (e instanceof NotSerializableException || e.getCause() instanceof NotSerializableException)
 					{
 						Log.network.error(new Exception("A class is not serializable! Implement Serializable interface!"));
@@ -88,7 +87,7 @@ public class ConnectionInput implements Runnable
 					{
 						this.inputMessageCache.clear();
 						this.terminate();
-						Log.network.debug(this.getClass().getSimpleName() + " lost stream!");
+						Log.network.debug(this.getClass().getSimpleName() + " lost stream! Exception: " + e.getMessage());
 						if (this.eventBusParent != null)
 							this.eventBusParent.publishSync(Connection.CONNECTION_CHANNEL_LOST, this);
 					}

@@ -74,7 +74,6 @@ public class Connection implements EventBusServiceInterface
 		if (topic.equals(Connection.MESSAGE_CHANNEL_SEND))
 		{
 			final Message message = (Message) event;
-			Log.network.info("IP comparison: " + message.getToIP() + "!" + this.ip + "!" + message.getToIP().equals(this.ip));
 			if (message.getToIP().equals(this.ip))
 			{
 				this.outputConnection.sendMessage(message);

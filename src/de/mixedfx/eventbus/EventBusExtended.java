@@ -1,10 +1,10 @@
 package de.mixedfx.eventbus;
 
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.bushe.swing.event.EventBus;
-import org.bushe.swing.event.annotation.ProxyTopicSubscriber;
+
+import de.mixedfx.inspector.Inspector;
 
 public class EventBusExtended extends EventBus
 {
@@ -47,34 +47,39 @@ public class EventBusExtended extends EventBus
 	{
 		final ArrayList<Object> proxySubscribers = new ArrayList<Object>(EventBus.getSubscribers(topic));
 
-		for (final Object proxySubscriber : proxySubscribers)
+		Inspector.runNowAsDaemon(() ->
 		{
-			final AtomicReference<ProxyTopicSubscriber> proxySubscriberAtomic = new AtomicReference<ProxyTopicSubscriber>((ProxyTopicSubscriber) proxySubscriber);
+			EventBus.publish(topic, eventObject);
+		});
 
-			new Thread(() ->
-			{
-				EventBus.publish(topic, eventObject);
-				// try
-				// {
-				// final ProxyTopicSubscriber subscriber = proxySubscriberAtomic.get();
-				//
-				// if (subscriber.getSubscriptionMethod() != null)
-				// {
-				// subscriber.getSubscriptionMethod().invoke(subscriber.getProxiedSubscriber().getClass().cast(subscriber.getProxiedSubscriber()), topic, eventObject);
-				// // else should throw a programming failure exception OR asking sth. like
-				// // ignore?
-				// }
-				// } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | SecurityException e1)
-				// {
-				// e1.printStackTrace();
-				// System.out.println(101);
-				// } catch (final ClassCastException e2)
-				// {
-				// e2.printStackTrace();
-				// System.out.println("It was because of: " + proxySubscriber.getClass().getSimpleName());
-				// System.out.println("At the topic " + topic + " occured an error!");
-				// }
-			}).start();
-		}
+		// for (final Object proxySubscriber : proxySubscribers)
+		// {
+		// final AtomicReference<ProxyTopicSubscriber> proxySubscriberAtomic = new AtomicReference<ProxyTopicSubscriber>((ProxyTopicSubscriber) proxySubscriber);
+		//
+		// new Thread(() ->
+		// {
+		//
+		// try
+		// {
+		// final ProxyTopicSubscriber subscriber = proxySubscriberAtomic.get();
+		//
+		// if (subscriber.getSubscriptionMethod() != null)
+		// {
+		// subscriber.getSubscriptionMethod().invoke(subscriber.getProxiedSubscriber().getClass().cast(subscriber.getProxiedSubscriber()), topic, eventObject);
+		// // else should throw a programming failure exception OR asking sth. like
+		// // ignore?
+		// }
+		// } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | SecurityException e1)
+		// {
+		// e1.printStackTrace();
+		// System.out.println(101);
+		// } catch (final ClassCastException e2)
+		// {
+		// e2.printStackTrace();
+		// System.out.println("It was because of: " + proxySubscriber.getClass().getSimpleName());
+		// System.out.println("At the topic " + topic + " occured an error!");
+		// }
+		// }).start();
+		// }
 	}
 }
