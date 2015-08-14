@@ -2,6 +2,7 @@ package de.mixedfx.network.rebuild.messages;
 
 import java.io.Serializable;
 import java.net.InetAddress;
+import java.util.Date;
 
 /**
  * Master Message object which contains the information to which next hop (as IP) it is send.
@@ -20,6 +21,8 @@ public class Message implements Serializable
 	 * The message is sent to this one ip to avoid packet circuits.
 	 */
 	private InetAddress toIP;
+
+	private Date timeStamp;
 
 	/*
 	 * START Message object

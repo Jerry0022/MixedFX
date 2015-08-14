@@ -65,7 +65,7 @@ public class NetworkTesterRebuild
 			{
 				if (c.wasAdded())
 				{
-					Log.network.info(!c.wasUpdated() ? "New" : "Updated" + " User: " + c.getAddedSubList().get(0));
+					Log.network.info((!c.wasReplaced() ? "New" : "Updated") + " User: " + c.getAddedSubList().get(0));
 
 					// c.getAddedSubList().get(0).networks.addListener(new MapChangeListener<InetAddress, Long>()
 					// {

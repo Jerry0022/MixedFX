@@ -65,17 +65,18 @@ public class ConnectivityManager
 										state.set(State.SEARCHING);
 								}
 							}
-						}
-					}
-
-					for (TCPClient tcp : c.getAddedSubList())
-					{
-						synchronized (NetworkManager.t.tcpClients)
+						} else if (c.wasAdded())
 						{
-							UserMessage message = new UserMessage(ConnectivityManager.myUniqueUser);
-							message.setToIP(tcp.remoteAddress);
-							MessageBus.send(message);
-							Log.network.debug("Sending UserMessage " + message + " to " + tcp.remoteAddress);
+							for (TCPClient tcp : c.getAddedSubList())
+							{
+								synchronized (NetworkManager.t.tcpClients)
+								{
+									UserMessage message = new UserMessage(ConnectivityManager.myUniqueUser);
+									message.setToIP(tcp.remoteAddress);
+									MessageBus.send(message);
+									Log.network.debug("Sending " + message + " to " + tcp.remoteAddress);
+								}
+							}
 						}
 					}
 				}
@@ -107,7 +108,6 @@ public class ConnectivityManager
 							User newUser = userMessage.getOriginalUser();
 							if (otherUsers.contains(newUser))
 							{
-								Log.network.fatal("SETTING UP");
 								otherUsers.set(otherUsers.indexOf(newUser), newUser);
 							} else
 								otherUsers.add(newUser);

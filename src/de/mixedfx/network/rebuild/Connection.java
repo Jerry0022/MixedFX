@@ -43,15 +43,16 @@ public class Connection implements EventBusServiceInterface
 		this.uid_pid_map = new HashMap<>();
 
 		this.clientSocket = clientSocket;
+		/*
+		 * TODO Sometimes the outputstream is not flushing and therefore the inputstream constructor is blocking! Use this.clientSocket.setSO_Linger() or .setNoTCPDelay to fix this!
+		 */
 
 		this.initilizeEventBusAndSubscriptions();
 
 		this.outputConnection = new ConnectionOutput(clientSocket.getOutputStream(), ip);
-		Log.network.trace("Starting output connection!");
 		Inspector.runNowAsDaemon(this.outputConnection);
 
 		this.inputConnection = new ConnectionInput(clientSocket.getInputStream(), ip);
-		Log.network.trace("Starting input connection!");
 		Inspector.runNowAsDaemon(this.inputConnection);
 
 		Log.network.debug(this.getClass().getSimpleName() + " initialized!");
@@ -73,6 +74,7 @@ public class Connection implements EventBusServiceInterface
 		if (topic.equals(Connection.MESSAGE_CHANNEL_SEND))
 		{
 			final Message message = (Message) event;
+			Log.network.info("IP comparison: " + message.getToIP() + "!" + this.ip + "!" + message.getToIP().equals(this.ip));
 			if (message.getToIP().equals(this.ip))
 			{
 				this.outputConnection.sendMessage(message);

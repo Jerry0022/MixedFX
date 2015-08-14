@@ -78,6 +78,7 @@ public class ConnectionInput implements Runnable
 			{
 				if (this.isRunning)
 				{
+					e.printStackTrace();
 					if (e instanceof NotSerializableException || e.getCause() instanceof NotSerializableException)
 					{
 						Log.network.error(new Exception("A class is not serializable! Implement Serializable interface!"));
