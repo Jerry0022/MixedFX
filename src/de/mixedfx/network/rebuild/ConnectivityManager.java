@@ -105,9 +105,10 @@ public class ConnectivityManager
 						synchronized (otherUsers)
 						{
 							User newUser = userMessage.getOriginalUser();
+							newUser.networks.add(MasterNetworkHandler.get(userMessage.getFromIP()));
 							if (otherUsers.contains(newUser))
 							{
-								otherUsers.set(otherUsers.indexOf(newUser), newUser);
+								otherUsers.get(otherUsers.indexOf(newUser)).merge(newUser);
 							} else
 								otherUsers.add(newUser);
 						}

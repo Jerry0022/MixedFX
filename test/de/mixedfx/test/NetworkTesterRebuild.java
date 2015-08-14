@@ -10,6 +10,7 @@ import de.mixedfx.network.rebuild.ConnectivityManager;
 import de.mixedfx.network.rebuild.MessageBus;
 import de.mixedfx.network.rebuild.MessageBus.MessageReceiver;
 import de.mixedfx.network.rebuild.NetworkManager;
+import de.mixedfx.network.rebuild.OverlayNetwork;
 import de.mixedfx.network.rebuild.TCPClient;
 import de.mixedfx.network.rebuild.UDPDetected;
 import de.mixedfx.network.rebuild.messages.Message;
@@ -68,19 +69,26 @@ public class NetworkTesterRebuild
 			{
 				if (c.wasAdded())
 				{
-					Log.network.info((!c.wasReplaced() ? "New" : "Updated") + " User: " + c.getAddedSubList().get(0));
+					User user = c.getAddedSubList().get(0);
+					Log.network.info((!c.wasReplaced() ? "New" : "Updated") + " User: " + user);
+					Log.network.info("User was detected to be in this network: " + user.networks);
 
-					// c.getAddedSubList().get(0).networks.addListener(new MapChangeListener<InetAddress, Long>()
-					// {
-					// @Override
-					// public void onChanged(javafx.collections.MapChangeListener.Change<? extends InetAddress, ? extends Long> change)
-					// {
-					// Log.network.info("Network was " + (change.wasAdded() == true ? "added" : "removed") + " for user " + c.getAddedSubList().get(0) + " with following data: " + change.getKey()
-					// + " " + change.getValueAdded());
-					// }
-					// });
+					user.networks.addListener(new ListChangeListener<OverlayNetwork>()
+					{
+
+						@Override
+						public void onChanged(javafx.collections.ListChangeListener.Change<? extends OverlayNetwork> c)
+						{
+							c.next();
+							if (c.wasAdded())
+								Log.network.info("User joined over other network: " + c.getAddedSubList().get(0));
+							else
+								Log.network.info("User left over this network: " + c.getRemoved().get(0) + " but is still in: " + user.networks);
+						}
+
+					});
 					WelcomeMessage message = new WelcomeMessage();
-					message.setReceivers(c.getAddedSubList().get(0));
+					message.setReceivers(user);
 					MessageBus.send(message);
 				} else if (c.wasRemoved())
 					Log.network.info("Removed User: " + c.getRemoved().get(0));
@@ -117,6 +125,11 @@ public class NetworkTesterRebuild
 			{
 				return id;
 			}
+
+			@Override
+			public void mergeMe(User newUser)
+			{
+			}
 		});
 		try
 		{
@@ -125,6 +138,25 @@ public class NetworkTesterRebuild
 		{
 		}
 		ConnectivityManager.stop();
+		ConnectivityManager.start(new User()
+		{
+			private String id;
+
+			{
+				this.id = UUID.randomUUID().toString();
+			}
+
+			@Override
+			public Object getIdentifier()
+			{
+				return id;
+			}
+
+			@Override
+			public void mergeMe(User newUser)
+			{
+			}
+		});
 		while (true)
 			;
 	}

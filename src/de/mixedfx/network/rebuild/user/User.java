@@ -2,11 +2,11 @@ package de.mixedfx.network.rebuild.user;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.InetAddress;
 
 import de.mixedfx.list.Identifiable;
-import javafx.beans.property.MapProperty;
-import javafx.beans.property.SimpleMapProperty;
+import de.mixedfx.network.rebuild.OverlayNetwork;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 
 /**
@@ -22,19 +22,33 @@ public abstract class User implements Identifiable, Serializable
 	/**
 	 * A list of current networks of the user to which this local client is directly connected.
 	 */
-	public transient MapProperty<InetAddress, Long> networks;
+	public transient ListProperty<OverlayNetwork> networks;
 
 	protected User()
 	{
-		this.networks = new SimpleMapProperty<>(FXCollections.observableHashMap());
+		this.networks = new SimpleListProperty<>(FXCollections.observableArrayList());
 	}
 
 	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
 		in.defaultReadObject();
-		// User user = (User) in.readObject();
-		this.networks = new SimpleMapProperty<>(FXCollections.observableHashMap());
+		this.networks = new SimpleListProperty<>(FXCollections.observableArrayList());
 	}
+
+	public void merge(User newUser)
+	{
+		this.networks.addAll(newUser.networks);
+		mergeMe(newUser);
+	}
+
+	/**
+	 * This method enables you to use properties and link users directly to GUI. If a user is updated with a new UserProfile what shall I do with the new fields? Do nothing here if a new user profile
+	 * doesn't care the old one!
+	 * 
+	 * @param newUser
+	 *            The new one with the same id! All other values might have changed!
+	 */
+	public abstract void mergeMe(User newUser);
 
 	@Override
 	public String toString()
