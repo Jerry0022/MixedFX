@@ -3,8 +3,10 @@ package de.mixedfx.network.rebuild;
 import java.net.InetAddress;
 import java.util.Hashtable;
 
+import org.bushe.swing.event.VetoTopicEventListener;
+
+import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.logging.Log;
-import de.mixedfx.network.rebuild.MessageBus.MessageReceiver;
 import de.mixedfx.network.rebuild.messages.Message;
 import de.mixedfx.network.rebuild.messages.UserMessage;
 import de.mixedfx.network.rebuild.user.User;
@@ -51,9 +53,11 @@ public class ConnectivityManager
 				}
 			}
 		});
-		MessageBus.registerForReceival(new MessageReceiver()
+		// Attention: Does only subscribe if at leaster one other subscribes to!
+		EventBusExtended.subscribeVetoListenerStrongly(MessageBus.MESSAGE_RECEIVE, new VetoTopicEventListener<Message>()
 		{
-			public void receive(Message message)
+			@Override
+			public boolean shouldVeto(String topic, Message message)
 			{
 				if (message instanceof UserMessage)
 				{
@@ -67,12 +71,13 @@ public class ConnectivityManager
 							tcp_user_map.put(userMessage.getFromIP(), userMessage);
 							Log.network.debug("Put UserMessage " + userMessage + " from ip " + userMessage.getFromIP() + " to my list!");
 						} else
-							Log.network.debug("But UserMessage was from me!");
+							Log.network.debug("UserMessage was from me!");
 					}
 				}
+				System.out.println("FATAL");
+				return false;
 			}
-
-		}, true);
+		});
 	}
 
 	public static void start(User myUniqueUser)

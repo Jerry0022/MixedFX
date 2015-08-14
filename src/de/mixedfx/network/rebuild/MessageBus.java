@@ -8,7 +8,6 @@ import org.bushe.swing.event.annotation.AnnotationProcessor;
 import org.bushe.swing.event.annotation.EventTopicSubscriber;
 
 import de.mixedfx.eventbus.EventBusExtended;
-import de.mixedfx.logging.Log;
 import de.mixedfx.network.rebuild.messages.IdentifiedMessage;
 import de.mixedfx.network.rebuild.messages.Message;
 
@@ -118,7 +117,6 @@ public class MessageBus
 	@EventTopicSubscriber(topic = MessageBus.MESSAGE_RECEIVE)
 	public void getMessage(final String topic, final Message message)
 	{
-		Log.network.fatal("GOT MESSAGE");
 		for (final Object receiver : MessageBus.receiverList)
 		{
 			if (receiver instanceof MessageReceiver)
