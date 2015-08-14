@@ -28,6 +28,8 @@ public class NetworkTesterRebuild
 		NetworkTesterRebuild rebuild = new NetworkTesterRebuild();
 		AnnotationProcessor.process(rebuild);
 
+		Log.network.info("NOW TESTING NETWORK!");
+
 		// Log UDP members
 		NetworkManager.u.allAdresses.addListener(new ListChangeListener<UDPDetected>()
 		{
