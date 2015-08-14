@@ -134,7 +134,7 @@ public class NetworkTesterRebuild
 		});
 		try
 		{
-			Thread.sleep(20000);
+			Thread.sleep(30000);
 		} catch (InterruptedException e)
 		{
 		}
