@@ -1,6 +1,7 @@
 package de.mixedfx.network.rebuild;
 
 import java.lang.ref.WeakReference;
+import java.net.InetAddress;
 import java.util.ArrayList;
 
 import org.bushe.swing.event.annotation.AnnotationProcessor;
@@ -39,12 +40,34 @@ public class MessageBus
 	 */
 	public static synchronized void send(final Message message)
 	{
-		// TODO Compare Message with list of users and update ip of message! If user not found throw exception and return!
 		if (message instanceof IdentifiedMessage)
 		{
-
+			IdentifiedMessage idMessage = (IdentifiedMessage) message;
+			synchronized (ConnectivityManager.tcp_user_map)
+			{
+				if (idMessage.getToUserIDs().isEmpty())
+					for (InetAddress ip : ConnectivityManager.tcp_user_map.keySet())
+					{
+						message.setToIP(ip);
+						EventBusExtended.publishAsyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
+					}
+				else
+				{
+					for (Object id : idMessage.getToUserIDs())
+					{
+						FindIP: for (InetAddress ip : ConnectivityManager.tcp_user_map.keySet())
+						{
+							if (ConnectivityManager.tcp_user_map.get(ip).getOriginalUser().getIdentifier().equals(id))
+							{
+								message.setToIP(ip);
+								EventBusExtended.publishAsyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
+								break FindIP; // Avoid double sending!
+							}
+						}
+					}
+				}
+			}
 		}
-		EventBusExtended.publishAsyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
 	}
 
 	/**

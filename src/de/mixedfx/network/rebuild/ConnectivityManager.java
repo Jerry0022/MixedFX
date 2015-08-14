@@ -12,9 +12,9 @@ import javafx.collections.ListChangeListener;
 
 public class ConnectivityManager
 {
-	private static Hashtable<InetAddress, UserMessage> tcp_user_map;
+	protected static Hashtable<InetAddress, UserMessage> tcp_user_map;
 
-	private static User myUniqueUser;
+	public static User myUniqueUser;
 
 	static
 	{
@@ -26,24 +26,23 @@ public class ConnectivityManager
 			{
 				while (c.next())
 				{
-					if (c.wasRemoved())
-						for (TCPClient tcp : c.getRemoved())
+					synchronized (NetworkManager.t.tcpClients)
+					{
+						if (c.wasRemoved())
 						{
-							tcp_user_map.remove(tcp.remoteAddress);
-							Log.network.debug("Removed user message from list: " + tcp.remoteAddress);
+							for (TCPClient tcp : c.getRemoved())
+							{
+								tcp_user_map.remove(tcp.remoteAddress);
+								Log.network.debug("Removed user message from list: " + tcp.remoteAddress);
+							}
 						}
+					}
 
 					for (TCPClient tcp : c.getAddedSubList())
 					{
 						synchronized (NetworkManager.t.tcpClients)
 						{
 							UserMessage message = new UserMessage(ConnectivityManager.myUniqueUser);
-							for (InetAddress inet : tcp_user_map.keySet())
-							{
-								if (!inet.equals(tcp.remoteAddress))
-									for (Object ids : tcp_user_map.get(inet).getList())
-										message.addHop(ids);
-							}
 							message.setToIP(tcp.remoteAddress);
 							MessageBus.send(message);
 							Log.network.debug("Sending UserMessage " + message + " to " + tcp.remoteAddress);
@@ -58,35 +57,21 @@ public class ConnectivityManager
 			{
 				if (message instanceof UserMessage)
 				{
-					Log.network.debug("UserMessage received: " + message);
-					UserMessage userMessage = (UserMessage) message;
-					// Prevent death circles if more than one connection exist to the same client
-					if (!userMessage.getOriginalUser().equals(ConnectivityManager.myUniqueUser))
-						synchronized (NetworkManager.t.tcpClients)
+					synchronized (NetworkManager.t.tcpClients)
+					{
+						Log.network.debug("UserMessage received: " + message);
+						UserMessage userMessage = (UserMessage) message;
+						if (!userMessage.getOriginalUser().equals(ConnectivityManager.myUniqueUser))
 						{
 							// Update mapping
 							tcp_user_map.put(userMessage.getFromIP(), userMessage);
 							Log.network.debug("Put UserMessage " + userMessage + " from ip " + userMessage.getFromIP() + " to my list!");
-							// Go through all other available connections
-							for (InetAddress inet : tcp_user_map.keySet())
-							{
-								// Don't send back to direct sender!
-								if (!inet.equals(userMessage.getFromIP()))
-								{
-									// Does the other ones know already the original? If yes don't forward
-									// Don't send to clients who already have a path to the original user.
-									if (!tcp_user_map.get(inet).getList().contains(userMessage.getOriginalUser().getIdentifier()))
-									{
-										userMessage.addHop(ConnectivityManager.myUniqueUser.getIdentifier());
-										userMessage.setToIP(inet);
-										MessageBus.send(userMessage);
-										Log.network.debug("Forward message " + userMessage + " to " + inet);
-									}
-								}
-							}
-						}
+						} else
+							Log.network.debug("But UserMessage was from me!");
+					}
 				}
 			}
+
 		}, true);
 	}
 
