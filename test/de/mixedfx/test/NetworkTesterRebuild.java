@@ -7,11 +7,14 @@ import org.bushe.swing.event.annotation.EventTopicSubscriber;
 
 import de.mixedfx.logging.Log;
 import de.mixedfx.network.rebuild.ConnectivityManager;
+import de.mixedfx.network.rebuild.MessageBus;
+import de.mixedfx.network.rebuild.MessageBus.MessageReceiver;
 import de.mixedfx.network.rebuild.NetworkManager;
 import de.mixedfx.network.rebuild.TCPClient;
 import de.mixedfx.network.rebuild.UDPDetected;
+import de.mixedfx.network.rebuild.messages.Message;
+import de.mixedfx.network.rebuild.messages.WelcomeMessage;
 import de.mixedfx.network.rebuild.user.User;
-import de.mixedfx.network.user.UserManager;
 import javafx.collections.ListChangeListener;
 
 public class NetworkTesterRebuild
@@ -76,12 +79,23 @@ public class NetworkTesterRebuild
 					// + " " + change.getValueAdded());
 					// }
 					// });
+					MessageBus.send(new WelcomeMessage());
 				} else if (c.wasRemoved())
 					Log.network.info("Removed User: " + c.getRemoved().get(0));
 			}
 
-			Log.network.info("UserManager list changed to: " + UserManager.allUsers);
+			Log.network.info("UserManager list changed to: " + ConnectivityManager.otherUsers);
 		});
+
+		MessageBus.registerForReceival(new MessageReceiver()
+		{
+			@Override
+			public void receive(Message message)
+			{
+				if (message instanceof WelcomeMessage)
+					Log.network.info("YEAH! WelcomeMessage received!");
+			}
+		}, true);
 
 		/*
 		 * Set up network!
