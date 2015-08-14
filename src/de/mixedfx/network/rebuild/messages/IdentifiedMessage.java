@@ -10,6 +10,12 @@ public abstract class IdentifiedMessage extends Message
 	private Object				fromUserID;
 	private ArrayList<Object>	toUserIDs;
 
+	public IdentifiedMessage()
+	{
+		this.fromUserID = ConnectivityManager.myUniqueUser.getIdentifier();
+		this.toUserIDs = new ArrayList<>();
+	}
+
 	/**
 	 * @param toUserIDs
 	 *            May not be null. If empty it is a broadcast otherwise a multi- or unicast.
@@ -19,7 +25,6 @@ public abstract class IdentifiedMessage extends Message
 		if (toUserIDs == null)
 			throw new IllegalArgumentException("Parameter toUserIDs may not be null!");
 
-		this.fromUserID = ConnectivityManager.myUniqueUser.getIdentifier();
 		this.toUserIDs = toUserIDs;
 	}
 
@@ -31,9 +36,6 @@ public abstract class IdentifiedMessage extends Message
 	 */
 	public void setReceivers(User... toUsers)
 	{
-		this.fromUserID = ConnectivityManager.myUniqueUser.getIdentifier();
-
-		this.toUserIDs = new ArrayList<>();
 		for (User user : toUsers)
 			this.toUserIDs.add(user.getIdentifier());
 	}
