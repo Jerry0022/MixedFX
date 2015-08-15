@@ -47,7 +47,7 @@ public class TCPCoordinator
 				if (tcp.remoteAddress.equals(connection.ip))
 					toRemove = tcp;
 			tcpClients.remove(toRemove);
-			System.out.println(tcpClients);
+			Log.network.debug("All remaining tcp clients: " + tcpClients);
 		}
 	}
 

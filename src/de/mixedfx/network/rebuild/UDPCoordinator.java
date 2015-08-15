@@ -207,7 +207,7 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 						{
 							if (!handler.isDone())
 							{
-								Log.network.error("A TCP connection needed to much time to establish! Time waited: " + NetworkConfig.TCP_CONNECTION_ESTABLISHING_TIMEOUT + " milliseconds."
+								Log.network.warn("A TCP connection needed to much time to establish! Time waited: " + NetworkConfig.TCP_CONNECTION_ESTABLISHING_TIMEOUT + " milliseconds."
 										+ "Connection is now closed!");
 								handler.cancel(true);
 								try
