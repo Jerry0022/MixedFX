@@ -110,13 +110,11 @@ public class TCPCoordinator
 			try
 			{
 				Log.network.info("Start TCP connection to: " + ip.getHostAddress());
-				synchronized (tcpClients)
-				{
-					this.tcpClients.add(new TCPClient().start(ip));
-				}
+				this.tcpClients.add(new TCPClient().start(ip));
+				Log.network.fatal("Try to establish TCPClient complete!");
 			} catch (final IOException e)
 			{
-				Log.network.info("Error occured while starting TCP client: " + e);
+				Log.network.warn("Error occured while starting TCP client: " + e);
 				return;
 			}
 		}
