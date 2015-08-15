@@ -10,7 +10,7 @@ public class PingTest
 	public static void main(String[] args)
 	{
 		// repeat a few times
-		for (int count = 1; count <= 50; count++)
+		for (int count = 1; count <= 5; count++)
 		{
 			// request
 			final IcmpPingRequest request = IcmpPingUtil.createIcmpPingRequest();
