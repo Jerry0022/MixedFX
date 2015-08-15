@@ -51,7 +51,7 @@ public class ConnectionInput implements Runnable
 	@Override
 	public void run()
 	{
-		Object receivedObject;
+		Object receivedObject = null;
 		while (this.isRunning)
 		{
 			try

@@ -3,7 +3,6 @@ package de.mixedfx.network.rebuild;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.HashMap;
 
 import org.bushe.swing.event.annotation.AnnotationProcessor;
 import org.bushe.swing.event.annotation.EventTopicSubscriber;
@@ -24,11 +23,6 @@ public class Connection implements EventBusServiceInterface
 
 	public final InetAddress ip;
 
-	/**
-	 * A mapping of all going through uids to pids, whereby the pid value may be null.
-	 */
-	public final HashMap<String, Integer> uid_pid_map;
-
 	private final Socket			clientSocket;
 	private final ConnectionOutput	outputConnection;
 	private final ConnectionInput	inputConnection;
@@ -40,13 +34,12 @@ public class Connection implements EventBusServiceInterface
 		Log.network.debug("Initializing " + this.getClass().getSimpleName() + " with " + clientSocket.getInetAddress());
 
 		this.ip = clientSocket.getInetAddress();
-		this.uid_pid_map = new HashMap<>();
 
 		this.clientSocket = clientSocket;
 		// this.clientSocket.setKeepAlive(true);
-		// this.clientSocket.setSoLinger(true, 1000);
+		// this.clientSocket.setSoLinger(true, 0);
 		// this.clientSocket.setTcpNoDelay(true);
-		// this.clientSocket.setSoTimeout(1000);
+		// this.clientSocket.setSoTimeout(5000);
 		/*
 		 * TODO Sometimes the outputstream is not flushing and therefore the inputstream constructor is blocking! Use this.clientSocket.setSO_Linger() or .setNoTCPDelay to fix this!
 		 */
