@@ -9,7 +9,7 @@ public class Crypto
 	/**
 	 *
 	 * @param text
-	 *            The String to hash.
+	 *            The String to hash. Should be in UTF-8 format!
 	 * @return Returns the hash of the string.
 	 */
 	public static String getSHA256(final String text)
@@ -21,8 +21,7 @@ public class Crypto
 			md.update(text.getBytes("UTF-8"));
 			final byte[] digest = md.digest();
 			result = new String(digest);
-		}
-		catch (final UnsupportedEncodingException | NoSuchAlgorithmException e)
+		} catch (final UnsupportedEncodingException | NoSuchAlgorithmException e)
 		{
 		}
 		return result;

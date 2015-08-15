@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.bushe.swing.event.annotation.AnnotationProcessor;
 import org.bushe.swing.event.annotation.EventTopicSubscriber;
 
+import de.mixedfx.java.Ran;
 import de.mixedfx.logging.Log;
 import de.mixedfx.network.rebuild.ConnectivityManager;
 import de.mixedfx.network.rebuild.MessageBus;
@@ -134,11 +135,18 @@ public class NetworkTesterRebuild
 		});
 		try
 		{
-			Thread.sleep(15000);
+			Thread.sleep(Ran.dom(10000, 30000));
 		} catch (InterruptedException e)
 		{
 		}
-		// ConnectivityManager.restart();
+		ConnectivityManager.restart();
+		try
+		{
+			Thread.sleep(Ran.dom(10000, 30000));
+		} catch (InterruptedException e)
+		{
+		}
+		ConnectivityManager.restart();
 		while (true)
 			;
 	}
