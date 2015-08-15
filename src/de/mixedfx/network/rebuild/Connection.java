@@ -36,9 +36,9 @@ public class Connection implements EventBusServiceInterface
 		this.ip = clientSocket.getInetAddress();
 
 		this.clientSocket = clientSocket;
-		// this.clientSocket.setKeepAlive(true);
-		// this.clientSocket.setSoLinger(true, 0);
-		// this.clientSocket.setTcpNoDelay(true);
+		this.clientSocket.setKeepAlive(true);
+		this.clientSocket.setSoLinger(true, 0);
+		this.clientSocket.setTcpNoDelay(true);
 		// this.clientSocket.setSoTimeout(5000);
 		/*
 		 * TODO Sometimes the outputstream is not flushing and therefore the inputstream constructor is blocking! Use this.clientSocket.setSO_Linger() or .setNoTCPDelay to fix this!

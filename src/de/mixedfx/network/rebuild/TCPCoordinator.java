@@ -141,6 +141,13 @@ public class TCPCoordinator
 				Log.network.debug("Sent GoodByeMessage!");
 			}
 
+			try
+			{
+				Thread.sleep(NetworkConfig.TCP_UNICAST_INTERVAL * 2);
+			} catch (InterruptedException e)
+			{
+			}
+
 			for (TCPClient tcp : tcpClients)
 				// Then stop it!
 				tcp.stop();
