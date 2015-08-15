@@ -2,7 +2,9 @@ package de.mixedfx.file;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 /**
@@ -88,10 +90,11 @@ public class FileObject implements Cloneable
 	/**
 	 * @return Returns the size of the file or folder as {@link BigInteger} in Bytes
 	 */
-	// public BigInteger size()
-	// {
-	// return FileUtils.sizeOfAsBigInteger(this.toFile());
-	// }
+	public BigInteger size()
+	{
+		// Otherwise Gradle doesn't compile?!
+		return new BigInteger(String.valueOf(FileUtils.sizeOf(this.toFile())));
+	}
 
 	/**
 	 * @return Returns the corresponding {@link File} even if the file is not valid / created
@@ -115,16 +118,16 @@ public class FileObject implements Cloneable
 	 * @param toCompare
 	 * @return Returns true if size and name is equal.
 	 */
-	// public boolean equalsNameSize(final FileObject toCompare)
-	// {
-	// if (this.getName().equalsIgnoreCase(toCompare.getName()) && this.size().equals(toCompare.size()))
-	// {
-	// return true;
-	// } else
-	// {
-	// return false;
-	// }
-	// }
+	public boolean equalsNameSize(final FileObject toCompare)
+	{
+		if (this.getName().equalsIgnoreCase(toCompare.getName()) && this.size().equals(toCompare.size()))
+		{
+			return true;
+		} else
+		{
+			return false;
+		}
+	}
 
 	/**
 	 * Compares file/folder fullPath via {@link #getFullPath()} comparison.

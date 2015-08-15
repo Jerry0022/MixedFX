@@ -9,7 +9,7 @@ plugins {
  * Build .jar, javadoc.jar and sources.jar from the source folder!
  */
  
-version = '0.97'
+version = '0.98'
 group = 'de.lantool'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -73,7 +73,7 @@ repositories {
  
 //Project dependencies
 dependencies {
-   	compile group: 'commons-io', name: 'commons-io', version: '2.4'
+   	compile 'commons-io:commons-io:2.4'
     compile 'commons-beanutils:commons-beanutils:1.9.2'
     compile 'org.bushe:eventbus:1.4'
     compile 'org.apache.logging.log4j:log4j-core:2.3'
