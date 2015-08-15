@@ -1,4 +1,4 @@
-package de.mixedfx.network.rebuild;
+package de.mixedfx.network;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -12,8 +12,8 @@ import de.mixedfx.eventbus.EventBusService;
 import de.mixedfx.eventbus.EventBusServiceInterface;
 import de.mixedfx.inspector.Inspector;
 import de.mixedfx.logging.Log;
-import de.mixedfx.network.rebuild.messages.GoodByeMessage;
-import de.mixedfx.network.rebuild.messages.Message;
+import de.mixedfx.network.messages.GoodByeMessage;
+import de.mixedfx.network.messages.Message;
 
 public class Connection implements EventBusServiceInterface
 {

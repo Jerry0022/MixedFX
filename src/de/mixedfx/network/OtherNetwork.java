@@ -1,4 +1,4 @@
-package de.mixedfx.network.rebuild;
+package de.mixedfx.network;
 
 public class OtherNetwork extends OverlayNetwork
 {

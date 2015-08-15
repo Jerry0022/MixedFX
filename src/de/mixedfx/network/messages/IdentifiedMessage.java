@@ -1,9 +1,9 @@
-package de.mixedfx.network.rebuild.messages;
+package de.mixedfx.network.messages;
 
 import java.util.ArrayList;
 
-import de.mixedfx.network.rebuild.ConnectivityManager;
-import de.mixedfx.network.rebuild.user.User;
+import de.mixedfx.network.ConnectivityManager;
+import de.mixedfx.network.user.User;
 
 public abstract class IdentifiedMessage extends Message
 {

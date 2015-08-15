@@ -1,10 +1,10 @@
-package de.mixedfx.network.rebuild.user;
+package de.mixedfx.network.user;
 
 import java.io.IOException;
 import java.io.Serializable;
 
 import de.mixedfx.list.Identifiable;
-import de.mixedfx.network.rebuild.OverlayNetwork;
+import de.mixedfx.network.OverlayNetwork;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;

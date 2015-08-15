@@ -1,4 +1,4 @@
-package de.mixedfx.network.rebuild;
+package de.mixedfx.network;
 
 import java.net.InetAddress;
 import java.util.Hashtable;
@@ -7,10 +7,10 @@ import org.bushe.swing.event.VetoTopicEventListener;
 
 import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.logging.Log;
-import de.mixedfx.network.rebuild.MessageBus.MessageReceiver;
-import de.mixedfx.network.rebuild.messages.Message;
-import de.mixedfx.network.rebuild.messages.UserMessage;
-import de.mixedfx.network.rebuild.user.User;
+import de.mixedfx.network.MessageBus.MessageReceiver;
+import de.mixedfx.network.messages.Message;
+import de.mixedfx.network.messages.UserMessage;
+import de.mixedfx.network.user.User;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleListProperty;

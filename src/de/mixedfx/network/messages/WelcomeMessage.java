@@ -1,4 +1,4 @@
-package de.mixedfx.network.rebuild.messages;
+package de.mixedfx.network.messages;
 
 public class WelcomeMessage extends IdentifiedMessage
 {

@@ -1,4 +1,4 @@
-package de.mixedfx.network.rebuild.messages;
+package de.mixedfx.network.messages;
 
 import java.io.Serializable;
 import java.net.InetAddress;

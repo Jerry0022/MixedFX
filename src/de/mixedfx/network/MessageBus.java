@@ -1,4 +1,4 @@
-package de.mixedfx.network.rebuild;
+package de.mixedfx.network;
 
 import java.lang.ref.WeakReference;
 import java.net.InetAddress;
@@ -9,8 +9,8 @@ import org.bushe.swing.event.annotation.EventTopicSubscriber;
 
 import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.inspector.Inspector;
-import de.mixedfx.network.rebuild.messages.IdentifiedMessage;
-import de.mixedfx.network.rebuild.messages.Message;
+import de.mixedfx.network.messages.IdentifiedMessage;
+import de.mixedfx.network.messages.Message;
 
 /**
  * @author Jerry

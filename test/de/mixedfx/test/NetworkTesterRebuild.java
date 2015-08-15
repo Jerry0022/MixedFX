@@ -7,16 +7,16 @@ import org.bushe.swing.event.annotation.EventTopicSubscriber;
 
 import de.mixedfx.java.Ran;
 import de.mixedfx.logging.Log;
-import de.mixedfx.network.rebuild.ConnectivityManager;
-import de.mixedfx.network.rebuild.MessageBus;
-import de.mixedfx.network.rebuild.MessageBus.MessageReceiver;
-import de.mixedfx.network.rebuild.NetworkManager;
-import de.mixedfx.network.rebuild.OverlayNetwork;
-import de.mixedfx.network.rebuild.TCPClient;
-import de.mixedfx.network.rebuild.UDPDetected;
-import de.mixedfx.network.rebuild.messages.Message;
-import de.mixedfx.network.rebuild.messages.WelcomeMessage;
-import de.mixedfx.network.rebuild.user.User;
+import de.mixedfx.network.ConnectivityManager;
+import de.mixedfx.network.MessageBus;
+import de.mixedfx.network.NetworkManager;
+import de.mixedfx.network.OverlayNetwork;
+import de.mixedfx.network.TCPClient;
+import de.mixedfx.network.UDPDetected;
+import de.mixedfx.network.MessageBus.MessageReceiver;
+import de.mixedfx.network.messages.Message;
+import de.mixedfx.network.messages.WelcomeMessage;
+import de.mixedfx.network.user.User;
 import javafx.collections.ListChangeListener;
 
 public class NetworkTesterRebuild

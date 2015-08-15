@@ -1,4 +1,4 @@
-package de.mixedfx.network.rebuild;
+package de.mixedfx.network;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;

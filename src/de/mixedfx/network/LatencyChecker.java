@@ -1,4 +1,4 @@
-package de.mixedfx.network.rebuild;
+package de.mixedfx.network;
 
 import org.icmp4j.IcmpPingRequest;
 import org.icmp4j.IcmpPingResponse;

@@ -1,6 +1,6 @@
-package de.mixedfx.network.rebuild.messages;
+package de.mixedfx.network.messages;
 
-import de.mixedfx.network.rebuild.user.User;
+import de.mixedfx.network.user.User;
 
 public class UserMessage extends Message
 {
