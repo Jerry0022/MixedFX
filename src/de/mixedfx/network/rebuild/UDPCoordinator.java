@@ -8,6 +8,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -208,8 +209,13 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 							if (!handler.isDone())
 							{
 								Log.network.warn("A TCP connection needed to much time to establish! Time waited: " + NetworkConfig.TCP_CONNECTION_ESTABLISHING_TIMEOUT + " milliseconds."
-										+ "Connection is now closed!");
-								handler.cancel(true);
+										+ "Connection is now closed!" + newDetected.address);
+								Log.network.fatal(allAdresses);
+								UDPDetected det = new UDPDetected(new Date());
+								det.address = newDetected.address;
+								Log.network.fatal(allAdresses.contains(newDetected));
+								Log.network.fatal(allAdresses.get(allAdresses.indexOf(newDetected)).getTimeStamp());
+								// handler.cancel(true);
 								try
 								{
 									Thread.sleep(NetworkConfig.TCP_CONNECTION_ESTABLISHING_RETRY);

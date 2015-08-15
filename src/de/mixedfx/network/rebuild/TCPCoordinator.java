@@ -46,8 +46,11 @@ public class TCPCoordinator
 			for (TCPClient tcp : tcpClients)
 				if (tcp.remoteAddress.equals(connection.ip))
 					toRemove = tcp;
-			tcpClients.remove(toRemove);
-			Log.network.debug("All remaining tcp clients: " + tcpClients);
+			if (toRemove != null)
+			{
+				tcpClients.remove(toRemove);
+				Log.network.debug("All remaining tcp clients: " + tcpClients);
+			}
 		}
 	}
 

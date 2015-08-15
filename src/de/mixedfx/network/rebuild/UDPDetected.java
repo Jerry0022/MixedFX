@@ -38,6 +38,15 @@ public class UDPDetected implements Serializable
 		return "UDPDetected with ip " + address + " with lastContact on " + getTimeStamp() + "!";
 	}
 
+	@Override
+	public boolean equals(Object object)
+	{
+		if (object instanceof UDPDetected)
+			return ((UDPDetected) object).address.equals(this.address);
+		else
+			return false;
+	}
+
 	/*
 	 * GETTER
 	 */
