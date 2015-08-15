@@ -21,10 +21,10 @@ public class SpeechToText
 	 */
 	public static Language language = Language.GERMAN;
 
-	private static GSpeechDuplex dup;
-	private static Microphone mic;
-	private static long stopDelay = 250;
-	private static volatile boolean listening;
+	private static GSpeechDuplex	dup;
+	private static Microphone		mic;
+	private static long				stopDelay	= 250;
+	private static volatile boolean	listening;
 
 	/**
 	 * Starts to listen endless for a Unfortunately the API doesn't give a possibility to fetch an wrong API-Key.
@@ -35,7 +35,7 @@ public class SpeechToText
 	 * @param trigger
 	 *            If true this listens synchronously!
 	 * @param callback
-	 *            The callback {@link #onResponse(com.darkprograms.speech.recognizer.GoogleResponse)} is asynchronous.
+	 *            The callback is asynchronous.
 	 * @throws NoMicroFoundException
 	 *             Throws this exception if no microphone was found!
 	 */

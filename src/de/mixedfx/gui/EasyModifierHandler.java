@@ -3,7 +3,7 @@ package de.mixedfx.gui;
 import javafx.scene.Parent;
 
 /**
- * Triggers once if {@link EasyModifierConfig#trigger} is pressed and released!
+ * Triggers once!
  * 
  * @author Jerry
  *
@@ -11,7 +11,7 @@ import javafx.scene.Parent;
 public interface EasyModifierHandler
 {
 	/**
-	 * Triggers once if {@link EasyModifierConfig#trigger}! If released triggers again.
+	 * Triggers once!
 	 * 
 	 * @param parent
 	 *            The Parent who has a not null id and the matching {@link EasyModifierConfig#staticClass}!

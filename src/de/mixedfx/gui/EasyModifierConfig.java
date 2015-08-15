@@ -10,8 +10,7 @@ public class EasyModifierConfig
 	public String staticClass;
 
 	/**
-	 * The style class which shall apply to all Parents with {@link #staticClass} as long as {@link #trigger} is pressed. Default is "modifying". Use also "DYNAMICCLASS:hover" to set up hover events
-	 * while modifying!
+	 * The style class which shall apply to all Parents with {@link #staticClass}. Default is "modifying". Use also "DYNAMICCLASS:hover" to set up hover events while modifying!
 	 */
 	public String dynamicClass;
 

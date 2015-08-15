@@ -19,8 +19,8 @@ public class TTSConfig
 	public double volume = 1.0;
 
 	/**
-	 * German and English as female or male voice are available (see also {@link TextToSpeech.Language}). Default is {@link Language#ENGLISH}. If null the voice is auto detected from the input text.
-	 * Pay attention auto detection, see also {@link #DETECTLANGUAGE_API_KEY}.
+	 * German and English as female or male voice are available. Default is {@link Language#ENGLISH}. If null the voice is auto detected from the input text. Pay attention auto detection, see also
+	 * {@link #DETECTLANGUAGE_API_KEY}.
 	 */
 	public Language lang = Language.ENGLISH;
 
