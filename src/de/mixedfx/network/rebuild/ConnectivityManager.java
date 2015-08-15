@@ -56,14 +56,14 @@ public class ConnectivityManager
 								{
 									User oldUser = tcp_user_map.get(tcp.remoteAddress).getOriginalUser();
 									tcp_user_map.remove(tcp.remoteAddress);
+									Log.network.debug("Removed user message from list: " + tcp.remoteAddress);
 									synchronized (otherUsers)
 									{
 										if (!tcp_user_map.containsValue(new UserMessage(oldUser)))
 											otherUsers.remove(oldUser);
 										else
-											Log.network.info("User is still available over other connection!");
+											Log.network.info("User is still available over other connection! ");
 									}
-									Log.network.debug("Removed user message from list: " + tcp.remoteAddress);
 									if (tcp_user_map.keySet().isEmpty())
 										state.set(State.SEARCHING);
 								}

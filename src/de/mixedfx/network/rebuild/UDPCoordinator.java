@@ -9,6 +9,7 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -84,7 +85,8 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 		}
 	}
 
-	private boolean oldMessage;
+	private boolean						oldMessage;
+	private volatile List<InetAddress>	cached	= new ArrayList<InetAddress>();
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -167,7 +169,24 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 				/*
 				 * Connect to other one!
 				 */
-				NetworkManager.t.startFullTCP(newDetected.address);
+				boolean alreadyWaiting;
+				synchronized (cached)
+				{
+					if (!cached.contains(newDetected.address))
+					{
+						alreadyWaiting = false;
+						cached.add(newDetected.address);
+					} else
+						alreadyWaiting = true;
+				}
+				if (!alreadyWaiting)
+				{
+					NetworkManager.t.startFullTCP(newDetected.address);
+					synchronized (cached)
+					{
+						cached.remove(newDetected.address);
+					}
+				}
 			} catch (Exception e)
 			{
 				UDPCoordinator.service.publishSync(UDPCoordinator.ERROR, e);
