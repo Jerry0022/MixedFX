@@ -81,8 +81,10 @@ public class Connection implements EventBusServiceInterface
 			final Message message = (Message) this.inputConnection.getNextMessage();
 			message.setFromIP(this.ip);
 			if (message instanceof GoodByeMessage)
+			{
+				Log.network.debug("Got GoodByeMessage!");
 				this.close();
-			else
+			} else
 				EventBusExtended.publishAsyncSafe(MessageBus.MESSAGE_RECEIVE, message);
 		} else
 		{

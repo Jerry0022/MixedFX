@@ -138,6 +138,7 @@ public class TCPCoordinator
 				final GoodByeMessage goodbyeMessage = new GoodByeMessage();
 				goodbyeMessage.setToIP(tcp.remoteAddress);
 				EventBusExtended.publishSyncSafe(Connection.MESSAGE_CHANNEL_SEND, goodbyeMessage);
+				Log.network.debug("Sent GoodByeMessage!");
 			}
 
 			for (TCPClient tcp : tcpClients)
