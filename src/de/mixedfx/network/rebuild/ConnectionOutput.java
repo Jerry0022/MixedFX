@@ -16,9 +16,9 @@ public class ConnectionOutput implements Runnable
 
 	private volatile boolean running = true;
 
-	private final ObjectOutputStream			objectOutputStream;
-	private volatile ArrayList<Serializable>	outputMessageCache;
-	private final EventBusService				eventBusParent;
+	private final ObjectOutputStream		objectOutputStream;
+	public volatile ArrayList<Serializable>	outputMessageCache;
+	private final EventBusService			eventBusParent;
 
 	protected ConnectionOutput(final OutputStream outputStream, InetAddress ip) throws IOException
 	{

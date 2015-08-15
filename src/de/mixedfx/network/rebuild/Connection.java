@@ -101,6 +101,8 @@ public class Connection implements EventBusServiceInterface
 
 		try
 		{
+			while (!this.outputConnection.outputMessageCache.isEmpty())
+				;
 			// Terminate first to processing last remaining steps.
 			this.outputConnection.terminate();
 			this.inputConnection.terminate();
