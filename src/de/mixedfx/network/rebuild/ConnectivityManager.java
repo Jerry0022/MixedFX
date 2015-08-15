@@ -52,7 +52,7 @@ public class ConnectivityManager
 						{
 							for (TCPClient tcp : c.getRemoved())
 							{
-								if (tcp_user_map.contains(tcp.remoteAddress))
+								if (tcp_user_map.containsKey(tcp.remoteAddress))
 								{
 									User oldUser = tcp_user_map.get(tcp.remoteAddress).getOriginalUser();
 									tcp_user_map.remove(tcp.remoteAddress);

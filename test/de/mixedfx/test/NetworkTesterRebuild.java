@@ -138,6 +138,13 @@ public class NetworkTesterRebuild
 		} catch (InterruptedException e)
 		{
 		}
+		MessageBus.send(new WelcomeMessage());
+		try
+		{
+			Thread.sleep(30000);
+		} catch (InterruptedException e)
+		{
+		}
 		ConnectivityManager.stop();
 		// ConnectivityManager.restart();
 		while (true)
