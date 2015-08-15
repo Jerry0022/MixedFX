@@ -22,11 +22,11 @@ public class FileObject implements Cloneable
 	/**
 	 * The separator between the prefix and the name in the file name. As soon as this parameter is modified, all actions taken on a FileObject will deal with the new one. Default: "###"
 	 */
-	public static String prefixSeparator = "###";
+	public static String	prefixSeparator		= "###";
 	/**
 	 * The separator between the name and the extension in the file name. As soon as this parameter is modified, all actions taken on a FileObject will deal with the new one. Default: "."
 	 */
-	public static String extensionSeparator = ".";
+	public static String	extensionSeparator	= ".";
 
 	public static FileObject create()
 	{
@@ -38,11 +38,11 @@ public class FileObject implements Cloneable
 		return new FileObject(file);
 	}
 
-	private String path; // pure path maybe without last folder
-	private String prefix; // without separator
-	private String name; // pure name without sth. else
-	private String extension; // without separator
-	private String[] parameter; // can be empty
+	private String		path;		// pure path maybe without last folder
+	private String		prefix;		// without separator
+	private String		name;		// pure name without sth. else
+	private String		extension;	// without separator
+	private String[]	parameter;	// can be empty
 
 	/**
 	 * <pre>
