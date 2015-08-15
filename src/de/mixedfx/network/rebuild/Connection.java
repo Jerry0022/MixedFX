@@ -15,6 +15,7 @@ import de.mixedfx.inspector.Inspector;
 import de.mixedfx.logging.Log;
 import de.mixedfx.network.rebuild.messages.GoodByeMessage;
 import de.mixedfx.network.rebuild.messages.Message;
+import javafx.util.Duration;
 
 public class Connection implements EventBusServiceInterface
 {
@@ -33,7 +34,8 @@ public class Connection implements EventBusServiceInterface
 	private final ConnectionOutput	outputConnection;
 	private final ConnectionInput	inputConnection;
 
-	private EventBusService eventBus;
+	private boolean			timeout;
+	private EventBusService	eventBus;
 
 	public Connection(final Socket clientSocket) throws IOException
 	{
@@ -50,6 +52,15 @@ public class Connection implements EventBusServiceInterface
 		/*
 		 * TODO Sometimes the outputstream is not flushing and therefore the inputstream constructor is blocking! Use this.clientSocket.setSO_Linger() or .setNoTCPDelay to fix this!
 		 */
+		timeout = true;
+		Inspector.runLater(() ->
+		{
+			if (timeout)
+			{
+				Log.network.error("");
+				Connection.this.close();
+			}
+		} , Duration.millis(NetworkConfig.TCP_CONNECTION_ESTABLISHING_TIMEOUT));
 
 		this.initilizeEventBusAndSubscriptions();
 
@@ -59,6 +70,7 @@ public class Connection implements EventBusServiceInterface
 		this.inputConnection = new ConnectionInput(clientSocket.getInputStream(), ip);
 		Inspector.runNowAsDaemon(this.inputConnection);
 
+		timeout = false;
 		Log.network.debug(this.getClass().getSimpleName() + " initialized!");
 	}
 
