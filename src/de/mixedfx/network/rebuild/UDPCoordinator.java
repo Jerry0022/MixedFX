@@ -10,6 +10,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -181,11 +186,29 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 				}
 				if (!alreadyWaiting)
 				{
-					NetworkManager.t.startFullTCP(newDetected.address);
-					synchronized (cached)
+					ScheduledExecutorService executor = Executors.newScheduledThreadPool(2);
+					final Future handler = executor.submit(new Callable()
 					{
-						cached.remove(newDetected.address);
-					}
+						@Override
+						public Object call() throws Exception
+						{
+							NetworkManager.t.startFullTCP(newDetected.address);
+							synchronized (cached)
+							{
+								cached.remove(newDetected.address);
+							}
+							return null;
+						}
+					});
+					executor.schedule(new Runnable()
+					{
+						public void run()
+						{
+							if (!handler.cancel(true))
+								Log.network.error("A TCP connection needed to much time to establish! Time waited: " + NetworkConfig.TCP_CONNECTION_ESTABLISHING_TIMEOUT + " milliseconds."
+										+ "Connection is now closed!");
+						}
+					}, NetworkConfig.TCP_CONNECTION_ESTABLISHING_TIMEOUT, TimeUnit.MILLISECONDS);
 				}
 			} catch (Exception e)
 			{

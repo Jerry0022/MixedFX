@@ -14,7 +14,7 @@ public class PingTest
 		{
 			// request
 			final IcmpPingRequest request = IcmpPingUtil.createIcmpPingRequest();
-			request.setHost("25.127.132.223");
+			request.setHost("www.google.de");
 			request.setTimeout(2000);
 
 			// delegate
