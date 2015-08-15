@@ -49,6 +49,8 @@ public class LayoutTester extends Application
 		subColouredPane.getStyleClass().add("modifiable");
 		subColouredPane.setPrefSize(40, 40);
 		Button yesButton = new Button("YEAH!");
+		yesButton.getStyleClass().add("Modifiable");
+		yesButton.setId("HammerButton");
 		yesButton.setOnAction(new EventHandler<ActionEvent>()
 		{
 			@Override
@@ -58,7 +60,7 @@ public class LayoutTester extends Application
 			}
 		});
 		SuperPane superPane = new SuperPane(null, new LayoutLoadScreen());
-		subBox.getChildren().addAll(subColouredPane, new Label("COOL"), yesButton, superPane);
+		subBox.getChildren().addAll(subColouredPane, new Label("COOL"), yesButton, new VoiceEnabler(), superPane);
 
 		box.getChildren().addAll(colouredPane, subBox);
 		StackPane root = new StackPane();

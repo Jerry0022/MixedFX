@@ -16,9 +16,9 @@ import marytts.util.data.audio.AudioPlayer;
 
 public class TextToSpeech
 {
-	private static MaryInterface maryttsServer;
-	private static AudioPlayer audioPlayer;
-	private static Language currentLang;
+	private static MaryInterface	maryttsServer;
+	private static AudioPlayer		audioPlayer;
+	private static Language			currentLang;
 
 	/**
 	 * May need some seconds!
@@ -28,7 +28,6 @@ public class TextToSpeech
 		try
 		{
 			maryttsServer = new LocalMaryInterface();
-			audioPlayer = new AudioPlayer();
 		} catch (MaryConfigurationException ex)
 		{
 			Log.textAndSpeech.fatal("MaryConfigurationException registered: " + ex);
@@ -36,14 +35,15 @@ public class TextToSpeech
 	}
 
 	/**
-	 * Is much faster if {@link #init()} was called once before!
 	 * 
 	 * @param input
 	 *            The text which shall be spoken (not null and not empty).
 	 * @param config
 	 *            The config for this saying. If null default configuration will be used.
+	 * @throws IncorrectInputLanguage
+	 *             If the input couldn't be process with the specified language.
 	 */
-	public static void say(String input, TTSConfig config)
+	public static void say(String input, TTSConfig config) throws IncorrectInputLanguage
 	{
 		// Input mustn't be null
 		if (input == null || input.isEmpty())
@@ -53,8 +53,8 @@ public class TextToSpeech
 		if (config == null)
 			config = new TTSConfig();
 
-		// If not initialized, do it! (Needs some seconds)
-		if (audioPlayer == null)
+		// Initialize
+		if (maryttsServer == null)
 			init();
 
 		// Set volume
@@ -82,6 +82,7 @@ public class TextToSpeech
 		try
 		{
 			AudioInputStream audio = maryttsServer.generateAudio(input);
+			audioPlayer = new AudioPlayer();
 			audioPlayer.setAudio(audio);
 			audioPlayer.start();
 			if (config.block)
@@ -96,6 +97,7 @@ public class TextToSpeech
 		} catch (SynthesisException ex)
 		{
 			Log.textAndSpeech.fatal("Error saving input! " + ex);
+			throw new IncorrectInputLanguage();
 		}
 	}
 }

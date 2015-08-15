@@ -1,5 +1,6 @@
 package de.mixedfx.test;
 
+import de.mixedfx.textandspeech.IncorrectInputLanguage;
 import de.mixedfx.textandspeech.TTSConfig;
 import de.mixedfx.textandspeech.TextToSpeech;
 
@@ -16,6 +17,11 @@ public class TTSTester
 		config.male = false;
 		config.volume = 0.6;
 
-		TextToSpeech.say(text, config);
+		try
+		{
+			TextToSpeech.say(text, config);
+		} catch (IncorrectInputLanguage e)
+		{
+		}
 	}
 }
