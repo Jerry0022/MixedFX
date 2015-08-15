@@ -21,7 +21,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 
-public class NetworkTesterRebuild
+public class NetworkTester
 {
 
 	public static void main(String[] args)
@@ -33,7 +33,7 @@ public class NetworkTesterRebuild
 		// Log.network.setLevel(Level.DEBUG);
 
 		// Log fatal errors (network reacted already to this error)
-		NetworkTesterRebuild rebuild = new NetworkTesterRebuild();
+		NetworkTester rebuild = new NetworkTester();
 		AnnotationProcessor.process(rebuild);
 
 		Log.network.info("NOW TESTING NETWORK!");
@@ -178,7 +178,7 @@ public class NetworkTesterRebuild
 		} catch (InterruptedException e)
 		{
 		}
-		ConnectivityManager.stop();
+		// ConnectivityManager.stop();
 		// try
 		// {
 		// Thread.sleep(Ran.dom(10000, 30000));
