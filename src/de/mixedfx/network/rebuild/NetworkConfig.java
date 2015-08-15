@@ -38,7 +38,7 @@ public class NetworkConfig
 	/**
 	 * Defines how much milliseconds a {@link Connection} may need to establish after it is interrupted.
 	 */
-	public static final int TCP_CONNECTION_ESTABLISHING_RETRY = UDP_BROADCAST_INTERVAL;
+	public static final int TCP_CONNECTION_ESTABLISHING_RETRY = UDP_BROADCAST_INTERVAL * 2;
 
 	/**
 	 * <p>

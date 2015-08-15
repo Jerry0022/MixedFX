@@ -109,18 +109,25 @@ public class TCPCoordinator
 					return;
 				}
 			}
-
-			try
-			{
-				Log.network.info("Start TCP connection to: " + ip.getHostAddress());
-				this.tcpClients.add(new TCPClient().start(ip));
-			} catch (final IOException e)
-			{
-				Log.network.warn("Error occured while starting TCP client: " + e);
-				return;
-			}
-			Log.network.debug("Full TCP connection established to " + ip);
 		}
+
+		try
+		{
+			TCPClient client = null;
+
+			Log.network.info("Start TCP connection to: " + ip.getHostAddress());
+			client = new TCPClient().start(ip);
+			synchronized (tcpClients)
+			{
+				if (client != null)
+					this.tcpClients.add(client);
+			}
+		} catch (final IOException e)
+		{
+			Log.network.warn("Error occured while starting TCP client: " + e);
+			return;
+		}
+		Log.network.debug("Full TCP connection established to " + ip);
 	}
 
 	/**

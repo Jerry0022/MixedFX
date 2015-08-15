@@ -208,11 +208,14 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 							if (!handler.isDone())
 							{
 								Log.network.warn("A TCP connection needed to much time to establish! Time waited: " + NetworkConfig.TCP_CONNECTION_ESTABLISHING_TIMEOUT + " milliseconds."
-										+ "Connection is now closed!" + newDetected.address);
+										+ "Connection is now closed! " + newDetected.address);
+
 								handler.cancel(true);
+								Log.network.fatal("HÄ? " + newDetected.address);
+								// Lock of callable still works...
 								try
 								{
-									Thread.sleep(NetworkConfig.TCP_CONNECTION_ESTABLISHING_RETRY * 2);
+									Thread.sleep(NetworkConfig.TCP_CONNECTION_ESTABLISHING_RETRY);
 								} catch (InterruptedException e)
 								{
 								}

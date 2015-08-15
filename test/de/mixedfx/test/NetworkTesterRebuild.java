@@ -139,7 +139,6 @@ public class NetworkTesterRebuild
 		} catch (InterruptedException e)
 		{
 		}
-		// MessageBus.send(new GoodByeMessage());
 		ConnectivityManager.stop();
 		// try
 		// {
