@@ -135,10 +135,11 @@ public class NetworkTesterRebuild
 		});
 		try
 		{
-			Thread.sleep(Ran.dom(20000, 30000));
+			Thread.sleep(Ran.dom(30000, 30000));
 		} catch (InterruptedException e)
 		{
 		}
+		// MessageBus.send(new GoodByeMessage());
 		ConnectivityManager.stop();
 		// try
 		// {

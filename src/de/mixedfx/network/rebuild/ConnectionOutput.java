@@ -51,8 +51,8 @@ public class ConnectionOutput implements Runnable
 					{
 						this.objectOutputStream.reset(); // GBC can collect written objects
 						this.objectOutputStream.writeObject(this.outputMessageCache.get(0));
-						this.outputMessageCache.remove(0);
 						Log.network.trace(this.getClass().getSimpleName() + " message successfully sent!");
+						this.outputMessageCache.remove(0);
 					} catch (final IOException e)
 					{
 						this.outputMessageCache.clear();
