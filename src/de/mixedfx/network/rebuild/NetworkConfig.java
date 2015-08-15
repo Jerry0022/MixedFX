@@ -36,6 +36,11 @@ public class NetworkConfig
 	public static final int TCP_CONNECTION_ESTABLISHING_TIMEOUT = UDP_BROADCAST_INTERVAL;
 
 	/**
+	 * Defines how much milliseconds a {@link Connection} may need to establish after it is interrupted.
+	 */
+	public static final int TCP_CONNECTION_ESTABLISHING_RETRY = UDP_BROADCAST_INTERVAL;
+
+	/**
 	 * <p>
 	 * Default port is 8888 for TCP and UDP.
 	 *

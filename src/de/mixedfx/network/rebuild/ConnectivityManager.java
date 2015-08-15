@@ -56,6 +56,15 @@ public class ConnectivityManager
 								{
 									User oldUser = tcp_user_map.get(tcp.remoteAddress).getOriginalUser();
 									tcp_user_map.remove(tcp.remoteAddress);
+									// synchronized (otherUsers)
+									// {
+									// OverlayNetwork overlayToRemove = null;
+									// for (OverlayNetwork network : oldUser.networks)
+									// if (network.getIP().equals(tcp.remoteAddress))
+									// overlayToRemove = network;
+									// if (overlayToRemove != null)
+									// oldUser.networks.remove(overlayToRemove);
+									// }
 									Log.network.debug("Removed user message from list: " + tcp.remoteAddress);
 									synchronized (otherUsers)
 									{

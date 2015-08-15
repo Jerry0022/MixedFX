@@ -174,6 +174,7 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 				/*
 				 * Connect to other one!
 				 */
+				Log.network.trace("Cached requests: " + cached);
 				boolean alreadyWaiting;
 				synchronized (cached)
 				{
@@ -206,9 +207,19 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 						{
 							if (!handler.isDone())
 							{
-								handler.cancel(true);
 								Log.network.error("A TCP connection needed to much time to establish! Time waited: " + NetworkConfig.TCP_CONNECTION_ESTABLISHING_TIMEOUT + " milliseconds."
 										+ "Connection is now closed!");
+								handler.cancel(true);
+								try
+								{
+									Thread.sleep(NetworkConfig.TCP_CONNECTION_ESTABLISHING_RETRY);
+								} catch (InterruptedException e)
+								{
+								}
+								synchronized (cached)
+								{
+									cached.remove(newDetected.address);
+								}
 							}
 						}
 					}, NetworkConfig.TCP_CONNECTION_ESTABLISHING_TIMEOUT, TimeUnit.MILLISECONDS);
