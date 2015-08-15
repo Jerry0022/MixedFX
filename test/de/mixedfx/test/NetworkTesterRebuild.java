@@ -77,20 +77,21 @@ public class NetworkTesterRebuild
 					Log.network.info((!c.wasReplaced() ? "New" : "Updated") + " User: " + user);
 					Log.network.info("User was detected to be in this network: " + user.networks);
 
-					user.networks.get(0).latencyProperty().addListener(new ChangeListener<Number>()
+					OverlayNetwork network = user.networks.get(0);
+					network.latencyProperty().addListener(new ChangeListener<Number>()
 					{
 						@Override
 						public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue)
 						{
-							Log.network.info("Network " + user.networks.get(0) + " has latency " + newValue.intValue() + " ms!");
+							Log.network.info("Network " + network + " has latency " + newValue.intValue() + " ms!");
 						}
 					});
-					user.networks.get(0).reliablityProperty().addListener(new ChangeListener<Number>()
+					network.reliablityProperty().addListener(new ChangeListener<Number>()
 					{
 						@Override
 						public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue)
 						{
-							Log.network.info("Network " + user.networks.get(0) + " has reliability of " + Math.round(newValue.doubleValue() * 100) + "%!");
+							Log.network.info("Network " + network + " has reliability of " + Math.round(newValue.doubleValue() * 100) + "%!");
 						}
 					});
 
@@ -104,20 +105,22 @@ public class NetworkTesterRebuild
 							if (c.wasAdded())
 							{
 								Log.network.info("User joined over other network: " + c.getAddedSubList().get(0) + " so that he is now in following networks: " + user.networks);
-								c.getAddedSubList().get(0).latencyProperty().addListener(new ChangeListener<Number>()
+								OverlayNetwork network = c.getAddedSubList().get(0);
+								network.latencyProperty().addListener(new ChangeListener<Number>()
 								{
+
 									@Override
 									public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue)
 									{
-										Log.network.info("Network " + c.getAddedSubList().get(0) + " has latency " + newValue.intValue() + " ms!");
+										Log.network.info("Network " + network + " has latency " + newValue.intValue() + " ms!");
 									}
 								});
-								c.getAddedSubList().get(0).reliablityProperty().addListener(new ChangeListener<Number>()
+								network.reliablityProperty().addListener(new ChangeListener<Number>()
 								{
 									@Override
 									public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue)
 									{
-										Log.network.info("Network " + c.getAddedSubList().get(0) + " has reliability of " + Math.round(newValue.doubleValue() * 100) + "%!");
+										Log.network.info("Network " + network + " has reliability of " + Math.round(newValue.doubleValue() * 100) + "%!");
 									}
 								});
 							} else
