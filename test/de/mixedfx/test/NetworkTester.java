@@ -78,6 +78,8 @@ public class NetworkTester
 					Log.network.info("User was detected to be in this network: " + user.networks);
 
 					OverlayNetwork network = user.networks.get(0);
+					Log.network.info("Network " + network + " has latency " + network.latencyProperty().get() + " ms!");
+					Log.network.info("Network " + network + " has reliability of " + Math.round(network.reliablityProperty().get() * 100) + "%!");
 					network.latencyProperty().addListener(new ChangeListener<Number>()
 					{
 						@Override

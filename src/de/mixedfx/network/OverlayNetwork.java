@@ -52,6 +52,7 @@ public abstract class OverlayNetwork
 	protected void setIP(InetAddress ip)
 	{
 		this.ip = ip;
+		updateLatency();
 	}
 
 	public InetAddress getIP()
