@@ -9,14 +9,16 @@ import de.mixedfx.java.Ran;
 import de.mixedfx.logging.Log;
 import de.mixedfx.network.ConnectivityManager;
 import de.mixedfx.network.MessageBus;
+import de.mixedfx.network.MessageBus.MessageReceiver;
 import de.mixedfx.network.NetworkManager;
 import de.mixedfx.network.OverlayNetwork;
 import de.mixedfx.network.TCPClient;
 import de.mixedfx.network.UDPDetected;
-import de.mixedfx.network.MessageBus.MessageReceiver;
 import de.mixedfx.network.messages.Message;
 import de.mixedfx.network.messages.WelcomeMessage;
 import de.mixedfx.network.user.User;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 
 public class NetworkTesterRebuild
@@ -75,6 +77,23 @@ public class NetworkTesterRebuild
 					Log.network.info((!c.wasReplaced() ? "New" : "Updated") + " User: " + user);
 					Log.network.info("User was detected to be in this network: " + user.networks);
 
+					user.networks.get(0).latencyProperty().addListener(new ChangeListener<Number>()
+					{
+						@Override
+						public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue)
+						{
+							Log.network.info("Network " + user.networks.get(0) + " has latency " + newValue.intValue() + " ms!");
+						}
+					});
+					user.networks.get(0).reliablityProperty().addListener(new ChangeListener<Number>()
+					{
+						@Override
+						public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue)
+						{
+							Log.network.info("Network " + user.networks.get(0) + " has reliability of " + Math.round(newValue.doubleValue() * 100) + "%!");
+						}
+					});
+
 					user.networks.addListener(new ListChangeListener<OverlayNetwork>()
 					{
 
@@ -83,8 +102,25 @@ public class NetworkTesterRebuild
 						{
 							c.next();
 							if (c.wasAdded())
+							{
 								Log.network.info("User joined over other network: " + c.getAddedSubList().get(0) + " so that he is now in following networks: " + user.networks);
-							else
+								c.getAddedSubList().get(0).latencyProperty().addListener(new ChangeListener<Number>()
+								{
+									@Override
+									public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue)
+									{
+										Log.network.info("Network " + c.getAddedSubList().get(0) + " has latency " + newValue.intValue() + " ms!");
+									}
+								});
+								c.getAddedSubList().get(0).reliablityProperty().addListener(new ChangeListener<Number>()
+								{
+									@Override
+									public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue)
+									{
+										Log.network.info("Network " + c.getAddedSubList().get(0) + " has reliability of " + Math.round(newValue.doubleValue() * 100) + "%!");
+									}
+								});
+							} else
 								Log.network.info("User left over this network: " + c.getRemoved().get(0) + " but is still in: " + user.networks);
 						}
 

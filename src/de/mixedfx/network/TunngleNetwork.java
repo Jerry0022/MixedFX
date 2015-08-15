@@ -9,4 +9,9 @@ public class TunngleNetwork extends OverlayNetwork
 		{ "7.0.0.0/8", "10.0.0.0/8" };
 	}
 
+	@Override
+	public String toString()
+	{
+		return "Tunngle";
+	}
 }

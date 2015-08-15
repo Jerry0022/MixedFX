@@ -41,6 +41,11 @@ public class NetworkConfig
 	public static final int TCP_CONNECTION_ESTABLISHING_RETRY = UDP_BROADCAST_INTERVAL * 2;
 
 	/**
+	 * Defines the interval in milliseconds in which all users' networks latencies are updated via icmp. Default is 10000 milliseconds.
+	 */
+	public static int ICMP_INTERVAL = 10000;
+
+	/**
 	 * <p>
 	 * Default port is 8888 for TCP and UDP.
 	 *

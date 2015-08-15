@@ -8,4 +8,10 @@ public class OtherNetwork extends OverlayNetwork
 		return new String[]
 		{ "" };
 	}
+
+	@Override
+	public String toString()
+	{
+		return "Anderes";
+	}
 }

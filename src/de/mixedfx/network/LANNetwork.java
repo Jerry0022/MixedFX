@@ -2,7 +2,6 @@ package de.mixedfx.network;
 
 public class LANNetwork extends OverlayNetwork
 {
-
 	@Override
 	public String[] getRange()
 	{
@@ -10,4 +9,9 @@ public class LANNetwork extends OverlayNetwork
 		{ "192.168.0.0/16" };
 	}
 
+	@Override
+	public String toString()
+	{
+		return "LAN";
+	}
 }

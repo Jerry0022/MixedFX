@@ -8,4 +8,10 @@ public class HamachiNetwork extends OverlayNetwork
 		return new String[]
 		{ "25.0.0.0/8" };
 	}
+
+	@Override
+	public String toString()
+	{
+		return "Hamachi";
+	}
 }

@@ -6,6 +6,7 @@ import java.util.Hashtable;
 import org.bushe.swing.event.VetoTopicEventListener;
 
 import de.mixedfx.eventbus.EventBusExtended;
+import de.mixedfx.inspector.Inspector;
 import de.mixedfx.logging.Log;
 import de.mixedfx.network.MessageBus.MessageReceiver;
 import de.mixedfx.network.messages.Message;
@@ -148,6 +149,21 @@ public class ConnectivityManager
 		ConnectivityManager.myUniqueUser = myUniqueUser;
 		NetworkManager.start();
 		state.set(State.SEARCHING);
+		Inspector.runNowAsDaemon(() ->
+		{
+			while (NetworkManager.running)
+			{
+				try
+				{
+					Thread.sleep(NetworkConfig.ICMP_INTERVAL);
+				} catch (Exception e)
+				{
+				}
+				for (User user : ConnectivityManager.otherUsers)
+					for (OverlayNetwork network : user.networks)
+						network.updateLatency();
+			}
+		});
 	}
 
 	public static void stop()
