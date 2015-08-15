@@ -116,6 +116,7 @@ public class TCPCoordinator
 				Log.network.warn("Error occured while starting TCP client: " + e);
 				return;
 			}
+			Log.network.debug("Full TCP connection established to " + ip);
 		}
 	}
 
