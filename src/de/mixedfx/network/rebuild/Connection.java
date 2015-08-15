@@ -84,6 +84,7 @@ public class Connection implements EventBusServiceInterface
 			{
 				Log.network.debug("Got GoodByeMessage!");
 				this.close();
+				EventBusExtended.publishSyncSafe(TCPCoordinator.CONNECTION_LOST, this);
 			} else
 				EventBusExtended.publishAsyncSafe(MessageBus.MESSAGE_RECEIVE, message);
 		} else
