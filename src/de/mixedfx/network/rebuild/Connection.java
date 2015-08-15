@@ -43,10 +43,10 @@ public class Connection implements EventBusServiceInterface
 		this.uid_pid_map = new HashMap<>();
 
 		this.clientSocket = clientSocket;
-		this.clientSocket.setKeepAlive(true);
-		this.clientSocket.setSoLinger(true, 1000);
-		this.clientSocket.setTcpNoDelay(true);
-		this.clientSocket.setSoTimeout(1000);
+		// this.clientSocket.setKeepAlive(true);
+		// this.clientSocket.setSoLinger(true, 1000);
+		// this.clientSocket.setTcpNoDelay(true);
+		// this.clientSocket.setSoTimeout(1000);
 		/*
 		 * TODO Sometimes the outputstream is not flushing and therefore the inputstream constructor is blocking! Use this.clientSocket.setSO_Linger() or .setNoTCPDelay to fix this!
 		 */
