@@ -75,7 +75,7 @@ public class Layouter
 					{
 						Region parent = (Region) popOver.getOwnerNode();
 						// Just save if background changed!
-						if (parent.getBackground() != null || !parent.getBackground().equals(popOver.lastBackground))
+						if (parent.getBackground() != null && !parent.getBackground().equals(popOver.lastBackground))
 						{
 							Image image = parent.getBackground().getImages().get(0).getImage();
 							paneToShowSaving.load(new Task<Void>()
