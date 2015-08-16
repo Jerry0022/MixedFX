@@ -5,8 +5,10 @@ import de.mixedfx.assets.ImageProducer;
 import de.mixedfx.assets.LayoutManager;
 import de.mixedfx.assets.Layouter;
 import de.mixedfx.file.FileObject;
+import de.mixedfx.gui.Blurrer;
 import de.mixedfx.gui.EasyModifierConfig;
 import de.mixedfx.gui.panes.SuperPane;
+import de.mixedfx.inspector.Inspector;
 import javafx.animation.Animation.Status;
 import javafx.animation.ScaleTransition;
 import javafx.application.Application;
@@ -23,18 +25,25 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+/**
+ * Test Layout, SpeechToText and the Blurrer
+ * 
+ * @author Jerry
+ *
+ */
 public class LayoutTester extends Application
 {
 	@Override
 	public void start(Stage primaryStage) throws Exception
 	{
-
 		HBox box = new HBox();
 
 		HBox colouredPane = ImageHandler.getPane(ImageProducer.getMonoColored(Color.RED));
 		colouredPane.setPrefSize(100, 100);
 		colouredPane.setId("ColouredPane");
 		colouredPane.getStyleClass().add("modifiable");
+		colouredPane.getStyleClass().add("tutorial");
+		colouredPane.getProperties().put("tutorialNr", "3");
 		colouredPane.setOnMouseClicked(new EventHandler<MouseEvent>()
 		{
 			@Override
@@ -45,6 +54,8 @@ public class LayoutTester extends Application
 		});
 
 		HBox subBox = new HBox();
+		subBox.getStyleClass().add("tutorial");
+		subBox.getProperties().put("tutorialNr", "2");
 		HBox.setHgrow(subBox, Priority.ALWAYS);
 		subBox.setPrefSize(50, 50);
 		HBox subColouredPane = ImageHandler.getPane(ImageProducer.getMonoColored(Color.BLUE));
@@ -53,6 +64,8 @@ public class LayoutTester extends Application
 		subColouredPane.setPrefSize(40, 40);
 		Button yesButton = new Button("YEAH!");
 		yesButton.getStyleClass().add("Modifiable");
+		yesButton.getStyleClass().add("tutorial");
+		yesButton.getProperties().put("tutorialNr", "1");
 		yesButton.setId("HammerButton");
 		yesButton.setMinSize(0, 0);
 		ScaleTransition animation = new ScaleTransition(Duration.seconds(1));
@@ -96,6 +109,14 @@ public class LayoutTester extends Application
 		Layouter.setLayoutable(superPane, root, lm, new EasyModifierConfig());
 		primaryStage.setScene(scene);
 		primaryStage.show();
+		Blurrer.blur(yesButton);
+
+		Inspector.runFXLater(() ->
+		{
+			Blurrer.unBlur(yesButton);
+		});
+
+		Tutorializer.startTutorial(scene);
 	}
 
 	// System.out.println("Damit jerre merge muss");
