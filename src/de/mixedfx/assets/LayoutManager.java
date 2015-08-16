@@ -72,6 +72,8 @@ public class LayoutManager
 	{
 		if (!Platform.isFxApplicationThread())
 			throw new IllegalStateException("Must run from FX Thread!");
+		if (root != null && root.getScene() == null)
+			throw new IllegalStateException("The root must be part of the scene once you create a LayoutManager.");
 
 		this.currentLayout = new SimpleStringProperty(defaultLayout);
 		this.layoutDir = layoutDir;
