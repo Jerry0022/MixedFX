@@ -173,6 +173,11 @@ public class NetworkTester
 			public void mergeMe(User newUser)
 			{
 			}
+
+			@Override
+			public void setMeUp()
+			{
+			}
 		});
 		try
 		{

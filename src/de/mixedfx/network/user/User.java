@@ -33,6 +33,7 @@ public abstract class User implements Identifiable, Serializable
 	{
 		in.defaultReadObject();
 		this.networks = new SimpleListProperty<>(FXCollections.observableArrayList());
+		this.setMeUp();
 	}
 
 	public void merge(User newUser)
@@ -40,6 +41,11 @@ public abstract class User implements Identifiable, Serializable
 		this.networks.addAll(newUser.networks);
 		mergeMe(newUser);
 	}
+
+	/**
+	 * All transient fields should be set up here!
+	 */
+	public abstract void setMeUp();
 
 	/**
 	 * This method enables you to use properties and link users directly to GUI. If a user is updated with a new UserProfile what shall I do with the new fields? Do nothing here if a new user profile

@@ -144,9 +144,21 @@ public class ConnectivityManager
 		}, true);
 	}
 
+	public static void setMyUser(User myUser)
+	{
+		ConnectivityManager.myUniqueUser = myUser;
+	}
+
 	public static void start(User myUniqueUser)
 	{
 		ConnectivityManager.myUniqueUser = myUniqueUser;
+		start();
+	}
+
+	public static void start()
+	{
+		if (myUniqueUser == null)
+			throw new IllegalStateException("Please first set a user!");
 		NetworkManager.start();
 		state.set(State.SEARCHING);
 		Inspector.runNowAsDaemon(() ->
@@ -181,9 +193,7 @@ public class ConnectivityManager
 
 	public static void restart()
 	{
-		if (myUniqueUser == null)
-			throw new IllegalStateException("Please first set a user!");
 		stop();
-		start(myUniqueUser);
+		start();
 	}
 }
