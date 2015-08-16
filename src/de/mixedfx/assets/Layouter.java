@@ -11,6 +11,7 @@ import de.mixedfx.gui.EasyModifierEventHandler;
 import de.mixedfx.gui.EasyModifierHandler;
 import de.mixedfx.gui.RegionManipulator;
 import de.mixedfx.gui.panes.SuperPane;
+import de.mixedfx.inspector.Inspector;
 import de.mixedfx.logging.Log;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -46,16 +47,24 @@ public class Layouter
 	 * config modifiable! Other nodes are not clickable while in modifying mode!
 	 * 
 	 * @param paneToShowSaving
-	 *            On this pane load() is called if a new layout background is saved!
+	 *            On this pane load() is called if a new layout background is saved! May be null, then the layout is saved in the background asynchronously without visuals.
 	 * @param root
-	 *            Itself and all of its children are scanned if they are layoutables!
+	 *            Itself and all of its children are scanned if they are layoutables! Must not be null!
+	 * @param layoutManager
+	 *            The LayoutManager to use. Must not be null!
 	 * @param config
-	 *            The config for this layout!
+	 *            The config for this layout! If null a default config is loaded.
 	 */
 	public static void setLayoutable(SuperPane paneToShowSaving, Parent root, LayoutManager layoutManager, EasyModifierConfig config)
 	{
+		if (root == null || layoutManager == null)
+			throw new NullPointerException();
+
 		if (layoutManager.root == null)
 			layoutManager.root = root;
+
+		if (config == null)
+			config = new EasyModifierConfig();
 
 		/*
 		 * Set up PopOver
@@ -78,7 +87,7 @@ public class Layouter
 						if (parent.getBackground() != null && !parent.getBackground().equals(popOver.lastBackground))
 						{
 							Image image = parent.getBackground().getImages().get(0).getImage();
-							paneToShowSaving.load(new Task<Void>()
+							Task<Void> task = new Task<Void>()
 							{
 								@Override
 								protected Void call() throws Exception
@@ -88,7 +97,11 @@ public class Layouter
 									System.out.println("BACKGROUND SAVED!");
 									return null;
 								}
-							});
+							};
+							if (paneToShowSaving != null)
+								paneToShowSaving.load(task);
+							else
+								Inspector.runNowAsDaemon(task);
 						}
 					});
 			}

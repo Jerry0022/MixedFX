@@ -63,34 +63,40 @@ public class VoiceButton extends Pane
 
 		// Incoming voice?
 		SpeechToText.language = Language.ENGLISH;
-		SpeechToText.startListening("AIzaSyBI012J_HtuCeXTpwvcaNB3awo88uAbIGA", voiceSwitcher, new GSpeechResponseListener()
+		try
 		{
-			@Override
-			public void onResponse(GoogleResponse gr)
+			SpeechToText.startListening("AIzaSyBI012J_HtuCeXTpwvcaNB3awo88uAbIGA", voiceSwitcher, new GSpeechResponseListener()
 			{
-				System.out.println("Antwort von Google: " + gr.getResponse());
-				System.out.println("Jetzt auf Deutsch");
-				try
+				@Override
+				public void onResponse(GoogleResponse gr)
 				{
-					TextToSpeech.say("Hallo " + userName + ", du hast gerade gesagt: " + gr.getResponse(), config);
-				} catch (IncorrectInputLanguage e)
-				{
+					System.out.println("Antwort von Google: " + gr.getResponse());
+					System.out.println("Jetzt auf Deutsch");
 					try
 					{
-						TextToSpeech.say("Es tut mir Leid, aber ich habe dich nicht verstanden!", config);
-					} catch (IncorrectInputLanguage e1)
+						TextToSpeech.say("Hallo " + userName + ", du hast gerade gesagt: " + gr.getResponse(), config);
+					} catch (IncorrectInputLanguage e)
+					{
+						try
+						{
+							TextToSpeech.say("Es tut mir Leid, aber ich habe dich nicht verstanden!", config);
+						} catch (IncorrectInputLanguage e1)
+						{
+						}
+					}
+					System.out.println("Jetzt auf Englisch");
+					config.lang = Language.ENGLISH;
+					try
+					{
+						TextToSpeech.say("Hello " + userName + "! you have said " + gr.getResponse(), config);
+					} catch (IncorrectInputLanguage e)
 					{
 					}
 				}
-				System.out.println("Jetzt auf Englisch");
-				config.lang = Language.ENGLISH;
-				try
-				{
-					TextToSpeech.say("Hello " + userName + "! you have said " + gr.getResponse(), config);
-				} catch (IncorrectInputLanguage e)
-				{
-				}
-			}
-		});
+			});
+		} catch (Exception e)
+		{
+			System.out.println("No micro found!");
+		}
 	}
 }

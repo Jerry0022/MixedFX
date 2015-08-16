@@ -2,6 +2,7 @@ package de.mixedfx.assets;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.Collection;
 import java.util.List;
 
@@ -21,6 +22,11 @@ import javafx.scene.layout.Region;
 
 public class LayoutManager
 {
+	/**
+	 * If there is a file of this name (case is ignored), e. g. style.css, this file is loaded as .css file!
+	 */
+	public static final String styleFileName = "style";
+
 	public final FileObject layoutDir;
 
 	public StringProperty currentLayout;
@@ -83,7 +89,8 @@ public class LayoutManager
 		}
 
 		// Apply default layout
-		this.applyLayout(defaultLayout);
+		if (this.root != null)
+			this.applyLayout(defaultLayout);
 	}
 
 	/**
@@ -134,13 +141,24 @@ public class LayoutManager
 		Collection<File> files = DataHandler.listFiles(layoutFullPath);
 		for (File file : files)
 		{
-			FileObject fileObject = FileObject.create(file);
-			String id = fileObject.getName();
-			Node node = root.lookup("#" + id);
-			if (node instanceof Region)
-				RegionManipulator.bindBackground((Region) node, MasterHandler.read(fileObject, Image.class));
+			if (FileObject.create(file).getName().equalsIgnoreCase("style"))
+				try
+				{
+					root.getScene().getStylesheets().add(file.toURI().toURL().toExternalForm());
+					Log.assets.trace("Loaded layout stylesheet!");
+				} catch (MalformedURLException e)
+				{
+				}
 			else
-				Log.assets.warn("The node " + node + " is not a Region. Only Regions are supported for layouting!");
+			{
+				FileObject fileObject = FileObject.create(file);
+				String id = fileObject.getName();
+				Node node = root.lookup("#" + id);
+				if (node instanceof Region)
+					RegionManipulator.bindBackground((Region) node, MasterHandler.read(fileObject, Image.class));
+				else
+					Log.assets.warn("The node " + node + " is not a Region. Only Regions are supported for layouting!");
+			}
 		}
 
 		this.currentLayout.set(layout);

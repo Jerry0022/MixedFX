@@ -12947,3 +12947,1439 @@
 2015-08-16 12:22:08,923 [JavaFX Application Thread] INFO  marytts.Voice Registering voice `cmu-bdl-hsmm': male, locale en_US
 2015-08-16 12:22:08,927 [JavaFX Application Thread] INFO  marytts.Voice New default voice for locale en_US: cmu-bdl-hsmm (desire 0)
 2015-08-16 12:22:08,929 [JavaFX Application Thread] INFO  marytts.HMMData Loading Tree Set in CARTs:
+2015-08-16 16:54:45,886 [JavaFX Application Thread] INFO  marytts.main Mary starting up...
+2015-08-16 16:54:45,890 [JavaFX Application Thread] INFO  marytts.main Specification version 5.1.2
+2015-08-16 16:54:45,890 [JavaFX Application Thread] INFO  marytts.main Implementation version unknown
+2015-08-16 16:54:45,890 [JavaFX Application Thread] INFO  marytts.main Running on a Java 1.8.0_51 implementation by Oracle Corporation, on a Windows 8.1 platform (x86, 6.3)
+2015-08-16 16:54:46,057 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.de.JTokeniser'
+2015-08-16 16:54:46,067 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.de.Preprocess'
+2015-08-16 16:54:46,068 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.OpenNLPPosTagger(de,de.pos)'
+2015-08-16 16:54:46,069 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.de.JPhonemiser'
+2015-08-16 16:54:46,071 [JavaFX Application Thread] INFO  marytts.JPhonemiser_de User dictionary '.\user-dictionaries\userdict-de.txt' for locale 'de' does not exist. Ignoring.
+2015-08-16 16:54:46,101 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.de.Prosody'
+2015-08-16 16:54:46,105 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.de.Postlex'
+2015-08-16 16:54:46,107 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.SimplePhoneme2AP(de)'
+2015-08-16 16:54:46,108 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.JTokeniser'
+2015-08-16 16:54:46,109 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.FreeTTSTokenToWords'
+2015-08-16 16:54:46,113 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.JPhonemiser(en_US.)'
+2015-08-16 16:54:46,113 [JavaFX Application Thread] INFO  marytts.JPhonemiser User dictionary '.\user-dictionaries\userdict-en_US.txt' for locale 'en_US' does not exist. Ignoring.
+2015-08-16 16:54:46,154 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.JPhonemiser(en_GB.)'
+2015-08-16 16:54:46,154 [JavaFX Application Thread] INFO  marytts.JPhonemiser User dictionary '.\user-dictionaries\userdict-en_GB.txt' for locale 'en_GB' does not exist. Ignoring.
+2015-08-16 16:54:46,187 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.Prosody'
+2015-08-16 16:54:46,189 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.SimplePhoneme2AP(en_US)'
+2015-08-16 16:54:46,189 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.Utt2XMLWordsEn'
+2015-08-16 16:54:46,192 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.XML2UttTokensEn'
+2015-08-16 16:54:46,197 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.PronunciationModel'
+2015-08-16 16:54:46,197 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.OpenNLPPosTagger(en,en.pos)'
+2015-08-16 16:54:46,197 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.Synthesis'
+2015-08-16 16:54:46,198 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.TextToMaryXML'
+2015-08-16 16:54:46,199 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.SableParser'
+2015-08-16 16:54:46,199 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.SSMLParser'
+2015-08-16 16:54:46,200 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.APMLParser'
+2015-08-16 16:54:46,201 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.EmotionmlParser'
+2015-08-16 16:54:46,202 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.JTokeniser'
+2015-08-16 16:54:46,202 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.DummyTokens2Words'
+2015-08-16 16:54:46,202 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.ProsodyGeneric'
+2015-08-16 16:54:46,202 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.PronunciationModel'
+2015-08-16 16:54:46,202 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.TargetFeatureLister'
+2015-08-16 16:54:46,203 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.HalfPhoneTargetFeatureLister'
+2015-08-16 16:54:46,204 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.AcousticModeller'
+2015-08-16 16:54:46,205 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.RealisedAcoustparamsExtractor'
+2015-08-16 16:54:46,205 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.RealisedDurationsExtractor'
+2015-08-16 16:54:46,206 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.HTSEngine'
+2015-08-16 16:54:46,213 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.PraatTextGridGenerator'
+2015-08-16 16:54:46,216 [JavaFX Application Thread] INFO  marytts.JTokeniser Module started (RAWMARYXML->TOKENS, locale de).
+2015-08-16 16:54:46,250 [JavaFX Application Thread] INFO  marytts.JTokeniser Starting power-on self test.
+2015-08-16 16:54:46,261 [JavaFX Application Thread] INFO  marytts.JTokeniser Power-on self test complete.
+2015-08-16 16:54:46,261 [JavaFX Application Thread] INFO  marytts.Preprocess Module started (TOKENS->WORDS, locale de).
+2015-08-16 16:54:46,261 [JavaFX Application Thread] INFO  marytts.Preprocess Starting power-on self test.
+2015-08-16 16:54:46,262 [JavaFX Application Thread] INFO  marytts.Preprocess Expanding say-as elements...
+2015-08-16 16:54:46,262 [JavaFX Application Thread] INFO  marytts.Preprocess Matching and expanding patterns...
+2015-08-16 16:54:46,304 [JavaFX Application Thread] INFO  marytts.Preprocess Done.
+2015-08-16 16:54:46,304 [JavaFX Application Thread] INFO  marytts.Preprocess Power-on self test complete.
+2015-08-16 16:54:46,304 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Module started (WORDS->PARTSOFSPEECH, locale de).
+2015-08-16 16:54:46,849 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Starting power-on self test.
+2015-08-16 16:54:46,849 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Power-on self test complete.
+2015-08-16 16:54:46,849 [JavaFX Application Thread] INFO  marytts.JPhonemiser_de Module started (PARTSOFSPEECH->PHONEMES, locale de).
+2015-08-16 16:54:46,863 [JavaFX Application Thread] INFO  marytts.JPhonemiser_de Starting power-on self test.
+2015-08-16 16:54:46,863 [JavaFX Application Thread] INFO  marytts.JPhonemiser_de Power-on self test complete.
+2015-08-16 16:54:46,871 [JavaFX Application Thread] INFO  marytts.Prosody Module started (PHONEMES->INTONATION, locale de).
+2015-08-16 16:54:46,871 [JavaFX Application Thread] INFO  marytts.Prosody Starting power-on self test.
+2015-08-16 16:54:46,871 [JavaFX Application Thread] INFO  marytts.Prosody Power-on self test complete.
+2015-08-16 16:54:46,871 [JavaFX Application Thread] INFO  marytts.PronunciationModel Module started (INTONATION->ALLOPHONES, locale de).
+2015-08-16 16:54:46,871 [JavaFX Application Thread] INFO  marytts.PronunciationModel Starting power-on self test.
+2015-08-16 16:54:46,871 [JavaFX Application Thread] INFO  marytts.PronunciationModel Power-on self test complete.
+2015-08-16 16:54:46,872 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Module started (SIMPLEPHONEMES->ACOUSTPARAMS, locale de).
+2015-08-16 16:54:46,872 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Starting power-on self test.
+2015-08-16 16:54:46,873 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Power-on self test complete.
+2015-08-16 16:54:46,873 [JavaFX Application Thread] INFO  marytts.JTokeniser Module started (RAWMARYXML->TOKENS, locale en).
+2015-08-16 16:54:46,886 [JavaFX Application Thread] INFO  marytts.JTokeniser Starting power-on self test.
+2015-08-16 16:54:46,886 [JavaFX Application Thread] INFO  marytts.JTokeniser Power-on self test complete.
+2015-08-16 16:54:46,886 [JavaFX Application Thread] INFO  marytts.TokenToWords Module started (FREETTS_TOKENS->FREETTS_WORDS, locale en).
+2015-08-16 16:54:46,888 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices Loading US English FreeTTS voices...
+2015-08-16 16:54:46,893 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices done.
+2015-08-16 16:54:46,906 [JavaFX Application Thread] INFO  marytts.TokenToWords Starting power-on self test.
+2015-08-16 16:54:46,907 [JavaFX Application Thread] INFO  marytts.TokenToWords Power-on self test complete.
+2015-08-16 16:54:46,907 [JavaFX Application Thread] INFO  marytts.JPhonemiser Module started (PARTSOFSPEECH->PHONEMES, locale en_US).
+2015-08-16 16:54:46,907 [JavaFX Application Thread] INFO  marytts.JPhonemiser Starting power-on self test.
+2015-08-16 16:54:46,907 [JavaFX Application Thread] INFO  marytts.JPhonemiser Power-on self test complete.
+2015-08-16 16:54:46,907 [JavaFX Application Thread] INFO  marytts.JPhonemiser Module started (PARTSOFSPEECH->PHONEMES, locale en_GB).
+2015-08-16 16:54:46,907 [JavaFX Application Thread] INFO  marytts.JPhonemiser Starting power-on self test.
+2015-08-16 16:54:46,907 [JavaFX Application Thread] INFO  marytts.JPhonemiser Power-on self test complete.
+2015-08-16 16:54:46,910 [JavaFX Application Thread] INFO  marytts.Prosody Module started (PHONEMES->INTONATION, locale en).
+2015-08-16 16:54:46,910 [JavaFX Application Thread] INFO  marytts.Prosody Starting power-on self test.
+2015-08-16 16:54:46,910 [JavaFX Application Thread] INFO  marytts.Prosody Power-on self test complete.
+2015-08-16 16:54:46,911 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Module started (SIMPLEPHONEMES->ACOUSTPARAMS, locale en_US).
+2015-08-16 16:54:46,911 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Starting power-on self test.
+2015-08-16 16:54:46,912 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Power-on self test complete.
+2015-08-16 16:54:46,913 [JavaFX Application Thread] INFO  marytts.Utt2XML WordsEn Module started (FREETTS_WORDS->WORDS, locale en).
+2015-08-16 16:54:46,913 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices Loading US English FreeTTS voices...
+2015-08-16 16:54:46,913 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices done.
+2015-08-16 16:54:46,913 [JavaFX Application Thread] INFO  marytts.Utt2XML WordsEn Starting power-on self test.
+2015-08-16 16:54:46,913 [JavaFX Application Thread] INFO  marytts.Utt2XML WordsEn Power-on self test complete.
+2015-08-16 16:54:46,913 [JavaFX Application Thread] INFO  marytts.XML2Utt TokensEn Module started (TOKENS->FREETTS_TOKENS, locale en).
+2015-08-16 16:54:46,913 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices Loading US English FreeTTS voices...
+2015-08-16 16:54:46,913 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices done.
+2015-08-16 16:54:46,913 [JavaFX Application Thread] INFO  marytts.XML2Utt TokensEn Starting power-on self test.
+2015-08-16 16:54:46,913 [JavaFX Application Thread] INFO  marytts.XML2Utt TokensEn Power-on self test complete.
+2015-08-16 16:54:46,913 [JavaFX Application Thread] INFO  marytts.PronunciationModel Module started (INTONATION->ALLOPHONES, locale en).
+2015-08-16 16:54:46,913 [JavaFX Application Thread] INFO  marytts.PronunciationModel Starting power-on self test.
+2015-08-16 16:54:46,913 [JavaFX Application Thread] INFO  marytts.PronunciationModel Power-on self test complete.
+2015-08-16 16:54:46,913 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Module started (WORDS->PARTSOFSPEECH, locale en).
+2015-08-16 16:54:47,674 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Starting power-on self test.
+2015-08-16 16:54:47,674 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Power-on self test complete.
+2015-08-16 16:54:47,677 [JavaFX Application Thread] INFO  marytts.UnitSelectionSynthesizer started.
+2015-08-16 16:54:47,678 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Module started (ACOUSTPARAMS->TARGETFEATURES, locale null).
+2015-08-16 16:54:47,678 [JavaFX Application Thread] INFO  marytts.HTSEngine Module started (TARGETFEATURES->AUDIO, locale null).
+2015-08-16 16:54:47,690 [JavaFX Application Thread] INFO  marytts.HMMData Loading Tree Set in CARTs:
+2015-08-16 16:54:47,764 [JavaFX Application Thread] INFO  marytts.HMMData Loading GV Model Set:
+2015-08-16 16:54:47,887 [JavaFX Application Thread] INFO  marytts.Voice Registering voice `bits1-hsmm': female, locale de
+2015-08-16 16:54:47,895 [JavaFX Application Thread] INFO  marytts.Voice New default voice for locale de: bits1-hsmm (desire 0)
+2015-08-16 16:54:47,898 [JavaFX Application Thread] INFO  marytts.HMMData Loading Tree Set in CARTs:
+2015-08-16 16:54:47,966 [JavaFX Application Thread] INFO  marytts.HMMData Loading GV Model Set:
+2015-08-16 16:54:48,085 [JavaFX Application Thread] INFO  marytts.Voice Registering voice `bits3-hsmm': male, locale de
+2015-08-16 16:54:48,089 [JavaFX Application Thread] INFO  marytts.HMMData Loading Tree Set in CARTs:
+2015-08-16 16:54:48,115 [JavaFX Application Thread] INFO  marytts.HMMData Loading GV Model Set:
+2015-08-16 16:54:48,205 [JavaFX Application Thread] INFO  marytts.Voice Registering voice `cmu-bdl-hsmm': male, locale en_US
+2015-08-16 16:54:48,207 [JavaFX Application Thread] INFO  marytts.Voice New default voice for locale en_US: cmu-bdl-hsmm (desire 0)
+2015-08-16 16:54:48,210 [JavaFX Application Thread] INFO  marytts.HMMData Loading Tree Set in CARTs:
+2015-08-16 16:54:48,239 [JavaFX Application Thread] INFO  marytts.HMMData Loading GV Model Set:
+2015-08-16 16:54:48,316 [JavaFX Application Thread] INFO  marytts.Voice Registering voice `cmu-slt-hsmm': female, locale en_US
+2015-08-16 16:54:48,317 [JavaFX Application Thread] INFO  marytts.HMMSynthesizer started.
+2015-08-16 16:54:48,317 [JavaFX Application Thread] INFO  marytts.Synthesis Module started (ACOUSTPARAMS->AUDIO, locale null).
+2015-08-16 16:54:48,317 [JavaFX Application Thread] INFO  marytts.HMMSynthesizer Starting power-on self test.
+2015-08-16 16:54:48,327 [JavaFX Application Thread] INFO  marytts.HTSEngine Using prosody from acoustparams.
+2015-08-16 16:54:48,328 [JavaFX Application Thread] INFO  marytts.HTSEngine Number of models in sentence numModel=7  Total number of states numState=35
+2015-08-16 16:54:48,328 [JavaFX Application Thread] INFO  marytts.HTSEngine Total number of frames=147  Number of voiced frames=89
+2015-08-16 16:54:48,332 [JavaFX Application Thread] INFO  marytts.ParameterGeneration Parameter generation for MGC: 
+2015-08-16 16:54:48,333 [JavaFX Application Thread] INFO  marytts.PStream Context-dependent global variance optimization: gvLength = 107
+2015-08-16 16:54:48,335 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (0)  number of iterations=23
+2015-08-16 16:54:48,337 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (1)  number of iterations=54
+2015-08-16 16:54:48,338 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (2)  number of iterations=38
+2015-08-16 16:54:48,338 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (3)  number of iterations=20
+2015-08-16 16:54:48,338 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (4)  number of iterations=13
+2015-08-16 16:54:48,338 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (5)  number of iterations=21
+2015-08-16 16:54:48,339 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (6)  number of iterations=7
+2015-08-16 16:54:48,339 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (7)  number of iterations=4
+2015-08-16 16:54:48,339 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (8)  number of iterations=11
+2015-08-16 16:54:48,339 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (9)  number of iterations=19
+2015-08-16 16:54:48,339 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (10)  number of iterations=16
+2015-08-16 16:54:48,339 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (11)  number of iterations=9
+2015-08-16 16:54:48,339 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (12)  number of iterations=2
+2015-08-16 16:54:48,339 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (13)  number of iterations=13
+2015-08-16 16:54:48,340 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (14)  number of iterations=12
+2015-08-16 16:54:48,340 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (15)  number of iterations=14
+2015-08-16 16:54:48,340 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (16)  number of iterations=15
+2015-08-16 16:54:48,340 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (17)  number of iterations=14
+2015-08-16 16:54:48,340 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (18)  number of iterations=19
+2015-08-16 16:54:48,340 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (19)  number of iterations=12
+2015-08-16 16:54:48,341 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (20)  number of iterations=17
+2015-08-16 16:54:48,341 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (21)  number of iterations=23
+2015-08-16 16:54:48,341 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (22)  number of iterations=12
+2015-08-16 16:54:48,341 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (23)  number of iterations=18
+2015-08-16 16:54:48,341 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (24)  number of iterations=12
+2015-08-16 16:54:48,341 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (25)  number of iterations=11
+2015-08-16 16:54:48,342 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (26)  number of iterations=13
+2015-08-16 16:54:48,342 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (27)  number of iterations=9
+2015-08-16 16:54:48,342 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (28)  number of iterations=13
+2015-08-16 16:54:48,342 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (29)  number of iterations=8
+2015-08-16 16:54:48,342 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (30)  number of iterations=11
+2015-08-16 16:54:48,342 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (31)  number of iterations=12
+2015-08-16 16:54:48,342 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (32)  number of iterations=7
+2015-08-16 16:54:48,342 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (33)  number of iterations=8
+2015-08-16 16:54:48,343 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (34)  number of iterations=12
+2015-08-16 16:54:48,343 [JavaFX Application Thread] INFO  marytts.ParameterGeneration Using f0 from maryXML acoustparams
+2015-08-16 16:54:48,343 [JavaFX Application Thread] INFO  marytts.PStream Context-dependent global variance optimization: gvLength = 107
+2015-08-16 16:54:48,343 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (0)  number of iterations=16
+2015-08-16 16:54:48,343 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (1)  number of iterations=2
+2015-08-16 16:54:48,343 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (2)  number of iterations=2
+2015-08-16 16:54:48,344 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (3)  number of iterations=8
+2015-08-16 16:54:48,344 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (4)  number of iterations=26
+2015-08-16 16:54:48,352 [JavaFX Application Thread] INFO  marytts.HMMSynthesizer Power-on self test complete.
+2015-08-16 16:54:48,354 [JavaFX Application Thread] INFO  marytts.TextToMaryXML Module started (TEXT->RAWMARYXML, locale null).
+2015-08-16 16:54:48,354 [JavaFX Application Thread] INFO  marytts.TextToMaryXML Starting power-on self test.
+2015-08-16 16:54:48,354 [JavaFX Application Thread] WARN  marytts.TextToMaryXML Locale is null, overriding with de_DE
+2015-08-16 16:54:48,354 [JavaFX Application Thread] WARN  marytts.TextToMaryXML Locale is null, overriding with de_DE
+2015-08-16 16:54:48,355 [JavaFX Application Thread] INFO  marytts.TextToMaryXML Power-on self test complete.
+2015-08-16 16:54:48,580 [JavaFX Application Thread] INFO  marytts.SableParser Module started (SABLE->RAWMARYXML, locale null).
+2015-08-16 16:54:48,580 [JavaFX Application Thread] INFO  marytts.SableParser Starting power-on self test.
+2015-08-16 16:54:48,580 [JavaFX Application Thread] INFO  marytts.SableParser Power-on self test complete.
+2015-08-16 16:54:48,627 [JavaFX Application Thread] INFO  marytts.SSMLParser Module started (SSML->RAWMARYXML, locale null).
+2015-08-16 16:54:48,627 [JavaFX Application Thread] INFO  marytts.SSMLParser Starting power-on self test.
+2015-08-16 16:54:48,628 [JavaFX Application Thread] INFO  marytts.SSMLParser Power-on self test complete.
+2015-08-16 16:54:48,672 [JavaFX Application Thread] INFO  marytts.APMLParser Module started (APML->RAWMARYXML, locale null).
+2015-08-16 16:54:48,672 [JavaFX Application Thread] INFO  marytts.APMLParser Starting power-on self test.
+2015-08-16 16:54:48,673 [JavaFX Application Thread] INFO  marytts.APMLParser Power-on self test complete.
+2015-08-16 16:54:48,697 [JavaFX Application Thread] INFO  marytts.EmotionmlParser Module started (EMOTIONML->RAWMARYXML, locale null).
+2015-08-16 16:54:48,697 [JavaFX Application Thread] INFO  marytts.EmotionmlParser Starting power-on self test.
+2015-08-16 16:54:48,697 [JavaFX Application Thread] INFO  marytts.EmotionmlParser Power-on self test complete.
+2015-08-16 16:54:48,697 [JavaFX Application Thread] INFO  marytts.JTokeniser Module started (RAWMARYXML->TOKENS, locale null).
+2015-08-16 16:54:48,707 [JavaFX Application Thread] INFO  marytts.JTokeniser Starting power-on self test.
+2015-08-16 16:54:48,707 [JavaFX Application Thread] INFO  marytts.JTokeniser Power-on self test complete.
+2015-08-16 16:54:48,707 [JavaFX Application Thread] INFO  marytts.DummyTokens2Words Module started (TOKENS->WORDS, locale null).
+2015-08-16 16:54:48,707 [JavaFX Application Thread] INFO  marytts.DummyTokens2Words Starting power-on self test.
+2015-08-16 16:54:48,707 [JavaFX Application Thread] INFO  marytts.DummyTokens2Words Power-on self test complete.
+2015-08-16 16:54:48,709 [JavaFX Application Thread] INFO  marytts.Prosody Module started (PHONEMES->INTONATION, locale null).
+2015-08-16 16:54:48,709 [JavaFX Application Thread] INFO  marytts.Prosody Starting power-on self test.
+2015-08-16 16:54:48,709 [JavaFX Application Thread] INFO  marytts.Prosody Power-on self test complete.
+2015-08-16 16:54:48,709 [JavaFX Application Thread] INFO  marytts.PronunciationModel Module started (INTONATION->ALLOPHONES, locale null).
+2015-08-16 16:54:48,709 [JavaFX Application Thread] INFO  marytts.PronunciationModel Starting power-on self test.
+2015-08-16 16:54:48,709 [JavaFX Application Thread] INFO  marytts.PronunciationModel Power-on self test complete.
+2015-08-16 16:54:48,710 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Starting power-on self test.
+2015-08-16 16:54:48,710 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Power-on self test complete.
+2015-08-16 16:54:48,710 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Module started (ACOUSTPARAMS->HALFPHONE_TARGETFEATURES, locale null).
+2015-08-16 16:54:48,710 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Starting power-on self test.
+2015-08-16 16:54:48,710 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Power-on self test complete.
+2015-08-16 16:54:48,710 [JavaFX Application Thread] INFO  marytts.AcousticModeller Module started (ALLOPHONES->ACOUSTPARAMS, locale null).
+2015-08-16 16:54:48,710 [JavaFX Application Thread] INFO  marytts.AcousticModeller Starting power-on self test.
+2015-08-16 16:54:48,710 [JavaFX Application Thread] INFO  marytts.AcousticModeller Power-on self test complete.
+2015-08-16 16:54:48,710 [JavaFX Application Thread] INFO  marytts.Realised acoustparams extractor Module started (AUDIO->REALISED_ACOUSTPARAMS, locale null).
+2015-08-16 16:54:48,710 [JavaFX Application Thread] INFO  marytts.Realised acoustparams extractor Starting power-on self test.
+2015-08-16 16:54:48,710 [JavaFX Application Thread] INFO  marytts.Realised acoustparams extractor Power-on self test complete.
+2015-08-16 16:54:48,710 [JavaFX Application Thread] INFO  marytts.Realised durations extractor Module started (AUDIO->REALISED_DURATIONS, locale null).
+2015-08-16 16:54:48,710 [JavaFX Application Thread] INFO  marytts.Realised durations extractor Starting power-on self test.
+2015-08-16 16:54:48,710 [JavaFX Application Thread] INFO  marytts.Realised durations extractor Power-on self test complete.
+2015-08-16 16:54:48,710 [JavaFX Application Thread] INFO  marytts.Praat TextGrid generator Module started (AUDIO->PRAAT_TEXTGRID, locale null).
+2015-08-16 16:54:48,710 [JavaFX Application Thread] INFO  marytts.Praat TextGrid generator Starting power-on self test.
+2015-08-16 16:54:48,710 [JavaFX Application Thread] INFO  marytts.Praat TextGrid generator Power-on self test complete.
+2015-08-16 16:54:48,711 [JavaFX Application Thread] INFO  marytts.main Startup complete.
+2015-08-16 16:54:51,150 [Thread-5] INFO  marytts.main Shutting down modules...
+2015-08-16 16:54:51,151 [Thread-5] INFO  marytts.JTokeniser Module shut down.
+2015-08-16 16:54:51,151 [Thread-5] INFO  marytts.Preprocess Module shut down.
+2015-08-16 16:54:51,151 [Thread-5] INFO  marytts.OpenNLPPosTagger Module shut down.
+2015-08-16 16:54:51,154 [Thread-5] INFO  marytts.Prosody Module shut down.
+2015-08-16 16:54:51,154 [Thread-5] INFO  marytts.PronunciationModel Module shut down.
+2015-08-16 16:54:51,154 [Thread-5] INFO  marytts.SimplePhoneme2AP Module shut down.
+2015-08-16 16:54:51,154 [Thread-5] INFO  marytts.JTokeniser Module shut down.
+2015-08-16 16:54:51,154 [Thread-5] INFO  marytts.TokenToWords Module shut down.
+2015-08-16 16:54:51,154 [Thread-5] INFO  marytts.JPhonemiser Module shut down.
+2015-08-16 16:54:51,154 [Thread-5] INFO  marytts.JPhonemiser Module shut down.
+2015-08-16 16:54:51,154 [Thread-5] INFO  marytts.Prosody Module shut down.
+2015-08-16 16:54:51,154 [Thread-5] INFO  marytts.SimplePhoneme2AP Module shut down.
+2015-08-16 16:54:51,154 [Thread-5] INFO  marytts.Utt2XML WordsEn Module shut down.
+2015-08-16 16:54:51,154 [Thread-5] INFO  marytts.XML2Utt TokensEn Module shut down.
+2015-08-16 16:54:51,154 [Thread-5] INFO  marytts.PronunciationModel Module shut down.
+2015-08-16 16:54:51,154 [Thread-5] INFO  marytts.OpenNLPPosTagger Module shut down.
+2015-08-16 16:54:51,154 [Thread-5] INFO  marytts.Synthesis Module shut down.
+2015-08-16 16:54:51,154 [Thread-5] INFO  marytts.TextToMaryXML Module shut down.
+2015-08-16 16:54:51,154 [Thread-5] INFO  marytts.SableParser Module shut down.
+2015-08-16 16:54:51,154 [Thread-5] INFO  marytts.SSMLParser Module shut down.
+2015-08-16 16:54:51,154 [Thread-5] INFO  marytts.APMLParser Module shut down.
+2015-08-16 16:54:51,155 [Thread-5] INFO  marytts.EmotionmlParser Module shut down.
+2015-08-16 16:54:51,155 [Thread-5] INFO  marytts.JTokeniser Module shut down.
+2015-08-16 16:54:51,155 [Thread-5] INFO  marytts.DummyTokens2Words Module shut down.
+2015-08-16 16:54:51,155 [Thread-5] INFO  marytts.Prosody Module shut down.
+2015-08-16 16:54:51,155 [Thread-5] INFO  marytts.PronunciationModel Module shut down.
+2015-08-16 16:54:51,155 [Thread-5] INFO  marytts.TargetFeatureLister Module shut down.
+2015-08-16 16:54:51,155 [Thread-5] INFO  marytts.TargetFeatureLister Module shut down.
+2015-08-16 16:54:51,155 [Thread-5] INFO  marytts.AcousticModeller Module shut down.
+2015-08-16 16:54:51,156 [Thread-5] INFO  marytts.Realised acoustparams extractor Module shut down.
+2015-08-16 16:54:51,156 [Thread-5] INFO  marytts.Realised durations extractor Module shut down.
+2015-08-16 16:54:51,156 [Thread-5] INFO  marytts.HTSEngine Module shut down.
+2015-08-16 16:54:51,156 [Thread-5] INFO  marytts.Praat TextGrid generator Module shut down.
+2015-08-16 16:54:51,158 [Thread-5] INFO  marytts.main Shutdown complete.
+2015-08-16 16:55:58,731 [JavaFX Application Thread] INFO  marytts.main Mary starting up...
+2015-08-16 16:55:58,734 [JavaFX Application Thread] INFO  marytts.main Specification version 5.1.2
+2015-08-16 16:55:58,734 [JavaFX Application Thread] INFO  marytts.main Implementation version unknown
+2015-08-16 16:55:58,734 [JavaFX Application Thread] INFO  marytts.main Running on a Java 1.8.0_51 implementation by Oracle Corporation, on a Windows 8.1 platform (x86, 6.3)
+2015-08-16 16:55:58,881 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.de.JTokeniser'
+2015-08-16 16:55:58,889 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.de.Preprocess'
+2015-08-16 16:55:58,889 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.OpenNLPPosTagger(de,de.pos)'
+2015-08-16 16:55:58,890 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.de.JPhonemiser'
+2015-08-16 16:55:58,892 [JavaFX Application Thread] INFO  marytts.JPhonemiser_de User dictionary '.\user-dictionaries\userdict-de.txt' for locale 'de' does not exist. Ignoring.
+2015-08-16 16:55:58,919 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.de.Prosody'
+2015-08-16 16:55:58,922 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.de.Postlex'
+2015-08-16 16:55:58,924 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.SimplePhoneme2AP(de)'
+2015-08-16 16:55:58,924 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.JTokeniser'
+2015-08-16 16:55:58,925 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.FreeTTSTokenToWords'
+2015-08-16 16:55:58,927 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.JPhonemiser(en_US.)'
+2015-08-16 16:55:58,927 [JavaFX Application Thread] INFO  marytts.JPhonemiser User dictionary '.\user-dictionaries\userdict-en_US.txt' for locale 'en_US' does not exist. Ignoring.
+2015-08-16 16:55:58,968 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.JPhonemiser(en_GB.)'
+2015-08-16 16:55:58,968 [JavaFX Application Thread] INFO  marytts.JPhonemiser User dictionary '.\user-dictionaries\userdict-en_GB.txt' for locale 'en_GB' does not exist. Ignoring.
+2015-08-16 16:55:58,998 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.Prosody'
+2015-08-16 16:55:59,000 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.SimplePhoneme2AP(en_US)'
+2015-08-16 16:55:59,000 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.Utt2XMLWordsEn'
+2015-08-16 16:55:59,002 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.XML2UttTokensEn'
+2015-08-16 16:55:59,006 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.PronunciationModel'
+2015-08-16 16:55:59,006 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.OpenNLPPosTagger(en,en.pos)'
+2015-08-16 16:55:59,006 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.Synthesis'
+2015-08-16 16:55:59,007 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.TextToMaryXML'
+2015-08-16 16:55:59,008 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.SableParser'
+2015-08-16 16:55:59,008 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.SSMLParser'
+2015-08-16 16:55:59,009 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.APMLParser'
+2015-08-16 16:55:59,009 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.EmotionmlParser'
+2015-08-16 16:55:59,010 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.JTokeniser'
+2015-08-16 16:55:59,010 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.DummyTokens2Words'
+2015-08-16 16:55:59,010 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.ProsodyGeneric'
+2015-08-16 16:55:59,010 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.PronunciationModel'
+2015-08-16 16:55:59,011 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.TargetFeatureLister'
+2015-08-16 16:55:59,011 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.HalfPhoneTargetFeatureLister'
+2015-08-16 16:55:59,012 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.AcousticModeller'
+2015-08-16 16:55:59,013 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.RealisedAcoustparamsExtractor'
+2015-08-16 16:55:59,013 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.RealisedDurationsExtractor'
+2015-08-16 16:55:59,014 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.HTSEngine'
+2015-08-16 16:55:59,020 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.PraatTextGridGenerator'
+2015-08-16 16:55:59,023 [JavaFX Application Thread] INFO  marytts.JTokeniser Module started (RAWMARYXML->TOKENS, locale de).
+2015-08-16 16:55:59,052 [JavaFX Application Thread] INFO  marytts.JTokeniser Starting power-on self test.
+2015-08-16 16:55:59,062 [JavaFX Application Thread] INFO  marytts.JTokeniser Power-on self test complete.
+2015-08-16 16:55:59,062 [JavaFX Application Thread] INFO  marytts.Preprocess Module started (TOKENS->WORDS, locale de).
+2015-08-16 16:55:59,062 [JavaFX Application Thread] INFO  marytts.Preprocess Starting power-on self test.
+2015-08-16 16:55:59,063 [JavaFX Application Thread] INFO  marytts.Preprocess Expanding say-as elements...
+2015-08-16 16:55:59,064 [JavaFX Application Thread] INFO  marytts.Preprocess Matching and expanding patterns...
+2015-08-16 16:55:59,106 [JavaFX Application Thread] INFO  marytts.Preprocess Done.
+2015-08-16 16:55:59,106 [JavaFX Application Thread] INFO  marytts.Preprocess Power-on self test complete.
+2015-08-16 16:55:59,106 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Module started (WORDS->PARTSOFSPEECH, locale de).
+2015-08-16 16:55:59,630 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Starting power-on self test.
+2015-08-16 16:55:59,630 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Power-on self test complete.
+2015-08-16 16:55:59,630 [JavaFX Application Thread] INFO  marytts.JPhonemiser_de Module started (PARTSOFSPEECH->PHONEMES, locale de).
+2015-08-16 16:55:59,643 [JavaFX Application Thread] INFO  marytts.JPhonemiser_de Starting power-on self test.
+2015-08-16 16:55:59,643 [JavaFX Application Thread] INFO  marytts.JPhonemiser_de Power-on self test complete.
+2015-08-16 16:55:59,649 [JavaFX Application Thread] INFO  marytts.Prosody Module started (PHONEMES->INTONATION, locale de).
+2015-08-16 16:55:59,649 [JavaFX Application Thread] INFO  marytts.Prosody Starting power-on self test.
+2015-08-16 16:55:59,649 [JavaFX Application Thread] INFO  marytts.Prosody Power-on self test complete.
+2015-08-16 16:55:59,649 [JavaFX Application Thread] INFO  marytts.PronunciationModel Module started (INTONATION->ALLOPHONES, locale de).
+2015-08-16 16:55:59,649 [JavaFX Application Thread] INFO  marytts.PronunciationModel Starting power-on self test.
+2015-08-16 16:55:59,650 [JavaFX Application Thread] INFO  marytts.PronunciationModel Power-on self test complete.
+2015-08-16 16:55:59,650 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Module started (SIMPLEPHONEMES->ACOUSTPARAMS, locale de).
+2015-08-16 16:55:59,650 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Starting power-on self test.
+2015-08-16 16:55:59,651 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Power-on self test complete.
+2015-08-16 16:55:59,651 [JavaFX Application Thread] INFO  marytts.JTokeniser Module started (RAWMARYXML->TOKENS, locale en).
+2015-08-16 16:55:59,662 [JavaFX Application Thread] INFO  marytts.JTokeniser Starting power-on self test.
+2015-08-16 16:55:59,662 [JavaFX Application Thread] INFO  marytts.JTokeniser Power-on self test complete.
+2015-08-16 16:55:59,662 [JavaFX Application Thread] INFO  marytts.TokenToWords Module started (FREETTS_TOKENS->FREETTS_WORDS, locale en).
+2015-08-16 16:55:59,663 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices Loading US English FreeTTS voices...
+2015-08-16 16:55:59,667 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices done.
+2015-08-16 16:55:59,677 [JavaFX Application Thread] INFO  marytts.TokenToWords Starting power-on self test.
+2015-08-16 16:55:59,678 [JavaFX Application Thread] INFO  marytts.TokenToWords Power-on self test complete.
+2015-08-16 16:55:59,678 [JavaFX Application Thread] INFO  marytts.JPhonemiser Module started (PARTSOFSPEECH->PHONEMES, locale en_US).
+2015-08-16 16:55:59,678 [JavaFX Application Thread] INFO  marytts.JPhonemiser Starting power-on self test.
+2015-08-16 16:55:59,678 [JavaFX Application Thread] INFO  marytts.JPhonemiser Power-on self test complete.
+2015-08-16 16:55:59,678 [JavaFX Application Thread] INFO  marytts.JPhonemiser Module started (PARTSOFSPEECH->PHONEMES, locale en_GB).
+2015-08-16 16:55:59,678 [JavaFX Application Thread] INFO  marytts.JPhonemiser Starting power-on self test.
+2015-08-16 16:55:59,678 [JavaFX Application Thread] INFO  marytts.JPhonemiser Power-on self test complete.
+2015-08-16 16:55:59,681 [JavaFX Application Thread] INFO  marytts.Prosody Module started (PHONEMES->INTONATION, locale en).
+2015-08-16 16:55:59,681 [JavaFX Application Thread] INFO  marytts.Prosody Starting power-on self test.
+2015-08-16 16:55:59,681 [JavaFX Application Thread] INFO  marytts.Prosody Power-on self test complete.
+2015-08-16 16:55:59,682 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Module started (SIMPLEPHONEMES->ACOUSTPARAMS, locale en_US).
+2015-08-16 16:55:59,682 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Starting power-on self test.
+2015-08-16 16:55:59,683 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Power-on self test complete.
+2015-08-16 16:55:59,683 [JavaFX Application Thread] INFO  marytts.Utt2XML WordsEn Module started (FREETTS_WORDS->WORDS, locale en).
+2015-08-16 16:55:59,683 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices Loading US English FreeTTS voices...
+2015-08-16 16:55:59,683 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices done.
+2015-08-16 16:55:59,683 [JavaFX Application Thread] INFO  marytts.Utt2XML WordsEn Starting power-on self test.
+2015-08-16 16:55:59,683 [JavaFX Application Thread] INFO  marytts.Utt2XML WordsEn Power-on self test complete.
+2015-08-16 16:55:59,683 [JavaFX Application Thread] INFO  marytts.XML2Utt TokensEn Module started (TOKENS->FREETTS_TOKENS, locale en).
+2015-08-16 16:55:59,683 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices Loading US English FreeTTS voices...
+2015-08-16 16:55:59,683 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices done.
+2015-08-16 16:55:59,683 [JavaFX Application Thread] INFO  marytts.XML2Utt TokensEn Starting power-on self test.
+2015-08-16 16:55:59,684 [JavaFX Application Thread] INFO  marytts.XML2Utt TokensEn Power-on self test complete.
+2015-08-16 16:55:59,684 [JavaFX Application Thread] INFO  marytts.PronunciationModel Module started (INTONATION->ALLOPHONES, locale en).
+2015-08-16 16:55:59,684 [JavaFX Application Thread] INFO  marytts.PronunciationModel Starting power-on self test.
+2015-08-16 16:55:59,684 [JavaFX Application Thread] INFO  marytts.PronunciationModel Power-on self test complete.
+2015-08-16 16:55:59,684 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Module started (WORDS->PARTSOFSPEECH, locale en).
+2015-08-16 16:56:00,428 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Starting power-on self test.
+2015-08-16 16:56:00,428 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Power-on self test complete.
+2015-08-16 16:56:00,430 [JavaFX Application Thread] INFO  marytts.UnitSelectionSynthesizer started.
+2015-08-16 16:56:00,431 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Module started (ACOUSTPARAMS->TARGETFEATURES, locale null).
+2015-08-16 16:56:00,431 [JavaFX Application Thread] INFO  marytts.HTSEngine Module started (TARGETFEATURES->AUDIO, locale null).
+2015-08-16 16:56:00,442 [JavaFX Application Thread] INFO  marytts.HMMData Loading Tree Set in CARTs:
+2015-08-16 16:56:00,512 [JavaFX Application Thread] INFO  marytts.HMMData Loading GV Model Set:
+2015-08-16 16:56:00,635 [JavaFX Application Thread] INFO  marytts.Voice Registering voice `bits1-hsmm': female, locale de
+2015-08-16 16:56:00,641 [JavaFX Application Thread] INFO  marytts.Voice New default voice for locale de: bits1-hsmm (desire 0)
+2015-08-16 16:56:00,644 [JavaFX Application Thread] INFO  marytts.HMMData Loading Tree Set in CARTs:
+2015-08-16 16:56:00,717 [JavaFX Application Thread] INFO  marytts.HMMData Loading GV Model Set:
+2015-08-16 16:56:00,836 [JavaFX Application Thread] INFO  marytts.Voice Registering voice `bits3-hsmm': male, locale de
+2015-08-16 16:56:00,840 [JavaFX Application Thread] INFO  marytts.HMMData Loading Tree Set in CARTs:
+2015-08-16 16:56:00,864 [JavaFX Application Thread] INFO  marytts.HMMData Loading GV Model Set:
+2015-08-16 16:56:00,953 [JavaFX Application Thread] INFO  marytts.Voice Registering voice `cmu-bdl-hsmm': male, locale en_US
+2015-08-16 16:56:00,956 [JavaFX Application Thread] INFO  marytts.Voice New default voice for locale en_US: cmu-bdl-hsmm (desire 0)
+2015-08-16 16:56:00,959 [JavaFX Application Thread] INFO  marytts.HMMData Loading Tree Set in CARTs:
+2015-08-16 16:56:00,987 [JavaFX Application Thread] INFO  marytts.HMMData Loading GV Model Set:
+2015-08-16 16:56:01,063 [JavaFX Application Thread] INFO  marytts.Voice Registering voice `cmu-slt-hsmm': female, locale en_US
+2015-08-16 16:56:01,064 [JavaFX Application Thread] INFO  marytts.HMMSynthesizer started.
+2015-08-16 16:56:01,064 [JavaFX Application Thread] INFO  marytts.Synthesis Module started (ACOUSTPARAMS->AUDIO, locale null).
+2015-08-16 16:56:01,064 [JavaFX Application Thread] INFO  marytts.HMMSynthesizer Starting power-on self test.
+2015-08-16 16:56:01,073 [JavaFX Application Thread] INFO  marytts.HTSEngine Using prosody from acoustparams.
+2015-08-16 16:56:01,074 [JavaFX Application Thread] INFO  marytts.HTSEngine Number of models in sentence numModel=7  Total number of states numState=35
+2015-08-16 16:56:01,074 [JavaFX Application Thread] INFO  marytts.HTSEngine Total number of frames=147  Number of voiced frames=89
+2015-08-16 16:56:01,078 [JavaFX Application Thread] INFO  marytts.ParameterGeneration Parameter generation for MGC: 
+2015-08-16 16:56:01,078 [JavaFX Application Thread] INFO  marytts.PStream Context-dependent global variance optimization: gvLength = 107
+2015-08-16 16:56:01,081 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (0)  number of iterations=23
+2015-08-16 16:56:01,082 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (1)  number of iterations=54
+2015-08-16 16:56:01,082 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (2)  number of iterations=38
+2015-08-16 16:56:01,083 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (3)  number of iterations=20
+2015-08-16 16:56:01,083 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (4)  number of iterations=13
+2015-08-16 16:56:01,084 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (5)  number of iterations=21
+2015-08-16 16:56:01,084 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (6)  number of iterations=7
+2015-08-16 16:56:01,084 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (7)  number of iterations=4
+2015-08-16 16:56:01,084 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (8)  number of iterations=11
+2015-08-16 16:56:01,084 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (9)  number of iterations=19
+2015-08-16 16:56:01,084 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (10)  number of iterations=16
+2015-08-16 16:56:01,084 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (11)  number of iterations=9
+2015-08-16 16:56:01,085 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (12)  number of iterations=2
+2015-08-16 16:56:01,085 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (13)  number of iterations=13
+2015-08-16 16:56:01,085 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (14)  number of iterations=12
+2015-08-16 16:56:01,085 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (15)  number of iterations=14
+2015-08-16 16:56:01,085 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (16)  number of iterations=15
+2015-08-16 16:56:01,085 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (17)  number of iterations=14
+2015-08-16 16:56:01,086 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (18)  number of iterations=19
+2015-08-16 16:56:01,086 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (19)  number of iterations=12
+2015-08-16 16:56:01,086 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (20)  number of iterations=17
+2015-08-16 16:56:01,086 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (21)  number of iterations=23
+2015-08-16 16:56:01,086 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (22)  number of iterations=12
+2015-08-16 16:56:01,086 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (23)  number of iterations=18
+2015-08-16 16:56:01,087 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (24)  number of iterations=12
+2015-08-16 16:56:01,087 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (25)  number of iterations=11
+2015-08-16 16:56:01,087 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (26)  number of iterations=13
+2015-08-16 16:56:01,087 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (27)  number of iterations=9
+2015-08-16 16:56:01,087 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (28)  number of iterations=13
+2015-08-16 16:56:01,087 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (29)  number of iterations=8
+2015-08-16 16:56:01,087 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (30)  number of iterations=11
+2015-08-16 16:56:01,087 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (31)  number of iterations=12
+2015-08-16 16:56:01,088 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (32)  number of iterations=7
+2015-08-16 16:56:01,088 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (33)  number of iterations=8
+2015-08-16 16:56:01,088 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (34)  number of iterations=12
+2015-08-16 16:56:01,088 [JavaFX Application Thread] INFO  marytts.ParameterGeneration Using f0 from maryXML acoustparams
+2015-08-16 16:56:01,088 [JavaFX Application Thread] INFO  marytts.PStream Context-dependent global variance optimization: gvLength = 107
+2015-08-16 16:56:01,089 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (0)  number of iterations=16
+2015-08-16 16:56:01,089 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (1)  number of iterations=2
+2015-08-16 16:56:01,089 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (2)  number of iterations=2
+2015-08-16 16:56:01,089 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (3)  number of iterations=8
+2015-08-16 16:56:01,089 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (4)  number of iterations=26
+2015-08-16 16:56:01,095 [JavaFX Application Thread] INFO  marytts.HMMSynthesizer Power-on self test complete.
+2015-08-16 16:56:01,096 [JavaFX Application Thread] INFO  marytts.TextToMaryXML Module started (TEXT->RAWMARYXML, locale null).
+2015-08-16 16:56:01,096 [JavaFX Application Thread] INFO  marytts.TextToMaryXML Starting power-on self test.
+2015-08-16 16:56:01,097 [JavaFX Application Thread] WARN  marytts.TextToMaryXML Locale is null, overriding with de_DE
+2015-08-16 16:56:01,097 [JavaFX Application Thread] WARN  marytts.TextToMaryXML Locale is null, overriding with de_DE
+2015-08-16 16:56:01,097 [JavaFX Application Thread] INFO  marytts.TextToMaryXML Power-on self test complete.
+2015-08-16 16:56:01,243 [JavaFX Application Thread] INFO  marytts.SableParser Module started (SABLE->RAWMARYXML, locale null).
+2015-08-16 16:56:01,243 [JavaFX Application Thread] INFO  marytts.SableParser Starting power-on self test.
+2015-08-16 16:56:01,243 [JavaFX Application Thread] INFO  marytts.SableParser Power-on self test complete.
+2015-08-16 16:56:01,285 [JavaFX Application Thread] INFO  marytts.SSMLParser Module started (SSML->RAWMARYXML, locale null).
+2015-08-16 16:56:01,285 [JavaFX Application Thread] INFO  marytts.SSMLParser Starting power-on self test.
+2015-08-16 16:56:01,285 [JavaFX Application Thread] INFO  marytts.SSMLParser Power-on self test complete.
+2015-08-16 16:56:01,319 [JavaFX Application Thread] INFO  marytts.APMLParser Module started (APML->RAWMARYXML, locale null).
+2015-08-16 16:56:01,319 [JavaFX Application Thread] INFO  marytts.APMLParser Starting power-on self test.
+2015-08-16 16:56:01,319 [JavaFX Application Thread] INFO  marytts.APMLParser Power-on self test complete.
+2015-08-16 16:56:01,341 [JavaFX Application Thread] INFO  marytts.EmotionmlParser Module started (EMOTIONML->RAWMARYXML, locale null).
+2015-08-16 16:56:01,341 [JavaFX Application Thread] INFO  marytts.EmotionmlParser Starting power-on self test.
+2015-08-16 16:56:01,342 [JavaFX Application Thread] INFO  marytts.EmotionmlParser Power-on self test complete.
+2015-08-16 16:56:01,342 [JavaFX Application Thread] INFO  marytts.JTokeniser Module started (RAWMARYXML->TOKENS, locale null).
+2015-08-16 16:56:01,350 [JavaFX Application Thread] INFO  marytts.JTokeniser Starting power-on self test.
+2015-08-16 16:56:01,350 [JavaFX Application Thread] INFO  marytts.JTokeniser Power-on self test complete.
+2015-08-16 16:56:01,350 [JavaFX Application Thread] INFO  marytts.DummyTokens2Words Module started (TOKENS->WORDS, locale null).
+2015-08-16 16:56:01,350 [JavaFX Application Thread] INFO  marytts.DummyTokens2Words Starting power-on self test.
+2015-08-16 16:56:01,350 [JavaFX Application Thread] INFO  marytts.DummyTokens2Words Power-on self test complete.
+2015-08-16 16:56:01,352 [JavaFX Application Thread] INFO  marytts.Prosody Module started (PHONEMES->INTONATION, locale null).
+2015-08-16 16:56:01,352 [JavaFX Application Thread] INFO  marytts.Prosody Starting power-on self test.
+2015-08-16 16:56:01,352 [JavaFX Application Thread] INFO  marytts.Prosody Power-on self test complete.
+2015-08-16 16:56:01,352 [JavaFX Application Thread] INFO  marytts.PronunciationModel Module started (INTONATION->ALLOPHONES, locale null).
+2015-08-16 16:56:01,352 [JavaFX Application Thread] INFO  marytts.PronunciationModel Starting power-on self test.
+2015-08-16 16:56:01,352 [JavaFX Application Thread] INFO  marytts.PronunciationModel Power-on self test complete.
+2015-08-16 16:56:01,352 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Starting power-on self test.
+2015-08-16 16:56:01,352 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Power-on self test complete.
+2015-08-16 16:56:01,352 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Module started (ACOUSTPARAMS->HALFPHONE_TARGETFEATURES, locale null).
+2015-08-16 16:56:01,352 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Starting power-on self test.
+2015-08-16 16:56:01,352 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Power-on self test complete.
+2015-08-16 16:56:01,352 [JavaFX Application Thread] INFO  marytts.AcousticModeller Module started (ALLOPHONES->ACOUSTPARAMS, locale null).
+2015-08-16 16:56:01,352 [JavaFX Application Thread] INFO  marytts.AcousticModeller Starting power-on self test.
+2015-08-16 16:56:01,353 [JavaFX Application Thread] INFO  marytts.AcousticModeller Power-on self test complete.
+2015-08-16 16:56:01,353 [JavaFX Application Thread] INFO  marytts.Realised acoustparams extractor Module started (AUDIO->REALISED_ACOUSTPARAMS, locale null).
+2015-08-16 16:56:01,353 [JavaFX Application Thread] INFO  marytts.Realised acoustparams extractor Starting power-on self test.
+2015-08-16 16:56:01,353 [JavaFX Application Thread] INFO  marytts.Realised acoustparams extractor Power-on self test complete.
+2015-08-16 16:56:01,353 [JavaFX Application Thread] INFO  marytts.Realised durations extractor Module started (AUDIO->REALISED_DURATIONS, locale null).
+2015-08-16 16:56:01,353 [JavaFX Application Thread] INFO  marytts.Realised durations extractor Starting power-on self test.
+2015-08-16 16:56:01,353 [JavaFX Application Thread] INFO  marytts.Realised durations extractor Power-on self test complete.
+2015-08-16 16:56:01,353 [JavaFX Application Thread] INFO  marytts.Praat TextGrid generator Module started (AUDIO->PRAAT_TEXTGRID, locale null).
+2015-08-16 16:56:01,353 [JavaFX Application Thread] INFO  marytts.Praat TextGrid generator Starting power-on self test.
+2015-08-16 16:56:01,353 [JavaFX Application Thread] INFO  marytts.Praat TextGrid generator Power-on self test complete.
+2015-08-16 16:56:01,354 [JavaFX Application Thread] INFO  marytts.main Startup complete.
+2015-08-16 16:56:11,995 [JavaFX Application Thread] INFO  marytts.main Mary starting up...
+2015-08-16 16:56:11,998 [JavaFX Application Thread] INFO  marytts.main Specification version 5.1.2
+2015-08-16 16:56:11,998 [JavaFX Application Thread] INFO  marytts.main Implementation version unknown
+2015-08-16 16:56:11,998 [JavaFX Application Thread] INFO  marytts.main Running on a Java 1.8.0_51 implementation by Oracle Corporation, on a Windows 8.1 platform (x86, 6.3)
+2015-08-16 16:56:12,144 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.de.JTokeniser'
+2015-08-16 16:56:12,151 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.de.Preprocess'
+2015-08-16 16:56:12,152 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.OpenNLPPosTagger(de,de.pos)'
+2015-08-16 16:56:12,153 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.de.JPhonemiser'
+2015-08-16 16:56:12,155 [JavaFX Application Thread] INFO  marytts.JPhonemiser_de User dictionary '.\user-dictionaries\userdict-de.txt' for locale 'de' does not exist. Ignoring.
+2015-08-16 16:56:12,181 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.de.Prosody'
+2015-08-16 16:56:12,184 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.de.Postlex'
+2015-08-16 16:56:12,185 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.SimplePhoneme2AP(de)'
+2015-08-16 16:56:12,186 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.JTokeniser'
+2015-08-16 16:56:12,186 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.FreeTTSTokenToWords'
+2015-08-16 16:56:12,189 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.JPhonemiser(en_US.)'
+2015-08-16 16:56:12,189 [JavaFX Application Thread] INFO  marytts.JPhonemiser User dictionary '.\user-dictionaries\userdict-en_US.txt' for locale 'en_US' does not exist. Ignoring.
+2015-08-16 16:56:12,229 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.JPhonemiser(en_GB.)'
+2015-08-16 16:56:12,229 [JavaFX Application Thread] INFO  marytts.JPhonemiser User dictionary '.\user-dictionaries\userdict-en_GB.txt' for locale 'en_GB' does not exist. Ignoring.
+2015-08-16 16:56:12,260 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.Prosody'
+2015-08-16 16:56:12,261 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.SimplePhoneme2AP(en_US)'
+2015-08-16 16:56:12,261 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.Utt2XMLWordsEn'
+2015-08-16 16:56:12,263 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.XML2UttTokensEn'
+2015-08-16 16:56:12,266 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.PronunciationModel'
+2015-08-16 16:56:12,267 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.OpenNLPPosTagger(en,en.pos)'
+2015-08-16 16:56:12,267 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.Synthesis'
+2015-08-16 16:56:12,268 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.TextToMaryXML'
+2015-08-16 16:56:12,268 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.SableParser'
+2015-08-16 16:56:12,269 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.SSMLParser'
+2015-08-16 16:56:12,269 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.APMLParser'
+2015-08-16 16:56:12,270 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.EmotionmlParser'
+2015-08-16 16:56:12,270 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.JTokeniser'
+2015-08-16 16:56:12,270 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.DummyTokens2Words'
+2015-08-16 16:56:12,271 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.ProsodyGeneric'
+2015-08-16 16:56:12,271 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.PronunciationModel'
+2015-08-16 16:56:12,271 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.TargetFeatureLister'
+2015-08-16 16:56:12,272 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.HalfPhoneTargetFeatureLister'
+2015-08-16 16:56:12,272 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.AcousticModeller'
+2015-08-16 16:56:12,273 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.RealisedAcoustparamsExtractor'
+2015-08-16 16:56:12,273 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.RealisedDurationsExtractor'
+2015-08-16 16:56:12,274 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.HTSEngine'
+2015-08-16 16:56:12,280 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.PraatTextGridGenerator'
+2015-08-16 16:56:12,284 [JavaFX Application Thread] INFO  marytts.JTokeniser Module started (RAWMARYXML->TOKENS, locale de).
+2015-08-16 16:56:12,312 [JavaFX Application Thread] INFO  marytts.JTokeniser Starting power-on self test.
+2015-08-16 16:56:12,321 [JavaFX Application Thread] INFO  marytts.JTokeniser Power-on self test complete.
+2015-08-16 16:56:12,321 [JavaFX Application Thread] INFO  marytts.Preprocess Module started (TOKENS->WORDS, locale de).
+2015-08-16 16:56:12,322 [JavaFX Application Thread] INFO  marytts.Preprocess Starting power-on self test.
+2015-08-16 16:56:12,322 [JavaFX Application Thread] INFO  marytts.Preprocess Expanding say-as elements...
+2015-08-16 16:56:12,323 [JavaFX Application Thread] INFO  marytts.Preprocess Matching and expanding patterns...
+2015-08-16 16:56:12,363 [JavaFX Application Thread] INFO  marytts.Preprocess Done.
+2015-08-16 16:56:12,363 [JavaFX Application Thread] INFO  marytts.Preprocess Power-on self test complete.
+2015-08-16 16:56:12,363 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Module started (WORDS->PARTSOFSPEECH, locale de).
+2015-08-16 16:56:12,884 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Starting power-on self test.
+2015-08-16 16:56:12,884 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Power-on self test complete.
+2015-08-16 16:56:12,884 [JavaFX Application Thread] INFO  marytts.JPhonemiser_de Module started (PARTSOFSPEECH->PHONEMES, locale de).
+2015-08-16 16:56:12,897 [JavaFX Application Thread] INFO  marytts.JPhonemiser_de Starting power-on self test.
+2015-08-16 16:56:12,897 [JavaFX Application Thread] INFO  marytts.JPhonemiser_de Power-on self test complete.
+2015-08-16 16:56:12,904 [JavaFX Application Thread] INFO  marytts.Prosody Module started (PHONEMES->INTONATION, locale de).
+2015-08-16 16:56:12,904 [JavaFX Application Thread] INFO  marytts.Prosody Starting power-on self test.
+2015-08-16 16:56:12,904 [JavaFX Application Thread] INFO  marytts.Prosody Power-on self test complete.
+2015-08-16 16:56:12,904 [JavaFX Application Thread] INFO  marytts.PronunciationModel Module started (INTONATION->ALLOPHONES, locale de).
+2015-08-16 16:56:12,904 [JavaFX Application Thread] INFO  marytts.PronunciationModel Starting power-on self test.
+2015-08-16 16:56:12,905 [JavaFX Application Thread] INFO  marytts.PronunciationModel Power-on self test complete.
+2015-08-16 16:56:12,905 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Module started (SIMPLEPHONEMES->ACOUSTPARAMS, locale de).
+2015-08-16 16:56:12,905 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Starting power-on self test.
+2015-08-16 16:56:12,906 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Power-on self test complete.
+2015-08-16 16:56:12,906 [JavaFX Application Thread] INFO  marytts.JTokeniser Module started (RAWMARYXML->TOKENS, locale en).
+2015-08-16 16:56:12,917 [JavaFX Application Thread] INFO  marytts.JTokeniser Starting power-on self test.
+2015-08-16 16:56:12,917 [JavaFX Application Thread] INFO  marytts.JTokeniser Power-on self test complete.
+2015-08-16 16:56:12,917 [JavaFX Application Thread] INFO  marytts.TokenToWords Module started (FREETTS_TOKENS->FREETTS_WORDS, locale en).
+2015-08-16 16:56:12,918 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices Loading US English FreeTTS voices...
+2015-08-16 16:56:12,922 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices done.
+2015-08-16 16:56:12,933 [JavaFX Application Thread] INFO  marytts.TokenToWords Starting power-on self test.
+2015-08-16 16:56:12,933 [JavaFX Application Thread] INFO  marytts.TokenToWords Power-on self test complete.
+2015-08-16 16:56:12,933 [JavaFX Application Thread] INFO  marytts.JPhonemiser Module started (PARTSOFSPEECH->PHONEMES, locale en_US).
+2015-08-16 16:56:12,933 [JavaFX Application Thread] INFO  marytts.JPhonemiser Starting power-on self test.
+2015-08-16 16:56:12,933 [JavaFX Application Thread] INFO  marytts.JPhonemiser Power-on self test complete.
+2015-08-16 16:56:12,933 [JavaFX Application Thread] INFO  marytts.JPhonemiser Module started (PARTSOFSPEECH->PHONEMES, locale en_GB).
+2015-08-16 16:56:12,933 [JavaFX Application Thread] INFO  marytts.JPhonemiser Starting power-on self test.
+2015-08-16 16:56:12,933 [JavaFX Application Thread] INFO  marytts.JPhonemiser Power-on self test complete.
+2015-08-16 16:56:12,936 [JavaFX Application Thread] INFO  marytts.Prosody Module started (PHONEMES->INTONATION, locale en).
+2015-08-16 16:56:12,936 [JavaFX Application Thread] INFO  marytts.Prosody Starting power-on self test.
+2015-08-16 16:56:12,937 [JavaFX Application Thread] INFO  marytts.Prosody Power-on self test complete.
+2015-08-16 16:56:12,937 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Module started (SIMPLEPHONEMES->ACOUSTPARAMS, locale en_US).
+2015-08-16 16:56:12,937 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Starting power-on self test.
+2015-08-16 16:56:12,938 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Power-on self test complete.
+2015-08-16 16:56:12,938 [JavaFX Application Thread] INFO  marytts.Utt2XML WordsEn Module started (FREETTS_WORDS->WORDS, locale en).
+2015-08-16 16:56:12,938 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices Loading US English FreeTTS voices...
+2015-08-16 16:56:12,938 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices done.
+2015-08-16 16:56:12,939 [JavaFX Application Thread] INFO  marytts.Utt2XML WordsEn Starting power-on self test.
+2015-08-16 16:56:12,939 [JavaFX Application Thread] INFO  marytts.Utt2XML WordsEn Power-on self test complete.
+2015-08-16 16:56:12,939 [JavaFX Application Thread] INFO  marytts.XML2Utt TokensEn Module started (TOKENS->FREETTS_TOKENS, locale en).
+2015-08-16 16:56:12,939 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices Loading US English FreeTTS voices...
+2015-08-16 16:56:12,939 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices done.
+2015-08-16 16:56:12,939 [JavaFX Application Thread] INFO  marytts.XML2Utt TokensEn Starting power-on self test.
+2015-08-16 16:56:12,939 [JavaFX Application Thread] INFO  marytts.XML2Utt TokensEn Power-on self test complete.
+2015-08-16 16:56:12,939 [JavaFX Application Thread] INFO  marytts.PronunciationModel Module started (INTONATION->ALLOPHONES, locale en).
+2015-08-16 16:56:12,939 [JavaFX Application Thread] INFO  marytts.PronunciationModel Starting power-on self test.
+2015-08-16 16:56:12,939 [JavaFX Application Thread] INFO  marytts.PronunciationModel Power-on self test complete.
+2015-08-16 16:56:12,939 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Module started (WORDS->PARTSOFSPEECH, locale en).
+2015-08-16 16:56:13,672 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Starting power-on self test.
+2015-08-16 16:56:13,673 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Power-on self test complete.
+2015-08-16 16:56:13,675 [JavaFX Application Thread] INFO  marytts.UnitSelectionSynthesizer started.
+2015-08-16 16:56:13,676 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Module started (ACOUSTPARAMS->TARGETFEATURES, locale null).
+2015-08-16 16:56:13,676 [JavaFX Application Thread] INFO  marytts.HTSEngine Module started (TARGETFEATURES->AUDIO, locale null).
+2015-08-16 16:56:13,686 [JavaFX Application Thread] INFO  marytts.HMMData Loading Tree Set in CARTs:
+2015-08-16 16:56:13,752 [JavaFX Application Thread] INFO  marytts.HMMData Loading GV Model Set:
+2015-08-16 16:56:13,871 [JavaFX Application Thread] INFO  marytts.Voice Registering voice `bits1-hsmm': female, locale de
+2015-08-16 16:56:13,877 [JavaFX Application Thread] INFO  marytts.Voice New default voice for locale de: bits1-hsmm (desire 0)
+2015-08-16 16:56:13,880 [JavaFX Application Thread] INFO  marytts.HMMData Loading Tree Set in CARTs:
+2015-08-16 16:56:13,945 [JavaFX Application Thread] INFO  marytts.HMMData Loading GV Model Set:
+2015-08-16 16:56:14,060 [JavaFX Application Thread] INFO  marytts.Voice Registering voice `bits3-hsmm': male, locale de
+2015-08-16 16:56:14,064 [JavaFX Application Thread] INFO  marytts.HMMData Loading Tree Set in CARTs:
+2015-08-16 16:56:14,087 [JavaFX Application Thread] INFO  marytts.HMMData Loading GV Model Set:
+2015-08-16 16:56:14,172 [JavaFX Application Thread] INFO  marytts.Voice Registering voice `cmu-bdl-hsmm': male, locale en_US
+2015-08-16 16:56:14,175 [JavaFX Application Thread] INFO  marytts.Voice New default voice for locale en_US: cmu-bdl-hsmm (desire 0)
+2015-08-16 16:56:14,177 [JavaFX Application Thread] INFO  marytts.HMMData Loading Tree Set in CARTs:
+2015-08-16 16:56:14,204 [JavaFX Application Thread] INFO  marytts.HMMData Loading GV Model Set:
+2015-08-16 16:56:14,280 [JavaFX Application Thread] INFO  marytts.Voice Registering voice `cmu-slt-hsmm': female, locale en_US
+2015-08-16 16:56:14,280 [JavaFX Application Thread] INFO  marytts.HMMSynthesizer started.
+2015-08-16 16:56:14,280 [JavaFX Application Thread] INFO  marytts.Synthesis Module started (ACOUSTPARAMS->AUDIO, locale null).
+2015-08-16 16:56:14,280 [JavaFX Application Thread] INFO  marytts.HMMSynthesizer Starting power-on self test.
+2015-08-16 16:56:14,289 [JavaFX Application Thread] INFO  marytts.HTSEngine Using prosody from acoustparams.
+2015-08-16 16:56:14,290 [JavaFX Application Thread] INFO  marytts.HTSEngine Number of models in sentence numModel=7  Total number of states numState=35
+2015-08-16 16:56:14,290 [JavaFX Application Thread] INFO  marytts.HTSEngine Total number of frames=147  Number of voiced frames=89
+2015-08-16 16:56:14,294 [JavaFX Application Thread] INFO  marytts.ParameterGeneration Parameter generation for MGC: 
+2015-08-16 16:56:14,294 [JavaFX Application Thread] INFO  marytts.PStream Context-dependent global variance optimization: gvLength = 107
+2015-08-16 16:56:14,297 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (0)  number of iterations=23
+2015-08-16 16:56:14,298 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (1)  number of iterations=54
+2015-08-16 16:56:14,299 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (2)  number of iterations=38
+2015-08-16 16:56:14,299 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (3)  number of iterations=20
+2015-08-16 16:56:14,299 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (4)  number of iterations=13
+2015-08-16 16:56:14,300 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (5)  number of iterations=21
+2015-08-16 16:56:14,300 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (6)  number of iterations=7
+2015-08-16 16:56:14,300 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (7)  number of iterations=4
+2015-08-16 16:56:14,300 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (8)  number of iterations=11
+2015-08-16 16:56:14,300 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (9)  number of iterations=19
+2015-08-16 16:56:14,300 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (10)  number of iterations=16
+2015-08-16 16:56:14,300 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (11)  number of iterations=9
+2015-08-16 16:56:14,300 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (12)  number of iterations=2
+2015-08-16 16:56:14,301 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (13)  number of iterations=13
+2015-08-16 16:56:14,301 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (14)  number of iterations=12
+2015-08-16 16:56:14,301 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (15)  number of iterations=14
+2015-08-16 16:56:14,301 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (16)  number of iterations=15
+2015-08-16 16:56:14,301 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (17)  number of iterations=14
+2015-08-16 16:56:14,301 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (18)  number of iterations=19
+2015-08-16 16:56:14,302 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (19)  number of iterations=12
+2015-08-16 16:56:14,302 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (20)  number of iterations=17
+2015-08-16 16:56:14,302 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (21)  number of iterations=23
+2015-08-16 16:56:14,302 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (22)  number of iterations=12
+2015-08-16 16:56:14,302 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (23)  number of iterations=18
+2015-08-16 16:56:14,302 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (24)  number of iterations=12
+2015-08-16 16:56:14,303 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (25)  number of iterations=11
+2015-08-16 16:56:14,303 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (26)  number of iterations=13
+2015-08-16 16:56:14,303 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (27)  number of iterations=9
+2015-08-16 16:56:14,303 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (28)  number of iterations=13
+2015-08-16 16:56:14,303 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (29)  number of iterations=8
+2015-08-16 16:56:14,303 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (30)  number of iterations=11
+2015-08-16 16:56:14,303 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (31)  number of iterations=12
+2015-08-16 16:56:14,303 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (32)  number of iterations=7
+2015-08-16 16:56:14,304 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (33)  number of iterations=8
+2015-08-16 16:56:14,304 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (34)  number of iterations=12
+2015-08-16 16:56:14,304 [JavaFX Application Thread] INFO  marytts.ParameterGeneration Using f0 from maryXML acoustparams
+2015-08-16 16:56:14,304 [JavaFX Application Thread] INFO  marytts.PStream Context-dependent global variance optimization: gvLength = 107
+2015-08-16 16:56:14,304 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (0)  number of iterations=16
+2015-08-16 16:56:14,304 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (1)  number of iterations=2
+2015-08-16 16:56:14,305 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (2)  number of iterations=2
+2015-08-16 16:56:14,305 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (3)  number of iterations=8
+2015-08-16 16:56:14,305 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (4)  number of iterations=26
+2015-08-16 16:56:14,311 [JavaFX Application Thread] INFO  marytts.HMMSynthesizer Power-on self test complete.
+2015-08-16 16:56:14,312 [JavaFX Application Thread] INFO  marytts.TextToMaryXML Module started (TEXT->RAWMARYXML, locale null).
+2015-08-16 16:56:14,312 [JavaFX Application Thread] INFO  marytts.TextToMaryXML Starting power-on self test.
+2015-08-16 16:56:14,312 [JavaFX Application Thread] WARN  marytts.TextToMaryXML Locale is null, overriding with de_DE
+2015-08-16 16:56:14,312 [JavaFX Application Thread] WARN  marytts.TextToMaryXML Locale is null, overriding with de_DE
+2015-08-16 16:56:14,312 [JavaFX Application Thread] INFO  marytts.TextToMaryXML Power-on self test complete.
+2015-08-16 16:56:14,452 [JavaFX Application Thread] INFO  marytts.SableParser Module started (SABLE->RAWMARYXML, locale null).
+2015-08-16 16:56:14,452 [JavaFX Application Thread] INFO  marytts.SableParser Starting power-on self test.
+2015-08-16 16:56:14,452 [JavaFX Application Thread] INFO  marytts.SableParser Power-on self test complete.
+2015-08-16 16:56:14,493 [JavaFX Application Thread] INFO  marytts.SSMLParser Module started (SSML->RAWMARYXML, locale null).
+2015-08-16 16:56:14,493 [JavaFX Application Thread] INFO  marytts.SSMLParser Starting power-on self test.
+2015-08-16 16:56:14,493 [JavaFX Application Thread] INFO  marytts.SSMLParser Power-on self test complete.
+2015-08-16 16:56:14,523 [JavaFX Application Thread] INFO  marytts.APMLParser Module started (APML->RAWMARYXML, locale null).
+2015-08-16 16:56:14,523 [JavaFX Application Thread] INFO  marytts.APMLParser Starting power-on self test.
+2015-08-16 16:56:14,523 [JavaFX Application Thread] INFO  marytts.APMLParser Power-on self test complete.
+2015-08-16 16:56:14,543 [JavaFX Application Thread] INFO  marytts.EmotionmlParser Module started (EMOTIONML->RAWMARYXML, locale null).
+2015-08-16 16:56:14,543 [JavaFX Application Thread] INFO  marytts.EmotionmlParser Starting power-on self test.
+2015-08-16 16:56:14,543 [JavaFX Application Thread] INFO  marytts.EmotionmlParser Power-on self test complete.
+2015-08-16 16:56:14,543 [JavaFX Application Thread] INFO  marytts.JTokeniser Module started (RAWMARYXML->TOKENS, locale null).
+2015-08-16 16:56:14,551 [JavaFX Application Thread] INFO  marytts.JTokeniser Starting power-on self test.
+2015-08-16 16:56:14,551 [JavaFX Application Thread] INFO  marytts.JTokeniser Power-on self test complete.
+2015-08-16 16:56:14,551 [JavaFX Application Thread] INFO  marytts.DummyTokens2Words Module started (TOKENS->WORDS, locale null).
+2015-08-16 16:56:14,551 [JavaFX Application Thread] INFO  marytts.DummyTokens2Words Starting power-on self test.
+2015-08-16 16:56:14,551 [JavaFX Application Thread] INFO  marytts.DummyTokens2Words Power-on self test complete.
+2015-08-16 16:56:14,553 [JavaFX Application Thread] INFO  marytts.Prosody Module started (PHONEMES->INTONATION, locale null).
+2015-08-16 16:56:14,553 [JavaFX Application Thread] INFO  marytts.Prosody Starting power-on self test.
+2015-08-16 16:56:14,553 [JavaFX Application Thread] INFO  marytts.Prosody Power-on self test complete.
+2015-08-16 16:56:14,553 [JavaFX Application Thread] INFO  marytts.PronunciationModel Module started (INTONATION->ALLOPHONES, locale null).
+2015-08-16 16:56:14,553 [JavaFX Application Thread] INFO  marytts.PronunciationModel Starting power-on self test.
+2015-08-16 16:56:14,553 [JavaFX Application Thread] INFO  marytts.PronunciationModel Power-on self test complete.
+2015-08-16 16:56:14,553 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Starting power-on self test.
+2015-08-16 16:56:14,553 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Power-on self test complete.
+2015-08-16 16:56:14,553 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Module started (ACOUSTPARAMS->HALFPHONE_TARGETFEATURES, locale null).
+2015-08-16 16:56:14,553 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Starting power-on self test.
+2015-08-16 16:56:14,554 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Power-on self test complete.
+2015-08-16 16:56:14,554 [JavaFX Application Thread] INFO  marytts.AcousticModeller Module started (ALLOPHONES->ACOUSTPARAMS, locale null).
+2015-08-16 16:56:14,554 [JavaFX Application Thread] INFO  marytts.AcousticModeller Starting power-on self test.
+2015-08-16 16:56:14,554 [JavaFX Application Thread] INFO  marytts.AcousticModeller Power-on self test complete.
+2015-08-16 16:56:14,554 [JavaFX Application Thread] INFO  marytts.Realised acoustparams extractor Module started (AUDIO->REALISED_ACOUSTPARAMS, locale null).
+2015-08-16 16:56:14,554 [JavaFX Application Thread] INFO  marytts.Realised acoustparams extractor Starting power-on self test.
+2015-08-16 16:56:14,554 [JavaFX Application Thread] INFO  marytts.Realised acoustparams extractor Power-on self test complete.
+2015-08-16 16:56:14,554 [JavaFX Application Thread] INFO  marytts.Realised durations extractor Module started (AUDIO->REALISED_DURATIONS, locale null).
+2015-08-16 16:56:14,554 [JavaFX Application Thread] INFO  marytts.Realised durations extractor Starting power-on self test.
+2015-08-16 16:56:14,554 [JavaFX Application Thread] INFO  marytts.Realised durations extractor Power-on self test complete.
+2015-08-16 16:56:14,554 [JavaFX Application Thread] INFO  marytts.Praat TextGrid generator Module started (AUDIO->PRAAT_TEXTGRID, locale null).
+2015-08-16 16:56:14,554 [JavaFX Application Thread] INFO  marytts.Praat TextGrid generator Starting power-on self test.
+2015-08-16 16:56:14,554 [JavaFX Application Thread] INFO  marytts.Praat TextGrid generator Power-on self test complete.
+2015-08-16 16:56:14,555 [JavaFX Application Thread] INFO  marytts.main Startup complete.
+2015-08-16 17:00:52,815 [JavaFX Application Thread] INFO  marytts.main Mary starting up...
+2015-08-16 17:00:52,818 [JavaFX Application Thread] INFO  marytts.main Specification version 5.1.2
+2015-08-16 17:00:52,818 [JavaFX Application Thread] INFO  marytts.main Implementation version unknown
+2015-08-16 17:00:52,818 [JavaFX Application Thread] INFO  marytts.main Running on a Java 1.8.0_51 implementation by Oracle Corporation, on a Windows 8.1 platform (x86, 6.3)
+2015-08-16 17:00:52,962 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.de.JTokeniser'
+2015-08-16 17:00:52,969 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.de.Preprocess'
+2015-08-16 17:00:52,970 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.OpenNLPPosTagger(de,de.pos)'
+2015-08-16 17:00:52,971 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.de.JPhonemiser'
+2015-08-16 17:00:52,973 [JavaFX Application Thread] INFO  marytts.JPhonemiser_de User dictionary '.\user-dictionaries\userdict-de.txt' for locale 'de' does not exist. Ignoring.
+2015-08-16 17:00:52,999 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.de.Prosody'
+2015-08-16 17:00:53,002 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.de.Postlex'
+2015-08-16 17:00:53,004 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.SimplePhoneme2AP(de)'
+2015-08-16 17:00:53,005 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.JTokeniser'
+2015-08-16 17:00:53,005 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.FreeTTSTokenToWords'
+2015-08-16 17:00:53,008 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.JPhonemiser(en_US.)'
+2015-08-16 17:00:53,008 [JavaFX Application Thread] INFO  marytts.JPhonemiser User dictionary '.\user-dictionaries\userdict-en_US.txt' for locale 'en_US' does not exist. Ignoring.
+2015-08-16 17:00:53,049 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.JPhonemiser(en_GB.)'
+2015-08-16 17:00:53,049 [JavaFX Application Thread] INFO  marytts.JPhonemiser User dictionary '.\user-dictionaries\userdict-en_GB.txt' for locale 'en_GB' does not exist. Ignoring.
+2015-08-16 17:00:53,079 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.Prosody'
+2015-08-16 17:00:53,081 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.SimplePhoneme2AP(en_US)'
+2015-08-16 17:00:53,081 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.Utt2XMLWordsEn'
+2015-08-16 17:00:53,083 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.XML2UttTokensEn'
+2015-08-16 17:00:53,086 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.PronunciationModel'
+2015-08-16 17:00:53,087 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.OpenNLPPosTagger(en,en.pos)'
+2015-08-16 17:00:53,087 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.Synthesis'
+2015-08-16 17:00:53,087 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.TextToMaryXML'
+2015-08-16 17:00:53,088 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.SableParser'
+2015-08-16 17:00:53,089 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.SSMLParser'
+2015-08-16 17:00:53,089 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.APMLParser'
+2015-08-16 17:00:53,090 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.EmotionmlParser'
+2015-08-16 17:00:53,090 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.JTokeniser'
+2015-08-16 17:00:53,090 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.DummyTokens2Words'
+2015-08-16 17:00:53,091 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.ProsodyGeneric'
+2015-08-16 17:00:53,091 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.PronunciationModel'
+2015-08-16 17:00:53,091 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.TargetFeatureLister'
+2015-08-16 17:00:53,092 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.HalfPhoneTargetFeatureLister'
+2015-08-16 17:00:53,092 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.AcousticModeller'
+2015-08-16 17:00:53,093 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.RealisedAcoustparamsExtractor'
+2015-08-16 17:00:53,094 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.RealisedDurationsExtractor'
+2015-08-16 17:00:53,094 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.HTSEngine'
+2015-08-16 17:00:53,100 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.PraatTextGridGenerator'
+2015-08-16 17:00:53,104 [JavaFX Application Thread] INFO  marytts.JTokeniser Module started (RAWMARYXML->TOKENS, locale de).
+2015-08-16 17:00:53,132 [JavaFX Application Thread] INFO  marytts.JTokeniser Starting power-on self test.
+2015-08-16 17:00:53,142 [JavaFX Application Thread] INFO  marytts.JTokeniser Power-on self test complete.
+2015-08-16 17:00:53,142 [JavaFX Application Thread] INFO  marytts.Preprocess Module started (TOKENS->WORDS, locale de).
+2015-08-16 17:00:53,142 [JavaFX Application Thread] INFO  marytts.Preprocess Starting power-on self test.
+2015-08-16 17:00:53,143 [JavaFX Application Thread] INFO  marytts.Preprocess Expanding say-as elements...
+2015-08-16 17:00:53,143 [JavaFX Application Thread] INFO  marytts.Preprocess Matching and expanding patterns...
+2015-08-16 17:00:53,190 [JavaFX Application Thread] INFO  marytts.Preprocess Done.
+2015-08-16 17:00:53,190 [JavaFX Application Thread] INFO  marytts.Preprocess Power-on self test complete.
+2015-08-16 17:00:53,190 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Module started (WORDS->PARTSOFSPEECH, locale de).
+2015-08-16 17:00:53,716 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Starting power-on self test.
+2015-08-16 17:00:53,716 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Power-on self test complete.
+2015-08-16 17:00:53,716 [JavaFX Application Thread] INFO  marytts.JPhonemiser_de Module started (PARTSOFSPEECH->PHONEMES, locale de).
+2015-08-16 17:00:53,728 [JavaFX Application Thread] INFO  marytts.JPhonemiser_de Starting power-on self test.
+2015-08-16 17:00:53,729 [JavaFX Application Thread] INFO  marytts.JPhonemiser_de Power-on self test complete.
+2015-08-16 17:00:53,735 [JavaFX Application Thread] INFO  marytts.Prosody Module started (PHONEMES->INTONATION, locale de).
+2015-08-16 17:00:53,735 [JavaFX Application Thread] INFO  marytts.Prosody Starting power-on self test.
+2015-08-16 17:00:53,735 [JavaFX Application Thread] INFO  marytts.Prosody Power-on self test complete.
+2015-08-16 17:00:53,735 [JavaFX Application Thread] INFO  marytts.PronunciationModel Module started (INTONATION->ALLOPHONES, locale de).
+2015-08-16 17:00:53,735 [JavaFX Application Thread] INFO  marytts.PronunciationModel Starting power-on self test.
+2015-08-16 17:00:53,735 [JavaFX Application Thread] INFO  marytts.PronunciationModel Power-on self test complete.
+2015-08-16 17:00:53,736 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Module started (SIMPLEPHONEMES->ACOUSTPARAMS, locale de).
+2015-08-16 17:00:53,736 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Starting power-on self test.
+2015-08-16 17:00:53,737 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Power-on self test complete.
+2015-08-16 17:00:53,737 [JavaFX Application Thread] INFO  marytts.JTokeniser Module started (RAWMARYXML->TOKENS, locale en).
+2015-08-16 17:00:53,748 [JavaFX Application Thread] INFO  marytts.JTokeniser Starting power-on self test.
+2015-08-16 17:00:53,748 [JavaFX Application Thread] INFO  marytts.JTokeniser Power-on self test complete.
+2015-08-16 17:00:53,748 [JavaFX Application Thread] INFO  marytts.TokenToWords Module started (FREETTS_TOKENS->FREETTS_WORDS, locale en).
+2015-08-16 17:00:53,749 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices Loading US English FreeTTS voices...
+2015-08-16 17:00:53,753 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices done.
+2015-08-16 17:00:53,763 [JavaFX Application Thread] INFO  marytts.TokenToWords Starting power-on self test.
+2015-08-16 17:00:53,763 [JavaFX Application Thread] INFO  marytts.TokenToWords Power-on self test complete.
+2015-08-16 17:00:53,763 [JavaFX Application Thread] INFO  marytts.JPhonemiser Module started (PARTSOFSPEECH->PHONEMES, locale en_US).
+2015-08-16 17:00:53,763 [JavaFX Application Thread] INFO  marytts.JPhonemiser Starting power-on self test.
+2015-08-16 17:00:53,763 [JavaFX Application Thread] INFO  marytts.JPhonemiser Power-on self test complete.
+2015-08-16 17:00:53,763 [JavaFX Application Thread] INFO  marytts.JPhonemiser Module started (PARTSOFSPEECH->PHONEMES, locale en_GB).
+2015-08-16 17:00:53,763 [JavaFX Application Thread] INFO  marytts.JPhonemiser Starting power-on self test.
+2015-08-16 17:00:53,763 [JavaFX Application Thread] INFO  marytts.JPhonemiser Power-on self test complete.
+2015-08-16 17:00:53,766 [JavaFX Application Thread] INFO  marytts.Prosody Module started (PHONEMES->INTONATION, locale en).
+2015-08-16 17:00:53,766 [JavaFX Application Thread] INFO  marytts.Prosody Starting power-on self test.
+2015-08-16 17:00:53,767 [JavaFX Application Thread] INFO  marytts.Prosody Power-on self test complete.
+2015-08-16 17:00:53,767 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Module started (SIMPLEPHONEMES->ACOUSTPARAMS, locale en_US).
+2015-08-16 17:00:53,767 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Starting power-on self test.
+2015-08-16 17:00:53,768 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Power-on self test complete.
+2015-08-16 17:00:53,768 [JavaFX Application Thread] INFO  marytts.Utt2XML WordsEn Module started (FREETTS_WORDS->WORDS, locale en).
+2015-08-16 17:00:53,768 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices Loading US English FreeTTS voices...
+2015-08-16 17:00:53,768 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices done.
+2015-08-16 17:00:53,769 [JavaFX Application Thread] INFO  marytts.Utt2XML WordsEn Starting power-on self test.
+2015-08-16 17:00:53,769 [JavaFX Application Thread] INFO  marytts.Utt2XML WordsEn Power-on self test complete.
+2015-08-16 17:00:53,769 [JavaFX Application Thread] INFO  marytts.XML2Utt TokensEn Module started (TOKENS->FREETTS_TOKENS, locale en).
+2015-08-16 17:00:53,769 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices Loading US English FreeTTS voices...
+2015-08-16 17:00:53,769 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices done.
+2015-08-16 17:00:53,769 [JavaFX Application Thread] INFO  marytts.XML2Utt TokensEn Starting power-on self test.
+2015-08-16 17:00:53,769 [JavaFX Application Thread] INFO  marytts.XML2Utt TokensEn Power-on self test complete.
+2015-08-16 17:00:53,769 [JavaFX Application Thread] INFO  marytts.PronunciationModel Module started (INTONATION->ALLOPHONES, locale en).
+2015-08-16 17:00:53,769 [JavaFX Application Thread] INFO  marytts.PronunciationModel Starting power-on self test.
+2015-08-16 17:00:53,769 [JavaFX Application Thread] INFO  marytts.PronunciationModel Power-on self test complete.
+2015-08-16 17:00:53,769 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Module started (WORDS->PARTSOFSPEECH, locale en).
+2015-08-16 17:00:54,509 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Starting power-on self test.
+2015-08-16 17:00:54,509 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Power-on self test complete.
+2015-08-16 17:00:54,511 [JavaFX Application Thread] INFO  marytts.UnitSelectionSynthesizer started.
+2015-08-16 17:00:54,512 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Module started (ACOUSTPARAMS->TARGETFEATURES, locale null).
+2015-08-16 17:00:54,512 [JavaFX Application Thread] INFO  marytts.HTSEngine Module started (TARGETFEATURES->AUDIO, locale null).
+2015-08-16 17:00:54,522 [JavaFX Application Thread] INFO  marytts.HMMData Loading Tree Set in CARTs:
+2015-08-16 17:00:54,589 [JavaFX Application Thread] INFO  marytts.HMMData Loading GV Model Set:
+2015-08-16 17:00:54,709 [JavaFX Application Thread] INFO  marytts.Voice Registering voice `bits1-hsmm': female, locale de
+2015-08-16 17:00:54,715 [JavaFX Application Thread] INFO  marytts.Voice New default voice for locale de: bits1-hsmm (desire 0)
+2015-08-16 17:00:54,718 [JavaFX Application Thread] INFO  marytts.HMMData Loading Tree Set in CARTs:
+2015-08-16 17:00:54,784 [JavaFX Application Thread] INFO  marytts.HMMData Loading GV Model Set:
+2015-08-16 17:00:54,899 [JavaFX Application Thread] INFO  marytts.Voice Registering voice `bits3-hsmm': male, locale de
+2015-08-16 17:00:54,903 [JavaFX Application Thread] INFO  marytts.HMMData Loading Tree Set in CARTs:
+2015-08-16 17:00:54,926 [JavaFX Application Thread] INFO  marytts.HMMData Loading GV Model Set:
+2015-08-16 17:00:55,013 [JavaFX Application Thread] INFO  marytts.Voice Registering voice `cmu-bdl-hsmm': male, locale en_US
+2015-08-16 17:00:55,015 [JavaFX Application Thread] INFO  marytts.Voice New default voice for locale en_US: cmu-bdl-hsmm (desire 0)
+2015-08-16 17:00:55,018 [JavaFX Application Thread] INFO  marytts.HMMData Loading Tree Set in CARTs:
+2015-08-16 17:00:55,045 [JavaFX Application Thread] INFO  marytts.HMMData Loading GV Model Set:
+2015-08-16 17:00:55,120 [JavaFX Application Thread] INFO  marytts.Voice Registering voice `cmu-slt-hsmm': female, locale en_US
+2015-08-16 17:00:55,120 [JavaFX Application Thread] INFO  marytts.HMMSynthesizer started.
+2015-08-16 17:00:55,120 [JavaFX Application Thread] INFO  marytts.Synthesis Module started (ACOUSTPARAMS->AUDIO, locale null).
+2015-08-16 17:00:55,120 [JavaFX Application Thread] INFO  marytts.HMMSynthesizer Starting power-on self test.
+2015-08-16 17:00:55,129 [JavaFX Application Thread] INFO  marytts.HTSEngine Using prosody from acoustparams.
+2015-08-16 17:00:55,130 [JavaFX Application Thread] INFO  marytts.HTSEngine Number of models in sentence numModel=7  Total number of states numState=35
+2015-08-16 17:00:55,131 [JavaFX Application Thread] INFO  marytts.HTSEngine Total number of frames=147  Number of voiced frames=89
+2015-08-16 17:00:55,134 [JavaFX Application Thread] INFO  marytts.ParameterGeneration Parameter generation for MGC: 
+2015-08-16 17:00:55,134 [JavaFX Application Thread] INFO  marytts.PStream Context-dependent global variance optimization: gvLength = 107
+2015-08-16 17:00:55,137 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (0)  number of iterations=23
+2015-08-16 17:00:55,138 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (1)  number of iterations=54
+2015-08-16 17:00:55,139 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (2)  number of iterations=38
+2015-08-16 17:00:55,140 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (3)  number of iterations=20
+2015-08-16 17:00:55,140 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (4)  number of iterations=13
+2015-08-16 17:00:55,140 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (5)  number of iterations=21
+2015-08-16 17:00:55,140 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (6)  number of iterations=7
+2015-08-16 17:00:55,140 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (7)  number of iterations=4
+2015-08-16 17:00:55,140 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (8)  number of iterations=11
+2015-08-16 17:00:55,141 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (9)  number of iterations=19
+2015-08-16 17:00:55,141 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (10)  number of iterations=16
+2015-08-16 17:00:55,141 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (11)  number of iterations=9
+2015-08-16 17:00:55,141 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (12)  number of iterations=2
+2015-08-16 17:00:55,141 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (13)  number of iterations=13
+2015-08-16 17:00:55,141 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (14)  number of iterations=12
+2015-08-16 17:00:55,141 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (15)  number of iterations=14
+2015-08-16 17:00:55,142 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (16)  number of iterations=15
+2015-08-16 17:00:55,142 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (17)  number of iterations=14
+2015-08-16 17:00:55,142 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (18)  number of iterations=19
+2015-08-16 17:00:55,142 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (19)  number of iterations=12
+2015-08-16 17:00:55,142 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (20)  number of iterations=17
+2015-08-16 17:00:55,143 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (21)  number of iterations=23
+2015-08-16 17:00:55,143 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (22)  number of iterations=12
+2015-08-16 17:00:55,143 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (23)  number of iterations=18
+2015-08-16 17:00:55,143 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (24)  number of iterations=12
+2015-08-16 17:00:55,143 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (25)  number of iterations=11
+2015-08-16 17:00:55,143 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (26)  number of iterations=13
+2015-08-16 17:00:55,143 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (27)  number of iterations=9
+2015-08-16 17:00:55,143 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (28)  number of iterations=13
+2015-08-16 17:00:55,144 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (29)  number of iterations=8
+2015-08-16 17:00:55,144 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (30)  number of iterations=11
+2015-08-16 17:00:55,144 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (31)  number of iterations=12
+2015-08-16 17:00:55,144 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (32)  number of iterations=7
+2015-08-16 17:00:55,144 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (33)  number of iterations=8
+2015-08-16 17:00:55,144 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (34)  number of iterations=12
+2015-08-16 17:00:55,144 [JavaFX Application Thread] INFO  marytts.ParameterGeneration Using f0 from maryXML acoustparams
+2015-08-16 17:00:55,145 [JavaFX Application Thread] INFO  marytts.PStream Context-dependent global variance optimization: gvLength = 107
+2015-08-16 17:00:55,145 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (0)  number of iterations=16
+2015-08-16 17:00:55,145 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (1)  number of iterations=2
+2015-08-16 17:00:55,145 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (2)  number of iterations=2
+2015-08-16 17:00:55,145 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (3)  number of iterations=8
+2015-08-16 17:00:55,145 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (4)  number of iterations=26
+2015-08-16 17:00:55,151 [JavaFX Application Thread] INFO  marytts.HMMSynthesizer Power-on self test complete.
+2015-08-16 17:00:55,152 [JavaFX Application Thread] INFO  marytts.TextToMaryXML Module started (TEXT->RAWMARYXML, locale null).
+2015-08-16 17:00:55,153 [JavaFX Application Thread] INFO  marytts.TextToMaryXML Starting power-on self test.
+2015-08-16 17:00:55,153 [JavaFX Application Thread] WARN  marytts.TextToMaryXML Locale is null, overriding with de_DE
+2015-08-16 17:00:55,154 [JavaFX Application Thread] WARN  marytts.TextToMaryXML Locale is null, overriding with de_DE
+2015-08-16 17:00:55,154 [JavaFX Application Thread] INFO  marytts.TextToMaryXML Power-on self test complete.
+2015-08-16 17:00:55,294 [JavaFX Application Thread] INFO  marytts.SableParser Module started (SABLE->RAWMARYXML, locale null).
+2015-08-16 17:00:55,294 [JavaFX Application Thread] INFO  marytts.SableParser Starting power-on self test.
+2015-08-16 17:00:55,294 [JavaFX Application Thread] INFO  marytts.SableParser Power-on self test complete.
+2015-08-16 17:00:55,336 [JavaFX Application Thread] INFO  marytts.SSMLParser Module started (SSML->RAWMARYXML, locale null).
+2015-08-16 17:00:55,336 [JavaFX Application Thread] INFO  marytts.SSMLParser Starting power-on self test.
+2015-08-16 17:00:55,336 [JavaFX Application Thread] INFO  marytts.SSMLParser Power-on self test complete.
+2015-08-16 17:00:55,369 [JavaFX Application Thread] INFO  marytts.APMLParser Module started (APML->RAWMARYXML, locale null).
+2015-08-16 17:00:55,369 [JavaFX Application Thread] INFO  marytts.APMLParser Starting power-on self test.
+2015-08-16 17:00:55,369 [JavaFX Application Thread] INFO  marytts.APMLParser Power-on self test complete.
+2015-08-16 17:00:55,389 [JavaFX Application Thread] INFO  marytts.EmotionmlParser Module started (EMOTIONML->RAWMARYXML, locale null).
+2015-08-16 17:00:55,389 [JavaFX Application Thread] INFO  marytts.EmotionmlParser Starting power-on self test.
+2015-08-16 17:00:55,389 [JavaFX Application Thread] INFO  marytts.EmotionmlParser Power-on self test complete.
+2015-08-16 17:00:55,389 [JavaFX Application Thread] INFO  marytts.JTokeniser Module started (RAWMARYXML->TOKENS, locale null).
+2015-08-16 17:00:55,397 [JavaFX Application Thread] INFO  marytts.JTokeniser Starting power-on self test.
+2015-08-16 17:00:55,397 [JavaFX Application Thread] INFO  marytts.JTokeniser Power-on self test complete.
+2015-08-16 17:00:55,397 [JavaFX Application Thread] INFO  marytts.DummyTokens2Words Module started (TOKENS->WORDS, locale null).
+2015-08-16 17:00:55,397 [JavaFX Application Thread] INFO  marytts.DummyTokens2Words Starting power-on self test.
+2015-08-16 17:00:55,397 [JavaFX Application Thread] INFO  marytts.DummyTokens2Words Power-on self test complete.
+2015-08-16 17:00:55,399 [JavaFX Application Thread] INFO  marytts.Prosody Module started (PHONEMES->INTONATION, locale null).
+2015-08-16 17:00:55,399 [JavaFX Application Thread] INFO  marytts.Prosody Starting power-on self test.
+2015-08-16 17:00:55,399 [JavaFX Application Thread] INFO  marytts.Prosody Power-on self test complete.
+2015-08-16 17:00:55,399 [JavaFX Application Thread] INFO  marytts.PronunciationModel Module started (INTONATION->ALLOPHONES, locale null).
+2015-08-16 17:00:55,399 [JavaFX Application Thread] INFO  marytts.PronunciationModel Starting power-on self test.
+2015-08-16 17:00:55,399 [JavaFX Application Thread] INFO  marytts.PronunciationModel Power-on self test complete.
+2015-08-16 17:00:55,399 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Starting power-on self test.
+2015-08-16 17:00:55,399 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Power-on self test complete.
+2015-08-16 17:00:55,399 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Module started (ACOUSTPARAMS->HALFPHONE_TARGETFEATURES, locale null).
+2015-08-16 17:00:55,399 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Starting power-on self test.
+2015-08-16 17:00:55,399 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Power-on self test complete.
+2015-08-16 17:00:55,399 [JavaFX Application Thread] INFO  marytts.AcousticModeller Module started (ALLOPHONES->ACOUSTPARAMS, locale null).
+2015-08-16 17:00:55,399 [JavaFX Application Thread] INFO  marytts.AcousticModeller Starting power-on self test.
+2015-08-16 17:00:55,399 [JavaFX Application Thread] INFO  marytts.AcousticModeller Power-on self test complete.
+2015-08-16 17:00:55,399 [JavaFX Application Thread] INFO  marytts.Realised acoustparams extractor Module started (AUDIO->REALISED_ACOUSTPARAMS, locale null).
+2015-08-16 17:00:55,400 [JavaFX Application Thread] INFO  marytts.Realised acoustparams extractor Starting power-on self test.
+2015-08-16 17:00:55,400 [JavaFX Application Thread] INFO  marytts.Realised acoustparams extractor Power-on self test complete.
+2015-08-16 17:00:55,400 [JavaFX Application Thread] INFO  marytts.Realised durations extractor Module started (AUDIO->REALISED_DURATIONS, locale null).
+2015-08-16 17:00:55,400 [JavaFX Application Thread] INFO  marytts.Realised durations extractor Starting power-on self test.
+2015-08-16 17:00:55,400 [JavaFX Application Thread] INFO  marytts.Realised durations extractor Power-on self test complete.
+2015-08-16 17:00:55,400 [JavaFX Application Thread] INFO  marytts.Praat TextGrid generator Module started (AUDIO->PRAAT_TEXTGRID, locale null).
+2015-08-16 17:00:55,400 [JavaFX Application Thread] INFO  marytts.Praat TextGrid generator Starting power-on self test.
+2015-08-16 17:00:55,400 [JavaFX Application Thread] INFO  marytts.Praat TextGrid generator Power-on self test complete.
+2015-08-16 17:00:55,401 [JavaFX Application Thread] INFO  marytts.main Startup complete.
+2015-08-16 17:01:36,187 [Thread-5] INFO  marytts.main Shutting down modules...
+2015-08-16 17:01:36,188 [Thread-5] INFO  marytts.JTokeniser Module shut down.
+2015-08-16 17:01:36,188 [Thread-5] INFO  marytts.Preprocess Module shut down.
+2015-08-16 17:01:36,188 [Thread-5] INFO  marytts.OpenNLPPosTagger Module shut down.
+2015-08-16 17:01:36,191 [Thread-5] INFO  marytts.Prosody Module shut down.
+2015-08-16 17:01:36,191 [Thread-5] INFO  marytts.PronunciationModel Module shut down.
+2015-08-16 17:01:36,192 [Thread-5] INFO  marytts.SimplePhoneme2AP Module shut down.
+2015-08-16 17:01:36,192 [Thread-5] INFO  marytts.JTokeniser Module shut down.
+2015-08-16 17:01:36,192 [Thread-5] INFO  marytts.TokenToWords Module shut down.
+2015-08-16 17:01:36,192 [Thread-5] INFO  marytts.JPhonemiser Module shut down.
+2015-08-16 17:01:36,192 [Thread-5] INFO  marytts.JPhonemiser Module shut down.
+2015-08-16 17:01:36,192 [Thread-5] INFO  marytts.Prosody Module shut down.
+2015-08-16 17:01:36,192 [Thread-5] INFO  marytts.SimplePhoneme2AP Module shut down.
+2015-08-16 17:01:36,192 [Thread-5] INFO  marytts.Utt2XML WordsEn Module shut down.
+2015-08-16 17:01:36,192 [Thread-5] INFO  marytts.XML2Utt TokensEn Module shut down.
+2015-08-16 17:01:36,192 [Thread-5] INFO  marytts.PronunciationModel Module shut down.
+2015-08-16 17:01:36,192 [Thread-5] INFO  marytts.OpenNLPPosTagger Module shut down.
+2015-08-16 17:01:36,192 [Thread-5] INFO  marytts.Synthesis Module shut down.
+2015-08-16 17:01:36,192 [Thread-5] INFO  marytts.TextToMaryXML Module shut down.
+2015-08-16 17:01:36,192 [Thread-5] INFO  marytts.SableParser Module shut down.
+2015-08-16 17:01:36,192 [Thread-5] INFO  marytts.SSMLParser Module shut down.
+2015-08-16 17:01:36,192 [Thread-5] INFO  marytts.APMLParser Module shut down.
+2015-08-16 17:01:36,192 [Thread-5] INFO  marytts.EmotionmlParser Module shut down.
+2015-08-16 17:01:36,192 [Thread-5] INFO  marytts.JTokeniser Module shut down.
+2015-08-16 17:01:36,192 [Thread-5] INFO  marytts.DummyTokens2Words Module shut down.
+2015-08-16 17:01:36,192 [Thread-5] INFO  marytts.Prosody Module shut down.
+2015-08-16 17:01:36,192 [Thread-5] INFO  marytts.PronunciationModel Module shut down.
+2015-08-16 17:01:36,192 [Thread-5] INFO  marytts.TargetFeatureLister Module shut down.
+2015-08-16 17:01:36,192 [Thread-5] INFO  marytts.TargetFeatureLister Module shut down.
+2015-08-16 17:01:36,192 [Thread-5] INFO  marytts.AcousticModeller Module shut down.
+2015-08-16 17:01:36,192 [Thread-5] INFO  marytts.Realised acoustparams extractor Module shut down.
+2015-08-16 17:01:36,192 [Thread-5] INFO  marytts.Realised durations extractor Module shut down.
+2015-08-16 17:01:36,192 [Thread-5] INFO  marytts.HTSEngine Module shut down.
+2015-08-16 17:01:36,192 [Thread-5] INFO  marytts.Praat TextGrid generator Module shut down.
+2015-08-16 17:01:36,195 [Thread-5] INFO  marytts.main Shutdown complete.
+2015-08-16 17:02:04,623 [JavaFX Application Thread] INFO  marytts.main Mary starting up...
+2015-08-16 17:02:04,626 [JavaFX Application Thread] INFO  marytts.main Specification version 5.1.2
+2015-08-16 17:02:04,626 [JavaFX Application Thread] INFO  marytts.main Implementation version unknown
+2015-08-16 17:02:04,626 [JavaFX Application Thread] INFO  marytts.main Running on a Java 1.8.0_51 implementation by Oracle Corporation, on a Windows 8.1 platform (x86, 6.3)
+2015-08-16 17:02:04,772 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.de.JTokeniser'
+2015-08-16 17:02:04,779 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.de.Preprocess'
+2015-08-16 17:02:04,780 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.OpenNLPPosTagger(de,de.pos)'
+2015-08-16 17:02:04,781 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.de.JPhonemiser'
+2015-08-16 17:02:04,783 [JavaFX Application Thread] INFO  marytts.JPhonemiser_de User dictionary '.\user-dictionaries\userdict-de.txt' for locale 'de' does not exist. Ignoring.
+2015-08-16 17:02:04,811 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.de.Prosody'
+2015-08-16 17:02:04,814 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.de.Postlex'
+2015-08-16 17:02:04,816 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.SimplePhoneme2AP(de)'
+2015-08-16 17:02:04,816 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.JTokeniser'
+2015-08-16 17:02:04,817 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.FreeTTSTokenToWords'
+2015-08-16 17:02:04,819 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.JPhonemiser(en_US.)'
+2015-08-16 17:02:04,820 [JavaFX Application Thread] INFO  marytts.JPhonemiser User dictionary '.\user-dictionaries\userdict-en_US.txt' for locale 'en_US' does not exist. Ignoring.
+2015-08-16 17:02:04,861 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.JPhonemiser(en_GB.)'
+2015-08-16 17:02:04,861 [JavaFX Application Thread] INFO  marytts.JPhonemiser User dictionary '.\user-dictionaries\userdict-en_GB.txt' for locale 'en_GB' does not exist. Ignoring.
+2015-08-16 17:02:04,892 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.Prosody'
+2015-08-16 17:02:04,894 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.SimplePhoneme2AP(en_US)'
+2015-08-16 17:02:04,894 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.Utt2XMLWordsEn'
+2015-08-16 17:02:04,896 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.XML2UttTokensEn'
+2015-08-16 17:02:04,899 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.PronunciationModel'
+2015-08-16 17:02:04,899 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.OpenNLPPosTagger(en,en.pos)'
+2015-08-16 17:02:04,899 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.Synthesis'
+2015-08-16 17:02:04,900 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.TextToMaryXML'
+2015-08-16 17:02:04,901 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.SableParser'
+2015-08-16 17:02:04,902 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.SSMLParser'
+2015-08-16 17:02:04,902 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.APMLParser'
+2015-08-16 17:02:04,903 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.EmotionmlParser'
+2015-08-16 17:02:04,903 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.JTokeniser'
+2015-08-16 17:02:04,903 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.DummyTokens2Words'
+2015-08-16 17:02:04,904 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.ProsodyGeneric'
+2015-08-16 17:02:04,904 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.PronunciationModel'
+2015-08-16 17:02:04,904 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.TargetFeatureLister'
+2015-08-16 17:02:04,904 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.HalfPhoneTargetFeatureLister'
+2015-08-16 17:02:04,905 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.AcousticModeller'
+2015-08-16 17:02:04,906 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.RealisedAcoustparamsExtractor'
+2015-08-16 17:02:04,906 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.RealisedDurationsExtractor'
+2015-08-16 17:02:04,907 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.HTSEngine'
+2015-08-16 17:02:04,913 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.PraatTextGridGenerator'
+2015-08-16 17:02:04,917 [JavaFX Application Thread] INFO  marytts.JTokeniser Module started (RAWMARYXML->TOKENS, locale de).
+2015-08-16 17:02:04,945 [JavaFX Application Thread] INFO  marytts.JTokeniser Starting power-on self test.
+2015-08-16 17:02:04,955 [JavaFX Application Thread] INFO  marytts.JTokeniser Power-on self test complete.
+2015-08-16 17:02:04,955 [JavaFX Application Thread] INFO  marytts.Preprocess Module started (TOKENS->WORDS, locale de).
+2015-08-16 17:02:04,955 [JavaFX Application Thread] INFO  marytts.Preprocess Starting power-on self test.
+2015-08-16 17:02:04,956 [JavaFX Application Thread] INFO  marytts.Preprocess Expanding say-as elements...
+2015-08-16 17:02:04,956 [JavaFX Application Thread] INFO  marytts.Preprocess Matching and expanding patterns...
+2015-08-16 17:02:04,997 [JavaFX Application Thread] INFO  marytts.Preprocess Done.
+2015-08-16 17:02:04,997 [JavaFX Application Thread] INFO  marytts.Preprocess Power-on self test complete.
+2015-08-16 17:02:04,997 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Module started (WORDS->PARTSOFSPEECH, locale de).
+2015-08-16 17:02:05,520 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Starting power-on self test.
+2015-08-16 17:02:05,520 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Power-on self test complete.
+2015-08-16 17:02:05,520 [JavaFX Application Thread] INFO  marytts.JPhonemiser_de Module started (PARTSOFSPEECH->PHONEMES, locale de).
+2015-08-16 17:02:05,533 [JavaFX Application Thread] INFO  marytts.JPhonemiser_de Starting power-on self test.
+2015-08-16 17:02:05,533 [JavaFX Application Thread] INFO  marytts.JPhonemiser_de Power-on self test complete.
+2015-08-16 17:02:05,540 [JavaFX Application Thread] INFO  marytts.Prosody Module started (PHONEMES->INTONATION, locale de).
+2015-08-16 17:02:05,540 [JavaFX Application Thread] INFO  marytts.Prosody Starting power-on self test.
+2015-08-16 17:02:05,540 [JavaFX Application Thread] INFO  marytts.Prosody Power-on self test complete.
+2015-08-16 17:02:05,540 [JavaFX Application Thread] INFO  marytts.PronunciationModel Module started (INTONATION->ALLOPHONES, locale de).
+2015-08-16 17:02:05,540 [JavaFX Application Thread] INFO  marytts.PronunciationModel Starting power-on self test.
+2015-08-16 17:02:05,540 [JavaFX Application Thread] INFO  marytts.PronunciationModel Power-on self test complete.
+2015-08-16 17:02:05,540 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Module started (SIMPLEPHONEMES->ACOUSTPARAMS, locale de).
+2015-08-16 17:02:05,540 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Starting power-on self test.
+2015-08-16 17:02:05,542 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Power-on self test complete.
+2015-08-16 17:02:05,542 [JavaFX Application Thread] INFO  marytts.JTokeniser Module started (RAWMARYXML->TOKENS, locale en).
+2015-08-16 17:02:05,552 [JavaFX Application Thread] INFO  marytts.JTokeniser Starting power-on self test.
+2015-08-16 17:02:05,552 [JavaFX Application Thread] INFO  marytts.JTokeniser Power-on self test complete.
+2015-08-16 17:02:05,553 [JavaFX Application Thread] INFO  marytts.TokenToWords Module started (FREETTS_TOKENS->FREETTS_WORDS, locale en).
+2015-08-16 17:02:05,554 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices Loading US English FreeTTS voices...
+2015-08-16 17:02:05,558 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices done.
+2015-08-16 17:02:05,568 [JavaFX Application Thread] INFO  marytts.TokenToWords Starting power-on self test.
+2015-08-16 17:02:05,568 [JavaFX Application Thread] INFO  marytts.TokenToWords Power-on self test complete.
+2015-08-16 17:02:05,568 [JavaFX Application Thread] INFO  marytts.JPhonemiser Module started (PARTSOFSPEECH->PHONEMES, locale en_US).
+2015-08-16 17:02:05,568 [JavaFX Application Thread] INFO  marytts.JPhonemiser Starting power-on self test.
+2015-08-16 17:02:05,568 [JavaFX Application Thread] INFO  marytts.JPhonemiser Power-on self test complete.
+2015-08-16 17:02:05,568 [JavaFX Application Thread] INFO  marytts.JPhonemiser Module started (PARTSOFSPEECH->PHONEMES, locale en_GB).
+2015-08-16 17:02:05,569 [JavaFX Application Thread] INFO  marytts.JPhonemiser Starting power-on self test.
+2015-08-16 17:02:05,569 [JavaFX Application Thread] INFO  marytts.JPhonemiser Power-on self test complete.
+2015-08-16 17:02:05,572 [JavaFX Application Thread] INFO  marytts.Prosody Module started (PHONEMES->INTONATION, locale en).
+2015-08-16 17:02:05,572 [JavaFX Application Thread] INFO  marytts.Prosody Starting power-on self test.
+2015-08-16 17:02:05,572 [JavaFX Application Thread] INFO  marytts.Prosody Power-on self test complete.
+2015-08-16 17:02:05,572 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Module started (SIMPLEPHONEMES->ACOUSTPARAMS, locale en_US).
+2015-08-16 17:02:05,572 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Starting power-on self test.
+2015-08-16 17:02:05,573 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Power-on self test complete.
+2015-08-16 17:02:05,574 [JavaFX Application Thread] INFO  marytts.Utt2XML WordsEn Module started (FREETTS_WORDS->WORDS, locale en).
+2015-08-16 17:02:05,574 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices Loading US English FreeTTS voices...
+2015-08-16 17:02:05,574 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices done.
+2015-08-16 17:02:05,574 [JavaFX Application Thread] INFO  marytts.Utt2XML WordsEn Starting power-on self test.
+2015-08-16 17:02:05,574 [JavaFX Application Thread] INFO  marytts.Utt2XML WordsEn Power-on self test complete.
+2015-08-16 17:02:05,574 [JavaFX Application Thread] INFO  marytts.XML2Utt TokensEn Module started (TOKENS->FREETTS_TOKENS, locale en).
+2015-08-16 17:02:05,574 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices Loading US English FreeTTS voices...
+2015-08-16 17:02:05,574 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices done.
+2015-08-16 17:02:05,574 [JavaFX Application Thread] INFO  marytts.XML2Utt TokensEn Starting power-on self test.
+2015-08-16 17:02:05,574 [JavaFX Application Thread] INFO  marytts.XML2Utt TokensEn Power-on self test complete.
+2015-08-16 17:02:05,574 [JavaFX Application Thread] INFO  marytts.PronunciationModel Module started (INTONATION->ALLOPHONES, locale en).
+2015-08-16 17:02:05,574 [JavaFX Application Thread] INFO  marytts.PronunciationModel Starting power-on self test.
+2015-08-16 17:02:05,574 [JavaFX Application Thread] INFO  marytts.PronunciationModel Power-on self test complete.
+2015-08-16 17:02:05,574 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Module started (WORDS->PARTSOFSPEECH, locale en).
+2015-08-16 17:02:06,315 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Starting power-on self test.
+2015-08-16 17:02:06,315 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Power-on self test complete.
+2015-08-16 17:02:06,317 [JavaFX Application Thread] INFO  marytts.UnitSelectionSynthesizer started.
+2015-08-16 17:02:06,318 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Module started (ACOUSTPARAMS->TARGETFEATURES, locale null).
+2015-08-16 17:02:06,318 [JavaFX Application Thread] INFO  marytts.HTSEngine Module started (TARGETFEATURES->AUDIO, locale null).
+2015-08-16 17:02:06,328 [JavaFX Application Thread] INFO  marytts.HMMData Loading Tree Set in CARTs:
+2015-08-16 17:02:06,395 [JavaFX Application Thread] INFO  marytts.HMMData Loading GV Model Set:
+2015-08-16 17:02:06,513 [JavaFX Application Thread] INFO  marytts.Voice Registering voice `bits1-hsmm': female, locale de
+2015-08-16 17:02:06,519 [JavaFX Application Thread] INFO  marytts.Voice New default voice for locale de: bits1-hsmm (desire 0)
+2015-08-16 17:02:06,521 [JavaFX Application Thread] INFO  marytts.HMMData Loading Tree Set in CARTs:
+2015-08-16 17:02:06,587 [JavaFX Application Thread] INFO  marytts.HMMData Loading GV Model Set:
+2015-08-16 17:02:06,701 [JavaFX Application Thread] INFO  marytts.Voice Registering voice `bits3-hsmm': male, locale de
+2015-08-16 17:02:06,705 [JavaFX Application Thread] INFO  marytts.HMMData Loading Tree Set in CARTs:
+2015-08-16 17:02:06,728 [JavaFX Application Thread] INFO  marytts.HMMData Loading GV Model Set:
+2015-08-16 17:02:06,814 [JavaFX Application Thread] INFO  marytts.Voice Registering voice `cmu-bdl-hsmm': male, locale en_US
+2015-08-16 17:02:06,816 [JavaFX Application Thread] INFO  marytts.Voice New default voice for locale en_US: cmu-bdl-hsmm (desire 0)
+2015-08-16 17:02:06,818 [JavaFX Application Thread] INFO  marytts.HMMData Loading Tree Set in CARTs:
+2015-08-16 17:02:06,845 [JavaFX Application Thread] INFO  marytts.HMMData Loading GV Model Set:
+2015-08-16 17:02:06,920 [JavaFX Application Thread] INFO  marytts.Voice Registering voice `cmu-slt-hsmm': female, locale en_US
+2015-08-16 17:02:06,920 [JavaFX Application Thread] INFO  marytts.HMMSynthesizer started.
+2015-08-16 17:02:06,920 [JavaFX Application Thread] INFO  marytts.Synthesis Module started (ACOUSTPARAMS->AUDIO, locale null).
+2015-08-16 17:02:06,920 [JavaFX Application Thread] INFO  marytts.HMMSynthesizer Starting power-on self test.
+2015-08-16 17:02:06,929 [JavaFX Application Thread] INFO  marytts.HTSEngine Using prosody from acoustparams.
+2015-08-16 17:02:06,930 [JavaFX Application Thread] INFO  marytts.HTSEngine Number of models in sentence numModel=7  Total number of states numState=35
+2015-08-16 17:02:06,930 [JavaFX Application Thread] INFO  marytts.HTSEngine Total number of frames=147  Number of voiced frames=89
+2015-08-16 17:02:06,934 [JavaFX Application Thread] INFO  marytts.ParameterGeneration Parameter generation for MGC: 
+2015-08-16 17:02:06,934 [JavaFX Application Thread] INFO  marytts.PStream Context-dependent global variance optimization: gvLength = 107
+2015-08-16 17:02:06,936 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (0)  number of iterations=23
+2015-08-16 17:02:06,938 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (1)  number of iterations=54
+2015-08-16 17:02:06,939 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (2)  number of iterations=38
+2015-08-16 17:02:06,939 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (3)  number of iterations=20
+2015-08-16 17:02:06,939 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (4)  number of iterations=13
+2015-08-16 17:02:06,939 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (5)  number of iterations=21
+2015-08-16 17:02:06,939 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (6)  number of iterations=7
+2015-08-16 17:02:06,940 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (7)  number of iterations=4
+2015-08-16 17:02:06,940 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (8)  number of iterations=11
+2015-08-16 17:02:06,940 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (9)  number of iterations=19
+2015-08-16 17:02:06,940 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (10)  number of iterations=16
+2015-08-16 17:02:06,940 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (11)  number of iterations=9
+2015-08-16 17:02:06,940 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (12)  number of iterations=2
+2015-08-16 17:02:06,940 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (13)  number of iterations=13
+2015-08-16 17:02:06,941 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (14)  number of iterations=12
+2015-08-16 17:02:06,941 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (15)  number of iterations=14
+2015-08-16 17:02:06,941 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (16)  number of iterations=15
+2015-08-16 17:02:06,941 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (17)  number of iterations=14
+2015-08-16 17:02:06,941 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (18)  number of iterations=19
+2015-08-16 17:02:06,941 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (19)  number of iterations=12
+2015-08-16 17:02:06,942 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (20)  number of iterations=17
+2015-08-16 17:02:06,942 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (21)  number of iterations=23
+2015-08-16 17:02:06,942 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (22)  number of iterations=12
+2015-08-16 17:02:06,942 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (23)  number of iterations=18
+2015-08-16 17:02:06,942 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (24)  number of iterations=12
+2015-08-16 17:02:06,942 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (25)  number of iterations=11
+2015-08-16 17:02:06,942 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (26)  number of iterations=13
+2015-08-16 17:02:06,943 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (27)  number of iterations=9
+2015-08-16 17:02:06,943 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (28)  number of iterations=13
+2015-08-16 17:02:06,943 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (29)  number of iterations=8
+2015-08-16 17:02:06,943 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (30)  number of iterations=11
+2015-08-16 17:02:06,943 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (31)  number of iterations=12
+2015-08-16 17:02:06,943 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (32)  number of iterations=7
+2015-08-16 17:02:06,943 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (33)  number of iterations=8
+2015-08-16 17:02:06,943 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (34)  number of iterations=12
+2015-08-16 17:02:06,943 [JavaFX Application Thread] INFO  marytts.ParameterGeneration Using f0 from maryXML acoustparams
+2015-08-16 17:02:06,944 [JavaFX Application Thread] INFO  marytts.PStream Context-dependent global variance optimization: gvLength = 107
+2015-08-16 17:02:06,944 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (0)  number of iterations=16
+2015-08-16 17:02:06,944 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (1)  number of iterations=2
+2015-08-16 17:02:06,944 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (2)  number of iterations=2
+2015-08-16 17:02:06,944 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (3)  number of iterations=8
+2015-08-16 17:02:06,945 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (4)  number of iterations=26
+2015-08-16 17:02:06,950 [JavaFX Application Thread] INFO  marytts.HMMSynthesizer Power-on self test complete.
+2015-08-16 17:02:06,951 [JavaFX Application Thread] INFO  marytts.TextToMaryXML Module started (TEXT->RAWMARYXML, locale null).
+2015-08-16 17:02:06,951 [JavaFX Application Thread] INFO  marytts.TextToMaryXML Starting power-on self test.
+2015-08-16 17:02:06,952 [JavaFX Application Thread] WARN  marytts.TextToMaryXML Locale is null, overriding with de_DE
+2015-08-16 17:02:06,952 [JavaFX Application Thread] WARN  marytts.TextToMaryXML Locale is null, overriding with de_DE
+2015-08-16 17:02:06,952 [JavaFX Application Thread] INFO  marytts.TextToMaryXML Power-on self test complete.
+2015-08-16 17:02:07,092 [JavaFX Application Thread] INFO  marytts.SableParser Module started (SABLE->RAWMARYXML, locale null).
+2015-08-16 17:02:07,092 [JavaFX Application Thread] INFO  marytts.SableParser Starting power-on self test.
+2015-08-16 17:02:07,092 [JavaFX Application Thread] INFO  marytts.SableParser Power-on self test complete.
+2015-08-16 17:02:07,133 [JavaFX Application Thread] INFO  marytts.SSMLParser Module started (SSML->RAWMARYXML, locale null).
+2015-08-16 17:02:07,133 [JavaFX Application Thread] INFO  marytts.SSMLParser Starting power-on self test.
+2015-08-16 17:02:07,133 [JavaFX Application Thread] INFO  marytts.SSMLParser Power-on self test complete.
+2015-08-16 17:02:07,166 [JavaFX Application Thread] INFO  marytts.APMLParser Module started (APML->RAWMARYXML, locale null).
+2015-08-16 17:02:07,166 [JavaFX Application Thread] INFO  marytts.APMLParser Starting power-on self test.
+2015-08-16 17:02:07,166 [JavaFX Application Thread] INFO  marytts.APMLParser Power-on self test complete.
+2015-08-16 17:02:07,186 [JavaFX Application Thread] INFO  marytts.EmotionmlParser Module started (EMOTIONML->RAWMARYXML, locale null).
+2015-08-16 17:02:07,186 [JavaFX Application Thread] INFO  marytts.EmotionmlParser Starting power-on self test.
+2015-08-16 17:02:07,186 [JavaFX Application Thread] INFO  marytts.EmotionmlParser Power-on self test complete.
+2015-08-16 17:02:07,186 [JavaFX Application Thread] INFO  marytts.JTokeniser Module started (RAWMARYXML->TOKENS, locale null).
+2015-08-16 17:02:07,194 [JavaFX Application Thread] INFO  marytts.JTokeniser Starting power-on self test.
+2015-08-16 17:02:07,194 [JavaFX Application Thread] INFO  marytts.JTokeniser Power-on self test complete.
+2015-08-16 17:02:07,194 [JavaFX Application Thread] INFO  marytts.DummyTokens2Words Module started (TOKENS->WORDS, locale null).
+2015-08-16 17:02:07,194 [JavaFX Application Thread] INFO  marytts.DummyTokens2Words Starting power-on self test.
+2015-08-16 17:02:07,195 [JavaFX Application Thread] INFO  marytts.DummyTokens2Words Power-on self test complete.
+2015-08-16 17:02:07,196 [JavaFX Application Thread] INFO  marytts.Prosody Module started (PHONEMES->INTONATION, locale null).
+2015-08-16 17:02:07,196 [JavaFX Application Thread] INFO  marytts.Prosody Starting power-on self test.
+2015-08-16 17:02:07,197 [JavaFX Application Thread] INFO  marytts.Prosody Power-on self test complete.
+2015-08-16 17:02:07,197 [JavaFX Application Thread] INFO  marytts.PronunciationModel Module started (INTONATION->ALLOPHONES, locale null).
+2015-08-16 17:02:07,197 [JavaFX Application Thread] INFO  marytts.PronunciationModel Starting power-on self test.
+2015-08-16 17:02:07,197 [JavaFX Application Thread] INFO  marytts.PronunciationModel Power-on self test complete.
+2015-08-16 17:02:07,197 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Starting power-on self test.
+2015-08-16 17:02:07,197 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Power-on self test complete.
+2015-08-16 17:02:07,197 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Module started (ACOUSTPARAMS->HALFPHONE_TARGETFEATURES, locale null).
+2015-08-16 17:02:07,197 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Starting power-on self test.
+2015-08-16 17:02:07,197 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Power-on self test complete.
+2015-08-16 17:02:07,197 [JavaFX Application Thread] INFO  marytts.AcousticModeller Module started (ALLOPHONES->ACOUSTPARAMS, locale null).
+2015-08-16 17:02:07,197 [JavaFX Application Thread] INFO  marytts.AcousticModeller Starting power-on self test.
+2015-08-16 17:02:07,197 [JavaFX Application Thread] INFO  marytts.AcousticModeller Power-on self test complete.
+2015-08-16 17:02:07,197 [JavaFX Application Thread] INFO  marytts.Realised acoustparams extractor Module started (AUDIO->REALISED_ACOUSTPARAMS, locale null).
+2015-08-16 17:02:07,197 [JavaFX Application Thread] INFO  marytts.Realised acoustparams extractor Starting power-on self test.
+2015-08-16 17:02:07,197 [JavaFX Application Thread] INFO  marytts.Realised acoustparams extractor Power-on self test complete.
+2015-08-16 17:02:07,197 [JavaFX Application Thread] INFO  marytts.Realised durations extractor Module started (AUDIO->REALISED_DURATIONS, locale null).
+2015-08-16 17:02:07,197 [JavaFX Application Thread] INFO  marytts.Realised durations extractor Starting power-on self test.
+2015-08-16 17:02:07,197 [JavaFX Application Thread] INFO  marytts.Realised durations extractor Power-on self test complete.
+2015-08-16 17:02:07,198 [JavaFX Application Thread] INFO  marytts.Praat TextGrid generator Module started (AUDIO->PRAAT_TEXTGRID, locale null).
+2015-08-16 17:02:07,198 [JavaFX Application Thread] INFO  marytts.Praat TextGrid generator Starting power-on self test.
+2015-08-16 17:02:07,198 [JavaFX Application Thread] INFO  marytts.Praat TextGrid generator Power-on self test complete.
+2015-08-16 17:02:07,198 [JavaFX Application Thread] INFO  marytts.main Startup complete.
+2015-08-16 17:02:12,415 [Thread-5] INFO  marytts.main Shutting down modules...
+2015-08-16 17:02:12,415 [Thread-5] INFO  marytts.JTokeniser Module shut down.
+2015-08-16 17:02:12,415 [Thread-5] INFO  marytts.Preprocess Module shut down.
+2015-08-16 17:02:12,415 [Thread-5] INFO  marytts.OpenNLPPosTagger Module shut down.
+2015-08-16 17:02:12,417 [Thread-5] INFO  marytts.Prosody Module shut down.
+2015-08-16 17:02:12,417 [Thread-5] INFO  marytts.PronunciationModel Module shut down.
+2015-08-16 17:02:12,417 [Thread-5] INFO  marytts.SimplePhoneme2AP Module shut down.
+2015-08-16 17:02:12,417 [Thread-5] INFO  marytts.JTokeniser Module shut down.
+2015-08-16 17:02:12,417 [Thread-5] INFO  marytts.TokenToWords Module shut down.
+2015-08-16 17:02:12,417 [Thread-5] INFO  marytts.JPhonemiser Module shut down.
+2015-08-16 17:02:12,417 [Thread-5] INFO  marytts.JPhonemiser Module shut down.
+2015-08-16 17:02:12,417 [Thread-5] INFO  marytts.Prosody Module shut down.
+2015-08-16 17:02:12,417 [Thread-5] INFO  marytts.SimplePhoneme2AP Module shut down.
+2015-08-16 17:02:12,417 [Thread-5] INFO  marytts.Utt2XML WordsEn Module shut down.
+2015-08-16 17:02:12,417 [Thread-5] INFO  marytts.XML2Utt TokensEn Module shut down.
+2015-08-16 17:02:12,417 [Thread-5] INFO  marytts.PronunciationModel Module shut down.
+2015-08-16 17:02:12,417 [Thread-5] INFO  marytts.OpenNLPPosTagger Module shut down.
+2015-08-16 17:02:12,417 [Thread-5] INFO  marytts.Synthesis Module shut down.
+2015-08-16 17:02:12,417 [Thread-5] INFO  marytts.TextToMaryXML Module shut down.
+2015-08-16 17:02:12,417 [Thread-5] INFO  marytts.SableParser Module shut down.
+2015-08-16 17:02:12,417 [Thread-5] INFO  marytts.SSMLParser Module shut down.
+2015-08-16 17:02:12,417 [Thread-5] INFO  marytts.APMLParser Module shut down.
+2015-08-16 17:02:12,417 [Thread-5] INFO  marytts.EmotionmlParser Module shut down.
+2015-08-16 17:02:12,417 [Thread-5] INFO  marytts.JTokeniser Module shut down.
+2015-08-16 17:02:12,417 [Thread-5] INFO  marytts.DummyTokens2Words Module shut down.
+2015-08-16 17:02:12,418 [Thread-5] INFO  marytts.Prosody Module shut down.
+2015-08-16 17:02:12,418 [Thread-5] INFO  marytts.PronunciationModel Module shut down.
+2015-08-16 17:02:12,418 [Thread-5] INFO  marytts.TargetFeatureLister Module shut down.
+2015-08-16 17:02:12,418 [Thread-5] INFO  marytts.TargetFeatureLister Module shut down.
+2015-08-16 17:02:12,418 [Thread-5] INFO  marytts.AcousticModeller Module shut down.
+2015-08-16 17:02:12,418 [Thread-5] INFO  marytts.Realised acoustparams extractor Module shut down.
+2015-08-16 17:02:12,418 [Thread-5] INFO  marytts.Realised durations extractor Module shut down.
+2015-08-16 17:02:12,418 [Thread-5] INFO  marytts.HTSEngine Module shut down.
+2015-08-16 17:02:12,418 [Thread-5] INFO  marytts.Praat TextGrid generator Module shut down.
+2015-08-16 17:02:12,420 [Thread-5] INFO  marytts.main Shutdown complete.
+2015-08-16 17:10:56,188 [JavaFX Application Thread] INFO  marytts.main Mary starting up...
+2015-08-16 17:10:56,191 [JavaFX Application Thread] INFO  marytts.main Specification version 5.1.2
+2015-08-16 17:10:56,191 [JavaFX Application Thread] INFO  marytts.main Implementation version unknown
+2015-08-16 17:10:56,191 [JavaFX Application Thread] INFO  marytts.main Running on a Java 1.8.0_51 implementation by Oracle Corporation, on a Windows 8.1 platform (x86, 6.3)
+2015-08-16 17:10:56,338 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.de.JTokeniser'
+2015-08-16 17:10:56,345 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.de.Preprocess'
+2015-08-16 17:10:56,346 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.OpenNLPPosTagger(de,de.pos)'
+2015-08-16 17:10:56,347 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.de.JPhonemiser'
+2015-08-16 17:10:56,348 [JavaFX Application Thread] INFO  marytts.JPhonemiser_de User dictionary '.\user-dictionaries\userdict-de.txt' for locale 'de' does not exist. Ignoring.
+2015-08-16 17:10:56,376 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.de.Prosody'
+2015-08-16 17:10:56,379 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.de.Postlex'
+2015-08-16 17:10:56,380 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.SimplePhoneme2AP(de)'
+2015-08-16 17:10:56,381 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.JTokeniser'
+2015-08-16 17:10:56,381 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.FreeTTSTokenToWords'
+2015-08-16 17:10:56,384 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.JPhonemiser(en_US.)'
+2015-08-16 17:10:56,384 [JavaFX Application Thread] INFO  marytts.JPhonemiser User dictionary '.\user-dictionaries\userdict-en_US.txt' for locale 'en_US' does not exist. Ignoring.
+2015-08-16 17:10:56,424 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.JPhonemiser(en_GB.)'
+2015-08-16 17:10:56,424 [JavaFX Application Thread] INFO  marytts.JPhonemiser User dictionary '.\user-dictionaries\userdict-en_GB.txt' for locale 'en_GB' does not exist. Ignoring.
+2015-08-16 17:10:56,455 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.Prosody'
+2015-08-16 17:10:56,456 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.SimplePhoneme2AP(en_US)'
+2015-08-16 17:10:56,456 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.Utt2XMLWordsEn'
+2015-08-16 17:10:56,458 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.XML2UttTokensEn'
+2015-08-16 17:10:56,462 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.language.en.PronunciationModel'
+2015-08-16 17:10:56,462 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.OpenNLPPosTagger(en,en.pos)'
+2015-08-16 17:10:56,462 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.Synthesis'
+2015-08-16 17:10:56,463 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.TextToMaryXML'
+2015-08-16 17:10:56,464 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.SableParser'
+2015-08-16 17:10:56,464 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.SSMLParser'
+2015-08-16 17:10:56,465 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.APMLParser'
+2015-08-16 17:10:56,465 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.EmotionmlParser'
+2015-08-16 17:10:56,466 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.JTokeniser'
+2015-08-16 17:10:56,466 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.DummyTokens2Words'
+2015-08-16 17:10:56,466 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.ProsodyGeneric'
+2015-08-16 17:10:56,466 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.PronunciationModel'
+2015-08-16 17:10:56,467 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.TargetFeatureLister'
+2015-08-16 17:10:56,467 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.HalfPhoneTargetFeatureLister'
+2015-08-16 17:10:56,468 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.AcousticModeller'
+2015-08-16 17:10:56,469 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.RealisedAcoustparamsExtractor'
+2015-08-16 17:10:56,469 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.RealisedDurationsExtractor'
+2015-08-16 17:10:56,469 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.HTSEngine'
+2015-08-16 17:10:56,476 [JavaFX Application Thread] INFO  marytts.ModuleRegistry Now initiating mary module 'marytts.modules.PraatTextGridGenerator'
+2015-08-16 17:10:56,479 [JavaFX Application Thread] INFO  marytts.JTokeniser Module started (RAWMARYXML->TOKENS, locale de).
+2015-08-16 17:10:56,507 [JavaFX Application Thread] INFO  marytts.JTokeniser Starting power-on self test.
+2015-08-16 17:10:56,517 [JavaFX Application Thread] INFO  marytts.JTokeniser Power-on self test complete.
+2015-08-16 17:10:56,517 [JavaFX Application Thread] INFO  marytts.Preprocess Module started (TOKENS->WORDS, locale de).
+2015-08-16 17:10:56,518 [JavaFX Application Thread] INFO  marytts.Preprocess Starting power-on self test.
+2015-08-16 17:10:56,518 [JavaFX Application Thread] INFO  marytts.Preprocess Expanding say-as elements...
+2015-08-16 17:10:56,519 [JavaFX Application Thread] INFO  marytts.Preprocess Matching and expanding patterns...
+2015-08-16 17:10:56,559 [JavaFX Application Thread] INFO  marytts.Preprocess Done.
+2015-08-16 17:10:56,559 [JavaFX Application Thread] INFO  marytts.Preprocess Power-on self test complete.
+2015-08-16 17:10:56,559 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Module started (WORDS->PARTSOFSPEECH, locale de).
+2015-08-16 17:10:57,083 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Starting power-on self test.
+2015-08-16 17:10:57,083 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Power-on self test complete.
+2015-08-16 17:10:57,083 [JavaFX Application Thread] INFO  marytts.JPhonemiser_de Module started (PARTSOFSPEECH->PHONEMES, locale de).
+2015-08-16 17:10:57,096 [JavaFX Application Thread] INFO  marytts.JPhonemiser_de Starting power-on self test.
+2015-08-16 17:10:57,096 [JavaFX Application Thread] INFO  marytts.JPhonemiser_de Power-on self test complete.
+2015-08-16 17:10:57,103 [JavaFX Application Thread] INFO  marytts.Prosody Module started (PHONEMES->INTONATION, locale de).
+2015-08-16 17:10:57,103 [JavaFX Application Thread] INFO  marytts.Prosody Starting power-on self test.
+2015-08-16 17:10:57,103 [JavaFX Application Thread] INFO  marytts.Prosody Power-on self test complete.
+2015-08-16 17:10:57,103 [JavaFX Application Thread] INFO  marytts.PronunciationModel Module started (INTONATION->ALLOPHONES, locale de).
+2015-08-16 17:10:57,103 [JavaFX Application Thread] INFO  marytts.PronunciationModel Starting power-on self test.
+2015-08-16 17:10:57,103 [JavaFX Application Thread] INFO  marytts.PronunciationModel Power-on self test complete.
+2015-08-16 17:10:57,103 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Module started (SIMPLEPHONEMES->ACOUSTPARAMS, locale de).
+2015-08-16 17:10:57,103 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Starting power-on self test.
+2015-08-16 17:10:57,105 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Power-on self test complete.
+2015-08-16 17:10:57,105 [JavaFX Application Thread] INFO  marytts.JTokeniser Module started (RAWMARYXML->TOKENS, locale en).
+2015-08-16 17:10:57,115 [JavaFX Application Thread] INFO  marytts.JTokeniser Starting power-on self test.
+2015-08-16 17:10:57,115 [JavaFX Application Thread] INFO  marytts.JTokeniser Power-on self test complete.
+2015-08-16 17:10:57,115 [JavaFX Application Thread] INFO  marytts.TokenToWords Module started (FREETTS_TOKENS->FREETTS_WORDS, locale en).
+2015-08-16 17:10:57,116 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices Loading US English FreeTTS voices...
+2015-08-16 17:10:57,121 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices done.
+2015-08-16 17:10:57,131 [JavaFX Application Thread] INFO  marytts.TokenToWords Starting power-on self test.
+2015-08-16 17:10:57,131 [JavaFX Application Thread] INFO  marytts.TokenToWords Power-on self test complete.
+2015-08-16 17:10:57,131 [JavaFX Application Thread] INFO  marytts.JPhonemiser Module started (PARTSOFSPEECH->PHONEMES, locale en_US).
+2015-08-16 17:10:57,131 [JavaFX Application Thread] INFO  marytts.JPhonemiser Starting power-on self test.
+2015-08-16 17:10:57,131 [JavaFX Application Thread] INFO  marytts.JPhonemiser Power-on self test complete.
+2015-08-16 17:10:57,131 [JavaFX Application Thread] INFO  marytts.JPhonemiser Module started (PARTSOFSPEECH->PHONEMES, locale en_GB).
+2015-08-16 17:10:57,131 [JavaFX Application Thread] INFO  marytts.JPhonemiser Starting power-on self test.
+2015-08-16 17:10:57,132 [JavaFX Application Thread] INFO  marytts.JPhonemiser Power-on self test complete.
+2015-08-16 17:10:57,135 [JavaFX Application Thread] INFO  marytts.Prosody Module started (PHONEMES->INTONATION, locale en).
+2015-08-16 17:10:57,135 [JavaFX Application Thread] INFO  marytts.Prosody Starting power-on self test.
+2015-08-16 17:10:57,135 [JavaFX Application Thread] INFO  marytts.Prosody Power-on self test complete.
+2015-08-16 17:10:57,135 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Module started (SIMPLEPHONEMES->ACOUSTPARAMS, locale en_US).
+2015-08-16 17:10:57,135 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Starting power-on self test.
+2015-08-16 17:10:57,136 [JavaFX Application Thread] INFO  marytts.SimplePhoneme2AP Power-on self test complete.
+2015-08-16 17:10:57,137 [JavaFX Application Thread] INFO  marytts.Utt2XML WordsEn Module started (FREETTS_WORDS->WORDS, locale en).
+2015-08-16 17:10:57,137 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices Loading US English FreeTTS voices...
+2015-08-16 17:10:57,137 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices done.
+2015-08-16 17:10:57,137 [JavaFX Application Thread] INFO  marytts.Utt2XML WordsEn Starting power-on self test.
+2015-08-16 17:10:57,137 [JavaFX Application Thread] INFO  marytts.Utt2XML WordsEn Power-on self test complete.
+2015-08-16 17:10:57,137 [JavaFX Application Thread] INFO  marytts.XML2Utt TokensEn Module started (TOKENS->FREETTS_TOKENS, locale en).
+2015-08-16 17:10:57,137 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices Loading US English FreeTTS voices...
+2015-08-16 17:10:57,137 [JavaFX Application Thread] INFO  marytts.FreeTTSVoices done.
+2015-08-16 17:10:57,137 [JavaFX Application Thread] INFO  marytts.XML2Utt TokensEn Starting power-on self test.
+2015-08-16 17:10:57,137 [JavaFX Application Thread] INFO  marytts.XML2Utt TokensEn Power-on self test complete.
+2015-08-16 17:10:57,137 [JavaFX Application Thread] INFO  marytts.PronunciationModel Module started (INTONATION->ALLOPHONES, locale en).
+2015-08-16 17:10:57,137 [JavaFX Application Thread] INFO  marytts.PronunciationModel Starting power-on self test.
+2015-08-16 17:10:57,137 [JavaFX Application Thread] INFO  marytts.PronunciationModel Power-on self test complete.
+2015-08-16 17:10:57,137 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Module started (WORDS->PARTSOFSPEECH, locale en).
+2015-08-16 17:10:57,899 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Starting power-on self test.
+2015-08-16 17:10:57,899 [JavaFX Application Thread] INFO  marytts.OpenNLPPosTagger Power-on self test complete.
+2015-08-16 17:10:57,901 [JavaFX Application Thread] INFO  marytts.UnitSelectionSynthesizer started.
+2015-08-16 17:10:57,902 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Module started (ACOUSTPARAMS->TARGETFEATURES, locale null).
+2015-08-16 17:10:57,902 [JavaFX Application Thread] INFO  marytts.HTSEngine Module started (TARGETFEATURES->AUDIO, locale null).
+2015-08-16 17:10:57,913 [JavaFX Application Thread] INFO  marytts.HMMData Loading Tree Set in CARTs:
+2015-08-16 17:10:57,980 [JavaFX Application Thread] INFO  marytts.HMMData Loading GV Model Set:
+2015-08-16 17:10:58,102 [JavaFX Application Thread] INFO  marytts.Voice Registering voice `bits1-hsmm': female, locale de
+2015-08-16 17:10:58,108 [JavaFX Application Thread] INFO  marytts.Voice New default voice for locale de: bits1-hsmm (desire 0)
+2015-08-16 17:10:58,111 [JavaFX Application Thread] INFO  marytts.HMMData Loading Tree Set in CARTs:
+2015-08-16 17:10:58,178 [JavaFX Application Thread] INFO  marytts.HMMData Loading GV Model Set:
+2015-08-16 17:10:58,295 [JavaFX Application Thread] INFO  marytts.Voice Registering voice `bits3-hsmm': male, locale de
+2015-08-16 17:10:58,299 [JavaFX Application Thread] INFO  marytts.HMMData Loading Tree Set in CARTs:
+2015-08-16 17:10:58,322 [JavaFX Application Thread] INFO  marytts.HMMData Loading GV Model Set:
+2015-08-16 17:10:58,409 [JavaFX Application Thread] INFO  marytts.Voice Registering voice `cmu-bdl-hsmm': male, locale en_US
+2015-08-16 17:10:58,412 [JavaFX Application Thread] INFO  marytts.Voice New default voice for locale en_US: cmu-bdl-hsmm (desire 0)
+2015-08-16 17:10:58,414 [JavaFX Application Thread] INFO  marytts.HMMData Loading Tree Set in CARTs:
+2015-08-16 17:10:58,441 [JavaFX Application Thread] INFO  marytts.HMMData Loading GV Model Set:
+2015-08-16 17:10:58,517 [JavaFX Application Thread] INFO  marytts.Voice Registering voice `cmu-slt-hsmm': female, locale en_US
+2015-08-16 17:10:58,517 [JavaFX Application Thread] INFO  marytts.HMMSynthesizer started.
+2015-08-16 17:10:58,517 [JavaFX Application Thread] INFO  marytts.Synthesis Module started (ACOUSTPARAMS->AUDIO, locale null).
+2015-08-16 17:10:58,517 [JavaFX Application Thread] INFO  marytts.HMMSynthesizer Starting power-on self test.
+2015-08-16 17:10:58,525 [JavaFX Application Thread] INFO  marytts.HTSEngine Using prosody from acoustparams.
+2015-08-16 17:10:58,527 [JavaFX Application Thread] INFO  marytts.HTSEngine Number of models in sentence numModel=7  Total number of states numState=35
+2015-08-16 17:10:58,527 [JavaFX Application Thread] INFO  marytts.HTSEngine Total number of frames=147  Number of voiced frames=89
+2015-08-16 17:10:58,530 [JavaFX Application Thread] INFO  marytts.ParameterGeneration Parameter generation for MGC: 
+2015-08-16 17:10:58,531 [JavaFX Application Thread] INFO  marytts.PStream Context-dependent global variance optimization: gvLength = 107
+2015-08-16 17:10:58,533 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (0)  number of iterations=23
+2015-08-16 17:10:58,534 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (1)  number of iterations=54
+2015-08-16 17:10:58,535 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (2)  number of iterations=38
+2015-08-16 17:10:58,536 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (3)  number of iterations=20
+2015-08-16 17:10:58,536 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (4)  number of iterations=13
+2015-08-16 17:10:58,536 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (5)  number of iterations=21
+2015-08-16 17:10:58,536 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (6)  number of iterations=7
+2015-08-16 17:10:58,536 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (7)  number of iterations=4
+2015-08-16 17:10:58,537 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (8)  number of iterations=11
+2015-08-16 17:10:58,537 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (9)  number of iterations=19
+2015-08-16 17:10:58,537 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (10)  number of iterations=16
+2015-08-16 17:10:58,537 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (11)  number of iterations=9
+2015-08-16 17:10:58,537 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (12)  number of iterations=2
+2015-08-16 17:10:58,537 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (13)  number of iterations=13
+2015-08-16 17:10:58,538 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (14)  number of iterations=12
+2015-08-16 17:10:58,538 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (15)  number of iterations=14
+2015-08-16 17:10:58,538 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (16)  number of iterations=15
+2015-08-16 17:10:58,538 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (17)  number of iterations=14
+2015-08-16 17:10:58,538 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (18)  number of iterations=19
+2015-08-16 17:10:58,538 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (19)  number of iterations=12
+2015-08-16 17:10:58,539 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (20)  number of iterations=17
+2015-08-16 17:10:58,539 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (21)  number of iterations=23
+2015-08-16 17:10:58,539 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (22)  number of iterations=12
+2015-08-16 17:10:58,539 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (23)  number of iterations=18
+2015-08-16 17:10:58,539 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (24)  number of iterations=12
+2015-08-16 17:10:58,539 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (25)  number of iterations=11
+2015-08-16 17:10:58,540 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (26)  number of iterations=13
+2015-08-16 17:10:58,540 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (27)  number of iterations=9
+2015-08-16 17:10:58,540 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (28)  number of iterations=13
+2015-08-16 17:10:58,540 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (29)  number of iterations=8
+2015-08-16 17:10:58,540 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (30)  number of iterations=11
+2015-08-16 17:10:58,540 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (31)  number of iterations=12
+2015-08-16 17:10:58,540 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (32)  number of iterations=7
+2015-08-16 17:10:58,540 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (33)  number of iterations=8
+2015-08-16 17:10:58,540 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (34)  number of iterations=12
+2015-08-16 17:10:58,541 [JavaFX Application Thread] INFO  marytts.ParameterGeneration Using f0 from maryXML acoustparams
+2015-08-16 17:10:58,541 [JavaFX Application Thread] INFO  marytts.PStream Context-dependent global variance optimization: gvLength = 107
+2015-08-16 17:10:58,541 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (0)  number of iterations=16
+2015-08-16 17:10:58,541 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (1)  number of iterations=2
+2015-08-16 17:10:58,541 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (2)  number of iterations=2
+2015-08-16 17:10:58,542 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (3)  number of iterations=8
+2015-08-16 17:10:58,542 [JavaFX Application Thread] INFO  marytts.PStream Gradient GV optimization for feature: (4)  number of iterations=26
+2015-08-16 17:10:58,548 [JavaFX Application Thread] INFO  marytts.HMMSynthesizer Power-on self test complete.
+2015-08-16 17:10:58,549 [JavaFX Application Thread] INFO  marytts.TextToMaryXML Module started (TEXT->RAWMARYXML, locale null).
+2015-08-16 17:10:58,549 [JavaFX Application Thread] INFO  marytts.TextToMaryXML Starting power-on self test.
+2015-08-16 17:10:58,550 [JavaFX Application Thread] WARN  marytts.TextToMaryXML Locale is null, overriding with de_DE
+2015-08-16 17:10:58,550 [JavaFX Application Thread] WARN  marytts.TextToMaryXML Locale is null, overriding with de_DE
+2015-08-16 17:10:58,550 [JavaFX Application Thread] INFO  marytts.TextToMaryXML Power-on self test complete.
+2015-08-16 17:10:58,689 [JavaFX Application Thread] INFO  marytts.SableParser Module started (SABLE->RAWMARYXML, locale null).
+2015-08-16 17:10:58,689 [JavaFX Application Thread] INFO  marytts.SableParser Starting power-on self test.
+2015-08-16 17:10:58,689 [JavaFX Application Thread] INFO  marytts.SableParser Power-on self test complete.
+2015-08-16 17:10:58,731 [JavaFX Application Thread] INFO  marytts.SSMLParser Module started (SSML->RAWMARYXML, locale null).
+2015-08-16 17:10:58,731 [JavaFX Application Thread] INFO  marytts.SSMLParser Starting power-on self test.
+2015-08-16 17:10:58,732 [JavaFX Application Thread] INFO  marytts.SSMLParser Power-on self test complete.
+2015-08-16 17:10:58,761 [JavaFX Application Thread] INFO  marytts.APMLParser Module started (APML->RAWMARYXML, locale null).
+2015-08-16 17:10:58,761 [JavaFX Application Thread] INFO  marytts.APMLParser Starting power-on self test.
+2015-08-16 17:10:58,761 [JavaFX Application Thread] INFO  marytts.APMLParser Power-on self test complete.
+2015-08-16 17:10:58,781 [JavaFX Application Thread] INFO  marytts.EmotionmlParser Module started (EMOTIONML->RAWMARYXML, locale null).
+2015-08-16 17:10:58,781 [JavaFX Application Thread] INFO  marytts.EmotionmlParser Starting power-on self test.
+2015-08-16 17:10:58,781 [JavaFX Application Thread] INFO  marytts.EmotionmlParser Power-on self test complete.
+2015-08-16 17:10:58,781 [JavaFX Application Thread] INFO  marytts.JTokeniser Module started (RAWMARYXML->TOKENS, locale null).
+2015-08-16 17:10:58,789 [JavaFX Application Thread] INFO  marytts.JTokeniser Starting power-on self test.
+2015-08-16 17:10:58,789 [JavaFX Application Thread] INFO  marytts.JTokeniser Power-on self test complete.
+2015-08-16 17:10:58,789 [JavaFX Application Thread] INFO  marytts.DummyTokens2Words Module started (TOKENS->WORDS, locale null).
+2015-08-16 17:10:58,789 [JavaFX Application Thread] INFO  marytts.DummyTokens2Words Starting power-on self test.
+2015-08-16 17:10:58,789 [JavaFX Application Thread] INFO  marytts.DummyTokens2Words Power-on self test complete.
+2015-08-16 17:10:58,791 [JavaFX Application Thread] INFO  marytts.Prosody Module started (PHONEMES->INTONATION, locale null).
+2015-08-16 17:10:58,791 [JavaFX Application Thread] INFO  marytts.Prosody Starting power-on self test.
+2015-08-16 17:10:58,791 [JavaFX Application Thread] INFO  marytts.Prosody Power-on self test complete.
+2015-08-16 17:10:58,791 [JavaFX Application Thread] INFO  marytts.PronunciationModel Module started (INTONATION->ALLOPHONES, locale null).
+2015-08-16 17:10:58,791 [JavaFX Application Thread] INFO  marytts.PronunciationModel Starting power-on self test.
+2015-08-16 17:10:58,791 [JavaFX Application Thread] INFO  marytts.PronunciationModel Power-on self test complete.
+2015-08-16 17:10:58,791 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Starting power-on self test.
+2015-08-16 17:10:58,791 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Power-on self test complete.
+2015-08-16 17:10:58,791 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Module started (ACOUSTPARAMS->HALFPHONE_TARGETFEATURES, locale null).
+2015-08-16 17:10:58,791 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Starting power-on self test.
+2015-08-16 17:10:58,791 [JavaFX Application Thread] INFO  marytts.TargetFeatureLister Power-on self test complete.
+2015-08-16 17:10:58,791 [JavaFX Application Thread] INFO  marytts.AcousticModeller Module started (ALLOPHONES->ACOUSTPARAMS, locale null).
+2015-08-16 17:10:58,791 [JavaFX Application Thread] INFO  marytts.AcousticModeller Starting power-on self test.
+2015-08-16 17:10:58,792 [JavaFX Application Thread] INFO  marytts.AcousticModeller Power-on self test complete.
+2015-08-16 17:10:58,792 [JavaFX Application Thread] INFO  marytts.Realised acoustparams extractor Module started (AUDIO->REALISED_ACOUSTPARAMS, locale null).
+2015-08-16 17:10:58,792 [JavaFX Application Thread] INFO  marytts.Realised acoustparams extractor Starting power-on self test.
+2015-08-16 17:10:58,792 [JavaFX Application Thread] INFO  marytts.Realised acoustparams extractor Power-on self test complete.
+2015-08-16 17:10:58,792 [JavaFX Application Thread] INFO  marytts.Realised durations extractor Module started (AUDIO->REALISED_DURATIONS, locale null).
+2015-08-16 17:10:58,792 [JavaFX Application Thread] INFO  marytts.Realised durations extractor Starting power-on self test.
+2015-08-16 17:10:58,792 [JavaFX Application Thread] INFO  marytts.Realised durations extractor Power-on self test complete.
+2015-08-16 17:10:58,792 [JavaFX Application Thread] INFO  marytts.Praat TextGrid generator Module started (AUDIO->PRAAT_TEXTGRID, locale null).
+2015-08-16 17:10:58,792 [JavaFX Application Thread] INFO  marytts.Praat TextGrid generator Starting power-on self test.
+2015-08-16 17:10:58,792 [JavaFX Application Thread] INFO  marytts.Praat TextGrid generator Power-on self test complete.
+2015-08-16 17:10:58,793 [JavaFX Application Thread] INFO  marytts.main Startup complete.
+2015-08-16 17:11:10,810 [Thread-5] INFO  marytts.main Shutting down modules...
+2015-08-16 17:11:10,810 [Thread-5] INFO  marytts.JTokeniser Module shut down.
+2015-08-16 17:11:10,810 [Thread-5] INFO  marytts.Preprocess Module shut down.
+2015-08-16 17:11:10,810 [Thread-5] INFO  marytts.OpenNLPPosTagger Module shut down.
+2015-08-16 17:11:10,823 [Thread-5] INFO  marytts.Prosody Module shut down.
+2015-08-16 17:11:10,823 [Thread-5] INFO  marytts.PronunciationModel Module shut down.
+2015-08-16 17:11:10,823 [Thread-5] INFO  marytts.SimplePhoneme2AP Module shut down.
+2015-08-16 17:11:10,823 [Thread-5] INFO  marytts.JTokeniser Module shut down.
+2015-08-16 17:11:10,823 [Thread-5] INFO  marytts.TokenToWords Module shut down.
+2015-08-16 17:11:10,823 [Thread-5] INFO  marytts.JPhonemiser Module shut down.
+2015-08-16 17:11:10,823 [Thread-5] INFO  marytts.JPhonemiser Module shut down.
+2015-08-16 17:11:10,823 [Thread-5] INFO  marytts.Prosody Module shut down.
+2015-08-16 17:11:10,823 [Thread-5] INFO  marytts.SimplePhoneme2AP Module shut down.
+2015-08-16 17:11:10,823 [Thread-5] INFO  marytts.Utt2XML WordsEn Module shut down.
+2015-08-16 17:11:10,823 [Thread-5] INFO  marytts.XML2Utt TokensEn Module shut down.
+2015-08-16 17:11:10,823 [Thread-5] INFO  marytts.PronunciationModel Module shut down.
+2015-08-16 17:11:10,823 [Thread-5] INFO  marytts.OpenNLPPosTagger Module shut down.
+2015-08-16 17:11:10,823 [Thread-5] INFO  marytts.Synthesis Module shut down.
+2015-08-16 17:11:10,823 [Thread-5] INFO  marytts.TextToMaryXML Module shut down.
+2015-08-16 17:11:10,824 [Thread-5] INFO  marytts.SableParser Module shut down.
+2015-08-16 17:11:10,824 [Thread-5] INFO  marytts.SSMLParser Module shut down.
+2015-08-16 17:11:10,824 [Thread-5] INFO  marytts.APMLParser Module shut down.
+2015-08-16 17:11:10,824 [Thread-5] INFO  marytts.EmotionmlParser Module shut down.
+2015-08-16 17:11:10,824 [Thread-5] INFO  marytts.JTokeniser Module shut down.
+2015-08-16 17:11:10,824 [Thread-5] INFO  marytts.DummyTokens2Words Module shut down.
+2015-08-16 17:11:10,824 [Thread-5] INFO  marytts.Prosody Module shut down.
+2015-08-16 17:11:10,824 [Thread-5] INFO  marytts.PronunciationModel Module shut down.
+2015-08-16 17:11:10,824 [Thread-5] INFO  marytts.TargetFeatureLister Module shut down.
+2015-08-16 17:11:10,824 [Thread-5] INFO  marytts.TargetFeatureLister Module shut down.
+2015-08-16 17:11:10,824 [Thread-5] INFO  marytts.AcousticModeller Module shut down.
+2015-08-16 17:11:10,824 [Thread-5] INFO  marytts.Realised acoustparams extractor Module shut down.
+2015-08-16 17:11:10,824 [Thread-5] INFO  marytts.Realised durations extractor Module shut down.
+2015-08-16 17:11:10,824 [Thread-5] INFO  marytts.HTSEngine Module shut down.
+2015-08-16 17:11:10,824 [Thread-5] INFO  marytts.Praat TextGrid generator Module shut down.
+2015-08-16 17:11:10,825 [Thread-5] INFO  marytts.main Shutdown complete.
