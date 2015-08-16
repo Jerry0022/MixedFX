@@ -10,6 +10,9 @@ import org.apache.commons.io.FileUtils;
 
 import de.mixedfx.file.DataHandler;
 import de.mixedfx.file.FileObject;
+import de.mixedfx.gui.EasyModifier;
+import de.mixedfx.gui.EasyModifierConfig;
+import de.mixedfx.gui.EasyModifierHandler;
 import de.mixedfx.gui.RegionManipulator;
 import de.mixedfx.java.StringArrayList;
 import de.mixedfx.logging.Log;
@@ -17,6 +20,7 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
 
@@ -32,6 +36,8 @@ public class LayoutManager
 	public StringProperty currentLayout;
 
 	public Node root;
+
+	public String layoutableClass;
 
 	/**
 	 * First found Layout will be used!
@@ -109,7 +115,8 @@ public class LayoutManager
 	}
 
 	/**
-	 * Applies the given layout. This includes that if layout is not found layout will be created!
+	 * Applies the given layout. This includes that if layout is not found layout will be created! If this is used in combination with {@link Layouter} a new created layout will be a clone on the hdd
+	 * of the current layout if a layout was previously applied!
 	 *
 	 * @param layout
 	 *            The name of the layout. If null a layout with the name Default is created!
@@ -127,11 +134,26 @@ public class LayoutManager
 		// If there is no layout with the given name create a new one!
 		FileObject layoutFullPath = FileObject.create().setPath(this.layoutDir.getFullPath()).setFullName(layout);
 		if (!layoutFullPath.toFile().exists())
-
 		{
 			try
 			{
 				DataHandler.createFolder(layoutFullPath);
+				if (this.layoutableClass != null && root instanceof Parent)
+					EasyModifier.runOnAllSubNodes((Parent) root, this.layoutableClass, true, new EasyModifierHandler()
+					{
+						@Override
+						public void modify(Parent parent, boolean doIt)
+						{
+							if (parent instanceof Region)
+							{
+								Region region = (Region) parent;
+								Image image = region.getBackground().getImages().get(0).getImage();
+								if (image != null)
+									saveElement(parent.getId(), image);
+							}
+						}
+					});
+				return;
 			} catch (final IOException e)
 			{
 				Log.assets.error("Could not create layout! " + layoutFullPath);
@@ -200,5 +222,10 @@ public class LayoutManager
 		if (id.matches("^[A-Z0-9]+$"))
 			throw new IllegalArgumentException("ID may contain only letters and numbers!");
 		MasterHandler.write(FileObject.create().setPath(DataHandler.fuse(this.layoutDir.getFullPath(), this.currentLayout.get())).setName(id), image);
+	}
+
+	protected void register(EasyModifierConfig config)
+	{
+		this.layoutableClass = config.staticClass;
 	}
 }

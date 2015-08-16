@@ -49,7 +49,7 @@ public class Layouter
 	 * @param paneToShowSaving
 	 *            On this pane load() is called if a new layout background is saved! May be null, then the layout is saved in the background asynchronously without visuals.
 	 * @param root
-	 *            Itself and all of its children are scanned if they are layoutables! Must not be null!
+	 *            Itself and all of its children are scanned if they are layoutables! Overwrites the settings of LayoutManager! Must not be null!
 	 * @param layoutManager
 	 *            The LayoutManager to use. Must not be null!
 	 * @param config
@@ -60,8 +60,8 @@ public class Layouter
 		if (root == null || layoutManager == null)
 			throw new NullPointerException();
 
-		if (layoutManager.root == null)
-			layoutManager.root = root;
+		layoutManager.root = root;
+		layoutManager.register(config);
 
 		if (config == null)
 			config = new EasyModifierConfig();
