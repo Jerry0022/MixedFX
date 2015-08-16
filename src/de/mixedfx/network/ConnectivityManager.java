@@ -181,7 +181,6 @@ public class ConnectivityManager
 	public static void stop()
 	{
 		NetworkManager.stop();
-		ConnectivityManager.myUniqueUser = null;
 		state.set(State.OFFLINE);
 	}
 
