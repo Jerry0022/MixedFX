@@ -64,8 +64,35 @@ public class SuperPane extends StackPane
 	public static double opacity = 0.35;
 
 	/*
-	 * Find my first SuperPane father :)
+	 * Find my SuperPane :)
 	 */
+
+	/**
+	 * @param root
+	 *            The top root node.
+	 * @return Returns null if there was no SuperPane found in the Scene Graph. Otherwise it returns the top nearest first SuperPane.
+	 */
+	public final static SuperPane getNearest(Parent root)
+	{
+		Parent child = root;
+		if (child instanceof SuperPane)
+			return (SuperPane) child;
+		// Check direct children
+		for (Node node : child.getChildrenUnmodifiable())
+			if (node instanceof SuperPane)
+				return (SuperPane) node;
+		for (Node node : child.getChildrenUnmodifiable())
+		{
+			if (node instanceof Parent)
+			{
+				// Check indirect children
+				child = getNearest((Parent) node);
+				if (child instanceof SuperPane)
+					return (SuperPane) child;
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * Retrieves and returns the first found parent SuperPane (which doesn't have to be the direct parent node).
@@ -141,8 +168,7 @@ public class SuperPane extends StackPane
 		});
 		this.taskDoneHandler = event ->
 		{
-			if (event.getEventType().equals(WorkerStateEvent.WORKER_STATE_FAILED) || event.getEventType().equals(WorkerStateEvent.WORKER_STATE_SUCCEEDED)
-					|| event.getEventType().equals(WorkerStateEvent.WORKER_STATE_CANCELLED))
+			if (event.getEventType().equals(WorkerStateEvent.WORKER_STATE_FAILED) || event.getEventType().equals(WorkerStateEvent.WORKER_STATE_SUCCEEDED) || event.getEventType().equals(WorkerStateEvent.WORKER_STATE_CANCELLED))
 			{
 				boolean allDone = true;
 				for (final Task<?> t : SuperPane.this.taskList)
@@ -275,6 +301,8 @@ public class SuperPane extends StackPane
 			this.getChildren().add(1, content);
 		else
 			this.getChildren().add(0, content);
+
+		this.content = content;
 	}
 
 	public void setLoadScreen(final Node loadScreen)
