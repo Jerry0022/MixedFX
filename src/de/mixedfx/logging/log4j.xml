@@ -3,7 +3,7 @@
 <log4j:configuration debug="true"
 	xmlns:log4j='http://logging.apache.org/log4j/2.x/'>
 	<properties>
-		<property name="logFolder">logs</property>
+		<property name="logFolder">log</property>
 		<property name="logFileName">log.txt</property>
 	</properties>
 	<Appenders>
