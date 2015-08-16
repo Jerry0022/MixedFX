@@ -7,6 +7,8 @@ import de.mixedfx.assets.Layouter;
 import de.mixedfx.file.FileObject;
 import de.mixedfx.gui.EasyModifierConfig;
 import de.mixedfx.gui.panes.SuperPane;
+import javafx.animation.Animation.Status;
+import javafx.animation.ScaleTransition;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -19,6 +21,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class LayoutTester extends Application
 {
@@ -51,16 +54,37 @@ public class LayoutTester extends Application
 		Button yesButton = new Button("YEAH!");
 		yesButton.getStyleClass().add("Modifiable");
 		yesButton.setId("HammerButton");
+		yesButton.setMinSize(0, 0);
+		ScaleTransition animation = new ScaleTransition(Duration.seconds(1));
+		animation.setFromX(1);
+		animation.setFromY(1);
+		animation.setToX(0.5);
+		animation.setToY(0.5);
+		animation.setCycleCount(100);
+		animation.setAutoReverse(true);
+		animation.setNode(yesButton);
 		yesButton.setOnAction(new EventHandler<ActionEvent>()
 		{
 			@Override
 			public void handle(ActionEvent event)
 			{
-				System.out.println("yesButton was clicked!");
+				if (animation.getStatus().equals(Status.RUNNING))
+					animation.stop();
+				else
+					animation.play();
+				System.out.println(animation.getStatus());
 			}
 		});
+		// yesButton.setOnAction(new EventHandler<ActionEvent>()
+		// {
+		// @Override
+		// public void handle(ActionEvent event)
+		// {
+		// System.out.println("yesButton was clicked!");
+		// }
+		// });
 		SuperPane superPane = new SuperPane(null, new LayoutLoadScreen());
-		subBox.getChildren().addAll(subColouredPane, new Label("COOL"), yesButton, new VoiceEnabler(), superPane);
+		subBox.getChildren().addAll(subColouredPane, new Label("COOL"), yesButton, new VoiceButton(), superPane);
 
 		box.getChildren().addAll(colouredPane, subBox);
 		StackPane root = new StackPane();

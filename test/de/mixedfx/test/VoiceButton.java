@@ -19,11 +19,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
-public class VoiceEnabler extends Pane
+public class VoiceButton extends Pane
 {
 	private BooleanProperty voiceSwitcher = new SimpleBooleanProperty(false);
 
-	public VoiceEnabler()
+	public VoiceButton()
 	{
 		RegionManipulator.bindBackground(this, ImageProducer.getMonoColored(Color.BLUE));
 		this.setPrefSize(50, 50);
@@ -48,7 +48,7 @@ public class VoiceEnabler extends Pane
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue)
 			{
 				// Change style of this!
-				RegionManipulator.bindBackground(VoiceEnabler.this, newValue.booleanValue() ? ImageProducer.getMonoColored(Color.GREEN) : ImageProducer.getMonoColored(Color.BLUE));
+				RegionManipulator.bindBackground(VoiceButton.this, newValue.booleanValue() ? ImageProducer.getMonoColored(Color.GREEN) : ImageProducer.getMonoColored(Color.BLUE));
 			}
 		});
 
