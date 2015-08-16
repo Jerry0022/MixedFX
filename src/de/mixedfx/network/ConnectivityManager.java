@@ -37,7 +37,7 @@ public class ConnectivityManager
 
 	static
 	{
-		state = new SimpleObjectProperty<>();
+		state = new SimpleObjectProperty<>(State.OFFLINE);
 		otherUsers = new SimpleListProperty<User>(FXCollections.observableArrayList());
 		tcp_user_map = new Hashtable<>(16);
 		NetworkManager.t.tcpClients.addListener(new ListChangeListener<TCPClient>()
@@ -173,10 +173,17 @@ public class ConnectivityManager
 		state.set(State.OFFLINE);
 	}
 
+	public static void restart(User user)
+	{
+		myUniqueUser = user;
+		restart();
+	}
+
 	public static void restart()
 	{
-		User myUser = myUniqueUser;
+		if (myUniqueUser == null)
+			throw new IllegalStateException("Please first set a user!");
 		stop();
-		start(myUser);
+		start(myUniqueUser);
 	}
 }
