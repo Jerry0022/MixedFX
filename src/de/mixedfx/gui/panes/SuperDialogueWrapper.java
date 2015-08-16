@@ -1,7 +1,7 @@
 package de.mixedfx.gui.panes;
 
 import javafx.scene.Node;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Pane;
 
 /**
  * Just to identify a dialogue.
@@ -9,7 +9,7 @@ import javafx.scene.layout.StackPane;
  * @author Jerry
  *
  */
-public class SuperDialogueWrapper extends StackPane implements Dynamic
+public class SuperDialogueWrapper extends Pane implements Dynamic
 {
 	private Node	child;
 	private boolean	resizable;

@@ -1,11 +1,14 @@
 package de.mixedfx.gui.panes;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
+import de.mixedfx.gui.RegionManipulator;
+import de.mixedfx.inspector.Inspector;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -13,8 +16,11 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.effect.BoxBlur;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 /**
  * <p>
@@ -25,24 +31,52 @@ import javafx.scene.layout.StackPane;
  */
 public class SuperPane extends StackPane
 {
-	/**
-	 * Says how many tasks can be run in parallel. Other tasks will wait.
+	private enum StyleClasses
+	{
+		BACKGROUND, CONTENT, OVERLAY;
+
+		/**
+		 * @return A unique String representation of this enum!
+		 */
+		public String get()
+		{
+			return SuperPane.class.getName().replace(".", "-").concat(this.toString());
+		}
+	}
+
+	/*
+	 * Configuration
 	 */
-	private final static int taskMaxParallel = 3;
+
 	/**
-	 * Indicates after how many milliseconds a running task shall request to open the LoadScreen
+	 * Says how many tasks can be run in parallel. Other tasks will wait. MUST be set before {@link SuperPane} is initialized!
 	 */
-	private final static int taskLoadScreenDelayMS = 400;
+	public static int taskMaxParallel = 3;
+
+	/**
+	 * Indicates after how many milliseconds a running task shall request to open the LoadScreen. MUST be set before {@link SuperPane} is initialized!
+	 */
+	public static int taskLoadScreenDelayMS = 400;
+
+	/**
+	 * Sets the transparency if a dynamic was opened! Value must not be less than 0 or greater than 1. MUST be set before {@link SuperPane} is initialized!
+	 */
+	public static double opacity = 0.35;
+
+	/*
+	 * Find my first SuperPane father :)
+	 */
 
 	/**
 	 * Retrieves and returns the first found parent SuperPane (which doesn't have to be the direct parent node).
 	 *
-	 * @param content
+	 * @param child
+	 *            Any node which is in the scene graph.
 	 * @return Returns the SuperPane requested or returns null if there is no SuperPane as (direct or indirect) parent
 	 */
-	public final static SuperPane getMySP(final Node content)
+	public final static SuperPane getMySP(final Node child)
 	{
-		Parent parent = content.getParent();
+		Parent parent = child.getParent();
 		while (parent != null && !(parent instanceof SuperPane))
 		{
 			parent = parent.getParent();
@@ -50,12 +84,32 @@ public class SuperPane extends StackPane
 		return (SuperPane) parent;
 	}
 
+	/**
+	 * Retrieves and returns the last/uppest found parent SuperPane (which doesn't have to be the direct parent node).
+	 *
+	 * @param child
+	 *            Any node which is in the scene graph.
+	 * @return Returns the SuperPane requested or returns null if there is no SuperPane as (direct or indirect) parent.
+	 */
+	public final static SuperPane getMyUpperMostSP(final Node child)
+	{
+		SuperPane lastSuperPane = null;
+		Parent parent = child.getParent();
+		while (parent != null)
+		{
+			if (parent instanceof SuperPane)
+				lastSuperPane = (SuperPane) parent;
+			parent = parent.getParent();
+		}
+		return lastSuperPane;
+	}
+
 	/*
-	 * OBJECT INSTANCE DESCRIPTION:
+	 * OBJECT INSTANCE
 	 */
 
-	private Node content;
-	private Node loadScreen;
+	private Node	content;
+	private Node	loadScreen;
 
 	/**
 	 * Indicates whether the Load Screen is open, not if a task is running (because if many short tasks are running there is no LoadScreen)
@@ -65,9 +119,9 @@ public class SuperPane extends StackPane
 	/**
 	 * Handles all jobs which are loaded via {@link #load(Task)}! Executes three workers at the same time. Others have to wait.
 	 */
-	private ExecutorService taskCollector;
-	private ArrayList<Task<?>> taskList;
-	private EventHandler<WorkerStateEvent> taskDoneHandler;
+	private ExecutorService					taskCollector;
+	private ArrayList<Task<?>>				taskList;
+	private EventHandler<WorkerStateEvent>	taskDoneHandler;
 
 	/**
 	 * Initializes the StackPane resizing mechanism and all task related stuff.
@@ -111,6 +165,42 @@ public class SuperPane extends StackPane
 	}
 
 	/**
+	 * <p>
+	 * Creates an instance of a {@link SuperPane}. In fact is not much more than an (empty) StackPane.
+	 * </p>
+	 * 
+	 * <p>
+	 * You can get the nearest {@link SuperPane} from {@link SuperPane#getMySP(Node)}!
+	 * </p>
+	 *
+	 * Architecture (may differ from current {@link SuperPane#getChildren()} order, since not all must be inside):
+	 * <ol>
+	 * <li>Layer 0: Background</li>
+	 * <li>Layer 1: Content</li>
+	 * <li>Layer 2: LoadScreen <br>
+	 * <li>Layer n: {@link Node} with or without {@link Dynamic} being opened with {@link SuperPane#openDynamic(Node)} or {@link SuperPane#openDialogue(Node)}</li>
+	 * </ol>
+	 *
+	 * Lifecycle:
+	 * <ol>
+	 * <li>All parts are only part of the object once they were added and therefore in the scene graph as long as they are visible</li>
+	 * </ol>
+	 *
+	 * The LoadScreen is null = No LoadScreen is shown while loading...
+	 *
+	 * @param content
+	 *            The content which shall be shown.
+	 */
+	public SuperPane(final Node content)
+	{
+		this();
+		if (content != null)
+		{
+			this.setContent(content);
+		}
+	}
+
+	/**
 	 * See also {@link #SuperPane(Node)}
 	 *
 	 * @param content
@@ -123,9 +213,7 @@ public class SuperPane extends StackPane
 
 		if (content != null)
 		{
-			// Add content to the pane
-			this.content = content;
-			this.getChildren().add(this.content);
+			this.setContent(content);
 		}
 
 		// Set Load Screen (is visible if load() is called)
@@ -133,32 +221,36 @@ public class SuperPane extends StackPane
 	}
 
 	/**
-	 * <p>
-	 * You can get the {@link SuperPane} from {@link SuperPane#getMySP(Node)}
-	 * </p>
+	 * Sets the Background.
 	 *
-	 * Architecture:
-	 * <ol>
-	 * <li>1st layer: 1 time Content</li>
-	 * <li>1 layer: LoadScreen <br>
-	 * n layer: 0-n times Dialogue<br>
-	 * n layer: 0-n times SplashScreen</li>
-	 * </ol>
-	 *
-	 * Lifecycle:
-	 * <ol>
-	 * <li>Content is saved at instantiation</li>
-	 * <li>Others are only part of the object and therefore the scene graph as long as they are visible</li>
-	 * </ol>
-	 *
-	 * The LoadScreen is null = No LoadScreen is shown while loading...
-	 *
-	 * @param content
-	 *            The content which shall be shown.
+	 * @param background
+	 *            In contrast to {@link Region#setBackground(javafx.scene.layout.Background)} this can be any Node.
 	 */
-	public SuperPane(final Node content)
+	public void setBackgroundImage(final Image background)
 	{
-		this(content, null);
+		RegionManipulator.bindBackground(this, background);
+	}
+
+	/**
+	 * Sets the Background.
+	 *
+	 * @param background
+	 *            In contrast to {@link Region#setBackground(javafx.scene.layout.Background)} this can be any Node.
+	 */
+	public void setBackgroundNode(final Node background)
+	{
+		this.setBackgroundNode(null);
+		background.getStyleClass().add(StyleClasses.BACKGROUND.get());
+
+		// Remove background node
+		List<Node> backgrounds = new ArrayList<>();
+		for (Node node : this.getChildren())
+			if (node.getStyleClass().contains(StyleClasses.BACKGROUND.get()))
+				backgrounds.add(node);
+		this.getChildren().removeAll(backgrounds);
+
+		// Put background before other nodes
+		this.getChildren().add(0, background);
 	}
 
 	/**
@@ -169,31 +261,25 @@ public class SuperPane extends StackPane
 	 */
 	public void setContent(final Node content)
 	{
-		if (this.getChildren().size() > 0)
-		{
-			this.getChildren().remove(0);
-		}
-		this.getChildren().add(content);
+		content.getStyleClass().add(StyleClasses.CONTENT.get());
+
+		// Remove content node
+		List<Node> contents = new ArrayList<>();
+		for (Node node : this.getChildren())
+			if (node.getStyleClass().contains(StyleClasses.CONTENT.get()))
+				contents.add(node);
+		this.getChildren().removeAll(contents);
+
+		// If there is a background put content after background before other nodes
+		if (this.getChildren().size() > 0 && this.getChildren().get(0).getStyleClass().contains(StyleClasses.BACKGROUND.get()))
+			this.getChildren().add(1, content);
+		else
+			this.getChildren().add(0, content);
 	}
 
 	public void setLoadScreen(final Node loadScreen)
 	{
 		this.loadScreen = loadScreen;
-	}
-
-	/**
-	 * Sets the Background.
-	 *
-	 * @param background
-	 *            In contrast to {@link Region#setBackground(javafx.scene.layout.Background)} this can be any Node.
-	 */
-	public void setBackground(final Node background)
-	{
-		if (!this.getChildren().get(0).equals(this.content))
-		{
-			this.getChildren().remove(0);
-		}
-		this.getChildren().add(0, background);
 	}
 
 	/**
@@ -212,9 +298,8 @@ public class SuperPane extends StackPane
 		task.setOnFailed(this.taskDoneHandler);
 		this.taskCollector.execute(task);
 
-		// Start thread to delay/avoid the animation if the task is only a short
-		// one
-		final Thread t = new Thread(() ->
+		// Start thread to delay/avoid the animation if the task is only a short one
+		Inspector.runNowAsDaemon(() ->
 		{
 			try
 			{
@@ -236,8 +321,6 @@ public class SuperPane extends StackPane
 			{
 			}
 		});
-		t.setDaemon(true);
-		t.start();
 	}
 
 	/**
@@ -293,6 +376,8 @@ public class SuperPane extends StackPane
 	}
 
 	/**
+	 * Is the same method like {@link #closeDynamic(Node)}!
+	 * 
 	 * @param dialogue
 	 *            The dialogue to close.
 	 */
@@ -354,7 +439,7 @@ public class SuperPane extends StackPane
 	private void blurAndDarkenPreLastLayer()
 	{
 		// Removes all old overlays
-		this.getChildren().removeAll(this.getChildren().stream().filter(node -> node instanceof OverlayPane).collect(Collectors.toList()));
+		this.getChildren().removeAll(this.getChildren().stream().filter(node -> node.getStyleClass().contains(StyleClasses.OVERLAY.get())).collect(Collectors.toList()));
 
 		// Remove all blur effects
 		for (int i = 0; i < this.getChildren().size(); i++)
@@ -375,7 +460,11 @@ public class SuperPane extends StackPane
 
 			// Add an (unblurred) OverlayPane (to darken) before the last
 			// element
-			final OverlayPane overlay = new OverlayPane();
+			final Rectangle overlay = new Rectangle();
+			if (opacity < 0 || opacity > 1)
+				opacity = 0.35;
+			overlay.setFill(Color.valueOf("rgba(0, 0, 0, " + opacity + ")"));
+			overlay.getStyleClass().add(StyleClasses.OVERLAY.get());
 			overlay.widthProperty().bind(this.widthProperty());
 			overlay.heightProperty().bind(this.heightProperty());
 
