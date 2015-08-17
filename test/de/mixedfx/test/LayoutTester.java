@@ -1,19 +1,21 @@
 package de.mixedfx.test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.mixedfx.assets.ImageHandler;
 import de.mixedfx.assets.ImageProducer;
 import de.mixedfx.assets.LayoutManager;
 import de.mixedfx.assets.Layouter;
 import de.mixedfx.file.FileObject;
-import de.mixedfx.gui.Blurrer;
 import de.mixedfx.gui.EasyModifierConfig;
 import de.mixedfx.gui.panes.SuperPane;
-import de.mixedfx.inspector.Inspector;
 import javafx.animation.Animation.Status;
 import javafx.animation.ScaleTransition;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -110,39 +112,20 @@ public class LayoutTester extends Application
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
-		Blurrer.blur(yesButton);
+		// Blurrer.blur(yesButton);
+		//
+		// Inspector.runFXLater(() ->
+		// {
+		// Blurrer.unBlur(yesButton);
+		// });
 
-		Inspector.runFXLater(() ->
-		{
-			Blurrer.unBlur(yesButton);
-		});
+		List<Node> tutorials = new ArrayList<>();
+		tutorials.add(new Label("First Tutorial!"));
+		tutorials.add(new Label("Second Tutorial"));
+		tutorials.add(new Label("Third Tutorial"));
 
-		// Tutorializer.startTutorial(scene);
+		Tutorializer.startTutorial(scene, tutorials);
 	}
-
-	// System.out.println("Damit jerre merge muss");
-	// ddaasdfas/// final LayoutElement<Ia
-	// final List<LayoutdE
-	// final LayoutElement<String> ll2 = new LayoutElement<>("style",
-	// String.class);
-	// layoutElements.add(ll2);
-	// sysoutasöljdkfaöljskddfdf
-	// final LayoutElement<Istegear> color = new
-	// LayoutElement<>("meineFarbe", Integer.class);
-	// layoutElements.add(color);asd
-	// asdfasdfaösldkjfölaksdlökjfasdf
-	// // Erstellen eines LayoutManagers mit dem man im LanTool dynamisch
-	// das
-	// // Layout wechseln kann
-	// final LayoutManager lm = new
-	// LayoutManager(FileObject.create().setPath("assets\\layouts"),
-	// layoutElements, "BlueMoon");
-	// System.err.println("HUHUU");
-	// // Wenn man das Layoasdfasdfasdfut ändert
-	// color.set(new Intege
-	// // IRGENDWsdasdfO IM CODE im LanTool
-	// final ImageView view = new ImageView();
-	// view.imageProperty().bind(ll);
 
 	public static void main(String[] args)
 	{

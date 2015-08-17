@@ -2,7 +2,7 @@ package de.mixedfx.gui.panes;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.scene.layout.Region;
+import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 
 /**
@@ -19,11 +19,11 @@ public class MagicPane extends StackPane
 	 * @param pane
 	 *            The property which contains always the current pane.
 	 */
-	public MagicPane(final ObjectProperty<Region> pane)
+	public MagicPane(final ObjectProperty<Node> pane)
 	{
 		this.setMinSize(0, 0);
 
-		pane.addListener((ChangeListener<Region>) (observable, oldValue, newValue) ->
+		pane.addListener((ChangeListener<Node>) (observable, oldValue, newValue) ->
 		{
 			this.getChildren().clear();
 			this.getChildren().add(newValue);

@@ -1,3 +1,9 @@
+.tutorial {
+	-fx-border-color: yellow;
+    -fx-border-width: 5px;
+}
+
+
 .modifiable {
 }
 

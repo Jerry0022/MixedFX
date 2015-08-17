@@ -26,6 +26,12 @@ public class Blurrer
 		};
 	}
 
+	/**
+	 * First unblurs all of this blurring effected nodes. Then blurs all nodes in an efficient way except the argument.
+	 * 
+	 * @param exceptMe
+	 *            The one which shall not be blurred.
+	 */
 	public static void blur(Node exceptMe)
 	{
 		// Catch all Mouse Events!
@@ -59,6 +65,12 @@ public class Blurrer
 		exceptMe.getStyleClass().remove(STYLECLASS_EXCEPT);
 	}
 
+	/**
+	 * Stop blurring.
+	 * 
+	 * @param exceptMe
+	 *            The one on which {@link Blurrer#blur(Node)} was called.
+	 */
 	public static void unBlur(Node exceptMe)
 	{
 		// Catch all Mouse Events!
