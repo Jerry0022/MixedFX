@@ -69,6 +69,9 @@ public class Tutorializer
 		popOver.show(new Button());
 	}
 
+	/**
+	 * Stops a running tutorial
+	 */
 	public static void stopTutorial()
 	{
 

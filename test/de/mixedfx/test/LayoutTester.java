@@ -109,6 +109,7 @@ public class LayoutTester extends Application
 		Layouter.setLayoutable(superPane, root, lm, new EasyModifierConfig());
 		primaryStage.setScene(scene);
 		primaryStage.show();
+
 		Blurrer.blur(yesButton);
 
 		Inspector.runFXLater(() ->
@@ -116,7 +117,7 @@ public class LayoutTester extends Application
 			Blurrer.unBlur(yesButton);
 		});
 
-		Tutorializer.startTutorial(scene);
+		// Tutorializer.startTutorial(scene);
 	}
 
 	// System.out.println("Damit jerre merge muss");

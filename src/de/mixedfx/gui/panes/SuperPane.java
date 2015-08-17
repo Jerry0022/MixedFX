@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import de.mixedfx.gui.RegionManipulator;
 import de.mixedfx.inspector.Inspector;
+import de.mixedfx.logging.Log;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -17,6 +18,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -385,22 +387,22 @@ public class SuperPane extends StackPane
 	 * Opens a new dialogue which does isn't resized to fit the parent. Works if a dialogue is opened or not.
 	 * 
 	 * @param dialogue
-	 *            The dialoge to open.
+	 *            The dialogue to open.
 	 */
 	public void openDialogue(final Node dialogue)
 	{
-		this.openDynamic(new SuperDialogueWrapper(dialogue, false));
-	}
+		this.openDynamic(new Pane()
+		{
+			{
+				this.getChildren().add(dialogue);
+			}
 
-	/**
-	 * Opens a new dialogue. Works if a dialogue is opened or not.
-	 * 
-	 * @param dialogue
-	 *            The dialoge to open.
-	 */
-	public void openDialogueFitParent(final Node dialogue)
-	{
-		this.openDynamic(new SuperDialogueWrapper(dialogue, true));
+			@Override
+			public boolean isResizable()
+			{
+				return false;
+			}
+		});
 	}
 
 	/**
@@ -428,6 +430,8 @@ public class SuperPane extends StackPane
 	public void openDynamic(final Node dynamic)
 	{
 		this.getChildren().add(dynamic);
+		if (this.content == null)
+			Log.assets.warn("The SuperPane has no content. Therefore nothing will be blurred after opening this Dynamic: " + dynamic);
 		this.blurAndDarkenPreLastLayer();
 
 		if (dynamic instanceof Dynamic)

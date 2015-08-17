@@ -7,6 +7,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class SuperPaneTester extends Application
@@ -17,10 +18,11 @@ public class SuperPaneTester extends Application
 	{
 		SuperPane superPane = new SuperPane();
 		superPane.setBackgroundImage(ImageProducer.getMonoColored(Color.BROWN));
+		superPane.setContent(new Text("Text"));
 		StackPane node = new StackPane();
 		node.setPrefSize(50, 50);
 		RegionManipulator.bindBackground(node, ImageProducer.getMonoColored(Color.YELLOW));
-		superPane.openDialogueFitParent(node);
+		superPane.openDialogue(node);
 
 		Scene scene = new Scene(superPane, 640, 480);
 		primaryStage.setScene(scene);
