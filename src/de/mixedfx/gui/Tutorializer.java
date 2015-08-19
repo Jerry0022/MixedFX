@@ -1,17 +1,14 @@
-package de.mixedfx.test;
+package de.mixedfx.gui;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.PopOver.ArrowLocation;
 
-import de.mixedfx.gui.Blurrer;
 import de.mixedfx.gui.panes.MagicPane;
 import de.mixedfx.logging.Log;
 import javafx.beans.property.BooleanProperty;
@@ -45,7 +42,7 @@ public class Tutorializer
 	/**
 	 * Two things have to be done first, before you can start/stop the tutorial:
 	 * <ol>
-	 * <li>Add "tutorial" to the style classes of the node!</li>
+	 * <li>Add <b>tutorial</b> to the style classes of the node!</li>
 	 * <li>In FXML just add userdata via the tag: <b>tutorialNr="1"</b> with 1 being the number of its introduction. In Java code add to {@link Node#getProperties()} the <b>key "tutorialNr" and the
 	 * value "1"</b>.</li>
 	 * </ol>
@@ -277,12 +274,14 @@ public class Tutorializer
 		double sMaxY = spaceConsumer.localToScene(0, 0).getY() + spaceConsumer.getBoundsInLocal().getHeight();
 		bottom = maxY - sMaxY;
 
-		double[] values =
-		{ left, right, top, bottom };
-		List<Double> valuesAsList = Arrays.asList(ArrayUtils.toObject(values));
-		double max = Collections.max(valuesAsList);
-		for (int i = 0; i < values.length; i++)
-			if (values[i] == max)
+		List<Double> values = new ArrayList<>();
+		values.add(left);
+		values.add(right);
+		values.add(top);
+		values.add(bottom);
+		double max = Collections.max(values);
+		for (int i = 0; i < values.size(); i++)
+			if (values.get(i) == max)
 				return directions[i];
 		return result;
 	}

@@ -9,6 +9,7 @@ import de.mixedfx.assets.LayoutManager;
 import de.mixedfx.assets.Layouter;
 import de.mixedfx.file.FileObject;
 import de.mixedfx.gui.EasyModifierConfig;
+import de.mixedfx.gui.Tutorializer;
 import de.mixedfx.gui.panes.SuperPane;
 import javafx.animation.Animation.Status;
 import javafx.animation.ScaleTransition;
