@@ -56,8 +56,10 @@ distributions {
 
 uploadArchives {
     repositories {
-       	mavenLocal()
-    }
+      	mavenDeployer {
+            repository(url: "file:${System.env.GDRIVE}\\LanTool\\mvn-release")
+        	}
+   		}
 }
 
 // Get dependencies from Maven central repository
