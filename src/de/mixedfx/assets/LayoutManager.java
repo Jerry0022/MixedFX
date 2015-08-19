@@ -212,6 +212,16 @@ public class LayoutManager
 	}
 
 	/**
+	 * Reads an image dynamically!
+	 * 
+	 * @return Returns an image which is now loaded from the disk.
+	 */
+	public Image readImage()
+	{
+		return ImageHandler.readImage(FileObject.create().setPath(this.layoutDir.getFullPath()).setFullName(this.currentLayout.get()));
+	}
+
+	/**
 	 * @param id
 	 *            An id containing only letters and numbers.
 	 * @param image
