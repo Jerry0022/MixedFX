@@ -216,9 +216,9 @@ public class LayoutManager
 	 * 
 	 * @return Returns an image which is now loaded from the disk.
 	 */
-	public Image readImage()
+	public Image readImage(String name)
 	{
-		return ImageHandler.readImage(FileObject.create().setPath(this.layoutDir.getFullPath()).setFullName(this.currentLayout.get()));
+		return ImageHandler.readImage(FileObject.create().setPath(DataHandler.fuse(this.layoutDir.getFullPath(), this.currentLayout.get())).setFullName(name));
 	}
 
 	/**
