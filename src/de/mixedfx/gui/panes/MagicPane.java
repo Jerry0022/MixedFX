@@ -3,6 +3,7 @@ package de.mixedfx.gui.panes;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
 /**
@@ -13,6 +14,21 @@ import javafx.scene.layout.StackPane;
  */
 public class MagicPane extends StackPane
 {
+	public static void makeMagic(Pane pane, final ObjectProperty<Node> observ)
+	{
+		observ.addListener((ChangeListener<Node>) (observable, oldValue, newValue) ->
+		{
+			pane.getChildren().clear();
+			pane.getChildren().add(newValue);
+		});
+
+		if (observ.get() != null)
+		{
+			pane.getChildren().clear();
+			pane.getChildren().add(observ.get());
+		}
+	}
+
 	/**
 	 * This pane just changes its content to the property's current pane.
 	 *

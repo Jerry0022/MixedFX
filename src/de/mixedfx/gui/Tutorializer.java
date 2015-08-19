@@ -1,4 +1,4 @@
-package de.mixedfx.test;
+package de.mixedfx.gui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,7 +11,6 @@ import org.apache.commons.lang.ArrayUtils;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.PopOver.ArrowLocation;
 
-import de.mixedfx.gui.Blurrer;
 import de.mixedfx.gui.panes.MagicPane;
 import de.mixedfx.logging.Log;
 import javafx.beans.property.BooleanProperty;
