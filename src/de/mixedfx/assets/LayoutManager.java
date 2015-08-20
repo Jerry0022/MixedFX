@@ -181,7 +181,7 @@ public class LayoutManager
 				if (node instanceof Region)
 					RegionManipulator.bindBackground((Region) node, MasterHandler.read(fileObject, Image.class));
 				else
-					Log.assets.warn("The node " + node + " is not a Region. Only Regions are supported for layouting!");
+					Log.assets.warn("The node " + node + " for the id " + id + " is not a Region. Only Regions are supported for layouting!");
 			}
 		}
 
