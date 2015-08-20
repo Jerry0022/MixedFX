@@ -180,7 +180,7 @@ public class LayoutManager
 				Node node = root.lookup("#" + id);
 				if (node instanceof Region)
 					RegionManipulator.bindBackground((Region) node, MasterHandler.read(fileObject, Image.class));
-				else
+				else if (node != null) // If node is null the image is a dynamic image!
 					Log.assets.warn("The node " + node + " for the id " + id + " is not a Region. Only Regions are supported for layouting!");
 			}
 		}
