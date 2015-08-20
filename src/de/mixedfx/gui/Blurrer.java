@@ -1,12 +1,13 @@
 package de.mixedfx.gui;
 
+import java.util.Set;
+
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
 
 public class Blurrer
 {
@@ -53,7 +54,7 @@ public class Blurrer
 			{
 				for (Node child : ((Parent) parent).getChildrenUnmodifiable())
 				{
-					if (!(child instanceof StackPane) && child.lookup("." + STYLECLASS_EXCEPT) == null)
+					if (child.lookup("." + STYLECLASS_EXCEPT) == null)
 					{
 						child.getStyleClass().add(STYLECLASS_BLURRED);
 						child.setEffect(effect);
@@ -76,20 +77,11 @@ public class Blurrer
 		// Catch all Mouse Events!
 		exceptMe.getScene().removeEventFilter(MouseEvent.ANY, mouseCatcher);
 
-		Node parent = exceptMe.getParent();
-		while (parent != null)
+		Set<Node> blurredNodes = exceptMe.getScene().getRoot().lookupAll("." + STYLECLASS_BLURRED);
+		for (Node node : blurredNodes)
 		{
-			if (parent instanceof Parent)
-			{
-				for (Node child : ((Parent) parent).getChildrenUnmodifiable())
-				{
-					if (!(child instanceof StackPane) && child.getStyleClass().contains(STYLECLASS_BLURRED))
-					{
-						child.setEffect(null);
-					}
-				}
-			}
-			parent = parent.getParent();
+			node.getStyleClass().remove(STYLECLASS_BLURRED);
+			node.setEffect(null);
 		}
 	}
 }
