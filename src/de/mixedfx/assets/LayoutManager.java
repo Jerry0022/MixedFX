@@ -142,7 +142,7 @@ public class LayoutManager
 	 * of the current layout if a layout was previously applied!
 	 *
 	 * @param layout
-	 *            The name of the layout. If null a layout with the name Default is created!
+	 *            The name of the layout. If null a layout with the name {@link LayoutManager#defaultLayoutName} is created!
 	 */
 	public void applyLayout(String layout)
 	{
@@ -173,7 +173,7 @@ public class LayoutManager
 		DataHandler.listFiles(this.standardLayoutDir).stream().filter(t -> !files.stream().anyMatch(u -> FileObject.create(t).getName().equalsIgnoreCase(FileObject.create(u).getName()))).forEach(s -> files.add(s));
 		for (final File file : files)
 		{
-			if (FileObject.create(file).getName().equalsIgnoreCase("style"))
+			if (FileObject.create(file).getName().equalsIgnoreCase(LayoutManager.STYLE_FILE_NAME))
 				try
 				{
 					this.root.getScene().getStylesheets().add(file.toURI().toURL().toExternalForm());
