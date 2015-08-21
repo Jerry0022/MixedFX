@@ -235,10 +235,10 @@ public class LayoutManager
 	 */
 	private Image readImage(final FileObject usualImage)
 	{
-		if (usualImage.toFile().exists())
-			return MasterHandler.read(usualImage, Image.class);
-		else
-			return MasterHandler.read(LayoutManager.this.standardLayoutDir.setFullName(usualImage.getFullName()), Image.class);
+		Image image;
+		if ((image = MasterHandler.read(usualImage, Image.class)).equals(ImageProducer.getTransparent()))
+			image = MasterHandler.read(LayoutManager.this.standardLayoutDir.setFullName(usualImage.getFullName()), Image.class);
+		return image;
 	}
 
 	protected void register(final EasyModifierConfig config)
