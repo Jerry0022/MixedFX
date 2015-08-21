@@ -15,7 +15,6 @@ import com.google.common.cache.LoadingCache;
 
 import de.mixedfx.file.DataHandler;
 import de.mixedfx.file.FileObject;
-import de.mixedfx.gui.EasyModifier;
 import de.mixedfx.gui.EasyModifierConfig;
 import de.mixedfx.gui.RegionManipulator;
 import de.mixedfx.java.StringArrayList;
@@ -24,7 +23,6 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
@@ -34,14 +32,18 @@ public class LayoutManager
 	/**
 	 * The amount of (dynamic) images maximal cached for this application!
 	 */
-	public static final int cacheSize = 10;
+	public static final int IMAGE_CACHE_SIZE = 10;
 
 	/**
 	 * If there is a file of this name (case is ignored), e. g. style.css, this file is loaded as .css file!
 	 */
-	public static final String styleFileName = "style";
+	public static final String STYLE_FILE_NAME = "style";
+
+	public static String defaultLayoutName = "Layout1";
 
 	public final LoadingCache<String, Image> imageCache;
+
+	public final FileObject standardLayoutDir;
 
 	public final FileObject layoutDir;
 
@@ -95,30 +97,44 @@ public class LayoutManager
 
 		this.currentLayout = new SimpleStringProperty(defaultLayout);
 		this.layoutDir = layoutDir;
+		this.standardLayoutDir = FileObject.create().setPath(DataHandler.fuse(layoutDir.getFullPath(), "Standard"));
 		this.root = root;
-		this.imageCache = CacheBuilder.newBuilder().maximumSize(LayoutManager.cacheSize).build(new CacheLoader<String, Image>()
+		this.imageCache = CacheBuilder.newBuilder().maximumSize(LayoutManager.IMAGE_CACHE_SIZE).build(new CacheLoader<String, Image>()
 		{
 			@Override
 			public Image load(final String key) throws Exception
 			{
-				return ImageHandler.readImage(FileObject.create().setPath(DataHandler.fuse(LayoutManager.this.layoutDir.getFullPath(), LayoutManager.this.currentLayout.get())).setFullName(key));
+				return LayoutManager.this.readImage(FileObject.create().setPath(DataHandler.fuse(LayoutManager.this.layoutDir.getFullPath(), LayoutManager.this.currentLayout.get())).setFullName(key));
 			}
 		});
 
+		// Create Layout directory if it doesn't exist
 		if (!this.layoutDir.toFile().exists())
 		{
 			try
 			{
-				FileUtils.forceMkdir(layoutDir.toFile());
+				FileUtils.forceMkdir(this.layoutDir.toFile());
 			} catch (final IOException e)
 			{
 				Log.assets.fatal("Can't create layout directory! " + layoutDir);
 			}
 		}
 
+		// Create default layout directory
+		if (!this.standardLayoutDir.toFile().exists())
+		{
+			try
+			{
+				FileUtils.forceMkdir(this.standardLayoutDir.toFile());
+			} catch (final IOException e)
+			{
+				Log.assets.fatal("Can't create pre use directory! " + layoutDir);
+			}
+		}
+
 		// Apply default layout
 		if (this.root != null)
-			this.applyLayout(defaultLayout);
+			this.applyLayout(this.currentLayout.get());
 	}
 
 	/**
@@ -136,7 +152,7 @@ public class LayoutManager
 			throw new IllegalArgumentException("The root must be set! Or please use Layouter!");
 
 		if (layout == null)
-			layout = "Default";
+			layout = LayoutManager.defaultLayoutName;
 
 		// If there is no layout with the given name create a new one!
 		final FileObject layoutFullPath = FileObject.create().setPath(this.layoutDir.getFullPath()).setFullName(layout);
@@ -145,27 +161,16 @@ public class LayoutManager
 			try
 			{
 				DataHandler.createFolder(layoutFullPath);
-				if ((this.layoutableClass != null) && (this.root instanceof Parent))
-					EasyModifier.runOnAllSubNodes((Parent) this.root, this.layoutableClass, true, (parent, doIt) ->
-					{
-						if (parent instanceof Region)
-						{
-							final Region region = (Region) parent;
-							final Image image = region.getBackground().getImages().get(0).getImage();
-							if (image != null)
-								LayoutManager.this.saveElement(parent.getId(), image);
-						}
-					});
-				return;
 			} catch (final IOException e)
 			{
 				Log.assets.error("Could not create layout! " + layoutFullPath);
-				return;
 			}
 		}
 
 		// Apply layout
 		final Collection<File> files = DataHandler.listFiles(layoutFullPath);
+		// Add files of standard folder if they aren't already in the specific layout folder
+		DataHandler.listFiles(this.standardLayoutDir).stream().filter(t -> !files.stream().anyMatch(u -> FileObject.create(t).getName().equalsIgnoreCase(FileObject.create(u).getName()))).forEach(s -> files.add(s));
 		for (final File file : files)
 		{
 			if (FileObject.create(file).getName().equalsIgnoreCase("style"))
@@ -182,7 +187,7 @@ public class LayoutManager
 				final String id = fileObject.getName();
 				final Node node = this.root.lookup("#" + id);
 				if (node instanceof Region)
-					RegionManipulator.bindBackground((Region) node, MasterHandler.read(fileObject, Image.class));
+					RegionManipulator.bindBackground((Region) node, this.readImage(fileObject));
 				else if (node != null) // If node is null the image is a dynamic image!
 					Log.assets.warn("The node " + node + " for the id " + id + " is not a Region. Only Regions are supported for layouting!");
 			}
@@ -210,7 +215,7 @@ public class LayoutManager
 	 *
 	 * @return Returns an image which is now loaded from the disk.
 	 */
-	public Image readImage(final String name)
+	public Image readDynamicImage(final String name)
 	{
 		try
 		{
@@ -220,6 +225,21 @@ public class LayoutManager
 			Log.assets.error("Exception shown while reading image from cache or disk!", e);
 			return ImageProducer.getMonoColored(Color.RED);
 		}
+	}
+
+	/**
+	 * Reads an image either from the layout specific path or if it doesn't exist from the standard path.
+	 *
+	 * @param usualImage
+	 *            The layout specific file as FileObject.
+	 * @return Returns the layout specifc image or a standard image or a tranparent image.
+	 */
+	private Image readImage(final FileObject usualImage)
+	{
+		if (usualImage.toFile().exists())
+			return MasterHandler.read(usualImage, Image.class);
+		else
+			return MasterHandler.read(LayoutManager.this.standardLayoutDir.setFullName(usualImage.getFullName()), Image.class);
 	}
 
 	protected void register(final EasyModifierConfig config)
