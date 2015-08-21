@@ -3,12 +3,11 @@ package de.mixedfx.network;
 import java.net.InetAddress;
 import java.util.Hashtable;
 
+import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.VetoTopicEventListener;
 
-import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.inspector.Inspector;
 import de.mixedfx.logging.Log;
-import de.mixedfx.network.MessageBus.MessageReceiver;
 import de.mixedfx.network.messages.Message;
 import de.mixedfx.network.messages.UserMessage;
 import de.mixedfx.network.user.User;
@@ -37,60 +36,56 @@ public class ConnectivityManager
 
 	static
 	{
-		state = new SimpleObjectProperty<>(State.OFFLINE);
-		otherUsers = new SimpleListProperty<User>(FXCollections.observableArrayList());
-		tcp_user_map = new Hashtable<>(16);
-		NetworkManager.t.tcpClients.addListener(new ListChangeListener<TCPClient>()
+		ConnectivityManager.state = new SimpleObjectProperty<>(State.OFFLINE);
+		ConnectivityManager.otherUsers = new SimpleListProperty<User>(FXCollections.observableArrayList());
+		ConnectivityManager.tcp_user_map = new Hashtable<>(16);
+		NetworkManager.t.tcpClients.addListener((ListChangeListener<TCPClient>) c ->
 		{
-			@Override
-			public void onChanged(javafx.collections.ListChangeListener.Change<? extends TCPClient> c)
+			while (c.next())
 			{
-				while (c.next())
+				synchronized (NetworkManager.t.tcpClients)
 				{
-					synchronized (NetworkManager.t.tcpClients)
+					if (c.wasRemoved())
 					{
-						if (c.wasRemoved())
+						for (final TCPClient tcp1 : c.getRemoved())
 						{
-							for (TCPClient tcp : c.getRemoved())
+							if (ConnectivityManager.tcp_user_map.containsKey(tcp1.remoteAddress))
 							{
-								if (tcp_user_map.containsKey(tcp.remoteAddress))
+								final User oldUser = ConnectivityManager.tcp_user_map.get(tcp1.remoteAddress).getOriginalUser();
+								ConnectivityManager.tcp_user_map.remove(tcp1.remoteAddress);
+								synchronized (ConnectivityManager.otherUsers)
 								{
-									User oldUser = tcp_user_map.get(tcp.remoteAddress).getOriginalUser();
-									tcp_user_map.remove(tcp.remoteAddress);
-									synchronized (otherUsers)
+									OverlayNetwork overlayToRemove = null;
+									for (final OverlayNetwork network : ConnectivityManager.otherUsers.get(ConnectivityManager.otherUsers.indexOf(oldUser)).networks)
 									{
-										OverlayNetwork overlayToRemove = null;
-										for (OverlayNetwork network : otherUsers.get(otherUsers.indexOf(oldUser)).networks)
-										{
-											if (network.getIP().equals(tcp.remoteAddress))
-												overlayToRemove = network;
-										}
-										if (overlayToRemove != null)
-											otherUsers.get(otherUsers.indexOf(oldUser)).networks.remove(overlayToRemove);
+										if (network.getIP().equals(tcp1.remoteAddress))
+											overlayToRemove = network;
 									}
-									Log.network.debug("Removed user message from list: " + tcp.remoteAddress);
-									synchronized (otherUsers)
-									{
-										if (!tcp_user_map.containsValue(new UserMessage(oldUser)))
-											otherUsers.remove(oldUser);
-										else
-											Log.network.info("User is still available over other connection! ");
-									}
-									if (tcp_user_map.keySet().isEmpty())
-										state.set(State.SEARCHING);
+									if (overlayToRemove != null)
+										ConnectivityManager.otherUsers.get(ConnectivityManager.otherUsers.indexOf(oldUser)).networks.remove(overlayToRemove);
 								}
+								Log.network.debug("Removed user message from list: " + tcp1.remoteAddress);
+								synchronized (ConnectivityManager.otherUsers)
+								{
+									if (!ConnectivityManager.tcp_user_map.containsValue(new UserMessage(oldUser)))
+										ConnectivityManager.otherUsers.remove(oldUser);
+									else
+										Log.network.info("User is still available over other connection! ");
+								}
+								if (ConnectivityManager.tcp_user_map.keySet().isEmpty())
+									ConnectivityManager.state.set(State.SEARCHING);
 							}
-						} else if (c.wasAdded())
+						}
+					} else if (c.wasAdded())
+					{
+						for (final TCPClient tcp2 : c.getAddedSubList())
 						{
-							for (TCPClient tcp : c.getAddedSubList())
+							synchronized (NetworkManager.t.tcpClients)
 							{
-								synchronized (NetworkManager.t.tcpClients)
-								{
-									UserMessage message = new UserMessage(ConnectivityManager.myUniqueUser);
-									message.setToIP(tcp.remoteAddress);
-									MessageBus.send(message);
-									Log.network.debug("Sending " + message + " to " + tcp.remoteAddress);
-								}
+								final UserMessage message = new UserMessage(ConnectivityManager.myUniqueUser);
+								message.setToIP(tcp2.remoteAddress);
+								MessageBus.send(message);
+								Log.network.debug("Sending " + message + " to " + tcp2.remoteAddress);
 							}
 						}
 					}
@@ -98,69 +93,67 @@ public class ConnectivityManager
 			}
 		});
 		// Attention: Does only subscribe if at least one normal other subscriber to!
-		EventBusExtended.subscribeVetoListenerStrongly(MessageBus.MESSAGE_RECEIVE, new VetoTopicEventListener<Message>()
+		EventBus.subscribeVetoListenerStrongly(MessageBus.MESSAGE_RECEIVE, (VetoTopicEventListener<Message>) (topic, message) ->
 		{
-			@Override
-			public boolean shouldVeto(String topic, Message message)
+			if (message instanceof UserMessage)
 			{
-				if (message instanceof UserMessage)
+				Log.network.debug("UserMessage received: " + message);
+				final UserMessage userMessage = (UserMessage) message;
+				if (!userMessage.getOriginalUser().equals(ConnectivityManager.myUniqueUser))
 				{
-					Log.network.debug("UserMessage received: " + message);
-					UserMessage userMessage = (UserMessage) message;
-					if (!userMessage.getOriginalUser().equals(ConnectivityManager.myUniqueUser))
+					synchronized (NetworkManager.t.tcpClients)
 					{
-						synchronized (NetworkManager.t.tcpClients)
+						if (ConnectivityManager.tcp_user_map.keySet().isEmpty())
+							ConnectivityManager.state.set(State.ONLINE);
+						// Update mapping
+						ConnectivityManager.tcp_user_map.put(userMessage.getFromIP(), userMessage);
+						Log.network.debug("Put UserMessage " + userMessage + " from ip " + userMessage.getFromIP() + " to my list!");
+					}
+					synchronized (ConnectivityManager.otherUsers)
+					{
+						final User newUser = userMessage.getOriginalUser();
+						newUser.networks.add(MasterNetworkHandler.get(userMessage.getFromIP()));
+						if (ConnectivityManager.otherUsers.contains(newUser))
 						{
-							if (tcp_user_map.keySet().isEmpty())
-								state.set(State.ONLINE);
-							// Update mapping
-							tcp_user_map.put(userMessage.getFromIP(), userMessage);
-							Log.network.debug("Put UserMessage " + userMessage + " from ip " + userMessage.getFromIP() + " to my list!");
-						}
-						synchronized (otherUsers)
-						{
-							User newUser = userMessage.getOriginalUser();
-							newUser.networks.add(MasterNetworkHandler.get(userMessage.getFromIP()));
-							if (otherUsers.contains(newUser))
-							{
-								otherUsers.get(otherUsers.indexOf(newUser)).merge(newUser);
-							} else
-								otherUsers.add(newUser);
-						}
-					} else
-						Log.network.debug("UserMessage was from me!");
-					return true;
+							ConnectivityManager.otherUsers.get(ConnectivityManager.otherUsers.indexOf(newUser)).merge(newUser);
+						} else
+							ConnectivityManager.otherUsers.add(newUser);
+					}
 				} else
-					return false;
-			}
+					Log.network.debug("UserMessage was from me!");
+				return true;
+			} else
+				return false;
 		});
-		MessageBus.registerForReceival(new MessageReceiver()
+		MessageBus.registerForReceival(message ->
 		{
-			@Override
-			public void receive(Message message)
-			{
-				// Just to let the above veto listener work!
-			}
-		}, true);
+			// Just to let the above veto listener work!
+		} , true);
 	}
 
-	public static void setMyUser(User myUser)
+	public static void restart()
+	{
+		ConnectivityManager.stop();
+		ConnectivityManager.start();
+	}
+
+	public static void restart(final User user)
+	{
+		ConnectivityManager.myUniqueUser = user;
+		ConnectivityManager.restart();
+	}
+
+	public static void setMyUser(final User myUser)
 	{
 		ConnectivityManager.myUniqueUser = myUser;
 	}
 
-	public static void start(User myUniqueUser)
-	{
-		ConnectivityManager.myUniqueUser = myUniqueUser;
-		start();
-	}
-
 	public static void start()
 	{
-		if (myUniqueUser == null)
+		if (ConnectivityManager.myUniqueUser == null)
 			throw new IllegalStateException("Please first set a user!");
 		NetworkManager.start();
-		state.set(State.SEARCHING);
+		ConnectivityManager.state.set(State.SEARCHING);
 		Inspector.runNowAsDaemon(() ->
 		{
 			while (NetworkManager.running)
@@ -168,31 +161,33 @@ public class ConnectivityManager
 				try
 				{
 					Thread.sleep(NetworkConfig.ICMP_INTERVAL);
-				} catch (Exception e)
+				} catch (final Exception e)
 				{
 				}
-				for (User user : ConnectivityManager.otherUsers)
-					for (OverlayNetwork network : user.networks)
+				for (final User user : ConnectivityManager.otherUsers)
+					for (final OverlayNetwork network : user.networks)
 						network.updateLatency();
 			}
 		});
 	}
 
+	public static void start(final User myUniqueUser)
+	{
+		ConnectivityManager.myUniqueUser = myUniqueUser;
+		ConnectivityManager.start();
+	}
+
 	public static void stop()
 	{
 		NetworkManager.stop();
-		state.set(State.OFFLINE);
+		ConnectivityManager.state.set(State.OFFLINE);
 	}
 
-	public static void restart(User user)
+	public static void switchStatus()
 	{
-		myUniqueUser = user;
-		restart();
-	}
-
-	public static void restart()
-	{
-		stop();
-		start();
+		if (ConnectivityManager.state.get().equals(State.OFFLINE))
+			ConnectivityManager.start();
+		else
+			ConnectivityManager.stop();
 	}
 }
