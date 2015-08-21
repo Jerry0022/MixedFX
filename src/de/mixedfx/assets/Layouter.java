@@ -160,6 +160,6 @@ public class Layouter
 			}
 		};
 
-		EasyModifier.init(root, KeyCode.ALT, config, handler);
+		EasyModifier.init(root, KeyCode.CONTROL, config, handler);
 	}
 }
