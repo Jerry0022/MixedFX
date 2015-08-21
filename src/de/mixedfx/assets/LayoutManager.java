@@ -5,14 +5,18 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.io.FileUtils;
+
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 
 import de.mixedfx.file.DataHandler;
 import de.mixedfx.file.FileObject;
 import de.mixedfx.gui.EasyModifier;
 import de.mixedfx.gui.EasyModifierConfig;
-import de.mixedfx.gui.EasyModifierHandler;
 import de.mixedfx.gui.RegionManipulator;
 import de.mixedfx.java.StringArrayList;
 import de.mixedfx.logging.Log;
@@ -23,13 +27,21 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
 
 public class LayoutManager
 {
 	/**
+	 * The amount of (dynamic) images maximal cached for this application!
+	 */
+	public static final int cacheSize = 10;
+
+	/**
 	 * If there is a file of this name (case is ignored), e. g. style.css, this file is loaded as .css file!
 	 */
 	public static final String styleFileName = "style";
+
+	public final LoadingCache<String, Image> imageCache;
 
 	public final FileObject layoutDir;
 
@@ -41,7 +53,7 @@ public class LayoutManager
 
 	/**
 	 * First found Layout will be used!
-	 * 
+	 *
 	 * @param layoutDir
 	 *            The directory which will contain the layout folders.
 	 */
@@ -61,11 +73,11 @@ public class LayoutManager
 
 	/**
 	 * First found Layout will be used!
-	 * 
+	 *
 	 * @param layoutDir
 	 *            The directory which will contain the layout folders.
 	 */
-	public LayoutManager(Node root, final FileObject layoutDir)
+	public LayoutManager(final Node root, final FileObject layoutDir)
 	{
 		this(root, layoutDir, null);
 	}
@@ -74,16 +86,24 @@ public class LayoutManager
 	 * @param layoutDir
 	 *            The directory which will contain the layout folders.
 	 */
-	public LayoutManager(Node root, final FileObject layoutDir, final String defaultLayout)
+	public LayoutManager(final Node root, final FileObject layoutDir, final String defaultLayout)
 	{
 		if (!Platform.isFxApplicationThread())
 			throw new IllegalStateException("Must run from FX Thread!");
-		if (root != null && root.getScene() == null)
+		if ((root != null) && (root.getScene() == null))
 			throw new IllegalStateException("The root must be part of the scene once you create a LayoutManager.");
 
 		this.currentLayout = new SimpleStringProperty(defaultLayout);
 		this.layoutDir = layoutDir;
 		this.root = root;
+		this.imageCache = CacheBuilder.newBuilder().maximumSize(LayoutManager.cacheSize).build(new CacheLoader<String, Image>()
+		{
+			@Override
+			public Image load(final String key) throws Exception
+			{
+				return ImageHandler.readImage(FileObject.create().setPath(DataHandler.fuse(LayoutManager.this.layoutDir.getFullPath(), LayoutManager.this.currentLayout.get())).setFullName(key));
+			}
+		});
 
 		if (!this.layoutDir.toFile().exists())
 		{
@@ -99,19 +119,6 @@ public class LayoutManager
 		// Apply default layout
 		if (this.root != null)
 			this.applyLayout(defaultLayout);
-	}
-
-	/**
-	 * @return Returns a list of all available layouts!
-	 */
-	public List<String> getList()
-	{
-		final StringArrayList all = new StringArrayList(DataHandler.getSubFolderList(this.layoutDir));
-		if (all.size() == 0)
-		{
-			applyLayout(null);
-		}
-		return all;
 	}
 
 	/**
@@ -132,25 +139,21 @@ public class LayoutManager
 			layout = "Default";
 
 		// If there is no layout with the given name create a new one!
-		FileObject layoutFullPath = FileObject.create().setPath(this.layoutDir.getFullPath()).setFullName(layout);
+		final FileObject layoutFullPath = FileObject.create().setPath(this.layoutDir.getFullPath()).setFullName(layout);
 		if (!layoutFullPath.toFile().exists())
 		{
 			try
 			{
 				DataHandler.createFolder(layoutFullPath);
-				if (this.layoutableClass != null && root instanceof Parent)
-					EasyModifier.runOnAllSubNodes((Parent) root, this.layoutableClass, true, new EasyModifierHandler()
+				if ((this.layoutableClass != null) && (this.root instanceof Parent))
+					EasyModifier.runOnAllSubNodes((Parent) this.root, this.layoutableClass, true, (parent, doIt) ->
 					{
-						@Override
-						public void modify(Parent parent, boolean doIt)
+						if (parent instanceof Region)
 						{
-							if (parent instanceof Region)
-							{
-								Region region = (Region) parent;
-								Image image = region.getBackground().getImages().get(0).getImage();
-								if (image != null)
-									saveElement(parent.getId(), image);
-							}
+							final Region region = (Region) parent;
+							final Image image = region.getBackground().getImages().get(0).getImage();
+							if (image != null)
+								LayoutManager.this.saveElement(parent.getId(), image);
 						}
 					});
 				return;
@@ -162,22 +165,22 @@ public class LayoutManager
 		}
 
 		// Apply layout
-		Collection<File> files = DataHandler.listFiles(layoutFullPath);
-		for (File file : files)
+		final Collection<File> files = DataHandler.listFiles(layoutFullPath);
+		for (final File file : files)
 		{
 			if (FileObject.create(file).getName().equalsIgnoreCase("style"))
 				try
 				{
-					root.getScene().getStylesheets().add(file.toURI().toURL().toExternalForm());
+					this.root.getScene().getStylesheets().add(file.toURI().toURL().toExternalForm());
 					Log.assets.trace("Loaded layout stylesheet!");
-				} catch (MalformedURLException e)
+				} catch (final MalformedURLException e)
 				{
 				}
 			else
 			{
-				FileObject fileObject = FileObject.create(file);
-				String id = fileObject.getName();
-				Node node = root.lookup("#" + id);
+				final FileObject fileObject = FileObject.create(file);
+				final String id = fileObject.getName();
+				final Node node = this.root.lookup("#" + id);
 				if (node instanceof Region)
 					RegionManipulator.bindBackground((Region) node, MasterHandler.read(fileObject, Image.class));
 				else if (node != null) // If node is null the image is a dynamic image!
@@ -187,6 +190,41 @@ public class LayoutManager
 
 		this.currentLayout.set(layout);
 
+	}
+
+	/**
+	 * @return Returns a list of all available layouts!
+	 */
+	public List<String> getList()
+	{
+		final StringArrayList all = new StringArrayList(DataHandler.getSubFolderList(this.layoutDir));
+		if (all.size() == 0)
+		{
+			this.applyLayout(null);
+		}
+		return all;
+	}
+
+	/**
+	 * Reads an image dynamically!
+	 *
+	 * @return Returns an image which is now loaded from the disk.
+	 */
+	public Image readImage(final String name)
+	{
+		try
+		{
+			return this.imageCache.get(name);
+		} catch (final ExecutionException e)
+		{
+			Log.assets.error("Exception shown while reading image from cache or disk!", e);
+			return ImageProducer.getMonoColored(Color.RED);
+		}
+	}
+
+	protected void register(final EasyModifierConfig config)
+	{
+		this.layoutableClass = config.staticClass;
 	}
 
 	/**
@@ -200,8 +238,8 @@ public class LayoutManager
 	{
 		if (layout.equalsIgnoreCase(this.currentLayout.get()))
 		{
-			if (getList().size() > 1)
-				applyLayout(getList().get(getList().indexOf(layout) == 0 ? 1 : 0));
+			if (this.getList().size() > 1)
+				this.applyLayout(this.getList().get(this.getList().indexOf(layout) == 0 ? 1 : 0));
 			else
 			{
 				Log.assets.warn("Can't remove current layout " + layout + " because there is no other one!");
@@ -212,30 +250,15 @@ public class LayoutManager
 	}
 
 	/**
-	 * Reads an image dynamically!
-	 * 
-	 * @return Returns an image which is now loaded from the disk.
-	 */
-	public Image readImage(String name)
-	{
-		return ImageHandler.readImage(FileObject.create().setPath(DataHandler.fuse(this.layoutDir.getFullPath(), this.currentLayout.get())).setFullName(name));
-	}
-
-	/**
 	 * @param id
 	 *            An id containing only letters and numbers.
 	 * @param image
 	 *            The image to write to the current layout.
 	 */
-	protected synchronized void saveElement(String id, Image image)
+	protected synchronized void saveElement(final String id, final Image image)
 	{
 		if (id.matches("^[A-Z0-9]+$"))
 			throw new IllegalArgumentException("ID may contain only letters and numbers!");
 		MasterHandler.write(FileObject.create().setPath(DataHandler.fuse(this.layoutDir.getFullPath(), this.currentLayout.get())).setName(id), image);
-	}
-
-	protected void register(EasyModifierConfig config)
-	{
-		this.layoutableClass = config.staticClass;
 	}
 }
