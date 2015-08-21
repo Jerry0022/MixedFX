@@ -14,9 +14,15 @@ public class EasyModifierConfig
 	 */
 	public String dynamicClass;
 
+	/**
+	 * If false a key typed event enables or disables the modify mode. If true as long as the key is typed the modify mode is enabled.
+	 */
+	public boolean keyPressed;
+
 	public EasyModifierConfig()
 	{
 		this.staticClass = "modifiable";
 		this.dynamicClass = "modifying";
+		this.keyPressed = false;
 	}
 }
