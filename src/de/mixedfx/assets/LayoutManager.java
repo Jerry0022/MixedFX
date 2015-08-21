@@ -194,7 +194,6 @@ public class LayoutManager
 		}
 
 		this.currentLayout.set(layout);
-
 	}
 
 	/**
@@ -253,8 +252,10 @@ public class LayoutManager
 	 *
 	 * @param layout
 	 *            The name of the layout which shall be deleted.
+	 * @return Returns true if successful or false if not. Also false if the layout is the only and current one (if standard one is not there).
 	 */
-	public void removeLayout(final String layout)
+
+	public boolean removeLayout(final String layout)
 	{
 		if (layout.equalsIgnoreCase(this.currentLayout.get()))
 		{
@@ -263,10 +264,30 @@ public class LayoutManager
 			else
 			{
 				Log.assets.warn("Can't remove current layout " + layout + " because there is no other one!");
-				return;
+				return false;
 			}
 		}
-		DataHandler.deleteFile(this.layoutDir.setFullName(layout));
+		final boolean result = DataHandler.deleteFile(this.layoutDir.setFullName(layout));
+		Log.assets.trace("Layout " + layout + " removed " + (result ? "succesfully" : "unsuccessfully") + "!");
+		return result;
+	}
+
+	/**
+	 * @param oldName
+	 *            Old name of the layout (folder).
+	 * @param newName
+	 *            New name of the layout (folder).
+	 * @return Returns true if success or false if no success, e. g. a layout with this name already exists
+	 */
+	public boolean renameLayout(final String oldName, final String newName)
+	{
+		final File oldFolder = FileObject.create().setPath(DataHandler.fuse(this.layoutDir.getFullPath(), oldName)).toFile();
+		final File newFolder = FileObject.create().setPath(DataHandler.fuse(this.layoutDir.getFullPath(), newName)).toFile();
+		if (this.currentLayout.get().equalsIgnoreCase(oldName))
+			this.currentLayout.set(newName);
+		final boolean result = oldFolder.renameTo(newFolder);
+		Log.assets.trace("Layout " + oldName + " renamed to " + newName + " " + (result ? "succesfully" : "unsuccessfully") + "!");
+		return result;
 	}
 
 	/**
