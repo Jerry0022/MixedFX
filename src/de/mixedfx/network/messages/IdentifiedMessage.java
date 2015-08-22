@@ -12,7 +12,7 @@ public abstract class IdentifiedMessage extends Message
 
 	public IdentifiedMessage()
 	{
-		this.fromUserID = ConnectivityManager.get().getMyUser().getIdentifier();
+		this.fromUserID = ConnectivityManager.get().getMyUser().get().getIdentifier();
 		this.toUserIDs = new ArrayList<>();
 	}
 

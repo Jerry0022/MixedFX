@@ -29,39 +29,6 @@ public abstract class User implements Identifiable, Serializable
 		this.networks = new SimpleListProperty<>(FXCollections.observableArrayList());
 	}
 
-	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
-	{
-		in.defaultReadObject();
-		this.networks = new SimpleListProperty<>(FXCollections.observableArrayList());
-		this.setMeUp();
-	}
-
-	public void merge(User newUser)
-	{
-		this.networks.addAll(newUser.networks);
-		mergeMe(newUser);
-	}
-
-	/**
-	 * All transient fields should be set up here!
-	 */
-	public abstract void setMeUp();
-
-	/**
-	 * This method enables you to use properties and link users directly to GUI. If a user is updated with a new UserProfile what shall I do with the new fields? Do nothing here if a new user profile
-	 * doesn't care the old one!
-	 * 
-	 * @param newUser
-	 *            The new one with the same id! All other values might have changed!
-	 */
-	public abstract void mergeMe(User newUser);
-
-	@Override
-	public String toString()
-	{
-		return "UserID: " + this.getIdentifier();
-	}
-
 	/**
 	 * This method is called after a User is received by the network. If a user is already in the network this method should return true. If this method returns false, the user will be kicked from the
 	 * network. This implies that only the newest user is in the network and maybe not even him and there can't be a user twice.
@@ -70,11 +37,50 @@ public abstract class User implements Identifiable, Serializable
 	 * @return Returns true if the user is equal to the other user, otherwise false.
 	 */
 	@Override
-	public boolean equals(Object user)
+	public boolean equals(final Object user)
 	{
 		if (user instanceof User)
 			return this.getIdentifier().equals(((User) user).getIdentifier());
 		else
 			return false;
+	}
+
+	public void merge(final User newUser)
+	{
+		if (!newUser.networks.stream().anyMatch(n ->
+		{
+			return this.networks.stream().anyMatch(n2 -> n.getIP().getHostAddress().equalsIgnoreCase(n2.getIP().getHostAddress()));
+		}))
+		{
+			this.networks.addAll(newUser.networks);
+		}
+		this.mergeMe(newUser);
+	}
+
+	/**
+	 * This method enables you to use properties and link users directly to GUI. If a user is updated with a new UserProfile what shall I do with the new fields? Do nothing here if a new user profile
+	 * doesn't care the old one!
+	 *
+	 * @param newUser
+	 *            The new one with the same id! All other values might have changed!
+	 */
+	public abstract void mergeMe(User newUser);
+
+	private void readObject(final java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
+	{
+		in.defaultReadObject();
+		this.networks = new SimpleListProperty<>(FXCollections.observableArrayList());
+		this.setMeUp();
+	}
+
+	/**
+	 * All transient fields should be set up here!
+	 */
+	public abstract void setMeUp();
+
+	@Override
+	public String toString()
+	{
+		return "UserID: " + this.getIdentifier();
 	};
 }

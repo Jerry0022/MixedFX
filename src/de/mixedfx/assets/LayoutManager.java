@@ -300,7 +300,7 @@ public class LayoutManager
 	 */
 	protected synchronized void saveElement(final String id, final Image image)
 	{
-		if (id.matches("^[A-Z0-9]+$"))
+		if (!id.matches("^[A-Za-z0-9]+$"))
 			throw new IllegalArgumentException("ID may contain only letters and numbers!");
 		MasterHandler.write(FileObject.create().setPath(DataHandler.fuse(this.layoutDir.getFullPath(), this.currentLayout.get())).setName(id), image);
 	}

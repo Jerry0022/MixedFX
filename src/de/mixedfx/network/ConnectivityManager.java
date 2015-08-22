@@ -41,7 +41,7 @@ public class ConnectivityManager<T extends User>
 	 */
 	public ListProperty<T> otherUsers;
 
-	private T myUniqueUser;
+	private ObjectProperty<T> myUniqueUser;
 
 	public ConnectivityManager(final T myUser)
 	{
@@ -49,7 +49,7 @@ public class ConnectivityManager<T extends User>
 		this.otherUsers = new SimpleListProperty<T>(FXCollections.observableArrayList());
 		this.state = new SimpleObjectProperty<>(State.OFFLINE);
 		this.tcp_user_map = new Hashtable<>(16);
-		this.myUniqueUser = myUser;
+		this.myUniqueUser = new SimpleObjectProperty<>(myUser);
 		NetworkManager.t.tcpClients.addListener((ListChangeListener<TCPClient>) c ->
 		{
 			while (c.next())
@@ -93,7 +93,7 @@ public class ConnectivityManager<T extends User>
 						{
 							synchronized (NetworkManager.t.tcpClients)
 							{
-								final UserMessage<T> message = new UserMessage<T>(this.myUniqueUser);
+								final UserMessage<T> message = new UserMessage<T>(this.myUniqueUser.get());
 								message.setToIP(tcp2.remoteAddress);
 								MessageBus.send(message);
 								Log.network.debug("Sending " + message + " to " + tcp2.remoteAddress);
@@ -142,7 +142,7 @@ public class ConnectivityManager<T extends User>
 		} , true);
 	}
 
-	public T getMyUser()
+	public ObjectProperty<T> getMyUser()
 	{
 		return this.myUniqueUser;
 	}
@@ -161,15 +161,19 @@ public class ConnectivityManager<T extends User>
 
 	public void setMyUser(final T myUser)
 	{
-		this.myUniqueUser = myUser;
+		this.myUniqueUser.set(myUser);
 	}
 
 	public void start()
 	{
-		if (this.myUniqueUser == null)
+		if (this.myUniqueUser.get() == null)
 			throw new IllegalStateException("Please first set a user!");
+
+		// Start network
 		NetworkManager.start();
 		this.state.set(State.SEARCHING);
+
+		// Start updating overlay networks
 		Inspector.runNowAsDaemon(() ->
 		{
 			while (NetworkManager.running)
@@ -189,10 +193,10 @@ public class ConnectivityManager<T extends User>
 
 	public void start(final T myUniqueUser)
 	{
-		if (this.myUniqueUser == null)
+		if ((this.myUniqueUser.get() == null) || this.myUniqueUser.get().getIdentifier().equals(""))
 			this.setMyUser(myUniqueUser);
 		else
-			this.myUniqueUser.merge(myUniqueUser);
+			this.myUniqueUser.get().merge(myUniqueUser);
 		this.start();
 	}
 
@@ -204,9 +208,16 @@ public class ConnectivityManager<T extends User>
 
 	public void switchStatus()
 	{
-		if (this.state.equals(State.OFFLINE))
+		if (this.state.get().equals(State.OFFLINE))
 			this.start();
 		else
 			this.stop();
+	}
+
+	public void updatedUser()
+	{
+		// TODO Check
+		final UserMessage<T> message = new UserMessage<T>(this.myUniqueUser.get());
+		MessageBus.send(message);
 	}
 }
