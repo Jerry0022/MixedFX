@@ -18,7 +18,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -70,33 +69,6 @@ public class SuperPane extends StackPane
 	 */
 
 	/**
-	 * @param root
-	 *            The top root node.
-	 * @return Returns null if there was no SuperPane found in the Scene Graph. Otherwise it returns the top nearest first SuperPane.
-	 */
-	public final static SuperPane getNearest(Parent root)
-	{
-		Parent child = root;
-		if (child instanceof SuperPane)
-			return (SuperPane) child;
-		// Check direct children
-		for (Node node : child.getChildrenUnmodifiable())
-			if (node instanceof SuperPane)
-				return (SuperPane) node;
-		for (Node node : child.getChildrenUnmodifiable())
-		{
-			if (node instanceof Parent)
-			{
-				// Check indirect children
-				child = getNearest((Parent) node);
-				if (child instanceof SuperPane)
-					return (SuperPane) child;
-			}
-		}
-		return null;
-	}
-
-	/**
 	 * Retrieves and returns the first found parent SuperPane (which doesn't have to be the direct parent node).
 	 *
 	 * @param child
@@ -106,7 +78,7 @@ public class SuperPane extends StackPane
 	public final static SuperPane getMySP(final Node child)
 	{
 		Parent parent = child.getParent();
-		while (parent != null && !(parent instanceof SuperPane))
+		while ((parent != null) && !(parent instanceof SuperPane))
 		{
 			parent = parent.getParent();
 		}
@@ -131,6 +103,33 @@ public class SuperPane extends StackPane
 			parent = parent.getParent();
 		}
 		return lastSuperPane;
+	}
+
+	/**
+	 * @param root
+	 *            The top root node.
+	 * @return Returns null if there was no SuperPane found in the Scene Graph. Otherwise it returns the top nearest first SuperPane.
+	 */
+	public final static SuperPane getNearest(final Parent root)
+	{
+		Parent child = root;
+		if (child instanceof SuperPane)
+			return (SuperPane) child;
+		// Check direct children
+		for (final Node node : child.getChildrenUnmodifiable())
+			if (node instanceof SuperPane)
+				return (SuperPane) node;
+		for (final Node node : child.getChildrenUnmodifiable())
+		{
+			if (node instanceof Parent)
+			{
+				// Check indirect children
+				child = SuperPane.getNearest((Parent) node);
+				if (child instanceof SuperPane)
+					return (SuperPane) child;
+			}
+		}
+		return null;
 	}
 
 	/*
@@ -196,7 +195,7 @@ public class SuperPane extends StackPane
 	 * <p>
 	 * Creates an instance of a {@link SuperPane}. In fact is not much more than an (empty) StackPane.
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * You can get the nearest {@link SuperPane} from {@link SuperPane#getMySP(Node)}!
 	 * </p>
@@ -249,67 +248,93 @@ public class SuperPane extends StackPane
 	}
 
 	/**
-	 * Sets the Background.
-	 *
-	 * @param background
-	 *            In contrast to {@link Region#setBackground(javafx.scene.layout.Background)} this can be any Node.
+	 * Blurs and darkens the whole StackPane. First it removes all old overlays. Then maybe adds a new Overlay as forelast element (only in case the last element is not the content).
 	 */
-	public void setBackgroundImage(final Image background)
+	private void blurAndDarkenPreLastLayer()
 	{
-		RegionManipulator.bindBackground(this, background);
+		// Removes all old overlays
+		this.getChildren().removeAll(this.getChildren().stream().filter(node -> node.getStyleClass().contains(StyleClasses.OVERLAY.get())).collect(Collectors.toList()));
+
+		// Remove all blur effects
+		for (int i = 0; i < this.getChildren().size(); i++)
+		{
+			this.getChildren().get(i).setEffect(null);
+		}
+
+		// Add an overlay only if the last element is not the content
+		if ((this.content != null) && !this.getChildren().get(this.getChildren().size() - 1).equals(this.content))
+		{
+			// Blur all layer except the last one
+			final BoxBlur blurBox = new BoxBlur();
+			blurBox.setIterations(3);
+			for (int i = 0; i < (this.getChildren().size() - 1); i++)
+			{
+				this.getChildren().get(i).setEffect(blurBox);
+			}
+
+			// Add an (unblurred) OverlayPane (to darken) before the last
+			// element
+			final Rectangle overlay = new Rectangle();
+			if ((SuperPane.opacity < 0) || (SuperPane.opacity > 1))
+				SuperPane.opacity = 0.35;
+			overlay.setFill(Color.valueOf("rgba(0, 0, 0, " + SuperPane.opacity + ")"));
+			overlay.getStyleClass().add(StyleClasses.OVERLAY.get());
+			overlay.widthProperty().bind(this.widthProperty());
+			overlay.heightProperty().bind(this.heightProperty());
+
+			this.getChildren().add(this.getChildren().size() - 1, overlay);
+		}
 	}
 
 	/**
-	 * Sets the Background.
+	 * Is the same method like {@link #closeDynamic(Node)}!
 	 *
-	 * @param background
-	 *            In contrast to {@link Region#setBackground(javafx.scene.layout.Background)} this can be any Node.
+	 * @param dialogue
+	 *            The dialogue to close.
 	 */
-	public void setBackgroundNode(final Node background)
+	public void closeDialogue(final Node dialogue)
 	{
-		this.setBackgroundNode(null);
-		background.getStyleClass().add(StyleClasses.BACKGROUND.get());
-
-		// Remove background node
-		List<Node> backgrounds = new ArrayList<>();
-		for (Node node : this.getChildren())
-			if (node.getStyleClass().contains(StyleClasses.BACKGROUND.get()))
-				backgrounds.add(node);
-		this.getChildren().removeAll(backgrounds);
-
-		// Put background before other nodes
-		this.getChildren().add(0, background);
+		this.closeDynamic(dialogue);
 	}
 
 	/**
-	 * Set the main content node.
+	 * Closes a Dynamic or if a parent was added to this SuperPane it closes this one.
+	 * <p>
+	 * If the Dynamic implements {@link Dynamic} it will be informed about the stop (before it will be removed from the scene graph).
+	 * </p>
 	 *
-	 * @param content
-	 *            The content which shall be shown.
+	 * @param dynamic
+	 *            The node (if {@link Dynamic} it will be informed) which shall be shown on top of the SuperPane
 	 */
-	public void setContent(final Node content)
+	public void closeDynamic(final Node dynamic)
 	{
-		content.getStyleClass().add(StyleClasses.CONTENT.get());
+		if (dynamic instanceof Dynamic)
+		{
+			((Dynamic) dynamic).stop();
+		}
 
-		// Remove content node
-		List<Node> contents = new ArrayList<>();
-		for (Node node : this.getChildren())
-			if (node.getStyleClass().contains(StyleClasses.CONTENT.get()))
-				contents.add(node);
-		this.getChildren().removeAll(contents);
+		Node toDelete = dynamic;
+		while ((toDelete != null) && !this.getChildren().remove(toDelete))
+		{
+			toDelete = toDelete.getParent();
+		}
 
-		// If there is a background put content after background before other nodes
-		if (this.getChildren().size() > 0 && this.getChildren().get(0).getStyleClass().contains(StyleClasses.BACKGROUND.get()))
-			this.getChildren().add(1, content);
-		else
-			this.getChildren().add(0, content);
-
-		this.content = content;
+		this.blurAndDarkenPreLastLayer();
 	}
 
-	public void setLoadScreen(final Node loadScreen)
+	/**
+	 * Closes the load screen.
+	 */
+	private void closeLoadScreen()
 	{
-		this.loadScreen = loadScreen;
+		// Close Load Screen only if it is shown
+		if (this.loading.getAndSet(false))
+		{
+			if (this.loadScreen != null)
+			{
+				this.closeDynamic(this.loadScreen);
+			}
+		}
 	}
 
 	/**
@@ -354,66 +379,20 @@ public class SuperPane extends StackPane
 	}
 
 	/**
-	 * Opens the load screen. Can be only opened once.
-	 */
-	private void openLoadScreen()
-	{
-		// Show Load Screen only if it is not already shown
-		if (!this.loading.getAndSet(true))
-		{
-			if (this.loadScreen != null)
-			{
-				this.openDynamic(this.loadScreen);
-			}
-		}
-	}
-
-	/**
-	 * Closes the load screen.
-	 */
-	private void closeLoadScreen()
-	{
-		// Close Load Screen only if it is shown
-		if (this.loading.getAndSet(false))
-		{
-			if (this.loadScreen != null)
-			{
-				this.closeDynamic(this.loadScreen);
-			}
-		}
-	}
-
-	/**
 	 * Opens a new dialogue which does isn't resized to fit the parent. Works if a dialogue is opened or not.
-	 * 
+	 *
 	 * @param dialogue
 	 *            The dialogue to open.
 	 */
 	public void openDialogue(final Node dialogue)
 	{
-		this.openDynamic(new Pane()
+		this.openDynamic(new StackPane()
 		{
 			{
 				this.getChildren().add(dialogue);
-			}
-
-			@Override
-			public boolean isResizable()
-			{
-				return false;
+				this.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 			}
 		});
-	}
-
-	/**
-	 * Is the same method like {@link #closeDynamic(Node)}!
-	 * 
-	 * @param dialogue
-	 *            The dialogue to close.
-	 */
-	public void closeDialogue(final Node dialogue)
-	{
-		this.closeDynamic(dialogue);
 	}
 
 	/**
@@ -441,66 +420,81 @@ public class SuperPane extends StackPane
 	}
 
 	/**
-	 * Closes a Dynamic or if a parent was added to this SuperPane it closes this one.
-	 * <p>
-	 * If the Dynamic implements {@link Dynamic} it will be informed about the stop (before it will be removed from the scene graph).
-	 * </p>
-	 *
-	 * @param dynamic
-	 *            The node (if {@link Dynamic} it will be informed) which shall be shown on top of the SuperPane
+	 * Opens the load screen. Can be only opened once.
 	 */
-	public void closeDynamic(final Node dynamic)
+	private void openLoadScreen()
 	{
-		if (dynamic instanceof Dynamic)
+		// Show Load Screen only if it is not already shown
+		if (!this.loading.getAndSet(true))
 		{
-			((Dynamic) dynamic).stop();
+			if (this.loadScreen != null)
+			{
+				this.openDynamic(this.loadScreen);
+			}
 		}
-
-		Node toDelete = dynamic;
-		while (toDelete != null && !this.getChildren().remove(toDelete))
-		{
-			toDelete = toDelete.getParent();
-		}
-
-		this.blurAndDarkenPreLastLayer();
 	}
 
 	/**
-	 * Blurs and darkens the whole StackPane. First it removes all old overlays. Then maybe adds a new Overlay as forelast element (only in case the last element is not the content).
+	 * Sets the Background.
+	 *
+	 * @param background
+	 *            In contrast to {@link Region#setBackground(javafx.scene.layout.Background)} this can be any Node.
 	 */
-	private void blurAndDarkenPreLastLayer()
+	public void setBackgroundImage(final Image background)
 	{
-		// Removes all old overlays
-		this.getChildren().removeAll(this.getChildren().stream().filter(node -> node.getStyleClass().contains(StyleClasses.OVERLAY.get())).collect(Collectors.toList()));
+		RegionManipulator.bindBackground(this, background);
+	}
 
-		// Remove all blur effects
-		for (int i = 0; i < this.getChildren().size(); i++)
-		{
-			this.getChildren().get(i).setEffect(null);
-		}
+	/**
+	 * Sets the Background.
+	 *
+	 * @param background
+	 *            In contrast to {@link Region#setBackground(javafx.scene.layout.Background)} this can be any Node.
+	 */
+	public void setBackgroundNode(final Node background)
+	{
+		this.setBackgroundNode(null);
+		background.getStyleClass().add(StyleClasses.BACKGROUND.get());
 
-		// Add an overlay only if the last element is not the content
-		if (content != null && !this.getChildren().get(this.getChildren().size() - 1).equals(this.content))
-		{
-			// Blur all layer except the last one
-			final BoxBlur blurBox = new BoxBlur();
-			blurBox.setIterations(3);
-			for (int i = 0; i < this.getChildren().size() - 1; i++)
-			{
-				this.getChildren().get(i).setEffect(blurBox);
-			}
+		// Remove background node
+		final List<Node> backgrounds = new ArrayList<>();
+		for (final Node node : this.getChildren())
+			if (node.getStyleClass().contains(StyleClasses.BACKGROUND.get()))
+				backgrounds.add(node);
+		this.getChildren().removeAll(backgrounds);
 
-			// Add an (unblurred) OverlayPane (to darken) before the last
-			// element
-			final Rectangle overlay = new Rectangle();
-			if (opacity < 0 || opacity > 1)
-				opacity = 0.35;
-			overlay.setFill(Color.valueOf("rgba(0, 0, 0, " + opacity + ")"));
-			overlay.getStyleClass().add(StyleClasses.OVERLAY.get());
-			overlay.widthProperty().bind(this.widthProperty());
-			overlay.heightProperty().bind(this.heightProperty());
+		// Put background before other nodes
+		this.getChildren().add(0, background);
+	}
 
-			this.getChildren().add(this.getChildren().size() - 1, overlay);
-		}
+	/**
+	 * Set the main content node.
+	 *
+	 * @param content
+	 *            The content which shall be shown.
+	 */
+	public void setContent(final Node content)
+	{
+		content.getStyleClass().add(StyleClasses.CONTENT.get());
+
+		// Remove content node
+		final List<Node> contents = new ArrayList<>();
+		for (final Node node : this.getChildren())
+			if (node.getStyleClass().contains(StyleClasses.CONTENT.get()))
+				contents.add(node);
+		this.getChildren().removeAll(contents);
+
+		// If there is a background put content after background before other nodes
+		if ((this.getChildren().size() > 0) && this.getChildren().get(0).getStyleClass().contains(StyleClasses.BACKGROUND.get()))
+			this.getChildren().add(1, content);
+		else
+			this.getChildren().add(0, content);
+
+		this.content = content;
+	}
+
+	public void setLoadScreen(final Node loadScreen)
+	{
+		this.loadScreen = loadScreen;
 	}
 }
