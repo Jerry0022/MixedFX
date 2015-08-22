@@ -257,7 +257,6 @@ public class SuperPane extends StackPane
 	{
 		// Removes all old overlays
 		this.getChildren().removeAll(this.getChildren().stream().filter(node -> node.getStyleClass().contains(StyleClasses.OVERLAY.get())).collect(Collectors.toList()));
-		System.out.println(this.getChildren());
 
 		// Remove all blur effects
 		for (int i = 0; i < this.getChildren().size(); i++)
@@ -336,7 +335,6 @@ public class SuperPane extends StackPane
 		{
 			if (this.loadScreen != null)
 			{
-				System.out.println("CALLEd");
 				this.closeDynamic(this.loadScreen);
 			}
 		}
