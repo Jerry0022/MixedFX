@@ -142,7 +142,8 @@ public class SuperPane extends StackPane
 	/**
 	 * Indicates whether the Load Screen is open, not if a task is running (because if many short tasks are running there is no LoadScreen)
 	 */
-	private AtomicBoolean loading;
+	private AtomicBoolean	loading;
+	private Runnable		onLoadingDone;
 
 	/**
 	 * Handles all jobs which are loaded via {@link #load(Task)}! Executes three workers at the same time. Others have to wait.
@@ -185,6 +186,8 @@ public class SuperPane extends StackPane
 					Platform.runLater(() ->
 					{
 						SuperPane.this.closeLoadScreen();
+						if (this.onLoadingDone != null)
+							this.onLoadingDone.run();
 					});
 				}
 			}
@@ -254,6 +257,7 @@ public class SuperPane extends StackPane
 	{
 		// Removes all old overlays
 		this.getChildren().removeAll(this.getChildren().stream().filter(node -> node.getStyleClass().contains(StyleClasses.OVERLAY.get())).collect(Collectors.toList()));
+		System.out.println(this.getChildren());
 
 		// Remove all blur effects
 		for (int i = 0; i < this.getChildren().size(); i++)
@@ -332,6 +336,7 @@ public class SuperPane extends StackPane
 		{
 			if (this.loadScreen != null)
 			{
+				System.out.println("CALLEd");
 				this.closeDynamic(this.loadScreen);
 			}
 		}
@@ -408,10 +413,21 @@ public class SuperPane extends StackPane
 	 */
 	public void openDynamic(final Node dynamic)
 	{
+		this.openDynamic(dynamic, true);
+	}
+
+	/**
+	 * @param dynamic
+	 * @param darkenLastLayer
+	 *            Only has an effect if there is not already a layer darkened
+	 */
+	public void openDynamic(final Node dynamic, final boolean darkenLastLayer)
+	{
 		this.getChildren().add(dynamic);
 		if (this.content == null)
 			Log.assets.warn("The SuperPane has no content. Therefore nothing will be blurred after opening this Dynamic: " + dynamic);
-		this.blurAndDarkenPreLastLayer();
+		if (darkenLastLayer)
+			this.blurAndDarkenPreLastLayer();
 
 		if (dynamic instanceof Dynamic)
 		{
@@ -496,5 +512,16 @@ public class SuperPane extends StackPane
 	public void setLoadScreen(final Node loadScreen)
 	{
 		this.loadScreen = loadScreen;
+	}
+
+	/**
+	 * A runnable which is every time called from the FXThread when the SuperPane finished loading (after the loading pane disappeared)!
+	 *
+	 * @param onLoadingDone
+	 *            Any runnable which is called from the FXThread (therefore do not execute long running tasks here)!
+	 */
+	public void setOnLoadingDone(final Runnable onLoadingDone)
+	{
+		this.onLoadingDone = onLoadingDone;
 	}
 }
