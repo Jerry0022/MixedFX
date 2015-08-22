@@ -17,8 +17,6 @@ import de.mixedfx.network.messages.Message;
  */
 public class MessageBus
 {
-	public static final String MESSAGE_RECEIVE = "MESSAGE_RECEIVE";
-
 	public interface MessageReceiver
 	{
 		/**
@@ -29,8 +27,32 @@ public class MessageBus
 		public void receive(Message message);
 	}
 
+	public static final String MESSAGE_RECEIVE = "MESSAGE_RECEIVE";
+
 	private static MessageBus			intermediateReceiver;
 	private static ArrayList<Object>	receiverList	= new ArrayList<>();
+
+	/**
+	 * To undo this use {@link MessageBus#unregisterForReceival(MessageReceiver)}. Done with {@link WeakReference}.
+	 *
+	 * @param receiver
+	 *            Receiver will be informed asynchronously!
+	 * @param strongly
+	 *            Set true if you want to use this as an Anonymous Inner Object!
+	 */
+	public static synchronized void registerForReceival(final MessageReceiver receiver, final boolean strongly)
+	{
+		if (MessageBus.receiverList.isEmpty())
+		{
+			MessageBus.intermediateReceiver = new MessageBus();
+			AnnotationProcessor.process(MessageBus.intermediateReceiver);
+		}
+
+		if (strongly)
+			MessageBus.receiverList.add(receiver);
+		else
+			MessageBus.receiverList.add(new WeakReference<MessageBus.MessageReceiver>(receiver));
+	}
 
 	/**
 	 * @param message
@@ -38,26 +60,26 @@ public class MessageBus
 	 */
 	public static synchronized void send(final Message message)
 	{
-		Runnable run = () ->
+		final Runnable run = () ->
 		{
 			if (message instanceof IdentifiedMessage)
 			{
-				IdentifiedMessage idMessage = (IdentifiedMessage) message;
-				synchronized (ConnectivityManager.tcp_user_map)
+				final IdentifiedMessage idMessage = (IdentifiedMessage) message;
+				synchronized (ConnectivityManager.get().tcp_user_map)
 				{
 					if (idMessage.getToUserIDs().isEmpty())
-						for (InetAddress ip : ConnectivityManager.tcp_user_map.keySet())
+						for (final InetAddress ip : ConnectivityManager.get().tcp_user_map.keySet())
 						{
 							message.setToIP(ip);
 							EventBusExtended.publishAsyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
 						}
 					else
 					{
-						for (Object id : idMessage.getToUserIDs())
+						for (final Object id : idMessage.getToUserIDs())
 						{
-							FindIP: for (InetAddress ip : ConnectivityManager.tcp_user_map.keySet())
+							FindIP: for (final InetAddress ip : ConnectivityManager.get().tcp_user_map.keySet())
 							{
-								if (ConnectivityManager.tcp_user_map.get(ip).getOriginalUser().getIdentifier().equals(id))
+								if (ConnectivityManager.get().tcp_user_map.get(ip).getOriginalUser().getIdentifier().equals(id))
 								{
 									message.setToIP(ip);
 									EventBusExtended.publishAsyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
@@ -70,32 +92,10 @@ public class MessageBus
 			} else
 				EventBusExtended.publishAsyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
 		};
-		if (Thread.holdsLock(ConnectivityManager.tcp_user_map))
+		if (Thread.holdsLock(ConnectivityManager.get().tcp_user_map))
 			Inspector.runNowAsDaemon(run);
 		else
 			run.run();
-	}
-
-	/**
-	 * To undo this use {@link MessageBus#unregisterForReceival(MessageReceiver)}. Done with {@link WeakReference}.
-	 *
-	 * @param receiver
-	 *            Receiver will be informed asynchronously!
-	 * @param strongly
-	 *            Set true if you want to use this as an Anonymous Inner Object!
-	 */
-	public static synchronized void registerForReceival(final MessageReceiver receiver, boolean strongly)
-	{
-		if (MessageBus.receiverList.isEmpty())
-		{
-			MessageBus.intermediateReceiver = new MessageBus();
-			AnnotationProcessor.process(MessageBus.intermediateReceiver);
-		}
-
-		if (strongly)
-			MessageBus.receiverList.add(receiver);
-		else
-			MessageBus.receiverList.add(new WeakReference<MessageBus.MessageReceiver>(receiver));
 	}
 
 	/**
@@ -126,7 +126,7 @@ public class MessageBus
 		{
 			if (receiver instanceof MessageReceiver)
 				((MessageReceiver) receiver).receive(message);
-			else if ((receiver instanceof WeakReference) && ((WeakReference<MessageReceiver>) receiver).get() != null)
+			else if ((receiver instanceof WeakReference) && (((WeakReference<MessageReceiver>) receiver).get() != null))
 				((WeakReference<MessageReceiver>) receiver).get().receive(message);
 		}
 	}

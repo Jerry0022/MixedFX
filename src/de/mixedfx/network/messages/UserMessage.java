@@ -2,34 +2,35 @@ package de.mixedfx.network.messages;
 
 import de.mixedfx.network.user.User;
 
-public class UserMessage extends Message
+public class UserMessage<T extends User> extends Message
 {
-	private final User myUser;
+	private final T myUser;
 
-	public UserMessage(User myUser)
+	public UserMessage(final T myUser)
 	{
 		this.myUser = myUser;
 	}
 
-	public User getOriginalUser()
-	{
-		return this.myUser;
-	}
-
-	public boolean equals(Object userMessage)
+	@Override
+	public boolean equals(final Object userMessage)
 	{
 		if (!(userMessage instanceof UserMessage))
 			return false;
 		else
 		{
-			UserMessage message = (UserMessage) userMessage;
+			final UserMessage<T> message = (UserMessage<T>) userMessage;
 			return this.getOriginalUser().equals(message.getOriginalUser());
 		}
+	}
+
+	public T getOriginalUser()
+	{
+		return this.myUser;
 	}
 
 	@Override
 	public String toString()
 	{
-		return "UserMessage with User: " + myUser;
+		return "UserMessage with User: " + this.myUser;
 	}
 }
