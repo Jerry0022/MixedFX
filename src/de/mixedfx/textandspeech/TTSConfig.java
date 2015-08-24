@@ -9,7 +9,7 @@ public class TTSConfig
 	public String DETECTLANGUAGE_API_KEY = "d4bb31a242aba2eb925ae4cada947095";
 
 	/**
-	 * If true the method {@link TextToSpeech#say(String, TTSConfig)} blocks until the voice has finished!
+	 * If true the method {@link TextToSpeech#say(String, TTSConfig)} blocks until the voice has finished! Default is false!
 	 */
 	public boolean block = false;
 

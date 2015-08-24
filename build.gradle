@@ -68,6 +68,7 @@ repositories {
     maven {
         url "https://repository.apache.org/content/repositories/snapshots"
     }
+     maven { url "https://jitpack.io" }
 }
  
 //Project dependencies
@@ -87,5 +88,5 @@ dependencies {
    	compile 'net.java.dev.jna:jna:4.1.0'
    	compile 'net.java.dev.jna:jna-platform:4.1.0'
    	compile 'com.google.guava:guava:18.0'
-   	compile fileTree(dir: 'libs', include: ['*.jar'])
+   	runtime fileTree(dir: 'libs', include: ['*.jar'])
 }
