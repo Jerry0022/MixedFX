@@ -341,6 +341,14 @@ public class SuperPane extends StackPane
 	}
 
 	/**
+	 * @return Returns true if at least one Node is open which is not the BACKGROUND or CONTENT node.
+	 */
+	public boolean isOverlaying()
+	{
+		return ((this.lookupAll("." + StyleClasses.BACKGROUND).size() + this.lookupAll("." + StyleClasses.CONTENT).size()) != this.getChildren().size());
+	}
+
+	/**
 	 * Loads a task asynchronously and shows a stopping task animation as an overlay if the task is running longer than {@link SuperPane#taskLoadScreenDelayMS}. In each case the content is unclickable
 	 * for the time. Doesn't have to be called via FXThread.
 	 *
