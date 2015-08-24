@@ -51,11 +51,6 @@ public class TextToSpeech
 		// Set volume
 		maryttsServer.setAudioEffects("Volume(Amount=" + config.volume + ")");
 
-		System.out.println("JUHU");
-		System.out.println(config.lang);
-		System.out.println(config.male);
-		System.out.println(config.lang.getVoice(config.male));
-
 		// Autodetect language if no Language was chosen!
 		if (config.lang == null)
 		{

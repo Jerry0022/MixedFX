@@ -5,15 +5,19 @@ import de.mixedfx.windows.MasterController;
 import de.mixedfx.windows.NetworkAdapterNotFoundException;
 import de.mixedfx.windows.ProgramNotFoundException;
 
-public class WindowsTester {
+public class WindowsTester
+{
 
-	public static void main(final String[] args) {
+	public static void main(final String[] args)
+	{
 		// System.out.println(MasterController.isRunningAsAdmin());
 		// System.out.println(MasterController.hasCurrentUserAdminRights());
 
-		try {
+		try
+		{
 			MasterController.enableTunngle("Battlefield 2");
-		} catch (AdminRequiredException | ProgramNotFoundException | NetworkAdapterNotFoundException e) {
+		} catch (AdminRequiredException | ProgramNotFoundException | NetworkAdapterNotFoundException e)
+		{
 			e.printStackTrace();
 		}
 
