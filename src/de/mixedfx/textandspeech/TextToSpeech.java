@@ -16,23 +16,8 @@ import marytts.util.data.audio.AudioPlayer;
 
 public class TextToSpeech
 {
-	private static MaryInterface	maryttsServer;
-	private static AudioPlayer		audioPlayer;
-	private static Language			currentLang;
-
-	/**
-	 * May need some seconds!
-	 */
-	public static void init()
-	{
-		try
-		{
-			TextToSpeech.maryttsServer = new LocalMaryInterface();
-		} catch (final MaryConfigurationException ex)
-		{
-			Log.textAndSpeech.fatal("MaryConfigurationException registered: " + ex);
-		}
-	}
+	private static AudioPlayer	audioPlayer;
+	private static Language		currentLang;
 
 	/**
 	 *
@@ -53,18 +38,26 @@ public class TextToSpeech
 		if (config == null)
 			config = new TTSConfig();
 
-		// Initialize
-		if (TextToSpeech.maryttsServer == null)
-			TextToSpeech.init();
-
-		System.out.println("GO!");
+		final MaryInterface maryttsServer;
+		try
+		{
+			maryttsServer = new LocalMaryInterface();
+		} catch (final MaryConfigurationException ex)
+		{
+			Log.textAndSpeech.fatal("MaryConfigurationException registered: " + ex);
+			return;
+		}
 
 		// Set volume
-		TextToSpeech.maryttsServer.setAudioEffects("Volume(Amount=" + config.volume + ")");
+		maryttsServer.setAudioEffects("Volume(Amount=" + config.volume + ")");
 
-		System.out.println("GO!");
+		System.out.println("JUHU");
+		System.out.println(config.lang);
+		System.out.println(config.male);
+		System.out.println(config.lang.getVoice(config.male));
+
 		// Autodetect language if no Language was chosen!
-		if (TextToSpeech.currentLang == null)
+		if (config.lang == null)
 		{
 			try
 			{
@@ -79,19 +72,15 @@ public class TextToSpeech
 			}
 		}
 
-		System.out.println("GO!");
 		// Set voice
-		TextToSpeech.maryttsServer.setVoice(config.lang.getVoice(config.male));
+		maryttsServer.setVoice(config.lang.getVoice(config.male));
 
-		System.out.println("GO!");
 		try
 		{
-			final AudioInputStream audio = TextToSpeech.maryttsServer.generateAudio(input);
+			final AudioInputStream audio = maryttsServer.generateAudio(input);
 			TextToSpeech.audioPlayer = new AudioPlayer();
 			TextToSpeech.audioPlayer.setAudio(audio);
-			System.out.println("GO!");
 			TextToSpeech.audioPlayer.start();
-			System.out.println("GO!");
 			if (config.block)
 			{
 				try
