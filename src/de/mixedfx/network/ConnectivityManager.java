@@ -193,7 +193,7 @@ public class ConnectivityManager<T extends User>
 
 	public void start(final T myUniqueUser)
 	{
-		if ((this.myUniqueUser.get() == null) || this.myUniqueUser.get().getIdentifier().equals(""))
+		if ((this.myUniqueUser.get() == null))
 			this.setMyUser(myUniqueUser);
 		else
 			this.myUniqueUser.get().merge(myUniqueUser);
