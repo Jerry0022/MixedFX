@@ -13,7 +13,7 @@ public class ListMaker
 
 		for (int i = 9; i >= 3; i--)
 		{
-			ltuserList.add(new LTUser(i));
+			ltuserList.add(new LTExUser(i));
 		}
 
 		for (int i = 7; i < 15; i++)

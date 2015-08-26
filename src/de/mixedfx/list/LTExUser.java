@@ -1,10 +1,10 @@
 package de.mixedfx.list;
 
-public class LTUser implements SessionInterface
+public class LTExUser implements SessionInterface
 {
 	int	i;
 
-	LTUser(final int i)
+	LTExUser(final int i)
 	{
 		this.i = i;
 	}
