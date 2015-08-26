@@ -169,10 +169,11 @@ public class LayoutManager
 
 		// Apply layout
 		final Collection<File> files = DataHandler.listFiles(layoutFullPath);
-		// Add files of standard folder if they aren't already in the specific layout folder
+		// Add files of standard folder if they aren't already in the specific layout folder but take all css files
 		DataHandler.listFiles(this.standardLayoutDir).stream()
-				.filter(t -> !files.stream().anyMatch(u -> FileObject.create(t).getName().equalsIgnoreCase(LayoutManager.STYLE_FILE_NAME) ? true : FileObject.create(t).getName().equalsIgnoreCase(FileObject.create(u).getName())))
-				.forEach(s -> files.add(s));
+				.filter(standardFile -> !files.stream()
+						.anyMatch(layoutFile -> FileObject.create(standardFile).getName().equalsIgnoreCase(LayoutManager.STYLE_FILE_NAME) ? false : FileObject.create(standardFile).getName().equalsIgnoreCase(FileObject.create(layoutFile).getName())))
+				.forEach(additionalFile -> files.add(additionalFile));
 		for (final File file : files)
 		{
 			if (FileObject.create(file).getName().equalsIgnoreCase(LayoutManager.STYLE_FILE_NAME))
