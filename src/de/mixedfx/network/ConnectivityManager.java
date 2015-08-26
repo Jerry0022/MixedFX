@@ -41,7 +41,7 @@ public class ConnectivityManager<T extends User>
 	 */
 	public ListProperty<T> otherUsers;
 
-	private ObjectProperty<T> myUniqueUser;
+	private T myUniqueUser;
 
 	public ConnectivityManager(final T myUser)
 	{
@@ -49,7 +49,7 @@ public class ConnectivityManager<T extends User>
 		this.otherUsers = new SimpleListProperty<T>(FXCollections.observableArrayList());
 		this.state = new SimpleObjectProperty<>(State.OFFLINE);
 		this.tcp_user_map = new Hashtable<>(16);
-		this.myUniqueUser = new SimpleObjectProperty<>(myUser);
+		this.myUniqueUser = myUser;
 		NetworkManager.t.tcpClients.addListener((ListChangeListener<TCPClient>) c ->
 		{
 			while (c.next())
@@ -93,7 +93,7 @@ public class ConnectivityManager<T extends User>
 						{
 							synchronized (NetworkManager.t.tcpClients)
 							{
-								final UserMessage<T> message = new UserMessage<T>(this.myUniqueUser.get());
+								final UserMessage<T> message = new UserMessage<T>(this.myUniqueUser);
 								message.setToIP(tcp2.remoteAddress);
 								MessageBus.send(message);
 								Log.network.debug("Sending " + message + " to " + tcp2.remoteAddress);
@@ -142,7 +142,7 @@ public class ConnectivityManager<T extends User>
 		} , true);
 	}
 
-	public ObjectProperty<T> getMyUser()
+	public T getMyUser()
 	{
 		return this.myUniqueUser;
 	}
@@ -161,12 +161,12 @@ public class ConnectivityManager<T extends User>
 
 	public void setMyUser(final T myUser)
 	{
-		this.myUniqueUser.set(myUser);
+		this.myUniqueUser = myUser;
 	}
 
 	public void start()
 	{
-		if (this.myUniqueUser.get() == null)
+		if (this.myUniqueUser == null)
 			throw new IllegalStateException("Please first set a user!");
 
 		// Start network
@@ -193,10 +193,10 @@ public class ConnectivityManager<T extends User>
 
 	public void start(final T myUniqueUser)
 	{
-		if ((this.myUniqueUser.get() == null))
+		if ((this.myUniqueUser == null))
 			this.setMyUser(myUniqueUser);
 		else
-			this.myUniqueUser.get().merge(myUniqueUser);
+			this.myUniqueUser.merge(myUniqueUser);
 		this.start();
 	}
 
@@ -217,7 +217,7 @@ public class ConnectivityManager<T extends User>
 	public void updatedUser()
 	{
 		// TODO Check
-		final UserMessage<T> message = new UserMessage<T>(this.myUniqueUser.get());
+		final UserMessage<T> message = new UserMessage<T>(this.myUniqueUser);
 		MessageBus.send(message);
 	}
 }
