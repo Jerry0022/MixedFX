@@ -429,6 +429,8 @@ public class SuperPane extends StackPane
 	 */
 	public void openDynamic(final Node dynamic, final boolean darkenLastLayer)
 	{
+		if (dynamic == null)
+			return;
 		this.getChildren().add(dynamic);
 		if (this.content == null)
 			Log.assets.warn("The SuperPane has no content. Therefore nothing will be blurred after opening this Dynamic: " + dynamic);
