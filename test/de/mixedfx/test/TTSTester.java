@@ -6,13 +6,13 @@ import de.mixedfx.textandspeech.TextToSpeech;
 
 public class TTSTester
 {
-	public static void main(String[] args)
+	public static void main(final String[] args)
 	{
 		String text = "Ok Commander, wie steht es um Battlefield 2?";
 		text = "Ok Commander, what's going on with Battlefield 2?";
 
-		TTSConfig config = new TTSConfig();
-		config.block = false;
+		final TTSConfig config = new TTSConfig();
+		config.block = true;
 		config.lang = null;
 		config.male = false;
 		config.volume = 0.6;
@@ -20,7 +20,8 @@ public class TTSTester
 		try
 		{
 			TextToSpeech.say(text, config);
-		} catch (IncorrectInputLanguage e)
+			System.out.println("Said");
+		} catch (final IncorrectInputLanguage e)
 		{
 		}
 	}
