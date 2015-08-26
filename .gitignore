@@ -1,6 +1,7 @@
 /bin/
 /build/
 /logs/
+/log/
 *.uml
 *.umlcd
 /assets/
