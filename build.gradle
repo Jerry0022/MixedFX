@@ -101,4 +101,6 @@ dependencies {
    	compile 'de.dfki.mary:marytts-lang-en:5.1.2'
    	compile 'de.dfki.mary:voice-cmu-slt-hsmm:5.1.2'
    	compile 'javaFlacEncoder:java-flac-encoder:0.3.1'
+   	// For Executor to run commands AS ADMINISTRATOR
+   	compile 'net.java.dev.jna:jna:4.1.0'
 }
