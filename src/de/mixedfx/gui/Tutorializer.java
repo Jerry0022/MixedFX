@@ -30,7 +30,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 /**
- * 
+ *
  * @author Jerry
  */
 public class Tutorializer
@@ -39,6 +39,47 @@ public class Tutorializer
 
 	private static int currentIndex = 0;
 
+	private static ArrowLocation calculateSpace(final Node spaceConsumer)
+	{
+		final ArrowLocation result = ArrowLocation.TOP_CENTER;
+
+		final ArrowLocation[] directions =
+		{ ArrowLocation.RIGHT_CENTER, ArrowLocation.LEFT_CENTER, ArrowLocation.BOTTOM_CENTER, ArrowLocation.TOP_CENTER };
+
+		double left = 0;
+		double right = 0;
+		double top = 0;
+		double bottom = 0;
+
+		left = spaceConsumer.localToScene(0, 0).getX();
+
+		final double maxX = spaceConsumer.getScene().getWidth();
+		final double sMaxX = spaceConsumer.localToScene(0, 0).getX() + spaceConsumer.getBoundsInLocal().getWidth();
+		right = maxX - sMaxX;
+
+		top = spaceConsumer.localToScene(0, 0).getY();
+
+		final double maxY = spaceConsumer.getScene().getHeight();
+		final double sMaxY = spaceConsumer.localToScene(0, 0).getY() + spaceConsumer.getBoundsInLocal().getHeight();
+		bottom = maxY - sMaxY;
+
+		final List<Double> values = new ArrayList<>();
+		values.add(left);
+		values.add(right);
+		values.add(top);
+		values.add(bottom);
+		final double max = Collections.max(values);
+		for (int i = 0; i < values.size(); i++)
+			if (values.get(i) == max)
+				return directions[i];
+		return result;
+	}
+
+	public static void startTutorial(final Scene scene, final List<Node> tutorialNodes)
+	{
+		Tutorializer.startTutorial(scene, tutorialNodes, null);
+	}
+
 	/**
 	 * Two things have to be done first, before you can start/stop the tutorial:
 	 * <ol>
@@ -46,43 +87,45 @@ public class Tutorializer
 	 * <li>In FXML just add userdata via the tag: <b>tutorialNr="1"</b> with 1 being the number of its introduction. In Java code add to {@link Node#getProperties()} the <b>key "tutorialNr" and the
 	 * value "1"</b>.</li>
 	 * </ol>
-	 * 
+	 *
 	 * If the scene is resized or escape button was clicked the tutorial stops!
-	 * 
+	 *
 	 * @param scene
 	 *            The scene on which this tutorial shall be done. Only children of this scene are looked up for this tutorial. Nevertheless everything is blurred!
 	 * @param tutorialNodes
 	 *            A list of nodes which represent the content of the popover. They must be in the same order as the numbers of the marked nodes.
+	 * @param tutorialDone
+	 *            If tutorial stopped this Runnable is called from FXThread! Stopping can be initiated by clicking stop hyperlink, resizing the window or pressing escape
 	 */
-	public static void startTutorial(Scene scene, List<Node> tutorialNodes)
+	public static void startTutorial(final Scene scene, final List<Node> tutorialNodes, final Runnable tutorialDone)
 	{
 		if (scene == null)
 		{
 			Log.assets.error("Tutorial can be only started after rootNode is part of the scene!");
 			return;
 		}
-		if (active.get())
+		if (Tutorializer.active.get())
 		{
 			Log.assets.error("A tutorial is still active!");
 			return;
 		}
-		active.set(true);
+		Tutorializer.active.set(true);
 
-		Node rootNode = scene.getRoot();
+		final Node rootNode = scene.getRoot();
 
 		// Get all relevant nodes
-		Set<Node> nodes = rootNode.lookupAll(".tutorial");
+		final Set<Node> nodes = rootNode.lookupAll(".tutorial");
 
 		// Check if nodes also have the needed user data!
-		List<Node> verifiedNodes = new ArrayList<>();
-		for (Node node : nodes)
+		final List<Node> verifiedNodes = new ArrayList<>();
+		for (final Node node : nodes)
 			if (node.getProperties().containsKey("tutorialNr"))
 			{
 				try
 				{
 					Integer.valueOf(String.valueOf(node.getProperties().get("tutorialNr")));
 					verifiedNodes.add(node);
-				} catch (Exception e)
+				} catch (final Exception e)
 				{
 					Log.assets.warn("The value " + node.getProperties().get("tutorialNr")
 							+ " of the key \"tutorialNr\" as user data of an element is not in correct format! It can only be processed if it is an Integer or a String representation of an Integer!");
@@ -91,15 +134,11 @@ public class Tutorializer
 				Log.assets.warn("A \"tutorial\" element has not the user data key \"tutorialNr\"! It can't be processed!");
 
 		// Sort the list of Nodes by index!
-		Comparator<Node> comparator = new Comparator<Node>()
+		final Comparator<Node> comparator = (o1, o2) ->
 		{
-			@Override
-			public int compare(Node o1, Node o2)
-			{
-				int firstNr = Integer.valueOf((String) o1.getProperties().get("tutorialNr"));
-				int secondNr = Integer.valueOf((String) o2.getProperties().get("tutorialNr"));
-				return firstNr - secondNr;
-			}
+			final int firstNr = Integer.valueOf((String) o1.getProperties().get("tutorialNr"));
+			final int secondNr = Integer.valueOf((String) o2.getProperties().get("tutorialNr"));
+			return firstNr - secondNr;
 		};
 		Collections.sort(verifiedNodes, comparator);
 
@@ -116,124 +155,91 @@ public class Tutorializer
 
 		// Start Tutorial
 		// Consume all Events
-		EventHandler<MouseEvent> mouseConsumer = new EventHandler<MouseEvent>()
-		{
-			@Override
-			public void handle(MouseEvent event)
-			{
-				event.consume();
-			}
-		};
-		EventHandler<KeyEvent> keyConsumer = new EventHandler<KeyEvent>()
-		{
-			@Override
-			public void handle(KeyEvent event)
-			{
-				event.consume();
-			}
-		};
+		final EventHandler<MouseEvent> mouseConsumer = event -> event.consume();
+		final EventHandler<KeyEvent> keyConsumer = event -> event.consume();
 		rootNode.addEventFilter(MouseEvent.ANY, mouseConsumer);
 		rootNode.addEventFilter(KeyEvent.ANY, keyConsumer);
 
 		// Set up PopOver
-		PopOver popOver = new PopOver();
+		final PopOver popOver = new PopOver();
 		popOver.setArrowLocation(ArrowLocation.TOP_CENTER);
 		popOver.setAutoHide(false);
 		popOver.setDetachable(false);
 		popOver.setConsumeAutoHidingEvents(true);
 
 		// Set up PopOver content
-		ObjectProperty<Node> popContent = new SimpleObjectProperty<>();
-		MagicPane contentPane = new MagicPane(popContent);
+		final ObjectProperty<Node> popContent = new SimpleObjectProperty<>();
+		final MagicPane contentPane = new MagicPane(popContent);
 
 		// Set up PopOver tutorial control
-		Hyperlink backButton = new Hyperlink("Zurück!");
-		Hyperlink stopButton = new Hyperlink("Tutorial beenden!");
-		Hyperlink goButton = new Hyperlink("Weiter!");
-		BorderPane tutorialBox = new BorderPane();
+		final Hyperlink backButton = new Hyperlink("Zurück!");
+		final Hyperlink stopButton = new Hyperlink("Tutorial beenden!");
+		final Hyperlink goButton = new Hyperlink("Weiter!");
+		final BorderPane tutorialBox = new BorderPane();
 		tutorialBox.setLeft(backButton);
 		tutorialBox.setCenter(stopButton);
 		tutorialBox.setRight(goButton);
 
 		// Set PopOvers content node
-		VBox box = new VBox();
+		final VBox box = new VBox();
 		VBox.setVgrow(contentPane, Priority.ALWAYS);
 		VBox.setVgrow(tutorialBox, Priority.NEVER);
 		box.getChildren().addAll(contentPane, tutorialBox);
 		popOver.setContentNode(box);
 
 		// Set up movements
-		currentIndex = 0;
-		popContent.addListener(new ChangeListener<Node>()
+		Tutorializer.currentIndex = 0;
+		popContent.addListener((ChangeListener<Node>) (observable, oldValue, newValue) ->
 		{
-			@Override
-			public void changed(ObservableValue<? extends Node> observable, Node oldValue, Node newValue)
-			{
-				if (currentIndex == 0)
-					backButton.setVisible(false);
-				else if (currentIndex == 1)
-					backButton.setVisible(true);
-				if (currentIndex == verifiedNodes.size() - 2)
-					goButton.setVisible(true);
-				else if (currentIndex == verifiedNodes.size() - 1)
-					goButton.setVisible(false);
-			}
+			if (Tutorializer.currentIndex == 0)
+				backButton.setVisible(false);
+			else if (Tutorializer.currentIndex == 1)
+				backButton.setVisible(true);
+			if (Tutorializer.currentIndex == (verifiedNodes.size() - 2))
+				goButton.setVisible(true);
+			else if (Tutorializer.currentIndex == (verifiedNodes.size() - 1))
+				goButton.setVisible(false);
 		});
-		backButton.setOnAction(new EventHandler<ActionEvent>()
+		backButton.setOnAction(event ->
 		{
-			@Override
-			public void handle(ActionEvent event)
-			{
-				currentIndex = tutorialNodes.indexOf(popContent.get()) - 1;
-				Blurrer.unBlur(verifiedNodes.get(currentIndex + 1));
-				popContent.set(tutorialNodes.get(currentIndex));
-				Blurrer.blur(verifiedNodes.get(currentIndex));
-				popOver.setArrowLocation(calculateSpace(verifiedNodes.get(currentIndex)));
-				popOver.show(verifiedNodes.get(currentIndex));
-			}
+			Tutorializer.currentIndex = tutorialNodes.indexOf(popContent.get()) - 1;
+			Blurrer.unBlur(verifiedNodes.get(Tutorializer.currentIndex + 1));
+			popContent.set(tutorialNodes.get(Tutorializer.currentIndex));
+			Blurrer.blur(verifiedNodes.get(Tutorializer.currentIndex));
+			popOver.setArrowLocation(Tutorializer.calculateSpace(verifiedNodes.get(Tutorializer.currentIndex)));
+			popOver.show(verifiedNodes.get(Tutorializer.currentIndex));
 		});
-		goButton.setOnAction(new EventHandler<ActionEvent>()
+		goButton.setOnAction(event ->
 		{
-			@Override
-			public void handle(ActionEvent event)
-			{
-				currentIndex = tutorialNodes.indexOf(popContent.get()) + 1;
-				Blurrer.unBlur(verifiedNodes.get(currentIndex - 1));
-				popContent.set(tutorialNodes.get(currentIndex));
-				Blurrer.blur(verifiedNodes.get(currentIndex));
-				popOver.setArrowLocation(calculateSpace(verifiedNodes.get(currentIndex)));
-				popOver.show(verifiedNodes.get(currentIndex));
-			}
+			Tutorializer.currentIndex = tutorialNodes.indexOf(popContent.get()) + 1;
+			Blurrer.unBlur(verifiedNodes.get(Tutorializer.currentIndex - 1));
+			popContent.set(tutorialNodes.get(Tutorializer.currentIndex));
+			Blurrer.blur(verifiedNodes.get(Tutorializer.currentIndex));
+			popOver.setArrowLocation(Tutorializer.calculateSpace(verifiedNodes.get(Tutorializer.currentIndex)));
+			popOver.show(verifiedNodes.get(Tutorializer.currentIndex));
 		});
-		EventHandler<ActionEvent> stopEvent = new EventHandler<ActionEvent>()
+		final EventHandler<ActionEvent> stopEvent = event ->
 		{
-			@Override
-			public void handle(ActionEvent event)
-			{
-				popOver.hide();
-				rootNode.removeEventFilter(MouseEvent.ANY, mouseConsumer);
-				rootNode.removeEventFilter(KeyEvent.ANY, keyConsumer);
-				int currentIndex = tutorialNodes.indexOf(popContent.get());
-				Blurrer.unBlur(verifiedNodes.get(currentIndex));
-				active.set(false);
-			}
+			popOver.hide();
+			rootNode.removeEventFilter(MouseEvent.ANY, mouseConsumer);
+			rootNode.removeEventFilter(KeyEvent.ANY, keyConsumer);
+			final int currentIndex = tutorialNodes.indexOf(popContent.get());
+			Blurrer.unBlur(verifiedNodes.get(currentIndex));
+			Tutorializer.active.set(false);
+			if (tutorialDone != null)
+				tutorialDone.run();
 		};
-		popOver.addEventFilter(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>()
+		popOver.addEventFilter(KeyEvent.KEY_RELEASED, event ->
 		{
-			@Override
-			public void handle(KeyEvent event)
-			{
-				if (event.getCode().equals(KeyCode.ESCAPE))
-					stopEvent.handle(new ActionEvent());
-			}
+			if (event.getCode().equals(KeyCode.ESCAPE))
+				stopEvent.handle(new ActionEvent());
 		});
 		// If window is resized the PopOver automatically disappears => Stop whole tutorial!
-		ChangeListener<Number> change = new ChangeListener<Number>()
+		final ChangeListener<Number> change = new ChangeListener<Number>()
 		{
 			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue)
+			public void changed(final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue)
 			{
-				System.out.println("EVENT");
 				stopEvent.handle(new ActionEvent());
 				scene.widthProperty().removeListener(this);
 				scene.heightProperty().removeListener(this);
@@ -246,43 +252,7 @@ public class Tutorializer
 		// Show first
 		Blurrer.blur(verifiedNodes.get(0));
 		popContent.set(tutorialNodes.get(0));
-		popOver.setArrowLocation(calculateSpace(verifiedNodes.get(0)));
+		popOver.setArrowLocation(Tutorializer.calculateSpace(verifiedNodes.get(0)));
 		popOver.show(verifiedNodes.get(0));
-	}
-
-	private static ArrowLocation calculateSpace(Node spaceConsumer)
-	{
-		ArrowLocation result = ArrowLocation.TOP_CENTER;
-
-		ArrowLocation[] directions =
-		{ ArrowLocation.RIGHT_CENTER, ArrowLocation.LEFT_CENTER, ArrowLocation.BOTTOM_CENTER, ArrowLocation.TOP_CENTER };
-
-		double left = 0;
-		double right = 0;
-		double top = 0;
-		double bottom = 0;
-
-		left = spaceConsumer.localToScene(0, 0).getX();
-
-		double maxX = spaceConsumer.getScene().getWidth();
-		double sMaxX = spaceConsumer.localToScene(0, 0).getX() + spaceConsumer.getBoundsInLocal().getWidth();
-		right = maxX - sMaxX;
-
-		top = spaceConsumer.localToScene(0, 0).getY();
-
-		double maxY = spaceConsumer.getScene().getHeight();
-		double sMaxY = spaceConsumer.localToScene(0, 0).getY() + spaceConsumer.getBoundsInLocal().getHeight();
-		bottom = maxY - sMaxY;
-
-		List<Double> values = new ArrayList<>();
-		values.add(left);
-		values.add(right);
-		values.add(top);
-		values.add(bottom);
-		double max = Collections.max(values);
-		for (int i = 0; i < values.size(); i++)
-			if (values.get(i) == max)
-				return directions[i];
-		return result;
 	}
 }
