@@ -112,7 +112,6 @@ public class MasterController
 	/**
 	 * Enables Hamachi, including process, service and network adapter.
 	 *
-	 * @throws ProgramNotFoundException
 	 * @throws NetworkAdapterNotFoundException
 	 *             Please find an existing one with {@link NetworkAdapterController#getList()}!
 	 * @throws IllegalStateException
@@ -132,7 +131,6 @@ public class MasterController
 	/**
 	 * Enables Tunngle, including process, service and network adapter.
 	 *
-	 * @throws ProgramNotFoundException
 	 * @throws NetworkAdapterNotFoundException
 	 *             Please find an existing one with {@link NetworkAdapterController#getList()}!
 	 * @throws IllegalStateException

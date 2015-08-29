@@ -38,7 +38,6 @@ public class ProcessController
 	 * @param program
 	 *            E. g. "xxx.exe" The name of the process plus the extension
 	 * @throws TimeoutException
-	 * @throws FileNotFoundException
 	 */
 	public static void stop(final Program program) throws TimeoutException
 	{
