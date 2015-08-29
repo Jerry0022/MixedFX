@@ -38,6 +38,18 @@ public class FileObject implements Cloneable
 		return new FileObject(file);
 	}
 
+	/**
+	 * Works also for files which are in the working directory. This means the place where the class or jar is executed.
+	 *
+	 * @param file
+	 *            The name or full path of the file WITH extension or folder.
+	 * @return Returns the FileObject.
+	 */
+	public static FileObject create(final String file)
+	{
+		return new FileObject(new File(file));
+	}
+
 	private String		path;		// pure path maybe without last folder
 	private String		prefix;		// without separator
 	private String		name;		// pure name without sth. else
@@ -88,45 +100,22 @@ public class FileObject implements Cloneable
 	}
 
 	/**
-	 * @return Returns the size of the file or folder as {@link BigInteger} in Bytes
+	 * All set attributes are deleted.
 	 */
-	public BigInteger size()
+	public void clear()
 	{
-		// Otherwise Gradle doesn't compile?!
-		return new BigInteger(String.valueOf(FileUtils.sizeOf(this.toFile())));
+		this.path = "";
+		this.prefix = "";
+		this.name = "";
+		this.extension = "";
+		this.parameter = new String[0];
 	}
 
-	/**
-	 * @return Returns the corresponding {@link File} even if the file is not valid / created
-	 */
-	public File toFile()
+	@Override
+	public FileObject clone()
 	{
-		return new File(this.getFullPath());
-	}
-
-	/**
-	 * @return Returns the URI representation of this FileObject
-	 */
-	public String toURI()
-	{
-		return new File(this.getFullPath()).toURI().toString();
-	}
-
-	/**
-	 * Compares file/folder size and name (ignoring case). It doesn't compare the {@link #getFullPath()}.
-	 *
-	 * @param toCompare
-	 * @return Returns true if size and name is equal.
-	 */
-	public boolean equalsNameSize(final FileObject toCompare)
-	{
-		if (this.getName().equalsIgnoreCase(toCompare.getName()) && this.size().equals(toCompare.size()))
-		{
-			return true;
-		} else
-		{
-			return false;
-		}
+		// Works because Strings are immutuable
+		return FileObject.create().setPath(this.getPath()).setFullName(this.getFullName());
 	}
 
 	/**
@@ -148,59 +137,61 @@ public class FileObject implements Cloneable
 	}
 
 	/**
-	 * Checks if {@link #getFullPath()} is valid. This means the criterias of the os apply.
+	 * Compares file/folder size and name (ignoring case). It doesn't compare the {@link #getFullPath()}.
 	 *
-	 * @return boolean True if it fulfills the criterias, false if not.
+	 * @param toCompare
+	 * @return Returns true if size and name is equal.
 	 */
-	public boolean isValid()
+	public boolean equalsNameSize(final FileObject toCompare)
 	{
-		try
+		if (this.getName().equalsIgnoreCase(toCompare.getName()) && this.size().equals(toCompare.size()))
 		{
-			final File toTest = new File(this.getFullPath());
-			toTest.getCanonicalPath();
 			return true;
-		} catch (final IOException e)
+		} else
 		{
 			return false;
 		}
 	}
 
-	@Override
-	public String toString()
+	/**
+	 * @return Returns the extension without separator
+	 */
+	public String getExtension()
 	{
-		return this.getFullPath();
+		return this.extension;
 	}
 
-	@Override
-	public FileObject clone()
+	/**
+	 * @return Returns separator + extension
+	 */
+	public String getFullExtension()
 	{
-		// Works because Strings are immutuable
-		return FileObject.create().setPath(this.getPath()).setFullName(this.getFullName());
+		if (this.getExtension().equals(""))
+		{
+			return this.getExtension();
+		} else
+		{
+			return FileObject.extensionSeparator + this.getExtension();
+		}
+	}
+
+	/**
+	 * @return Returns the name with prefix and with extension and without parameters!
+	 */
+	public String getFullName()
+	{
+		return this.getFullNameWithoutExtension() + this.getFullExtension();
+	}
+
+	/**
+	 * @return Returns the name with prefix and without extension and without parameters!
+	 */
+	public String getFullNameWithoutExtension()
+	{
+		return this.getFullPrefix() + this.getName();
 	}
 
 	// Getters and Setters
-
-	/**
-	 * All set attributes are deleted.
-	 */
-	public void clear()
-	{
-		this.path = "";
-		this.prefix = "";
-		this.name = "";
-		this.extension = "";
-		this.parameter = new String[0];
-	}
-
-	/**
-	 * ATTENTION: If this object represents a directory use {@link #getFullPath()} instead to get reliably the full path!
-	 *
-	 * @return Returns only the path!
-	 */
-	public String getPath()
-	{
-		return this.path;
-	}
 
 	/**
 	 * Returns the entire path including the file/folder name with prefix and extension
@@ -223,28 +214,10 @@ public class FileObject implements Cloneable
 	 */
 	public String getFullPathWithParameter()
 	{
-		StringBuilder builder = new StringBuilder();
-		for (String parameter : getParameter())
+		final StringBuilder builder = new StringBuilder();
+		for (final String parameter : this.getParameter())
 			builder.append(" " + parameter);
-		return getFullPath() + builder.toString();
-	}
-
-	/**
-	 * @param path
-	 *            Set the path (excluding file)
-	 */
-	public FileObject setPath(final String path)
-	{
-		this.path = path;
-		return this;
-	}
-
-	/**
-	 * @return Returns only the prefix.
-	 */
-	public String getPrefix()
-	{
-		return this.prefix;
+		return this.getFullPath() + builder.toString();
 	}
 
 	/**
@@ -262,22 +235,6 @@ public class FileObject implements Cloneable
 	}
 
 	/**
-	 * @param prefix
-	 *            Set the prefix with/without separator
-	 */
-	public FileObject setPrefix(final String prefix)
-	{
-		if (prefix.endsWith(FileObject.prefixSeparator))
-		{
-			this.prefix = prefix.replaceFirst(FileObject.prefixSeparator, "");
-		} else
-		{
-			this.prefix = prefix;
-		}
-		return this;
-	}
-
-	/**
 	 * @return Returns the name without prefix and without extension
 	 */
 	public String getName()
@@ -286,31 +243,63 @@ public class FileObject implements Cloneable
 	}
 
 	/**
-	 * Set the name excluding directory, prefix and extension.
+	 * @return Returns the parameter of this file.
+	 */
+	public String[] getParameter()
+	{
+		return this.parameter;
+	}
+
+	/**
+	 * ATTENTION: If this object represents a directory use {@link #getFullPath()} instead to get reliably the full path!
 	 *
-	 * @param name
-	 *            File/Folder name without prefix without extension
+	 * @return Returns only the path!
 	 */
-	public FileObject setName(final String name)
+	public String getPath()
 	{
-		this.name = name;
+		return this.path;
+	}
+
+	/**
+	 * @return Returns only the prefix.
+	 */
+	public String getPrefix()
+	{
+		return this.prefix;
+	}
+
+	/**
+	 * Checks if {@link #getFullPath()} is valid. This means the criterias of the os apply.
+	 *
+	 * @return boolean True if it fulfills the criterias, false if not.
+	 */
+	public boolean isValid()
+	{
+		try
+		{
+			final File toTest = new File(this.getFullPath());
+			toTest.getCanonicalPath();
+			return true;
+		} catch (final IOException e)
+		{
+			return false;
+		}
+	}
+
+	/**
+	 * @param extension
+	 *            Set the file extension with/without separator, e. g. ".png" or only "png"
+	 */
+	public FileObject setExtension(final String extension)
+	{
+		if (extension.startsWith(FileObject.extensionSeparator))
+		{
+			this.extension = extension.replaceFirst("\\" + FileObject.extensionSeparator, "");
+		} else
+		{
+			this.extension = extension;
+		}
 		return this;
-	}
-
-	/**
-	 * @return Returns the name with prefix and without extension and without parameters!
-	 */
-	public String getFullNameWithoutExtension()
-	{
-		return this.getFullPrefix() + this.getName();
-	}
-
-	/**
-	 * @return Returns the name with prefix and with extension and without parameters!
-	 */
-	public String getFullName()
-	{
-		return this.getFullNameWithoutExtension() + this.getFullExtension();
 	}
 
 	/**
@@ -338,61 +327,84 @@ public class FileObject implements Cloneable
 	}
 
 	/**
-	 * @return Returns the extension without separator
+	 * Set the name excluding directory, prefix and extension.
+	 *
+	 * @param name
+	 *            File/Folder name without prefix without extension
 	 */
-	public String getExtension()
+	public FileObject setName(final String name)
 	{
-		return this.extension;
-	}
-
-	/**
-	 * @return Returns separator + extension
-	 */
-	public String getFullExtension()
-	{
-		if (this.getExtension().equals(""))
-		{
-			return this.getExtension();
-		} else
-		{
-			return FileObject.extensionSeparator + this.getExtension();
-		}
-	}
-
-	/**
-	 * @param extension
-	 *            Set the file extension with/without separator, e. g. ".png" or only "png"
-	 */
-	public FileObject setExtension(final String extension)
-	{
-		if (extension.startsWith(FileObject.extensionSeparator))
-		{
-			this.extension = extension.replaceFirst("\\" + FileObject.extensionSeparator, "");
-		} else
-		{
-			this.extension = extension;
-		}
+		this.name = name;
 		return this;
 	}
 
 	/**
 	 * Don't use this for directories!
-	 * 
+	 *
 	 * @param parameter
 	 *            Parameters to apply without leading space. Default is an empty String.
 	 * @return Returns this.
 	 */
-	public FileObject setParameter(String... parameter)
+	public FileObject setParameter(final String... parameter)
 	{
 		this.parameter = parameter;
 		return this;
 	}
 
 	/**
-	 * @return Returns the parameter of this file.
+	 * @param path
+	 *            Set the path (excluding file)
 	 */
-	public String[] getParameter()
+	public FileObject setPath(final String path)
 	{
-		return this.parameter;
+		this.path = path;
+		return this;
+	}
+
+	/**
+	 * @param prefix
+	 *            Set the prefix with/without separator
+	 */
+	public FileObject setPrefix(final String prefix)
+	{
+		if (prefix.endsWith(FileObject.prefixSeparator))
+		{
+			this.prefix = prefix.replaceFirst(FileObject.prefixSeparator, "");
+		} else
+		{
+			this.prefix = prefix;
+		}
+		return this;
+	}
+
+	/**
+	 * @return Returns the size of the file or folder as {@link BigInteger} in Bytes
+	 */
+	public BigInteger size()
+	{
+		// Otherwise Gradle doesn't compile?!
+		return new BigInteger(String.valueOf(FileUtils.sizeOf(this.toFile())));
+	}
+
+	/**
+	 * @return Returns the corresponding {@link File} even if the file is not valid / created
+	 */
+	public File toFile()
+	{
+		return new File(this.getFullPath());
+	}
+
+	@Override
+	public String toString()
+	{
+		return this.getFullPath();
+	}
+
+	/**
+	 * @return Returns the URI representation of this FileObject
+	 */
+	public String toURI()
+	{
+		return new File(this.getFullPath()).toURI().toString();
 	}
 }
