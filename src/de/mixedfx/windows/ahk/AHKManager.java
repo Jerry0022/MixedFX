@@ -10,6 +10,7 @@ import org.apache.commons.io.FileUtils;
 import de.mixedfx.file.DataHandler;
 import de.mixedfx.file.FileObject;
 import de.mixedfx.java.ComplexString;
+import de.mixedfx.windows.Executor;
 import javafx.util.Duration;
 
 public class AHKManager
@@ -96,7 +97,7 @@ public class AHKManager
 	 * @param commandBlock
 	 *            AutoHotKey commands. Each command as one element of the ComplexString
 	 * @param blocking
-	 *            If this method should wait for the completion of the AHK script
+	 *            If this method should wait for the completion of the AHK script it is executed NOT AS ADMIN otherwise it is executed as ADMIN!
 	 * @throws IOException
 	 *             If file(s) could not be created in temp directory
 	 */
@@ -109,7 +110,7 @@ public class AHKManager
 	 * @param commands
 	 *            AutoHotKey commands separated by line breaks
 	 * @param blocking
-	 *            If this method should wait for the completion of the AHK script
+	 *            If this method should wait for the completion of the AHK script it is executed NOT AS ADMIN otherwise it is executed as ADMIN!
 	 * @throws IOException
 	 *             If file(s) could not be created in temp directory
 	 */
@@ -134,8 +135,6 @@ public class AHKManager
 			throw new IOException("Three random file names were already available. Therefore could not create script file.");
 		else
 		{
-			final Process process = AHKManager.checkExistance(script).start();
-
 			// Remove file after 3 seconds
 			final String toDelete = script.toString();
 			final Duration delay = Duration.seconds(3);
@@ -150,16 +149,8 @@ public class AHKManager
 				DataHandler.deleteFile(FileObject.create(new File(toDelete)));
 			}).start();
 
-			// Shall this method block until AHK script is done?
-			if (blocking)
-			{
-				try
-				{
-					process.waitFor();
-				} catch (final InterruptedException e)
-				{
-				}
-			}
+			// Start script
+			AHKManager.startScript(script.setExtension(AHKManager.AHKExtension).toFile(), blocking);
 		}
 	}
 
@@ -168,22 +159,14 @@ public class AHKManager
 	 * @param scriptFile
 	 *            The ahk script to execute with or without extension.
 	 * @param blocking
-	 *            If this method should wait for the completion of the AHK script
+	 *            If this method should wait for the completion of the AHK script it is executed NOT AS ADMIN otherwise it is executed as ADMIN!
 	 * @throws IOException
 	 *             If file(s) could not be created in temp directory
 	 */
 	public static void runAHKFile(final FileObject scriptFile, final boolean blocking) throws IOException
 	{
-		final Process process = AHKManager.checkExistance(scriptFile).start();
-		if (blocking)
-		{
-			try
-			{
-				process.waitFor();
-			} catch (final InterruptedException e)
-			{
-			}
-		}
+		// Set the AHK extension and start script
+		AHKManager.startScript(scriptFile.setExtension(AHKManager.AHKExtension).toFile(), blocking);
 	}
 
 	/**
@@ -194,7 +177,7 @@ public class AHKManager
 	 * @param scriptName
 	 *            The name of the script with or without extension
 	 * @param blocking
-	 *            If this method should wait for the completion of the AHK script
+	 *            If this method should wait for the completion of the AHK script it is executed NOT AS ADMIN otherwise it is executed as ADMIN!
 	 * @throws IOException
 	 *             If file(s) could not be created in temp directory
 	 */
@@ -203,16 +186,37 @@ public class AHKManager
 		// Is extension available?
 		if (!scriptName.substring(scriptName.length() - 4).equalsIgnoreCase(".ahk"))
 			scriptName += ".ahk";
+
+		// Get resource and start script
 		try
 		{
-			// Get resource
 			final File scriptFile = new File(referenceClass.getResource(scriptName).toURI());
+			AHKManager.startScript(scriptFile, blocking);
+		} catch (final URISyntaxException e)
+		{
+		}
 
+	}
+
+	/**
+	 * @param script
+	 *            The script file to start
+	 * @param blocking
+	 *            If this method should wait for the completion of the AHK script it is executed NOT AS ADMIN otherwise it is executed as ADMIN!
+	 * @throws IOException
+	 *             If something went wrong!
+	 */
+	private static void startScript(final File script, final boolean blocking) throws IOException
+	{
+		try
+		{
 			// Start AHK script
-			final Process process = AHKManager.checkExistance(scriptFile).start();
+			final ProcessBuilder process = AHKManager.checkExistance(script);
 			if (blocking)
-				process.waitFor();
-		} catch (final URISyntaxException | InterruptedException e)
+				process.start().waitFor();
+			else
+				Executor.runAsAdministrator(process.command().get(0), process.command().get(1));
+		} catch (final InterruptedException e)
 		{
 		}
 	}

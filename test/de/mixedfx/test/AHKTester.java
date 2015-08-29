@@ -18,20 +18,17 @@ public class AHKTester
 			/*
 			 * Commands as one String example
 			 */
-			AHKManager.runAHKCommands("MsgBox, Test!\nMsgBox, Test2!", true);
+			AHKManager.runAHKCommands("MsgBox, Test %A_IsAdmin%!\nMsgBox, Test2 %A_IsAdmin%!", false);
+
+			System.out.println("GO ON");
 
 			/*
 			 * Commands as separate String example
 			 */
 			final ComplexString cmds = new ComplexString();
-			cmds.add("MsgBox, Test!");
-			cmds.add("MsgBox, Test2!");
+			cmds.add("MsgBox, Test! %A_IsAdmin%");
+			cmds.add("MsgBox, Test2! %A_IsAdmin%");
 			AHKManager.runAHKCommands(cmds, true);
-
-			/*
-			 * File in the working directory. File extension essential, see create method!
-			 */
-			AHKManager.runAHKFile(FileObject.create("MsgBox.ahk"), true);
 
 			/*
 			 * File in the src directory. File extension doesn't matter!
@@ -41,11 +38,17 @@ public class AHKTester
 			/*
 			 * File somewhere else, e.g. last used file. File extension doesn't matter!
 			 */
-			AHKManager.runAHKFile(FileObject.create().setPath(AHKManager.getTempFolder().toString()).setFullName("MsgBox"), true);
+			AHKManager.runAHKFile(FileObject.create().setPath(AHKManager.getTempFolder().toString()).setFullName("MsgBox"), false);
 
-			System.out.println("DONE!");
+			/*
+			 * File in the working directory (usually project directory). File extension essential, see create method!
+			 */
+			AHKManager.runAHKFile(FileObject.create("MsgBox.ahk"), false);
+
+			System.out.println("Done :)");
 		} catch (final IOException e)
 		{
+			System.out.println("Error detected!");
 			e.printStackTrace();
 		}
 	}
