@@ -27,8 +27,8 @@ public class AHKManager
 	 */
 	public static ProcessBuilder checkExistance(final File ahkScript) throws IOException
 	{
-		final FileObject ahkTempExeFile = FileObject.create().setPath(AHKManager.getTempFolder().toString()).setFullName(AHKManager.AHKExecutable);
-		final FileObject ahkTempScript = FileObject.create().setPath(AHKManager.getTempFolder().toString()).setFullName(FileObject.create(ahkScript).getFullName()).setExtension(AHKManager.AHKExtension);
+		final FileObject ahkTempExeFile = FileObject.create().setPath(DataHandler.getTempFolder().toString()).setFullName(AHKManager.AHKExecutable);
+		final FileObject ahkTempScript = FileObject.create().setPath(DataHandler.getTempFolder().toString()).setFullName(FileObject.create(ahkScript).getFullName()).setExtension(AHKManager.AHKExtension);
 
 		try
 		{
@@ -78,19 +78,8 @@ public class AHKManager
 	public static void cleanTempDirectory(final boolean onlyScript) throws IOException
 	{
 		if (!onlyScript)
-			DataHandler.deleteFile(FileObject.create().setPath(AHKManager.getTempFolder().getFullPath()).setFullName(AHKManager.AHKExecutable));
-		DataHandler.listFiles(AHKManager.getTempFolder()).stream().filter(file -> FileObject.create(file).getFullExtension().equalsIgnoreCase(AHKManager.AHKExtension)).forEach(file -> DataHandler.deleteFile(FileObject.create(file)));
-	}
-
-	/**
-	 * @return Returns the tmp folder where the autohotkey.exe and scripts will be written to.
-	 * @throws IOException
-	 *             If temp directory is not accessible
-	 */
-	public static FileObject getTempFolder() throws IOException
-	{
-		// Retrieve real temp folder
-		return FileObject.create().setPath(File.createTempFile("temp-file", "tmp").getParent());
+			DataHandler.deleteFile(FileObject.create().setPath(DataHandler.getTempFolder().getFullPath()).setFullName(AHKManager.AHKExecutable));
+		DataHandler.listFiles(DataHandler.getTempFolder()).stream().filter(file -> FileObject.create(file).getFullExtension().equalsIgnoreCase(AHKManager.AHKExtension)).forEach(file -> DataHandler.deleteFile(FileObject.create(file)));
 	}
 
 	/**
@@ -121,7 +110,7 @@ public class AHKManager
 		for (int i = 0; i < 5; i++)
 		{
 			final String id = UUID.randomUUID().toString();
-			final FileObject tmpFile = FileObject.create().setPath(AHKManager.getTempFolder().toString()).setName(id).setExtension(AHKManager.AHKExtension);
+			final FileObject tmpFile = FileObject.create().setPath(DataHandler.getTempFolder().toString()).setName(id).setExtension(AHKManager.AHKExtension);
 			if (!tmpFile.toFile().exists())
 			{
 				script = tmpFile;
@@ -215,7 +204,7 @@ public class AHKManager
 			if (blocking)
 				process.start().waitFor();
 			else
-				Executor.runAsAdministrator(process.command().get(0), process.command().get(1));
+				Executor.runAsAdmin(process.command().get(0), process.command().get(1), true);
 		} catch (final InterruptedException e)
 		{
 		}

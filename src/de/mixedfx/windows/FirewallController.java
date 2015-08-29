@@ -1,59 +1,72 @@
 package de.mixedfx.windows;
 
 import de.mixedfx.java.ComplexString;
+import de.mixedfx.java.TimeoutController;
+import de.mixedfx.java.TimeoutController.TimeoutException;
 import de.mixedfx.logging.Log;
 
 public class FirewallController
 {
-	private final static String	enableCommand	= "netsh advfirewall set allprofiles state on";
-	private final static String	disableCommand	= "netsh advfirewall set allprofiles state off";
-	private final static String	statusCommand	= "netsh advfirewall show allprofiles";
+	private final static String	exeFile			= "netsh";
+	private final static String	enableCommand	= "advfirewall set allprofiles state on";
+	private final static String	disableCommand	= "advfirewall set allprofiles state off";
+	private final static String	statusCommand	= "advfirewall show allprofiles";
 
 	/**
-	 * @return False if all firewalls are disabled or status could not be retrieved! True if at least one firewall is online.
+	 * Disables all windows firewalls.
+	 *
+	 * @throws TimeoutException
 	 */
-	public static boolean isEnabled()
+	public static void disable() throws TimeoutException
 	{
-		final ComplexString response = Executor.runAndWaitForOutput(FirewallController.statusCommand);
-		try
+		Executor.runAsAdmin(FirewallController.exeFile, FirewallController.disableCommand, false);
+		TimeoutController.execute(() ->
 		{
-			Log.windows.debug("Windows Firewalls are " + (response.containsAllRows("Status", "EIN")?"enabled!":"disabled!"));
-			return response.containsAllRows("Status", "EIN");
-		}
-		catch (final Exception e)
-		{
-			Log.windows.debug("Windows Firewall is disabled!");
-			return false;
-		}
+			while (FirewallController.isEnabled())
+				;
+		} , MasterController.TIMEOUT);
+		Log.windows.debug("Disabled Windows Firewalls!");
 	}
 
 	/**
 	 * Enables all windows firewalls.
+	 * 
+	 * @throws TimeoutException
 	 */
-	public static void enable()
+	public static void enable() throws TimeoutException
 	{
-		if (FirewallController.isEnabled())
-			return;
-		Executor.runAndWaitForOutput(FirewallController.enableCommand);
-		while (!FirewallController.isEnabled())
+		Executor.runAsAdmin(FirewallController.exeFile, FirewallController.enableCommand, false);
+		TimeoutController.execute(() ->
 		{
-			;
-		}
-		Log.windows.debug("Windows Firewalls were enabled!");
+			while (!FirewallController.isEnabled())
+				;
+		} , MasterController.TIMEOUT);
+		Log.windows.debug("Enabled Windows Firewalls!");
 	}
 
 	/**
-	 * Disables all windows firewalls.
+	 * @return False if all firewalls are disabled or could not retrieve status! True if at least one firewall is online.
 	 */
-	public static void disable()
+	public static boolean isEnabled()
 	{
-		if (!FirewallController.isEnabled())
-			return;
-		Executor.runAndWaitForOutput(FirewallController.disableCommand);
-		while (FirewallController.isEnabled())
+		final ComplexString response = Executor.runAndWaitForOutput(FirewallController.exeFile + " " + FirewallController.statusCommand, MasterController.TIMEOUT);
+		try
 		{
-			;
+			boolean result;
+			if (response.containsAllRows("Status", "EIN"))
+				result = true;
+			else
+				if (response.containsAllRows("Status", "AUS"))
+					result = false;
+				else
+					result = true; // At least one firewall is enabled but not all are enabled => ENABLED
+			Log.windows.debug("Windows Firewalls are " + (result ? "enabled!" : "disabled!"));
+			return result;
 		}
-		Log.windows.debug("Windows Firewalls were disabled!");
+		catch (final Exception e)
+		{
+			Log.windows.error("Windows Firewall wrong command!");
+			return false;
+		}
 	}
 }

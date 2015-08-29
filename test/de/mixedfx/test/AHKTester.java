@@ -2,6 +2,7 @@ package de.mixedfx.test;
 
 import java.io.IOException;
 
+import de.mixedfx.file.DataHandler;
 import de.mixedfx.file.FileObject;
 import de.mixedfx.java.ComplexString;
 import de.mixedfx.windows.ahk.AHKManager;
@@ -38,7 +39,7 @@ public class AHKTester
 			/*
 			 * File somewhere else, e.g. last used file. File extension doesn't matter!
 			 */
-			AHKManager.runAHKFile(FileObject.create().setPath(AHKManager.getTempFolder().toString()).setFullName("MsgBox"), false);
+			AHKManager.runAHKFile(FileObject.create().setPath(DataHandler.getTempFolder().toString()).setFullName("MsgBox"), false);
 
 			/*
 			 * File in the working directory (usually project directory). File extension essential, see create method!

@@ -1,19 +1,149 @@
 package de.mixedfx.windows;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.FileNotFoundException;
 
-public class MasterController {
+import de.mixedfx.java.TimeoutController.TimeoutException;
+import javafx.util.Duration;
+
+public class MasterController
+{
+	public static final long TIMEOUT = (long) Duration.seconds(3).toMillis();
+
 	/*
 	 * ADMIN METHODS
 	 */
 
 	/**
+	 * Disables first the process then the service if available.
+	 *
+	 * @param program
+	 * @throws TimeoutException
+	 */
+	public static void disableAll(final Program program) throws TimeoutException
+	{
+		ProcessController.stop(program);
+		ServiceController.stop(program);
+	}
+
+	/**
+	 * Disables first the process then the service if available. Afterwards disables the network adapter.
+	 *
+	 * @param program
+	 *            The program to disable.
+	 * @param networkAdapter
+	 *            The network adapter to disable.
+	 * @throws NetworkAdapterNotFoundException
+	 * @throws TimeoutException
+	 */
+	public static void disableAll(final Program program, final String networkAdapter) throws NetworkAdapterNotFoundException, TimeoutException
+	{
+		MasterController.disableAll(program);
+		NetworkAdapterController.disable(networkAdapter);
+	}
+
+	/**
+	 * Disables Hamachi, including process, service and network adapter.
+	 *
+	 * @throws NetworkAdapterNotFoundException
+	 *             Please find an existing one with {@link NetworkAdapterController#getList()}!
+	 * @throws TimeoutException
+	 */
+	public static void disableHamachi() throws NetworkAdapterNotFoundException, TimeoutException
+	{
+		MasterController.disableAll(DefaultPrograms.HAMACHI, DefaultNetworkAdapter.HAMACHI);
+	}
+
+	/**
+	 * Disables Tunngle, including process, service and network adapter.
+	 *
+	 * @throws NetworkAdapterNotFoundException
+	 *             Please find an existing one with {@link NetworkAdapterController#getList()}!
+	 * @throws TimeoutException
+	 */
+	public static void disableTunngle() throws NetworkAdapterNotFoundException, TimeoutException
+	{
+		MasterController.disableAll(DefaultPrograms.TUNNGLE, DefaultNetworkAdapter.TUNNGLE);
+	}
+
+	/**
+	 * Enables first the service then the process if available.
+	 *
+	 * @param program
+	 *            The program to enable.
+	 * @throws FileNotFoundException
+	 * @throws TimeoutException
+	 */
+	public static void enableAll(final Program program) throws FileNotFoundException, TimeoutException
+	{
+		ServiceController.run(program);
+		ProcessController.run(program);
+	}
+
+	/**
+	 * Enables first the process then the service if available. Afterwards enables the network adapter.
+	 *
+	 * @param program
+	 *            The program to enable.
+	 * @param networkAdapter
+	 *            The network adapter to enable.
+	 * @throws NetworkAdapterNotFoundException
+	 * @throws FileNotFoundException
+	 *             If program could not be found!
+	 * @throws IllegalStateException
+	 *             If system runs on Windows 10 NetworkPriorityController is not supported! (Last thrown)
+	 * @throws TimeoutException
+	 */
+	public static void enableAll(final Program program, final String networkAdapter) throws NetworkAdapterNotFoundException, FileNotFoundException, IllegalStateException, TimeoutException
+	{
+		NetworkAdapterController.enable(networkAdapter);
+		MasterController.enableAll(program);
+		NetworkPriorityController.toTop(networkAdapter);
+	}
+
+	/*
+	 * Methods for convenience for properitary gaming tunneling.
+	 */
+
+	/**
+	 * Enables Hamachi, including process, service and network adapter.
+	 *
+	 * @throws ProgramNotFoundException
+	 * @throws NetworkAdapterNotFoundException
+	 *             Please find an existing one with {@link NetworkAdapterController#getList()}!
+	 * @throws IllegalStateException
+	 *             If system runs on Windows 10 NetworkPriorityController is not supported! (Last thrown)
+	 * @throws FileNotFoundException
+	 * @throws TimeoutException
+	 */
+	public static void enableHamachi() throws NetworkAdapterNotFoundException, FileNotFoundException, IllegalStateException, TimeoutException
+	{
+		MasterController.enableAll(DefaultPrograms.HAMACHI, DefaultNetworkAdapter.HAMACHI);
+	}
+
+	/**
+	 * Enables Tunngle, including process, service and network adapter.
+	 *
+	 * @throws ProgramNotFoundException
+	 * @throws NetworkAdapterNotFoundException
+	 *             Please find an existing one with {@link NetworkAdapterController#getList()}!
+	 * @throws IllegalStateException
+	 *             If system runs on Windows 10 NetworkPriorityController is not supported! (Last thrown)
+	 * @throws FileNotFoundException
+	 * @throws TimeoutException
+	 */
+	public static void enableTunngle() throws NetworkAdapterNotFoundException, FileNotFoundException, IllegalStateException, TimeoutException
+	{
+		MasterController.enableAll(DefaultPrograms.TUNNGLE, DefaultNetworkAdapter.TUNNGLE);
+	}
+
+	/**
 	 * @return Returns true if the current windows user has admin rights, otherwise false.
 	 */
-	public static boolean hasCurrentUserAdminRights() {
-		String groups[] = (new com.sun.security.auth.module.NTSystem()).getGroupIDs();
-		for (String group : groups) {
+	public static boolean hasCurrentUserAdminRights()
+	{
+		final String groups[] = (new com.sun.security.auth.module.NTSystem()).getGroupIDs();
+		for (final String group : groups)
+		{
 			if (group.equals("S-1-5-32-544"))
 				return true;
 		}
@@ -23,179 +153,20 @@ public class MasterController {
 	/**
 	 * @return Returns true if this program has admin rights, otherwise false.
 	 */
-	public static boolean isRunningAsAdmin() {
-		try {
-			String command = "reg query \"HKU\\S-1-5-19\"";
-			Process p = Runtime.getRuntime().exec(command);
+	public static boolean isRunningAsAdmin()
+	{
+		try
+		{
+			final String command = "reg query \"HKU\\S-1-5-19\"";
+			final Process p = Runtime.getRuntime().exec(command);
 			p.waitFor(); // Wait for for command to finish
-			int exitValue = p.exitValue(); // If exit value 0, then admin user.
+			final int exitValue = p.exitValue(); // If exit value 0, then admin user.
 
 			return 0 == exitValue;
-		} catch (Exception e) {
+		}
+		catch (final Exception e)
+		{
 			return false;
 		}
-	}
-
-	/*
-	 * FULL ENABLER AND DISABLER
-	 */
-
-	/**
-	 * Disables first the process then the service if available.
-	 * 
-	 * @param program
-	 */
-	public static void disableAll(Program program) throws AdminRequiredException {
-		if (!isRunningAsAdmin())
-			throw new AdminRequiredException();
-		ProcessController.stop(program);
-		ServiceController.stop(program);
-	}
-
-	/**
-	 * Disables first the process then the service if available. Afterwards disables the network adapter.
-	 * 
-	 * @param program
-	 *            The program to disable.
-	 * @param networkAdapter
-	 *            The network adapter to disable.
-	 * @throws AdminRequiredException
-	 *             This program must run as Admin to do this action. Please check {@link MasterController#isRunningAsAdmin()}!
-	 * @throws NetworkAdapterNotFoundException
-	 */
-	public static void disableAll(Program program, String networkAdapter) throws AdminRequiredException, NetworkAdapterNotFoundException {
-		if (!isRunningAsAdmin())
-			throw new AdminRequiredException();
-		disableAll(program);
-		NetworkAdapterController.disable(networkAdapter);
-	}
-
-	/**
-	 * Enables first the process then the service if available.
-	 * 
-	 * @param program
-	 *            The program to enable.
-	 * @throws AdminRequiredException
-	 *             This program must run as Admin to do this action. Please check {@link MasterController#isRunningAsAdmin()}!
-	 */
-	public static void enableAll(Program program) throws AdminRequiredException {
-		if (!isRunningAsAdmin())
-			throw new AdminRequiredException();
-		ServiceController.run(program);
-		ProcessController.run(program);
-	}
-
-	/**
-	 * Enables first the process then the service if available. Afterwards enables the network adapter.
-	 * 
-	 * @param program
-	 *            The program to enable.
-	 * @param networkAdapter
-	 *            The network adapter to enable.
-	 * @throws AdminRequiredException
-	 *             This program must run as Admin to do this action. Please check {@link MasterController#isRunningAsAdmin()}!
-	 * @throws NetworkAdapterNotFoundException
-	 */
-	public static void enableAll(Program program, String networkAdapter) throws AdminRequiredException, NetworkAdapterNotFoundException {
-		if (!isRunningAsAdmin())
-			throw new AdminRequiredException();
-		NetworkAdapterController.enable(networkAdapter);
-		NetworkPriorityController.toTop(networkAdapter);
-		enableAll(program);
-	}
-
-	/**
-	 * See also {@link FirewallController#disable()}.
-	 * 
-	 * @throws AdminRequiredException
-	 *             This program must run as Admin to do this action. Please check {@link MasterController#isRunningAsAdmin()}!
-	 */
-	public static void disableFirewalls() throws AdminRequiredException {
-		if (!isRunningAsAdmin())
-			throw new AdminRequiredException();
-		FirewallController.enable();
-	}
-
-	/**
-	 * See also {@link FirewallController#enable()}.
-	 * 
-	 * @throws AdminRequiredException
-	 *             This program must run as Admin to do this action. Please check {@link MasterController#isRunningAsAdmin()}!
-	 */
-	public static void enableFirewalls() throws AdminRequiredException {
-		if (!isRunningAsAdmin())
-			throw new AdminRequiredException();
-		FirewallController.enable();
-	}
-
-	/*
-	 * Methods for convenience for properitary gaming tunneling.
-	 */
-
-	/**
-	 * Disables Hamachi, including process, service and network adapter.
-	 * 
-	 * @throws AdminRequiredException
-	 *             This program must run as Admin to do this action. Please check {@link MasterController#isRunningAsAdmin()}!
-	 * @throws ProgramNotFoundException
-	 * @throws NetworkAdapterNotFoundException
-	 *             Please find an existing one with {@link NetworkAdapterController#getList()}!
-	 */
-	public static void disableHamachi() throws AdminRequiredException, ProgramNotFoundException, NetworkAdapterNotFoundException {
-		if (!DefaultPrograms.HAMACHI.fullPath.toFile().exists())
-			throw new ProgramNotFoundException("Hamachi path not found! Default path: " + DefaultPrograms.HAMACHI.fullPath);
-		disableAll(DefaultPrograms.HAMACHI, DefaultNetworkAdapter.HAMACHI);
-	}
-
-	/**
-	 * Enables Hamachi, including process, service and network adapter.
-	 * 
-	 * @throws AdminRequiredException
-	 *             This program must run as Admin to do this action. Please check {@link MasterController#isRunningAsAdmin()}!
-	 * @throws ProgramNotFoundException
-	 * @throws NetworkAdapterNotFoundException
-	 *             Please find an existing one with {@link NetworkAdapterController#getList()}!
-	 */
-	public static void enableHamachi() throws AdminRequiredException, ProgramNotFoundException, NetworkAdapterNotFoundException {
-		if (!DefaultPrograms.HAMACHI.fullPath.toFile().exists())
-			throw new ProgramNotFoundException("Hamachi path not found! Default path: " + DefaultPrograms.HAMACHI.fullPath);
-		enableAll(DefaultPrograms.HAMACHI, DefaultNetworkAdapter.HAMACHI);
-	}
-
-	/**
-	 * Disables Tunngle, including process, service and network adapter.
-	 * 
-	 * @throws AdminRequiredException
-	 *             This program must run as Admin to do this action. Please check {@link MasterController#isRunningAsAdmin()}!
-	 * @throws ProgramNotFoundException
-	 * @throws NetworkAdapterNotFoundException
-	 *             Please find an existing one with {@link NetworkAdapterController#getList()}!
-	 */
-	public static void disableTunngle() throws AdminRequiredException, ProgramNotFoundException, NetworkAdapterNotFoundException {
-		if (!DefaultPrograms.TUNNGLE.fullPath.toFile().exists())
-			throw new ProgramNotFoundException("Tunngle path not found! Default path: " + DefaultPrograms.TUNNGLE.fullPath);
-		disableAll(DefaultPrograms.TUNNGLE, DefaultNetworkAdapter.TUNNGLE);
-	}
-
-	/**
-	 * Enables Tunngle, including process, service and network adapter.
-	 * 
-	 * @param channelName
-	 *            The name of the Tunngle channel to which to connect automatically or an empty String so that Tunngle doesn't connect automatically to a channel.
-	 * @throws AdminRequiredException
-	 *             This program must run as Admin to do this action. Please check {@link MasterController#isRunningAsAdmin()}!
-	 * @throws ProgramNotFoundException
-	 * @throws NetworkAdapterNotFoundException
-	 *             Please find an existing one with {@link NetworkAdapterController#getList()}!
-	 */
-	public static void enableTunngle(String channelName) throws AdminRequiredException, ProgramNotFoundException, NetworkAdapterNotFoundException {
-		if (!DefaultPrograms.TUNNGLE.fullPath.toFile().exists())
-			throw new ProgramNotFoundException("Tunngle path not found! Default path: " + DefaultPrograms.TUNNGLE.fullPath);
-		List<String> parameters = new ArrayList<>();
-		if (!channelName.equals(""))
-			parameters.add("JoinNetwork " + channelName);
-		DefaultPrograms.TUNNGLE.fullPath.setParameter(parameters.toArray(new String[parameters.size()]));
-		System.out.println(DefaultPrograms.TUNNGLE.fullPath.getFullPathWithParameter());
-		enableAll(DefaultPrograms.TUNNGLE, DefaultNetworkAdapter.TUNNGLE);
 	}
 }

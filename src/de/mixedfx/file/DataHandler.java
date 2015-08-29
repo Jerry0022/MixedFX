@@ -35,45 +35,23 @@ public final class DataHandler
 	 */
 
 	/**
-	 * Returns the direct subfolders' names!
+	 * Creates a folder including all parent directories from a FileObject.
 	 *
-	 * @param parentFolder
-	 * @return Returns the direct subfolders' names!
+	 * @param folder
+	 *            A representation of the folder which shall be created.
+	 * @return Returns the folder (same as parameter).
+	 * @throws IOException
+	 *             If folder couln't be created it throws a IOException.
 	 */
-	public static ArrayList<String> getSubFolderList(final FileObject parentFolder)
+	public static FileObject createFolder(final FileObject folder) throws IOException
 	{
-		final File file = new File(parentFolder.getFullPath());
-		final String[] result = file.list((current, name) -> new File(current, name).isDirectory());
-		return new ArrayList<String>(Arrays.asList(result));
+		final File file = folder.toFile();
+		if (!file.mkdirs())
+		{
+			throw new IOException("Can't create parent directories");
+		}
+		return folder;
 	}
-
-	/**
-	 * Returns a list of files which are directly in the folder.
-	 *
-	 * @param fileObject
-	 * @return Returns a list of files which are directly in the folder.
-	 */
-	public static Collection<File> listFiles(FileObject fileObject)
-	{
-		if (!fileObject.toFile().isDirectory())
-			return FileUtils.listFiles(new File(FilenameUtils.getFullPath(fileObject.toFile().getAbsolutePath())), TrueFileFilter.TRUE, null);
-		return FileUtils.listFiles(fileObject.toFile(), TrueFileFilter.TRUE, null);
-	}
-
-	/**
-	 * Returns all executables (found by extension ".exe") in folder.
-	 *
-	 * @param parentFolder
-	 * @return Returns all executables (found by extension ".exe") in folder.
-	 */
-	public static Collection<File> getExecuteables(final FileObject parentFolder)
-	{
-		return FileUtils.listFiles(parentFolder.toFile(), new RegexFileFilter("(.*\\.exe)$"), DirectoryFileFilter.DIRECTORY);
-	}
-
-	/*
-	 * FILE/FOLDER METHODS
-	 */
 
 	/**
 	 * Creates or finds a file. Creation could take some time.
@@ -107,11 +85,147 @@ public final class DataHandler
 	}
 
 	/**
+	 * Deletes a file
+	 *
+	 * @param fullPath
+	 *            The full absolute directory + file name
+	 * @return True if file was successfully deleted or false if deletion failed
+	 */
+	public static boolean deleteFile(final FileObject fullPath)
+	{
+		boolean success;
+
+		final File file = new File(fullPath.getFullPath());
+
+		if (!file.exists())
+		{
+			success = true; // File doesn't exist already
+		}
+		else
+			// File exists
+			if (!file.isDirectory())
+			{
+				if (file.delete())
+				{
+					success = true;
+				}
+				else
+				{
+					success = false;
+				}
+			}
+			else
+			{
+				try
+				{
+					FileUtils.deleteDirectory(file);
+					success = true;
+				}
+				catch (final IOException e)
+				{
+					success = false;
+				}
+			}
+
+		return success;
+	}
+
+	/*
+	 * FILE/FOLDER METHODS
+	 */
+
+	/**
+	 * Fuses directory and file to one full path.
+	 *
+	 * @param directory
+	 *            Should contain only \\ or / as folder separator. Last char as \\ or / is not needed.
+	 * @param fileFolder
+	 *            The file or folder which should be fused.
+	 * @return Returns a full string containing the directory and file or folder
+	 */
+	public static String fuse(String directory, final String fileFolder)
+	{
+		String fullPath = "";
+
+		final String substring = directory.length() > 1 ? directory.substring(directory.length() - 1) : directory;
+		if (!substring.equals("\\"))
+		{
+			if (!substring.equals("/"))
+			{
+				if (StringUtils.countMatches(directory, "/") > 0)
+				{
+					directory += "/";
+				}
+				else
+				{
+					directory += "\\";
+				}
+			}
+		}
+
+		fullPath = directory + fileFolder;
+
+		return fullPath;
+	}
+
+	/**
+	 * Returns all executables (found by extension ".exe") in folder.
+	 *
+	 * @param parentFolder
+	 * @return Returns all executables (found by extension ".exe") in folder.
+	 */
+	public static Collection<File> getExecuteables(final FileObject parentFolder)
+	{
+		return FileUtils.listFiles(parentFolder.toFile(), new RegexFileFilter("(.*\\.exe)$"), DirectoryFileFilter.DIRECTORY);
+	}
+
+	/**
+	 * Returns the direct subfolders' names!
+	 *
+	 * @param parentFolder
+	 * @return Returns the direct subfolders' names!
+	 */
+	public static ArrayList<String> getSubFolderList(final FileObject parentFolder)
+	{
+		final File file = new File(parentFolder.getFullPath());
+		final String[] result = file.list((current, name) -> new File(current, name).isDirectory());
+		return new ArrayList<String>(Arrays.asList(result));
+	}
+
+	/**
+	 * @return Returns the tmp folder as PATH of a FileObject.
+	 * @throws IOException
+	 *             If temp directory is not accessible
+	 */
+	public static FileObject getTempFolder() throws IOException
+	{
+		// Retrieve real temp folder
+		return FileObject.create().setPath(File.createTempFile("temp-file", "tmp").getParent());
+	}
+
+	/**
+	 * Returns a list of files which are directly in the folder.
+	 *
+	 * @param fileObject
+	 * @return Returns a list of files which are directly in the folder.
+	 */
+	public static Collection<File> listFiles(final FileObject fileObject)
+	{
+		if (!fileObject.toFile().isDirectory())
+			return FileUtils.listFiles(new File(FilenameUtils.getFullPath(fileObject.toFile().getAbsolutePath())), TrueFileFilter.TRUE, null);
+		return FileUtils.listFiles(fileObject.toFile(), TrueFileFilter.TRUE, null);
+	}
+
+	/*
+	 * OTHER FILE / FOLDER METHODS
+	 */
+
+	/**
 	 * Finds a file by retrieving it only with its name. The extension is NOT needed but can be available.
 	 *
 	 * @param fileObject
-	 *            The fileName with or without extension! If without extension it finds first a file with equal file name which has no extension, otherwise the first file with equal file name with
-	 *            extension, otherwise the file is not found.
+	 *            The fileName with or without extension! If without extension it finds first a file with equal file name which has no extension,
+	 *            otherwise the first file with equal file name with extension, otherwise the file is not found.
 	 * @return Returns the found file.
 	 * @throws FileNotFoundException
 	 *             Throws exception if file doesn't exist
@@ -137,19 +251,21 @@ public final class DataHandler
 					result = f;
 					break;
 				}
-			} else
+			}
+			else
 				// fileName does contain an extension
 				if (FilenameUtils.getName(f.toString()).toString().toLowerCase().equals(fileFolder))
-			{
-				result = f;
-				break;
-			}
+				{
+					result = f;
+					break;
+				}
 		}
 
 		if (result != null)
 		{
 			return result;
-		} else
+		}
+		else
 		{
 			throw new FileNotFoundException("File doesn't exist or is a directory!");
 		}
@@ -167,111 +283,15 @@ public final class DataHandler
 		try
 		{
 			return DataHandler.createOrFindFile(data);
-		} catch (final IOException e)
+		}
+		catch (final IOException e)
 		{
 			e.printStackTrace();
-		} catch (final InterruptedException e)
+		}
+		catch (final InterruptedException e)
 		{
 			e.printStackTrace();
 		}
 		return null;
-	}
-
-	/**
-	 * Deletes a file
-	 *
-	 * @param fullPath
-	 *            The full absolute directory + file name
-	 * @return True if file was successfully deleted or false if deletion failed
-	 */
-	public static boolean deleteFile(final FileObject fullPath)
-	{
-		boolean success;
-
-		final File file = new File(fullPath.getFullPath());
-
-		if (!file.exists())
-		{
-			success = true; // File doesn't exist already
-		} else
-			// File exists
-			if (!file.isDirectory())
-		{
-			if (file.delete())
-			{
-				success = true;
-			} else
-			{
-				success = false;
-			}
-		} else
-		{
-			try
-			{
-				FileUtils.deleteDirectory(file);
-				success = true;
-			} catch (final IOException e)
-			{
-				success = false;
-			}
-		}
-
-		return success;
-	}
-
-	/**
-	 * Creates a folder including all parent directories from a FileObject.
-	 *
-	 * @param folder
-	 *            A representation of the folder which shall be created.
-	 * @return Returns the folder (same as parameter).
-	 * @throws IOException
-	 *             If folder couln't be created it throws a IOException.
-	 */
-	public static FileObject createFolder(final FileObject folder) throws IOException
-	{
-		final File file = folder.toFile();
-		if (!file.mkdirs())
-		{
-			throw new IOException("Can't create parent directories");
-		}
-		return folder;
-	}
-
-	/*
-	 * OTHER FILE / FOLDER METHODS
-	 */
-
-	/**
-	 * Fuses directory and file to one full path.
-	 *
-	 * @param directory
-	 *            Should contain only \\ or / as folder separator. Last char as \\ or / is not needed.
-	 * @param fileFolder
-	 *            The file or folder which should be fused.
-	 * @return Returns a full string containing the directory and file or folder
-	 */
-	public static String fuse(String directory, final String fileFolder)
-	{
-		String fullPath = "";
-
-		final String substring = directory.length() > 1 ? directory.substring(directory.length() - 1) : directory;
-		if (!substring.equals("\\"))
-		{
-			if (!substring.equals("/"))
-			{
-				if (StringUtils.countMatches(directory, "/") > 0)
-				{
-					directory += "/";
-				} else
-				{
-					directory += "\\";
-				}
-			}
-		}
-
-		fullPath = directory + fileFolder;
-
-		return fullPath;
 	}
 }

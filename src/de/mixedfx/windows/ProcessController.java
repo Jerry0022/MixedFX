@@ -1,49 +1,72 @@
 package de.mixedfx.windows;
 
+import java.io.FileNotFoundException;
+
 import de.mixedfx.java.ComplexString;
+import de.mixedfx.java.TimeoutController;
+import de.mixedfx.java.TimeoutController.TimeoutException;
 import de.mixedfx.logging.Log;
 
-public class ProcessController {
-	public static boolean isProcessRunning(final Program process) {
+public class ProcessController
+{
+	public static boolean isProcessRunning(final Program program)
+	{
 		final String[] commands = { "WMIC", "process", "list", "brief" };
 
-		final ComplexString complexString = Executor.runAndWaitForOutput(commands);
-		for (final String s : complexString) {
-			if (s.toUpperCase().contains(process.processName.toUpperCase())) {
-				Log.windows.debug("Process " + process.processName + " is enabled!");
-				return true;
-			}
-		}
-		Log.windows.debug("Process " + process.processName + " is disabled! Fullpath: " + process.fullPath.getFullPath());
-		return false;
+		final ComplexString complexString = Executor.runAndWaitForOutput(commands, MasterController.TIMEOUT);
+
+		final boolean result = complexString.containsOneRow("", program.processName);
+		Log.windows.debug("Process " + program.processName + " is " + (result ? "enabled" : "disabled") + "!");
+		return result;
 	}
 
-	public static void run(final Program process) {
-		if (ProcessController.isProcessRunning(process))
+	public static void run(final Program program) throws FileNotFoundException, TimeoutException
+	{
+		if (!program.fullPath.toFile().exists())
+			throw new FileNotFoundException("File not found: " + program.fullPath.toString());
+		if (ProcessController.isProcessRunning(program))
 			return;
-		if (process.fullPath.getParameter().length == 0)
-			Executor.runAndWaitForOutput("wmic process call create \"" + process.fullPath.getFullPathWithParameter() + "\"");
-		else
-			Executor.run(process.fullPath);
-		while (!ProcessController.isProcessRunning(process)) {
-			;
-		}
-		Log.windows.debug("Process " + process.processName + " was started! Fullpath with parameters: " + process.fullPath.getFullPathWithParameter());
+
+		Executor.runAsAdmin(program.fullPath, true);
+		TimeoutController.execute(() ->
+		{
+			try
+			{
+				while (!ProcessController.isProcessRunning(program))
+				{
+					System.out.println(Thread.currentThread().isInterrupted());
+					if (Thread.currentThread().isInterrupted())
+						break;
+				}
+			}
+			catch (final Exception e)
+			{
+				e.printStackTrace();
+			}
+
+		} , MasterController.TIMEOUT);
+		Log.windows.debug("Program " + program.programName + " was started! Fullpath with parameters: " + program.fullPath);
 	}
 
 	/**
 	 * Stops ALL process with the processName!
 	 *
-	 * @param process
+	 * @param program
 	 *            E. g. "xxx.exe" The name of the process plus the extension
+	 * @throws TimeoutException
+	 * @throws FileNotFoundException
 	 */
-	public static void stop(final Program process) {
-		if (!ProcessController.isProcessRunning(process))
+	public static void stop(final Program program) throws TimeoutException
+	{
+		if (!ProcessController.isProcessRunning(program))
 			return;
-		Executor.runAndWaitForOutput("taskkill /F /IM " + process.processName);
-		while (ProcessController.isProcessRunning(process)) {
-			;
-		}
-		Log.windows.debug("Process " + process.processName + " was stopped!");
+
+		Executor.runAsAdmin("taskkill", "/F /IM " + program.processName, false);
+		TimeoutController.execute(() ->
+		{
+			while (ProcessController.isProcessRunning(program))
+				;
+		} , MasterController.TIMEOUT);
+		Log.windows.debug("Program " + program.programName + " was stopped!");
 	}
 }

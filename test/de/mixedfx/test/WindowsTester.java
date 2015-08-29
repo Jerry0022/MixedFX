@@ -1,9 +1,11 @@
 package de.mixedfx.test;
 
-import de.mixedfx.windows.AdminRequiredException;
+import java.io.FileNotFoundException;
+
+import de.mixedfx.java.TimeoutController.TimeoutException;
+import de.mixedfx.windows.DefaultPrograms;
 import de.mixedfx.windows.MasterController;
 import de.mixedfx.windows.NetworkAdapterNotFoundException;
-import de.mixedfx.windows.ProgramNotFoundException;
 
 public class WindowsTester
 {
@@ -15,9 +17,12 @@ public class WindowsTester
 
 		try
 		{
-			MasterController.enableTunngle("Battlefield 2");
-		} catch (AdminRequiredException | ProgramNotFoundException | NetworkAdapterNotFoundException e)
+			DefaultPrograms.TUNNGLE.fullPath.setParameter("");
+			MasterController.enableTunngle();
+		}
+		catch (FileNotFoundException | IllegalStateException | NetworkAdapterNotFoundException | TimeoutException e)
 		{
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
