@@ -1,8 +1,8 @@
 package de.mixedfx.windows;
 
+import java.util.concurrent.TimeoutException;
+
 import de.mixedfx.java.ComplexString;
-import de.mixedfx.java.TimeoutController;
-import de.mixedfx.java.TimeoutController.TimeoutException;
 import de.mixedfx.logging.Log;
 
 public class FirewallController
@@ -20,27 +20,19 @@ public class FirewallController
 	public static void disable() throws TimeoutException
 	{
 		Executor.runAsAdmin(FirewallController.exeFile, FirewallController.disableCommand, false);
-		TimeoutController.execute(() ->
-		{
-			while (FirewallController.isEnabled())
-				;
-		} , MasterController.TIMEOUT);
+		MasterController.waitForBoolean(() -> !FirewallController.isEnabled());
 		Log.windows.debug("Disabled Windows Firewalls!");
 	}
 
 	/**
 	 * Enables all windows firewalls.
-	 * 
+	 *
 	 * @throws TimeoutException
 	 */
 	public static void enable() throws TimeoutException
 	{
 		Executor.runAsAdmin(FirewallController.exeFile, FirewallController.enableCommand, false);
-		TimeoutController.execute(() ->
-		{
-			while (!FirewallController.isEnabled())
-				;
-		} , MasterController.TIMEOUT);
+		MasterController.waitForBoolean(() -> FirewallController.isEnabled());
 		Log.windows.debug("Enabled Windows Firewalls!");
 	}
 

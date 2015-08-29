@@ -1,17 +1,22 @@
 package de.mixedfx.windows;
 
 import java.io.FileNotFoundException;
+import java.util.Date;
+import java.util.concurrent.TimeoutException;
 
-import de.mixedfx.java.TimeoutController.TimeoutException;
 import javafx.util.Duration;
 
 public class MasterController
 {
-	public static final long TIMEOUT = (long) Duration.seconds(3).toMillis();
+	public interface Conditionable
+	{
+		/**
+		 * @return Returns true if condition was accepted.
+		 */
+		public boolean done();
+	}
 
-	/*
-	 * ADMIN METHODS
-	 */
+	public static final long TIMEOUT = (long) Duration.seconds(3).toMillis();
 
 	/**
 	 * Disables first the process then the service if available.
@@ -24,6 +29,10 @@ public class MasterController
 		ProcessController.stop(program);
 		ServiceController.stop(program);
 	}
+
+	/*
+	 * ADMIN METHODS
+	 */
 
 	/**
 	 * Disables first the process then the service if available. Afterwards disables the network adapter.
@@ -100,10 +109,6 @@ public class MasterController
 		NetworkPriorityController.toTop(networkAdapter);
 	}
 
-	/*
-	 * Methods for convenience for properitary gaming tunneling.
-	 */
-
 	/**
 	 * Enables Hamachi, including process, service and network adapter.
 	 *
@@ -119,6 +124,10 @@ public class MasterController
 	{
 		MasterController.enableAll(DefaultPrograms.HAMACHI, DefaultNetworkAdapter.HAMACHI);
 	}
+
+	/*
+	 * Methods for convenience for properitary gaming tunneling.
+	 */
 
 	/**
 	 * Enables Tunngle, including process, service and network adapter.
@@ -167,6 +176,21 @@ public class MasterController
 		catch (final Exception e)
 		{
 			return false;
+		}
+	}
+
+	public static final void waitForBoolean(final Conditionable condition) throws TimeoutException
+	{
+		MasterController.waitForBoolean(condition, MasterController.TIMEOUT);
+	}
+
+	public static final void waitForBoolean(final Conditionable condition, final long timeout) throws TimeoutException
+	{
+		final long startTime = new Date().getTime();
+		while (!condition.done())
+		{
+			if ((new Date().getTime() - startTime) > timeout)
+				throw new TimeoutException();
 		}
 	}
 }

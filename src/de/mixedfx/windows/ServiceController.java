@@ -1,8 +1,8 @@
 package de.mixedfx.windows;
 
+import java.util.concurrent.TimeoutException;
+
 import de.mixedfx.java.ComplexString;
-import de.mixedfx.java.TimeoutController;
-import de.mixedfx.java.TimeoutController.TimeoutException;
 import de.mixedfx.logging.Log;
 
 public class ServiceController
@@ -29,11 +29,7 @@ public class ServiceController
 		if (ServiceController.isRunning(service))
 			return;
 		Executor.runAsAdmin("sc", "start " + "\"" + service.serviceName + "\"", false);
-		TimeoutController.execute(() ->
-		{
-			while (!ServiceController.isRunning(service))
-				;
-		} , MasterController.TIMEOUT);
+		MasterController.waitForBoolean(() -> ServiceController.isRunning(service));
 		Log.windows.debug("Service " + service.serviceName + " was started!");
 	}
 
@@ -42,11 +38,7 @@ public class ServiceController
 		if (!ServiceController.isRunning(service))
 			return;
 		Executor.runAsAdmin("sc", "stop " + "\"" + service.serviceName + "\"", false);
-		TimeoutController.execute(() ->
-		{
-			while (ServiceController.isRunning(service))
-				;
-		} , MasterController.TIMEOUT);
+		MasterController.waitForBoolean(() -> !ServiceController.isRunning(service));
 		Log.windows.debug("Service " + service.serviceName + " was stopped!");
 	}
 }

@@ -1,10 +1,9 @@
 package de.mixedfx.windows;
 
 import java.io.FileNotFoundException;
+import java.util.concurrent.TimeoutException;
 
 import de.mixedfx.java.ComplexString;
-import de.mixedfx.java.TimeoutController;
-import de.mixedfx.java.TimeoutController.TimeoutException;
 import de.mixedfx.logging.Log;
 
 public class ProcessController
@@ -28,23 +27,8 @@ public class ProcessController
 			return;
 
 		Executor.runAsAdmin(program.fullPath, true);
-		TimeoutController.execute(() ->
-		{
-			try
-			{
-				while (!ProcessController.isProcessRunning(program))
-				{
-					System.out.println(Thread.currentThread().isInterrupted());
-					if (Thread.currentThread().isInterrupted())
-						break;
-				}
-			}
-			catch (final Exception e)
-			{
-				e.printStackTrace();
-			}
 
-		} , MasterController.TIMEOUT);
+		MasterController.waitForBoolean(() -> ProcessController.isProcessRunning(program));
 		Log.windows.debug("Program " + program.programName + " was started! Fullpath with parameters: " + program.fullPath);
 	}
 
@@ -62,11 +46,7 @@ public class ProcessController
 			return;
 
 		Executor.runAsAdmin("taskkill", "/F /IM " + program.processName, false);
-		TimeoutController.execute(() ->
-		{
-			while (ProcessController.isProcessRunning(program))
-				;
-		} , MasterController.TIMEOUT);
+		MasterController.waitForBoolean(() -> !ProcessController.isProcessRunning(program));
 		Log.windows.debug("Program " + program.programName + " was stopped!");
 	}
 }

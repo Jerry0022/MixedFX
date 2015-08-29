@@ -2,10 +2,9 @@ package de.mixedfx.windows;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 import de.mixedfx.java.ComplexString;
-import de.mixedfx.java.TimeoutController;
-import de.mixedfx.java.TimeoutController.TimeoutException;
 import de.mixedfx.logging.Log;
 
 public class NetworkAdapterController
@@ -32,17 +31,17 @@ public class NetworkAdapterController
 		if (!NetworkAdapterController.isEnabled(adapterName))
 			return;
 		Executor.runAsAdmin(NetworkAdapterController.exeFile, NetworkAdapterController.disableCommand.replace(NetworkAdapterController.placeHolder, adapterName), false);
-		TimeoutController.execute(() ->
+		MasterController.waitForBoolean(() ->
 		{
 			try
 			{
-				while (NetworkAdapterController.isEnabled(adapterName))
-					;
+				return !NetworkAdapterController.isEnabled(adapterName);
 			}
-			catch (final Exception e)
+			catch (final NetworkAdapterNotFoundException e)
 			{
+				return false;
 			}
-		} , MasterController.TIMEOUT);
+		});
 		Log.windows.debug("Disabled NetworkAdapter " + adapterName + "!");
 	}
 
@@ -61,17 +60,17 @@ public class NetworkAdapterController
 		if (NetworkAdapterController.isEnabled(adapterName))
 			return;
 		Executor.runAsAdmin(NetworkAdapterController.exeFile, NetworkAdapterController.enableCommand.replace(NetworkAdapterController.placeHolder, adapterName), false);
-		TimeoutController.execute(() ->
+		MasterController.waitForBoolean(() ->
 		{
 			try
 			{
-				while (!NetworkAdapterController.isEnabled(adapterName))
-					;
+				return NetworkAdapterController.isEnabled(adapterName);
 			}
-			catch (final Exception e)
+			catch (final NetworkAdapterNotFoundException e)
 			{
+				return false;
 			}
-		} , MasterController.TIMEOUT);
+		});
 		Log.windows.debug("Enabled NetworkAdapter " + adapterName + "!");
 	}
 

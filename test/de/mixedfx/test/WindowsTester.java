@@ -1,12 +1,5 @@
 package de.mixedfx.test;
 
-import java.io.FileNotFoundException;
-
-import de.mixedfx.java.TimeoutController.TimeoutException;
-import de.mixedfx.windows.DefaultPrograms;
-import de.mixedfx.windows.MasterController;
-import de.mixedfx.windows.NetworkAdapterNotFoundException;
-
 public class WindowsTester
 {
 
@@ -14,17 +7,6 @@ public class WindowsTester
 	{
 		// System.out.println(MasterController.isRunningAsAdmin());
 		// System.out.println(MasterController.hasCurrentUserAdminRights());
-
-		try
-		{
-			DefaultPrograms.TUNNGLE.fullPath.setParameter("");
-			MasterController.enableTunngle();
-		}
-		catch (FileNotFoundException | IllegalStateException | NetworkAdapterNotFoundException | TimeoutException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
 		// System.out.println(FirewallController.isEnabled());
 		// FirewallController.enable();
