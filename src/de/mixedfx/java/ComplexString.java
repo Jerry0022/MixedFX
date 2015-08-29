@@ -72,7 +72,7 @@ public class ComplexString extends ArrayList<String>
 	 * @param indicator
 	 *            The indicator which is ALWAYS present. (case insensitive)
 	 * @param needles
-	 *            All strings which shall be in a line with the indicator. (case sensitive)
+	 *            All strings which shall be in a line with the indicator. (case insensitive)
 	 * @return Returns true if indicator found and at least once all needles, too. Returns false if not even one line with the indicator has all
 	 *         needles.
 	 */
@@ -87,7 +87,7 @@ public class ComplexString extends ArrayList<String>
 				boolean hasAllNeedles = true;
 				for (final String needle : needles)
 				{
-					if (!s.contains(needle))
+					if (!StringUtils.containsIgnoreCase(s, needle))
 					{
 						hasAllNeedles = false;
 					}

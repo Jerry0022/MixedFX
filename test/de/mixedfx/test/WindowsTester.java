@@ -1,5 +1,11 @@
 package de.mixedfx.test;
 
+import java.io.FileNotFoundException;
+import java.util.concurrent.TimeoutException;
+
+import de.mixedfx.windows.DefaultPrograms;
+import de.mixedfx.windows.ProcessController;
+
 public class WindowsTester
 {
 
@@ -7,6 +13,16 @@ public class WindowsTester
 	{
 		// System.out.println(MasterController.isRunningAsAdmin());
 		// System.out.println(MasterController.hasCurrentUserAdminRights());
+
+		try
+		{
+			ProcessController.run(DefaultPrograms.HAMACHI);
+		}
+		catch (FileNotFoundException | TimeoutException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		// System.out.println(FirewallController.isEnabled());
 		// FirewallController.enable();
