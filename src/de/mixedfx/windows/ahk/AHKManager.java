@@ -26,18 +26,19 @@ public class AHKManager
 	 */
 	public static ProcessBuilder checkExistance(final File ahkScript) throws IOException
 	{
-		final FileObject ahkExeFile = FileObject.create().setPath(AHKManager.getTempFolder().toString()).setFullName(AHKManager.AHKExecutable);
+		final FileObject ahkTempExeFile = FileObject.create().setPath(AHKManager.getTempFolder().toString()).setFullName(AHKManager.AHKExecutable);
 		final FileObject ahkTempScript = FileObject.create().setPath(AHKManager.getTempFolder().toString()).setFullName(FileObject.create(ahkScript).getFullName()).setExtension(AHKManager.AHKExtension);
 
 		try
 		{
 			// Copy AutoHotKey.exe
-			if (!ahkExeFile.toFile().exists())
-				FileUtils.copyFile(new File(AHKManager.class.getResource(AHKManager.AHKExecutable).toURI()), ahkExeFile.toFile());
+			final File ahkExeFile = new File(AHKManager.class.getResource(AHKManager.AHKExecutable).toURI());
+			if (!ahkTempExeFile.toFile().exists() || !ahkTempExeFile.equalsNameSize(FileObject.create(ahkExeFile)))
+				FileUtils.copyFile(ahkExeFile, ahkTempExeFile.toFile());
 			// Copy Script
 			if (!ahkTempScript.toFile().exists() || !ahkTempScript.equalsNameSize(FileObject.create(ahkScript)))
 				FileUtils.copyFile(ahkScript, ahkTempScript.toFile());
-			return new ProcessBuilder(ahkExeFile.getFullPath(), ahkTempScript.getFullPath());
+			return new ProcessBuilder(ahkTempExeFile.getFullPath(), ahkTempScript.getFullPath());
 		} catch (final URISyntaxException e)
 		{
 			return null;

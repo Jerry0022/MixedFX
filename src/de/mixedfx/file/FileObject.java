@@ -39,7 +39,7 @@ public class FileObject implements Cloneable
 	}
 
 	/**
-	 * Works also for files which are in the working directory. This means the place where the class or jar is executed.
+	 * Works also for files which are in the working directory. This means the place where the class or jar is executed. If this file or folder does not exist this FileObject is empty!
 	 *
 	 * @param file
 	 *            The name or full path of the file WITH extension or folder.
