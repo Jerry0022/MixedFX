@@ -41,6 +41,6 @@ public enum Language
 
 	public String getListening()
 	{
-		return locale + "_" + (this.locale.equals(Locale.GERMAN) ? "de" : "us");
+		return locale + "-" + (this.locale.equals(Locale.GERMAN) ? "de" : "us");
 	}
 }
