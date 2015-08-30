@@ -60,7 +60,8 @@ public class SuperPane extends StackPane
 	public static int taskLoadScreenDelayMS = 400;
 
 	/**
-	 * Sets the transparency if a dynamic was opened! Value must not be less than 0 or greater than 1. MUST be set before {@link SuperPane} is initialized!
+	 * Sets the transparency if a dynamic was opened! Value must not be less than 0 or greater than 1. MUST be set before {@link SuperPane} is
+	 * initialized!
 	 */
 	public static double opacity = 0.35;
 
@@ -142,15 +143,15 @@ public class SuperPane extends StackPane
 	/**
 	 * Indicates whether the Load Screen is open, not if a task is running (because if many short tasks are running there is no LoadScreen)
 	 */
-	private AtomicBoolean	loading;
-	private Runnable		onLoadingDone;
+	private final AtomicBoolean	loading;
+	private Runnable			onLoadingDone;
 
 	/**
 	 * Handles all jobs which are loaded via {@link #load(Task)}! Executes three workers at the same time. Others have to wait.
 	 */
-	private ExecutorService					taskCollector;
-	private ArrayList<Task<?>>				taskList;
-	private EventHandler<WorkerStateEvent>	taskDoneHandler;
+	private final ExecutorService					taskCollector;
+	private final ArrayList<Task<?>>				taskList;
+	private final EventHandler<WorkerStateEvent>	taskDoneHandler;
 
 	/**
 	 * Initializes the StackPane resizing mechanism and all task related stuff.
@@ -162,15 +163,11 @@ public class SuperPane extends StackPane
 		// Initialize the task management
 		this.loading = new AtomicBoolean(false);
 		this.taskList = new ArrayList<Task<?>>();
-		this.taskCollector = Executors.newFixedThreadPool(SuperPane.taskMaxParallel, r ->
-		{
-			final Thread t = new Thread(r);
-			t.setDaemon(true);
-			return t;
-		});
+		this.taskCollector = Executors.newFixedThreadPool(SuperPane.taskMaxParallel, Inspector.getThreadFactory());
 		this.taskDoneHandler = event ->
 		{
-			if (event.getEventType().equals(WorkerStateEvent.WORKER_STATE_FAILED) || event.getEventType().equals(WorkerStateEvent.WORKER_STATE_SUCCEEDED) || event.getEventType().equals(WorkerStateEvent.WORKER_STATE_CANCELLED))
+			if (event.getEventType().equals(WorkerStateEvent.WORKER_STATE_FAILED) || event.getEventType().equals(WorkerStateEvent.WORKER_STATE_SUCCEEDED)
+					|| event.getEventType().equals(WorkerStateEvent.WORKER_STATE_CANCELLED))
 			{
 				boolean allDone = true;
 				for (final Task<?> t : SuperPane.this.taskList)
@@ -208,7 +205,8 @@ public class SuperPane extends StackPane
 	 * <li>Layer 0: Background</li>
 	 * <li>Layer 1: Content</li>
 	 * <li>Layer 2: LoadScreen <br>
-	 * <li>Layer n: {@link Node} with or without {@link Dynamic} being opened with {@link SuperPane#openDynamic(Node)} or {@link SuperPane#openDialogue(Node)}</li>
+	 * <li>Layer n: {@link Node} with or without {@link Dynamic} being opened with {@link SuperPane#openDynamic(Node)} or
+	 * {@link SuperPane#openDialogue(Node)}</li>
 	 * </ol>
 	 *
 	 * Lifecycle:
@@ -235,7 +233,8 @@ public class SuperPane extends StackPane
 	 *
 	 * @param content
 	 * @param loadScreen
-	 *            Can be a {@link Dynamic} to be informed about its lifecycle. The Load Screen is not part of the scene graph until {SuperPane {@link #load(Task)} is called.
+	 *            Can be a {@link Dynamic} to be informed about its lifecycle. The Load Screen is not part of the scene graph until {SuperPane
+	 *            {@link #load(Task)} is called.
 	 */
 	public SuperPane(final Node content, final Node loadScreen)
 	{
@@ -251,7 +250,8 @@ public class SuperPane extends StackPane
 	}
 
 	/**
-	 * Blurs and darkens the whole StackPane. First it removes all old overlays. Then maybe adds a new Overlay as forelast element (only in case the last element is not the content).
+	 * Blurs and darkens the whole StackPane. First it removes all old overlays. Then maybe adds a new Overlay as forelast element (only in case the
+	 * last element is not the content).
 	 */
 	private void blurAndDarkenPreLastLayer()
 	{
@@ -349,12 +349,12 @@ public class SuperPane extends StackPane
 	}
 
 	/**
-	 * Loads a task asynchronously and shows a stopping task animation as an overlay if the task is running longer than {@link SuperPane#taskLoadScreenDelayMS}. In each case the content is unclickable
-	 * for the time. Doesn't have to be called via FXThread.
+	 * Loads a task asynchronously and shows a stopping task animation as an overlay if the task is running longer than
+	 * {@link SuperPane#taskLoadScreenDelayMS}. In each case the content is unclickable for the time. Doesn't have to be called via FXThread.
 	 *
 	 * @param task
-	 *            The task which shall be executed. Maybe it is not executed immediately because more than {@link SuperPane#taskMaxParallel} are running in parallel. But the Load Screen is shown all
-	 *            over the time.
+	 *            The task which shall be executed. Maybe it is not executed immediately because more than {@link SuperPane#taskMaxParallel} are
+	 *            running in parallel. But the Load Screen is shown all over the time.
 	 */
 	public void load(final Task<?> task)
 	{
@@ -383,9 +383,9 @@ public class SuperPane extends StackPane
 						SuperPane.this.openLoadScreen();
 					});
 				}
-			} catch (final InterruptedException e)
-			{
 			}
+			catch (final InterruptedException e)
+			{}
 		});
 	}
 

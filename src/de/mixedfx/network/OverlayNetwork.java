@@ -1,7 +1,6 @@
 package de.mixedfx.network;
 
 import java.net.InetAddress;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 
 import org.apache.commons.net.util.SubnetUtils;
@@ -12,6 +11,7 @@ import org.icmp4j.IcmpPingUtil;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 
+import de.mixedfx.inspector.Inspector;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -23,25 +23,25 @@ public abstract class OverlayNetwork
 	 * @param ip
 	 * @return Returns true if IP is in at least one range of {@link OverlayNetwork#getRange()}!
 	 */
-	public static boolean testInRange(InetAddress ip, Class<? extends OverlayNetwork> network)
+	public static boolean testInRange(final InetAddress ip, final Class<? extends OverlayNetwork> network)
 	{
 		OverlayNetwork rangeNetwork;
 		try
 		{
 			rangeNetwork = network.newInstance();
-			for (String range : rangeNetwork.getRange())
+			for (final String range : rangeNetwork.getRange())
 				if (rangeNetwork.isInRange(range, ip.getHostAddress()))
 					return true;
-		} catch (InstantiationException | IllegalAccessException e)
-		{
 		}
+		catch (InstantiationException | IllegalAccessException e)
+		{}
 		return false;
 	}
 
 	private InetAddress ip;
 
-	private DoubleProperty	reliability;
-	private IntegerProperty	latency;
+	private final DoubleProperty	reliability;
+	private final IntegerProperty	latency;
 
 	public OverlayNetwork()
 	{
@@ -49,10 +49,10 @@ public abstract class OverlayNetwork
 		this.latency = new SimpleIntegerProperty(0);
 	}
 
-	protected void setIP(InetAddress ip)
+	protected void setIP(final InetAddress ip)
 	{
 		this.ip = ip;
-		updateLatency();
+		this.updateLatency();
 	}
 
 	public InetAddress getIP()
@@ -64,44 +64,42 @@ public abstract class OverlayNetwork
 	{
 		if (this.ip != null)
 		{
-			ListeningExecutorService service = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(10));
-			service.submit(new Callable<Integer>()
+			final ListeningExecutorService service = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(10, Inspector.getThreadFactory()));
+			service.submit(() ->
 			{
-				public Integer call()
+				int latency = 0;
+				int successfullRequests = 0;
+
+				// repeat a few times
+				for (int count = 0; count <= 5; count++)
 				{
-					int latency = 0;
-					int successfullRequests = 0;
+					// request
+					final IcmpPingRequest request = IcmpPingUtil.createIcmpPingRequest();
+					request.setHost(OverlayNetwork.this.ip.getHostAddress());
+					request.setTimeout(2000);
 
-					// repeat a few times
-					for (int count = 0; count <= 5; count++)
+					// delegate
+					final IcmpPingResponse response = IcmpPingUtil.executePingRequest(request);
+
+					if (response.getSuccessFlag())
+						successfullRequests++;
+
+					latency += response.getDuration();
+
+					// rest
+					try
 					{
-						// request
-						final IcmpPingRequest request = IcmpPingUtil.createIcmpPingRequest();
-						request.setHost(OverlayNetwork.this.ip.getHostAddress());
-						request.setTimeout(2000);
-
-						// delegate
-						final IcmpPingResponse response = IcmpPingUtil.executePingRequest(request);
-
-						if (response.getSuccessFlag())
-							successfullRequests++;
-
-						latency += response.getDuration();
-
-						// rest
-						try
-						{
-							Thread.sleep(1000);
-						} catch (InterruptedException e)
-						{
-							e.printStackTrace();
-						}
+						Thread.sleep(1000);
 					}
-
-					OverlayNetwork.this.latency.set(latency / successfullRequests);
-					OverlayNetwork.this.reliability.set(successfullRequests / 5);
-					return 0;
+					catch (final InterruptedException e)
+					{
+						e.printStackTrace();
+					}
 				}
+
+				OverlayNetwork.this.latency.set(latency / successfullRequests);
+				OverlayNetwork.this.reliability.set(successfullRequests / 5);
+				return 0;
 			});
 		}
 	}
@@ -127,16 +125,17 @@ public abstract class OverlayNetwork
 	 */
 	public abstract String[] getRange();
 
-	private boolean isInRange(String rangeIP, String testIP)
+	private boolean isInRange(final String rangeIP, final String testIP)
 	{
 		if (rangeIP.isEmpty())
 			return true;
 		try
 		{
-			SubnetUtils utils = new SubnetUtils(rangeIP);
-			boolean isInRange = utils.getInfo().isInRange(testIP);
+			final SubnetUtils utils = new SubnetUtils(rangeIP);
+			final boolean isInRange = utils.getInfo().isInRange(testIP);
 			return isInRange;
-		} catch (Exception e)
+		}
+		catch (final Exception e)
 		{
 			return false;
 		}
@@ -147,7 +146,7 @@ public abstract class OverlayNetwork
 	 * @return Returns true if of the same type!
 	 */
 	@Override
-	public boolean equals(Object network)
+	public boolean equals(final Object network)
 	{
 		return this.getClass().equals(network.getClass());
 	}

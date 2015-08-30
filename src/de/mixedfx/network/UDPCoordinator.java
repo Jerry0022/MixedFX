@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
@@ -22,6 +21,7 @@ import org.bushe.swing.event.EventTopicSubscriber;
 
 import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.eventbus.EventBusService;
+import de.mixedfx.inspector.Inspector;
 import de.mixedfx.java.ApacheTools;
 import de.mixedfx.logging.Log;
 import javafx.beans.property.ListProperty;
@@ -36,8 +36,8 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 	public static final EventBusService service = new EventBusService("UDPCoordinator");
 
 	/**
-	 * Just a list of all who made them known at least once (maybe aren't still active). An replaced event to the listener is only submitted if the state changed, not if the last contact was updated.
-	 * This list isn't cleared as long as the udp connection is running!
+	 * Just a list of all who made them known at least once (maybe aren't still active). An replaced event to the listener is only submitted if the
+	 * state changed, not if the last contact was updated. This list isn't cleared as long as the udp connection is running!
 	 */
 	public static ListProperty<UDPDetected> allAdresses;
 
@@ -72,9 +72,10 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 		{
 			this.in.start();
 			this.out.start();
-		} catch (Exception e)
+		}
+		catch (final Exception e)
 		{
-			service.publishSync(UDPCoordinator.ERROR, e);
+			UDPCoordinator.service.publishSync(UDPCoordinator.ERROR, e);
 		}
 	}
 
@@ -119,20 +120,20 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 						}
 					}
 				}
-			} catch (final SocketException e)
-			{
 			}
+			catch (final SocketException e)
+			{}
 			if (ownOne)
 				return;
 
 			/*
 			 * Read packet!
 			 */
-			ByteArrayInputStream in = new ByteArrayInputStream(packet.getData());
+			final ByteArrayInputStream in = new ByteArrayInputStream(packet.getData());
 			try
 			{
-				ObjectInputStream is = new ObjectInputStream(in);
-				UDPDetected newDetected = (UDPDetected) is.readObject();
+				final ObjectInputStream is = new ObjectInputStream(in);
+				final UDPDetected newDetected = (UDPDetected) is.readObject();
 				newDetected.address = packet.getAddress();
 				/*
 				 * Register / Update the client in local list of UDP contacts.
@@ -152,21 +153,23 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 							localDetected.update(newDetected.getTimeStamp());
 							UDPCoordinator.allAdresses.set(UDPCoordinator.allAdresses.indexOf(localDetected), localDetected);
 							Log.network.trace("Updated " + newDetected);
-						} else
+						}
+						else
 						{
-							oldMessage = true;
+							this.oldMessage = true;
 						}
 					});
-				} else
+				}
+				else
 				{
 					// New UDP message of unknown NIC
 					UDPCoordinator.allAdresses.add(newDetected);
 					Log.network.debug("New " + newDetected);
 				}
 
-				if (oldMessage)
+				if (this.oldMessage)
 				{
-					oldMessage = false;
+					this.oldMessage = false;
 					return; // Old UDP Packet, newer one was already received!
 				}
 				Log.network.trace("New UDP message received!");
@@ -174,68 +177,65 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 				/*
 				 * Connect to other one!
 				 */
-				Log.network.trace("Cached requests: " + cached);
+				Log.network.trace("Cached requests: " + this.cached);
 				boolean alreadyWaiting;
-				synchronized (cached)
+				synchronized (this.cached)
 				{
-					if (!cached.contains(newDetected.address))
+					if (!this.cached.contains(newDetected.address))
 					{
 						alreadyWaiting = false;
-						cached.add(newDetected.address);
-					} else
+						this.cached.add(newDetected.address);
+					}
+					else
 						alreadyWaiting = true;
 				}
 				if (!alreadyWaiting)
 				{
-					ScheduledExecutorService executor = Executors.newScheduledThreadPool(2);
-					final Future handler = executor.submit(new Callable()
+					final ScheduledExecutorService executor = Executors.newScheduledThreadPool(2, Inspector.getThreadFactory());
+					final Future handler = executor.submit(() ->
 					{
-						@Override
-						public Object call() throws Exception
+						NetworkManager.t.startFullTCP(newDetected.address);
+						synchronized (UDPCoordinator.this.cached)
 						{
-							NetworkManager.t.startFullTCP(newDetected.address);
-							synchronized (cached)
-							{
-								cached.remove(newDetected.address);
-							}
-							return null;
+							UDPCoordinator.this.cached.remove(newDetected.address);
 						}
+						return null;
 					});
-					executor.schedule(new Runnable()
+					executor.schedule(() ->
 					{
-						public void run()
+						if (!handler.isDone())
 						{
-							if (!handler.isDone())
-							{
-								Log.network.warn("A TCP connection needed to much time to establish! Time waited: " + NetworkConfig.TCP_CONNECTION_ESTABLISHING_TIMEOUT + " milliseconds."
-										+ "Connection is now closed! " + newDetected.address);
+							Log.network.warn("A TCP connection needed to much time to establish! Time waited: " + NetworkConfig.TCP_CONNECTION_ESTABLISHING_TIMEOUT + " milliseconds."
+									+ "Connection is now closed! " + newDetected.address);
 
-								handler.cancel(true);
-								// Lock of callable still works...
-								try
-								{
-									Thread.sleep(NetworkConfig.TCP_CONNECTION_ESTABLISHING_RETRY);
-								} catch (InterruptedException e)
-								{
-								}
-								synchronized (cached)
-								{
-									cached.remove(newDetected.address);
-								}
+							handler.cancel(true);
+							// Lock of callable still works...
+							try
+							{
+								Thread.sleep(NetworkConfig.TCP_CONNECTION_ESTABLISHING_RETRY);
+							}
+							catch (final InterruptedException e)
+							{}
+							synchronized (UDPCoordinator.this.cached)
+							{
+								UDPCoordinator.this.cached.remove(newDetected.address);
 							}
 						}
-					}, NetworkConfig.TCP_CONNECTION_ESTABLISHING_TIMEOUT, TimeUnit.MILLISECONDS);
+					} , NetworkConfig.TCP_CONNECTION_ESTABLISHING_TIMEOUT, TimeUnit.MILLISECONDS);
 				}
-			} catch (Exception e)
+			}
+			catch (final Exception e)
 			{
 				UDPCoordinator.service.publishSync(UDPCoordinator.ERROR, e);
 			}
-		} else if (topic.equals(UDPCoordinator.ERROR))
-		{
-			NetworkManager.t.stopTCPFull();
-			this.stopUDPFull();
-
-			EventBusExtended.publishSyncSafe(NetworkManager.NETWORK_FATALERROR, data);
 		}
+		else
+			if (topic.equals(UDPCoordinator.ERROR))
+			{
+				NetworkManager.t.stopTCPFull();
+				this.stopUDPFull();
+
+				EventBusExtended.publishSyncSafe(NetworkManager.NETWORK_FATALERROR, data);
+			}
 	}
 }

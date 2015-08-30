@@ -3,6 +3,7 @@ package de.mixedfx.inspector;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -172,13 +173,25 @@ public class Inspector
 		newThread.start();
 	}
 
+	/**
+	 * @return Returns a single thread executor which starts threads as daemon
+	 */
 	public static ExecutorService getThreadExecutor()
 	{
-		return Executors.newSingleThreadExecutor(runnable ->
+		return Executors.newSingleThreadExecutor(Inspector.getThreadFactory());
+
+	}
+
+	/**
+	 * @return Returns a thread factory which produces threads as daemons
+	 */
+	public static ThreadFactory getThreadFactory()
+	{
+		return runnable ->
 		{
 			final Thread thread = new Thread(runnable);
 			thread.setDaemon(true);
 			return thread;
-		});
+		};
 	}
 }
