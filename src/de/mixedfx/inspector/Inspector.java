@@ -1,6 +1,8 @@
 package de.mixedfx.inspector;
 
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -108,8 +110,7 @@ public class Inspector
 				Thread.sleep((long) timeToWait.toMillis());
 			}
 			catch (final InterruptedException e)
-			{
-			}
+			{}
 			Platform.runLater(toRun);
 		}).start();
 	}
@@ -142,8 +143,7 @@ public class Inspector
 				Thread.sleep((long) timeToWait.toMillis());
 			}
 			catch (final InterruptedException e)
-			{
-			}
+			{}
 			toRun.run();
 		});
 	}
@@ -170,5 +170,15 @@ public class Inspector
 		final Thread newThread = new Thread(toRun);
 		newThread.setDaemon(true);
 		newThread.start();
+	}
+
+	public static ExecutorService getThreadExecutor()
+	{
+		return Executors.newSingleThreadExecutor(runnable ->
+		{
+			final Thread thread = new Thread(runnable);
+			thread.setDaemon(true);
+			return thread;
+		});
 	}
 }

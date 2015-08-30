@@ -27,7 +27,7 @@ public class NetworkPriorityController
 	public static void toTop(final String adapterName) throws NetworkAdapterNotFoundException, IllegalStateException
 	{
 		// Windows 10? If yes, it is unsupported!
-		final ComplexString result = Executor.runAndWaitForOutput("systeminfo", MasterController.TIMEOUT);
+		final ComplexString result = Executor.runAndWaitForOutput("systeminfo", 6000);
 		if (result.containsOneRow("Betriebssystemname", "10"))
 			throw new IllegalStateException("Windows 10 is not supported for this action. See also: "
 					+ "http://answers.microsoft.com/en-us/windows/forum/windows_10-networking/windows-10-tunngle-network-adapter-priority-cannot/e9df566a-4dfe-4d3e-ae6e-623f39e31661");

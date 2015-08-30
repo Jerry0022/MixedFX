@@ -52,7 +52,6 @@ public class WindowsMonitoring
 							final List<?> items = c.getItems();
 							for (final Object o : items)
 							{
-								// Individual handling of Programs
 								if (o instanceof Program)
 								{
 									((Program) o).processStatus = ProcessController.isProcessRunning((Program) o);
@@ -61,9 +60,19 @@ public class WindowsMonitoring
 								else
 									if (o instanceof NetworkAdapter)
 									{
-										final NetworkAdapter current = netAdapters.get(netAdapters.indexOf(o));
-										((NetworkAdapter) o).enabled = current.enabled;
-										((NetworkAdapter) o).connected = current.connected;
+										final int index = netAdapters.indexOf(o);
+										if (index != -1)
+										{
+											final NetworkAdapter current = netAdapters.get(index);
+											((NetworkAdapter) o).enabled = current.enabled;
+											((NetworkAdapter) o).connected = current.connected;
+										}
+										else
+										{
+											// Not found!
+											((NetworkAdapter) o).enabled = false;
+											((NetworkAdapter) o).connected = false;
+										}
 									}
 									else
 										if (o instanceof Firewalls)

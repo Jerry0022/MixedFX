@@ -24,7 +24,7 @@ public class NetworkAdapterController
 	 * @throws NetworkAdapterNotFoundException
 	 * @throws TimeoutException
 	 */
-	public static void disable(final String adapterName) throws NetworkAdapterNotFoundException, TimeoutException
+	public static synchronized void disable(final String adapterName) throws NetworkAdapterNotFoundException, TimeoutException
 	{
 		if (!NetworkAdapterController.exists(adapterName))
 			throw new NetworkAdapterNotFoundException(adapterName);
@@ -53,7 +53,7 @@ public class NetworkAdapterController
 	 * @throws NetworkAdapterNotFoundException
 	 * @throws TimeoutException
 	 */
-	public static void enable(final String adapterName) throws NetworkAdapterNotFoundException, TimeoutException
+	public static synchronized void enable(final String adapterName) throws NetworkAdapterNotFoundException, TimeoutException
 	{
 		if (!NetworkAdapterController.exists(adapterName))
 			throw new NetworkAdapterNotFoundException(adapterName);
@@ -79,7 +79,7 @@ public class NetworkAdapterController
 	 *            The adapter name which shall be checked if it exists.
 	 * @return Returns true if this adapter name exists (case insensitive).
 	 */
-	public static boolean exists(final String adapterName)
+	public static synchronized boolean exists(final String adapterName)
 	{
 		for (final NetworkAdapter adapter : NetworkAdapterController.getList())
 			if (adapter.name.equalsIgnoreCase(adapterName))
@@ -90,7 +90,7 @@ public class NetworkAdapterController
 	/**
 	 * @return Returns a list of all network adapters including the information whether each of them is enabled and/or connected!
 	 */
-	public static List<NetworkAdapter> getList()
+	public static synchronized List<NetworkAdapter> getList()
 	{
 		final ComplexString cmdResult = Executor.runAndWaitForOutput(NetworkAdapterController.exeFile + " " + NetworkAdapterController.statusCommand.replace("_", ""), MasterController.TIMEOUT);
 		final List<NetworkAdapter> adapters = new ArrayList<>();
@@ -122,7 +122,7 @@ public class NetworkAdapterController
 	 *            The name of the adapter (attention this name may is user specific)!
 	 * @throws NetworkAdapterNotFoundException
 	 */
-	public static boolean isEnabled(final String adapterName) throws NetworkAdapterNotFoundException
+	public static synchronized boolean isEnabled(final String adapterName) throws NetworkAdapterNotFoundException
 	{
 		if (!NetworkAdapterController.exists(adapterName))
 			throw new NetworkAdapterNotFoundException(adapterName);

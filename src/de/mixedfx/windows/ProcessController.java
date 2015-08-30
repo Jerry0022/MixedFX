@@ -8,7 +8,7 @@ import de.mixedfx.logging.Log;
 
 public class ProcessController
 {
-	public static boolean isProcessRunning(final Program program)
+	public static synchronized boolean isProcessRunning(final Program program)
 	{
 		final String[] commands = { "WMIC", "process", "list", "brief" };
 
@@ -19,7 +19,7 @@ public class ProcessController
 		return result;
 	}
 
-	public static void run(final Program program) throws FileNotFoundException, TimeoutException
+	public static synchronized void run(final Program program) throws FileNotFoundException, TimeoutException
 	{
 		if (!program.fullPath.toFile().exists())
 			throw new FileNotFoundException("File not found: " + program.fullPath.toString());
@@ -39,7 +39,7 @@ public class ProcessController
 	 *            E. g. "xxx.exe" The name of the process plus the extension
 	 * @throws TimeoutException
 	 */
-	public static void stop(final Program program) throws TimeoutException
+	public static synchronized void stop(final Program program) throws TimeoutException
 	{
 		if (!ProcessController.isProcessRunning(program))
 			return;

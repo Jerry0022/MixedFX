@@ -17,7 +17,7 @@ public class FirewallController
 	 *
 	 * @throws TimeoutException
 	 */
-	public static void disable() throws TimeoutException
+	public static synchronized void disable() throws TimeoutException
 	{
 		Executor.runAsAdmin(FirewallController.exeFile, FirewallController.disableCommand, false);
 		MasterController.waitForBoolean(() -> !FirewallController.isEnabled());
@@ -29,7 +29,7 @@ public class FirewallController
 	 *
 	 * @throws TimeoutException
 	 */
-	public static void enable() throws TimeoutException
+	public static synchronized void enable() throws TimeoutException
 	{
 		Executor.runAsAdmin(FirewallController.exeFile, FirewallController.enableCommand, false);
 		MasterController.waitForBoolean(() -> FirewallController.isEnabled());
@@ -39,7 +39,7 @@ public class FirewallController
 	/**
 	 * @return False if all firewalls are disabled or could not retrieve status! True if at least one firewall is online.
 	 */
-	public static boolean isEnabled()
+	public static synchronized boolean isEnabled()
 	{
 		final ComplexString response = Executor.runAndWaitForOutput(FirewallController.exeFile + " " + FirewallController.statusCommand, MasterController.TIMEOUT);
 		try

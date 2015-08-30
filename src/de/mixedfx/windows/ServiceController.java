@@ -8,7 +8,7 @@ import de.mixedfx.logging.Log;
 public class ServiceController
 {
 
-	public static boolean isRunning(final Program service)
+	public static synchronized boolean isRunning(final Program service)
 	{
 		final ComplexString result = Executor.runAndWaitForOutput("sc query " + "\"" + service.serviceName + "\"", MasterController.TIMEOUT);
 
@@ -24,7 +24,7 @@ public class ServiceController
 		}
 	}
 
-	public static void run(final Program service) throws TimeoutException
+	public static synchronized void run(final Program service) throws TimeoutException
 	{
 		if (ServiceController.isRunning(service))
 			return;
@@ -33,7 +33,7 @@ public class ServiceController
 		Log.windows.debug("Service " + service.serviceName + " was started!");
 	}
 
-	public static void stop(final Program service) throws TimeoutException
+	public static synchronized void stop(final Program service) throws TimeoutException
 	{
 		if (!ServiceController.isRunning(service))
 			return;

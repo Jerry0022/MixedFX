@@ -3,7 +3,6 @@ package de.mixedfx.windows;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
@@ -12,6 +11,7 @@ import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.Kernel32Util;
 
 import de.mixedfx.file.FileObject;
+import de.mixedfx.inspector.Inspector;
 import de.mixedfx.java.ComplexString;
 import de.mixedfx.logging.Log;
 
@@ -82,30 +82,23 @@ public class Executor
 
 	public static ComplexString start(final String[] commands, final long timout)
 	{
-		final Future<ComplexString> future = Executors.newSingleThreadExecutor().submit(() ->
+		final Future<ComplexString> future = Inspector.getThreadExecutor().submit(() ->
 		{
 			Log.windows.trace("Run following command and wait for output: " + Arrays.asList(commands));
 			final ComplexString result = new ComplexString();
-			try
-			{
-				Process process;
-				if (commands.length == 1)
-					process = Runtime.getRuntime().exec(commands[0]);
-				else
-					process = Runtime.getRuntime().exec(commands);
-				final BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			Process process;
+			if (commands.length == 1)
+				process = Runtime.getRuntime().exec(commands[0]);
+			else
+				process = Runtime.getRuntime().exec(commands);
+			final BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
-				String text;
-				while ((text = in.readLine()) != null)
-				{
-					result.add(text);
-				}
-				in.close();
-			}
-			catch (final Exception e)
+			String text;
+			while ((text = in.readLine()) != null)
 			{
-				e.printStackTrace();
+				result.add(text);
 			}
+			in.close();
 			return result;
 		});
 		try

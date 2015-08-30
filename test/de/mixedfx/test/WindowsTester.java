@@ -3,8 +3,8 @@ package de.mixedfx.test;
 import java.io.FileNotFoundException;
 import java.util.concurrent.TimeoutException;
 
-import de.mixedfx.windows.DefaultPrograms;
-import de.mixedfx.windows.ProcessController;
+import de.mixedfx.windows.MasterController;
+import de.mixedfx.windows.NetworkAdapterNotFoundException;
 
 public class WindowsTester
 {
@@ -16,9 +16,9 @@ public class WindowsTester
 
 		try
 		{
-			ProcessController.run(DefaultPrograms.HAMACHI);
+			MasterController.enableHamachi();
 		}
-		catch (FileNotFoundException | TimeoutException e)
+		catch (FileNotFoundException | TimeoutException | IllegalStateException | NetworkAdapterNotFoundException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();

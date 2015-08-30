@@ -121,6 +121,8 @@ public class MasterController
 	 */
 	public static void enableHamachi() throws NetworkAdapterNotFoundException, FileNotFoundException, IllegalStateException, TimeoutException
 	{
+		// Fix for Hamachi because sometimes GUI is not shown and not available but process is running at least under Windows 10
+		ProcessController.stop(DefaultPrograms.HAMACHI);
 		MasterController.enableAll(DefaultPrograms.HAMACHI, DefaultNetworkAdapter.HAMACHI);
 	}
 
