@@ -6,7 +6,7 @@ import de.mixedfx.file.FileObject;
 public class DefaultPrograms
 {
 	public static final Program	HAMACHI	= new Program("Hamachi", FileObject.create().setPath(DataHandler.fuse(System.getenv("ProgramFiles"), "LogMeIn Hamachi")).setFullName("hamachi-2-ui.exe"),
-			"Hamachi-2.exe", "Hamachi2Svc");
+			"Hamachi-2-ui.exe", "Hamachi2Svc");
 	/**
 	 * Parameters of {@link Program#fullPath} MUST NOT be null. Please set it to {"JoinPrivNet", "LanTool"} or {"JoinPrivNet", "CHANNELNAME"}! Empty
 	 * or other parameters do not work!
