@@ -16,10 +16,13 @@ public class Program
 	 * The process name (see also taskmgr.exe)!
 	 */
 	public final String		processName;
+	public boolean			processStatus;
+
 	/**
 	 * The service name (see services.msc)!
 	 */
-	public final String		serviceName;
+	public final String	serviceName;
+	public boolean		serviceStatus;
 
 	/**
 	 * @param programName

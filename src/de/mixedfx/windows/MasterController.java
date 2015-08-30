@@ -125,7 +125,7 @@ public class MasterController
 	}
 
 	/*
-	 * Methods for convenience for properitary gaming tunneling.
+	 * Methods for convenience for proprietary gaming tunneling.
 	 */
 
 	/**

@@ -16,4 +16,13 @@ public class NetworkAdapter
 	{
 		return "NetworkAdapter " + this.name + " is " + (this.enabled ? "enabled" : "disabled") + " and " + (this.connected ? "connected" : "disconnected");
 	}
+
+	@Override
+	public boolean equals(final Object object)
+	{
+		if (object instanceof NetworkAdapter)
+			return ((NetworkAdapter) object).name.equalsIgnoreCase(this.name);
+		else
+			return false;
+	}
 }

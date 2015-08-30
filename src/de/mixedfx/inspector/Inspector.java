@@ -16,8 +16,7 @@ import javafx.util.Duration;
 public class Inspector
 {
 	/**
-	 * This method adds an listener to the node's width and height and shows every change of these
-	 * values in the console.
+	 * This method adds an listener to the node's width and height and shows every change of these values in the console.
 	 *
 	 * @param region
 	 *            The Region (a type of {@link Node} which should be observed.
@@ -40,8 +39,8 @@ public class Inspector
 	}
 
 	/**
-	 * This method adds an listener to the node's width and height and shows every change of these
-	 * values in the console. The displayed name is the id of the object instance.
+	 * This method adds an listener to the node's width and height and shows every change of these values in the console. The displayed name is the id
+	 * of the object instance.
 	 *
 	 * @param region
 	 *            The Region (a type of {@link Node} which should be observed.
@@ -53,9 +52,8 @@ public class Inspector
 
 	/**
 	 * <p>
-	 * Sets the background of a node to a random color and shows the chosen color in the console.
-	 * Use the hex color in the console on the website <a
-	 * href="http://www.css3-generator.de/rgba.html" >http://www.css3-generator.de/rgba.html</a>
+	 * Sets the background of a node to a random color and shows the chosen color in the console. Use the hex color in the console on the website
+	 * <a href="http://www.css3-generator.de/rgba.html" >http://www.css3-generator.de/rgba.html</a>
 	 * </p>
 	 *
 	 * @param region
@@ -81,10 +79,8 @@ public class Inspector
 
 	/**
 	 * <p>
-	 * Sets the background of a node to a random color and shows the chosen color in the console.
-	 * The displayed name is the id of the object instance. Use the hex color in the console on the
-	 * website <a href="http://www.css3-generator.de/rgba.html"
-	 * >http://www.css3-generator.de/rgba.html</a>
+	 * Sets the background of a node to a random color and shows the chosen color in the console. The displayed name is the id of the object instance.
+	 * Use the hex color in the console on the website <a href="http://www.css3-generator.de/rgba.html" >http://www.css3-generator.de/rgba.html</a>
 	 * </p>
 	 *
 	 * @param region
@@ -101,8 +97,7 @@ public class Inspector
 	 * @param toRun
 	 *            The commands to be executed in GUI thread.
 	 * @param timeToWait
-	 *            The Duration this command should wait asynchronous before executing the Runnable
-	 *            on GUI thread.
+	 *            The Duration this command should wait asynchronous before executing the Runnable on GUI thread.
 	 */
 	public static void runFXLater(final Runnable toRun, final Duration timeToWait)
 	{
@@ -113,14 +108,14 @@ public class Inspector
 				Thread.sleep((long) timeToWait.toMillis());
 			}
 			catch (final InterruptedException e)
-			{}
+			{
+			}
 			Platform.runLater(toRun);
 		}).start();
 	}
 
 	/**
-	 * Runs a Runnable later in the JavaFX GUI thread. Waiting time is asynchronous. Default
-	 * timeToWait of 3 seconds.
+	 * Runs a Runnable later in the JavaFX GUI thread. Waiting time is asynchronous. Default timeToWait of 3 seconds.
 	 *
 	 * @param toRun
 	 *            The commands to be executed in GUI thread.
@@ -136,8 +131,7 @@ public class Inspector
 	 * @param toRun
 	 *            The commands to be executed in a separate thread.
 	 * @param timeToWait
-	 *            The Duration this command should wait asynchronous before executing the Runnable
-	 *            in this new thread.
+	 *            The Duration this command should wait asynchronous before executing the Runnable in this new thread.
 	 */
 	public static void runLater(final Runnable toRun, final Duration timeToWait)
 	{
@@ -148,14 +142,14 @@ public class Inspector
 				Thread.sleep((long) timeToWait.toMillis());
 			}
 			catch (final InterruptedException e)
-			{}
+			{
+			}
 			toRun.run();
 		});
 	}
 
 	/**
-	 * Runs a Runnable later in a new thread. Waiting time is asynchronous. Default timeToWait of 3
-	 * seconds.
+	 * Runs a Runnable later in a new thread. Waiting time is asynchronous. Default timeToWait of 3 seconds.
 	 *
 	 * @param toRun
 	 *            The commands to be executed in the new thread.
@@ -166,8 +160,7 @@ public class Inspector
 	}
 
 	/**
-	 * Runs a Runnable later in a new thread. Waiting time is asynchronous. Default timeToWait of 3
-	 * seconds.
+	 * Runs a Runnable later in a new thread. Waiting time is asynchronous. Default timeToWait of 3 seconds.
 	 *
 	 * @param toRun
 	 *            The commands to be executed in the new thread.

@@ -211,7 +211,6 @@ public class UDPCoordinator implements EventTopicSubscriber<Object>
 										+ "Connection is now closed! " + newDetected.address);
 
 								handler.cancel(true);
-								Log.network.fatal("HÄ? " + newDetected.address);
 								// Lock of callable still works...
 								try
 								{
