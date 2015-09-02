@@ -1,9 +1,12 @@
 package de.mixedfx.windows;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Date;
 import java.util.concurrent.TimeoutException;
 
+import de.mixedfx.java.ComplexString;
+import de.mixedfx.windows.ahk.AHKManager;
 import javafx.util.Duration;
 
 public class MasterController
@@ -124,6 +127,16 @@ public class MasterController
 		// Fix for Hamachi because sometimes GUI is not shown and not available but process is running at least under Windows 10
 		ProcessController.stop(DefaultPrograms.HAMACHI);
 		MasterController.enableAll(DefaultPrograms.HAMACHI, DefaultNetworkAdapter.HAMACHI);
+		final ComplexString ahkCommands = new ComplexString();
+		ahkCommands.add("WinWait LogMeIn Hamachi");
+		ahkCommands.add("ControlSend Button1, {Left}");
+
+		try
+		{
+			AHKManager.runEmbeddedAHKFile(MasterController.class, "HamachiSwitcher.ahk", true);
+		}
+		catch (final IOException e)
+		{}
 	}
 
 	/*
