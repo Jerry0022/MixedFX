@@ -4,7 +4,7 @@ apply plugin: 'maven'
 
 sourceCompatibility = 1.8
 
-version = '1.0.1-SNAPSHOT'
+version = '1.0.1'
 group = 'de.lantool'
 
 jar {

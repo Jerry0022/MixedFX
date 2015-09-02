@@ -114,7 +114,8 @@ public class LayoutManager
 			try
 			{
 				FileUtils.forceMkdir(this.layoutDir.toFile());
-			} catch (final IOException e)
+			}
+			catch (final IOException e)
 			{
 				Log.assets.fatal("Can't create layout directory! " + layoutDir);
 			}
@@ -126,7 +127,8 @@ public class LayoutManager
 			try
 			{
 				FileUtils.forceMkdir(this.standardLayoutDir.toFile());
-			} catch (final IOException e)
+			}
+			catch (final IOException e)
 			{
 				Log.assets.fatal("Can't create pre use directory! " + layoutDir);
 			}
@@ -138,8 +140,8 @@ public class LayoutManager
 	}
 
 	/**
-	 * Applies the given layout. This includes that if layout is not found layout will be created! If this is used in combination with {@link Layouter} a new created layout will be a clone on the hdd
-	 * of the current layout if a layout was previously applied!
+	 * Applies the given layout. This includes that if layout is not found layout will be created! If this is used in combination with
+	 * {@link Layouter} a new created layout will be a clone on the hdd of the current layout if a layout was previously applied!
 	 *
 	 * @param layout
 	 *            The name of the layout. If null a layout with the name {@link LayoutManager#defaultLayoutName} is created!
@@ -151,7 +153,7 @@ public class LayoutManager
 		if (this.root == null)
 			throw new IllegalArgumentException("The root must be set! Or please use Layouter!");
 
-		if (layout == null)
+		if ((layout == null) || layout.equals(""))
 			layout = LayoutManager.defaultLayoutName;
 
 		// If there is no layout with the given name create a new one!
@@ -161,7 +163,8 @@ public class LayoutManager
 			try
 			{
 				DataHandler.createFolder(layoutFullPath);
-			} catch (final IOException e)
+			}
+			catch (final IOException e)
 			{
 				Log.assets.error("Could not create layout! " + layoutFullPath);
 			}
@@ -170,9 +173,11 @@ public class LayoutManager
 		// Apply layout
 		final Collection<File> files = DataHandler.listFiles(layoutFullPath);
 		// Add files of standard folder if they aren't already in the specific layout folder but take all css files
-		DataHandler.listFiles(this.standardLayoutDir).stream()
-				.filter(standardFile -> !files.stream()
-						.anyMatch(layoutFile -> FileObject.create(standardFile).getName().equalsIgnoreCase(LayoutManager.STYLE_FILE_NAME) ? false : FileObject.create(standardFile).getName().equalsIgnoreCase(FileObject.create(layoutFile).getName())))
+		DataHandler
+				.listFiles(
+						this.standardLayoutDir)
+				.stream().filter(standardFile -> !files.stream().anyMatch(layoutFile -> FileObject.create(standardFile).getName().equalsIgnoreCase(LayoutManager.STYLE_FILE_NAME) ? false
+						: FileObject.create(standardFile).getName().equalsIgnoreCase(FileObject.create(layoutFile).getName())))
 				.forEach(additionalFile -> files.add(additionalFile));
 		for (final File file : files)
 		{
@@ -181,9 +186,9 @@ public class LayoutManager
 				{
 					this.root.getScene().getStylesheets().add(file.toURI().toURL().toExternalForm());
 					Log.assets.trace("Loaded layout stylesheet!");
-				} catch (final MalformedURLException e)
-				{
 				}
+				catch (final MalformedURLException e)
+				{}
 			else
 			{
 				final FileObject fileObject = FileObject.create(file);
@@ -191,8 +196,9 @@ public class LayoutManager
 				final Node node = this.root.lookup("#" + id);
 				if (node instanceof Region)
 					RegionManipulator.bindBackground((Region) node, this.readImage(fileObject));
-				else if (node != null) // If node is null the image is a dynamic image!
-					Log.assets.warn("The node " + node + " for the id " + id + " is not a Region. Only Regions are supported for layouting!");
+				else
+					if (node != null) // If node is null the image is a dynamic image!
+						Log.assets.warn("The node " + node + " for the id " + id + " is not a Region. Only Regions are supported for layouting!");
 			}
 		}
 
@@ -222,7 +228,8 @@ public class LayoutManager
 		try
 		{
 			return this.imageCache.get(name);
-		} catch (final ExecutionException e)
+		}
+		catch (final ExecutionException e)
 		{
 			Log.assets.error("Exception shown while reading image from cache or disk!", e);
 			return ImageProducer.getMonoColored(Color.RED);
@@ -250,8 +257,8 @@ public class LayoutManager
 	}
 
 	/**
-	 * Removes the layout also from the hdd! Trying to remove the currentLayout means that the first layout from the list (alphabetically) is applied! You can't remove the currentLayout if there is no
-	 * other layout!
+	 * Removes the layout also from the hdd! Trying to remove the currentLayout means that the first layout from the list (alphabetically) is applied!
+	 * You can't remove the currentLayout if there is no other layout!
 	 *
 	 * @param layout
 	 *            The name of the layout which shall be deleted.
