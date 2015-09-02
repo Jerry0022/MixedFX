@@ -16,8 +16,7 @@ repositories {
 }
 
 dependencies {
-    compile 'org.jboss.weld.se:weld-se-core:2.3.0.CR1'
-    compile 'org.jboss.weld:weld-core-impl:2.3.0.CR1'
+    compile 'org.jboss.weld:weld-se:1.0.1-Final'
     testCompile 'junit:junit:4.12'
     
 }

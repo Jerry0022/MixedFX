@@ -1,12 +1,15 @@
 package de.mixedfx.cdi2jfx;
 
+import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.spi.CDI;
+import javax.inject.Inject;
 
 import javafx.fxml.FXMLLoader;
 import javafx.util.Callback;
 
 public class RessourceProducer {
+    @Inject
+    private Instance<Object> instancer;
 
     @Produces
     public FXMLLoader buildLoader() {
@@ -15,7 +18,7 @@ public class RessourceProducer {
 
 	    @Override
 	    public Object call(Class<?> param) {
-		return CDI.current().select(param);
+		return RessourceProducer.this.instancer.select(param);
 	    }
 
 	});
