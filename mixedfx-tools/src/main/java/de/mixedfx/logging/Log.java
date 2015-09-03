@@ -24,7 +24,6 @@ public class Log {
     public static final Logger textAndSpeech;
 
     static {
-	CustomSysOutErr.init(true);
 	CONTEXT = new LoggerContext("MixedFX");
 	try {
 	    Log.CONTEXT.setConfigLocation(Log.class.getResource("log4j.xml").toURI());
@@ -35,6 +34,7 @@ public class Log {
 	assets = Log.CONTEXT.getLogger("Assets");
 	windows = Log.CONTEXT.getLogger("Windows");
 	textAndSpeech = Log.CONTEXT.getLogger("TextAndSpeech");
+	CustomSysOutErr.init(true);
     }
 
     public static void turnAllOn() {
