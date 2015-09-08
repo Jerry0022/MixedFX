@@ -10,15 +10,3 @@
 .project
 .classpath
 desktop.ini
-/*/bin/
-/*/build/
-/*/logs/
-/*/log/
-/*/*.uml
-/*/*.umlcd
-/*/assets/
-/*/.gradle/
-/*/.settings/
-/*/.project
-/*/.classpath
-/*/desktop.ini
