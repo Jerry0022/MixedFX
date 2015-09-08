@@ -2,7 +2,6 @@ package de.mixedfx.windows.ahk;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
@@ -10,6 +9,7 @@ import org.apache.commons.io.FileUtils;
 import de.mixedfx.file.DataHandler;
 import de.mixedfx.file.FileObject;
 import de.mixedfx.java.ComplexString;
+import de.mixedfx.java.StreamUtil;
 import de.mixedfx.windows.Executor;
 import javafx.util.Duration;
 
@@ -28,22 +28,17 @@ public class AHKManager
 	public static ProcessBuilder checkExistance(final File ahkScript) throws IOException
 	{
 		final FileObject ahkTempExeFile = FileObject.create().setPath(DataHandler.getTempFolder().toString()).setFullName(AHKManager.AHKExecutable);
-		final FileObject ahkTempScript = FileObject.create().setPath(DataHandler.getTempFolder().toString()).setFullName(FileObject.create(ahkScript).getFullName()).setExtension(AHKManager.AHKExtension);
+		final FileObject ahkTempScript = FileObject.create().setPath(DataHandler.getTempFolder().toString()).setFullName(FileObject.create(ahkScript).getFullName())
+				.setExtension(AHKManager.AHKExtension);
 
-		try
-		{
-			// Copy AutoHotKey.exe
-			final File ahkExeFile = new File(AHKManager.class.getResource(AHKManager.AHKExecutable).toURI());
-			if (!ahkTempExeFile.toFile().exists() || !ahkTempExeFile.equalsNameSize(FileObject.create(ahkExeFile)))
-				FileUtils.copyFile(ahkExeFile, ahkTempExeFile.toFile());
-			// Copy Script
-			if (!ahkTempScript.toFile().exists() || !ahkTempScript.equalsNameSize(FileObject.create(ahkScript)))
-				FileUtils.copyFile(ahkScript, ahkTempScript.toFile());
-			return new ProcessBuilder(ahkTempExeFile.getFullPath(), ahkTempScript.getFullPath());
-		} catch (final URISyntaxException e)
-		{
-			return null;
-		}
+		// Copy AutoHotKey.exe
+		final File ahkExeFile = StreamUtil.stream2file(AHKManager.class.getResourceAsStream(AHKManager.AHKExecutable));
+		if (!ahkTempExeFile.toFile().exists() || !ahkTempExeFile.equalsNameSize(FileObject.create(ahkExeFile)))
+			FileUtils.copyFile(ahkExeFile, ahkTempExeFile.toFile());
+		// Copy Script
+		if (!ahkTempScript.toFile().exists() || !ahkTempScript.equalsNameSize(FileObject.create(ahkScript)))
+			FileUtils.copyFile(ahkScript, ahkTempScript.toFile());
+		return new ProcessBuilder(ahkTempExeFile.getFullPath(), ahkTempScript.getFullPath());
 	}
 
 	/**
@@ -79,7 +74,8 @@ public class AHKManager
 	{
 		if (!onlyScript)
 			DataHandler.deleteFile(FileObject.create().setPath(DataHandler.getTempFolder().getFullPath()).setFullName(AHKManager.AHKExecutable));
-		DataHandler.listFiles(DataHandler.getTempFolder()).stream().filter(file -> FileObject.create(file).getFullExtension().equalsIgnoreCase(AHKManager.AHKExtension)).forEach(file -> DataHandler.deleteFile(FileObject.create(file)));
+		DataHandler.listFiles(DataHandler.getTempFolder()).stream().filter(file -> FileObject.create(file).getFullExtension().equalsIgnoreCase(AHKManager.AHKExtension))
+				.forEach(file -> DataHandler.deleteFile(FileObject.create(file)));
 	}
 
 	/**
@@ -132,9 +128,9 @@ public class AHKManager
 				try
 				{
 					Thread.sleep((long) delay.toMillis());
-				} catch (final Exception e)
-				{
 				}
+				catch (final Exception e)
+				{}
 				DataHandler.deleteFile(FileObject.create(new File(toDelete)));
 			}).start();
 
@@ -177,13 +173,8 @@ public class AHKManager
 			scriptName += ".ahk";
 
 		// Get resource and start script
-		try
-		{
-			final File scriptFile = new File(referenceClass.getResource(scriptName).toURI());
-			AHKManager.startScript(scriptFile, blocking);
-		} catch (final URISyntaxException e)
-		{
-		}
+		final File scriptFile = StreamUtil.stream2file(referenceClass.getResourceAsStream(scriptName));
+		AHKManager.startScript(scriptFile, blocking);
 
 	}
 
@@ -205,8 +196,8 @@ public class AHKManager
 				process.start().waitFor();
 			else
 				Executor.runAsAdmin(process.command().get(0), process.command().get(1), true);
-		} catch (final InterruptedException e)
-		{
 		}
+		catch (final InterruptedException e)
+		{}
 	}
 }
