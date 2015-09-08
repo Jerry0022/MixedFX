@@ -2,16 +2,20 @@ package de.mixedfx.logging;
 
 import java.net.URISyntaxException;
 
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
+import org.jboss.weld.injection.spi.InjectionContext;
 
 /**
  * Turn all Loggers on / off by calling {@link #turnAllOn()} or
  * {@link #turnAllOff()}! Turn the Logger off by calling
  * {@link Logger#setLevel(Level)} with {@link Level#OFF}! See Level logic here:
  * <a href="http://www.tutorialspoint.com/log4j/log4j_logging_levels.htm" >http:
- * //www.tutorialspoint .com/log4j/log4j_logging_levels.htm</a>
+ * //www.tutorialspoint.com/log4j/log4j_logging_levels.htm</a>
  *
  * @author Jerry
  */
@@ -35,6 +39,14 @@ public class Log {
 	windows = Log.CONTEXT.getLogger("Windows");
 	textAndSpeech = Log.CONTEXT.getLogger("TextAndSpeech");
 	CustomSysOutErr.init(true);
+    }
+
+    @Inject
+    private InjectionContext<?> context;
+
+    @Produces
+    public Logger loggerProducer(InjectionContext<?> context) {
+	return null;
     }
 
     public static void turnAllOn() {
