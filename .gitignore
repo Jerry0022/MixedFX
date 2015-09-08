@@ -9,3 +9,4 @@ log/
 .project
 .classpath
 desktop.ini
+*log
