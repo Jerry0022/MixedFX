@@ -1,14 +1,14 @@
 package de.mixedfx.logging;
 
+import java.lang.annotation.Annotation;
 import java.net.URISyntaxException;
 
 import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
+import javax.enterprise.inject.spi.InjectionPoint;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
-import org.jboss.weld.injection.spi.InjectionContext;
 
 /**
  * Turn all Loggers on / off by calling {@link #turnAllOn()} or
@@ -41,12 +41,17 @@ public class Log {
 	CustomSysOutErr.init(true);
     }
 
-    @Inject
-    private InjectionContext<?> context;
-
     @Produces
-    public Logger loggerProducer(InjectionContext<?> context) {
-	return null;
+    public Logger loggerProducer(InjectionPoint point) {
+	if (point.getAnnotated().isAnnotationPresent(LoggerTopic.class)) {
+	    for (Annotation annotation : point.getAnnotated().getAnnotations()) {
+		if (annotation instanceof LoggerTopic) {
+		    return CONTEXT.getLogger(((LoggerTopic) annotation).name());
+		}
+	    }
+	}
+
+	return CONTEXT.getLogger(point.getBean().getBeanClass().getPackage().getName());
     }
 
     public static void turnAllOn() {
