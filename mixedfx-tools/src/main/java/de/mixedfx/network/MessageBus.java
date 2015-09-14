@@ -4,6 +4,9 @@ import java.lang.ref.WeakReference;
 import java.net.InetAddress;
 import java.util.ArrayList;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
 import org.bushe.swing.event.annotation.AnnotationProcessor;
 import org.bushe.swing.event.annotation.EventTopicSubscriber;
 
@@ -15,119 +18,100 @@ import de.mixedfx.network.messages.Message;
 /**
  * @author Jerry
  */
-public class MessageBus
-{
-	public interface MessageReceiver
-	{
-		/**
-		 * Is called synchronized if a message was received. Therefore Messages will be received through this method in the same order they were received from the network.
-		 *
-		 * @param message
-		 */
-		public void receive(Message message);
+@ApplicationScoped
+public class MessageBus {
+    @Inject
+    ConnectivityManager<?> cm;
+
+    public static final String MESSAGE_RECEIVE = "MESSAGE_RECEIVE";
+
+    private MessageBus intermediateReceiver;
+    private ArrayList<Object> receiverList = new ArrayList<>();
+
+    /**
+     * To undo this use
+     * {@link MessageBus#unregisterForReceival(MessageReceiver)}. Done with
+     * {@link WeakReference}.
+     *
+     * @param receiver
+     *            Receiver will be informed asynchronously!
+     * @param strongly
+     *            Set true if you want to use this as an Anonymous Inner Object!
+     */
+    public synchronized void registerForReceival(final MessageReceiver receiver, final boolean strongly) {
+	if (this.receiverList.isEmpty()) {
+	    this.intermediateReceiver = new MessageBus();
+	    AnnotationProcessor.process(this.intermediateReceiver);
 	}
 
-	public static final String MESSAGE_RECEIVE = "MESSAGE_RECEIVE";
-
-	private static MessageBus			intermediateReceiver;
-	private static ArrayList<Object>	receiverList	= new ArrayList<>();
-
-	/**
-	 * To undo this use {@link MessageBus#unregisterForReceival(MessageReceiver)}. Done with {@link WeakReference}.
-	 *
-	 * @param receiver
-	 *            Receiver will be informed asynchronously!
-	 * @param strongly
-	 *            Set true if you want to use this as an Anonymous Inner Object!
-	 */
-	public static synchronized void registerForReceival(final MessageReceiver receiver, final boolean strongly)
-	{
-		if (MessageBus.receiverList.isEmpty())
-		{
-			MessageBus.intermediateReceiver = new MessageBus();
-			AnnotationProcessor.process(MessageBus.intermediateReceiver);
-		}
-
-		if (strongly)
-			MessageBus.receiverList.add(receiver);
-		else
-			MessageBus.receiverList.add(new WeakReference<MessageBus.MessageReceiver>(receiver));
+	if (strongly) {
+	    this.receiverList.add(receiver);
+	} else {
+	    this.receiverList.add(new WeakReference<MessageReceiver>(receiver));
 	}
+    }
 
-	/**
-	 * @param message
-	 *            Message to send.
-	 */
-	public static synchronized void send(final Message message)
-	{
-		final Runnable run = () ->
-		{
-			if (message instanceof IdentifiedMessage)
-			{
-				final IdentifiedMessage idMessage = (IdentifiedMessage) message;
-				synchronized (ConnectivityManager.get().tcp_user_map)
-				{
-					if (idMessage.getToUserIDs().isEmpty())
-						for (final InetAddress ip : ConnectivityManager.get().tcp_user_map.keySet())
-						{
-							message.setToIP(ip);
-							EventBusExtended.publishAsyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
-						}
-					else
-					{
-						for (final Object id : idMessage.getToUserIDs())
-						{
-							FindIP: for (final InetAddress ip : ConnectivityManager.get().tcp_user_map.keySet())
-							{
-								if (ConnectivityManager.get().tcp_user_map.get(ip).getOriginalUser().getIdentifier().equals(id))
-								{
-									message.setToIP(ip);
-									EventBusExtended.publishAsyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
-									break FindIP; // Avoid double sending!
-								}
-							}
-						}
-					}
+    /**
+     * @param message
+     *            Message to send.
+     */
+    public synchronized void send(final Message message) {
+	final Runnable run = () -> {
+	    if (message instanceof IdentifiedMessage) {
+		final IdentifiedMessage idMessage = (IdentifiedMessage) message;
+		synchronized (this.cm.tcp_user_map()) {
+		    if (idMessage.getToUserIDs().isEmpty()) {
+			for (final InetAddress ip : this.cm.tcp_user_map().keySet()) {
+			    message.setToIP(ip);
+			    EventBusExtended.publishAsyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
+			}
+		    } else {
+			for (final Object id : idMessage.getToUserIDs()) {
+			    FindIP: for (final InetAddress ip : this.cm.tcp_user_map().keySet()) {
+				if (this.cm.tcp_user_map().get(ip).getOriginalUser().getIdentifier().equals(id)) {
+				    message.setToIP(ip);
+				    EventBusExtended.publishAsyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
+				    break FindIP; // Avoid double sending!
 				}
-			} else
-				EventBusExtended.publishAsyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
-		};
-		if (Thread.holdsLock(ConnectivityManager.get().tcp_user_map))
-			Inspector.runNowAsDaemon(run);
-		else
-			run.run();
-	}
-
-	/**
-	 * Works silently. If receiver is not registered this method returns without throwing an exception. Also if receiver didn't subscribe strongly.
-	 *
-	 * @param receiver
-	 */
-	public static synchronized void unregisterForReceival(final MessageReceiver receiver)
-	{
-		MessageBus.receiverList.remove(receiver);
-
-		if (MessageBus.receiverList.isEmpty())
-		{
-			MessageBus.intermediateReceiver = null;
-			AnnotationProcessor.unprocess(MessageBus.intermediateReceiver);
+			    }
+			}
+		    }
 		}
+	    } else {
+		EventBusExtended.publishAsyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
+	    }
+	};
+	if (Thread.holdsLock(this.cm.tcp_user_map())) {
+	    Inspector.runNowAsDaemon(run);
+	} else {
+	    run.run();
 	}
+    }
 
-	private MessageBus()
-	{
+    /**
+     * Works silently. If receiver is not registered this method returns without
+     * throwing an exception. Also if receiver didn't subscribe strongly.
+     *
+     * @param receiver
+     */
+    public synchronized void unregisterForReceival(final MessageReceiver receiver) {
+	this.receiverList.remove(receiver);
 
+	if (this.receiverList.isEmpty()) {
+	    this.intermediateReceiver = null;
+	    AnnotationProcessor.unprocess(this.intermediateReceiver);
 	}
+    }
 
-	@EventTopicSubscriber(topic = MessageBus.MESSAGE_RECEIVE)
-	public void getMessage(final String topic, final Message message)
-	{
-		for (final Object receiver : MessageBus.receiverList)
-		{
-			if (receiver instanceof MessageReceiver)
-				((MessageReceiver) receiver).receive(message);
-			else if ((receiver instanceof WeakReference) && (((WeakReference<MessageReceiver>) receiver).get() != null))
-				((WeakReference<MessageReceiver>) receiver).get().receive(message);
-		}
+    @EventTopicSubscriber(topic = MESSAGE_RECEIVE)
+    public void getMessage(final String topic, final Message message) {
+	for (final Object receiver : this.receiverList) {
+	    if (receiver instanceof MessageReceiver) {
+		((MessageReceiver) receiver).receive(message);
+	    } else if ((receiver instanceof WeakReference)
+		    && (((WeakReference<MessageReceiver>) receiver).get() != null)) {
+		((WeakReference<MessageReceiver>) receiver).get().receive(message);
+	    }
 	}
+    }
 }
