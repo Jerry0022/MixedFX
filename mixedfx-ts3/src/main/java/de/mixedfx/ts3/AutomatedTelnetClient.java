@@ -30,8 +30,15 @@ public class AutomatedTelnetClient {
         try {
             char lastChar = pattern.charAt(pattern.length() - 1);
             StringBuilder sb = new StringBuilder();
-            char ch = (char) in.read();
             while (true) {
+                int asciiID = in.read();
+                char ch = (char) asciiID;
+
+                // The end of the input stream?
+                if (asciiID == -1)
+                    return null;
+
+                // Append character to input message
                 sb.append(ch);
                 if (ch == lastChar) {
                     if (sb.toString().endsWith(pattern))
@@ -39,12 +46,7 @@ public class AutomatedTelnetClient {
                     else if (sb.toString().endsWith("msg=command\\snot\\sfound"))
                         throw new IllegalStateException("This was not a correct command.");
                 }
-                int asciiID = in.read();
-                if (asciiID == -1)
-                    break;
-                ch = (char) asciiID;
             }
-            return sb.toString();
         } catch (Exception e) {
             e.printStackTrace();
             return null;

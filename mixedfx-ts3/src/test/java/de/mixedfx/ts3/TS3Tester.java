@@ -41,9 +41,10 @@ public class TS3Tester {
     public static void main(String[] args) {
         try {
             getInstance(); // .getClients().stream().filter(user -> user.isNormalUser()).forEach(client -> System.out.println(client.getName()))
-            getInstance().registerEventListener(string -> System.err.println("Event: " + string));
+            // getInstance().registerEventListener(string -> System.err.println("Event: " + string));
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("TS3 is not online?");
         }
         try {
             Thread.sleep(30000);
@@ -59,16 +60,26 @@ public class TS3Tester {
         AutomatedTelnetClient client = new AutomatedTelnetClient(server, port);
         String response = client.sendCommand("currentschandlerid");
 
-        int schandlerID = Integer.valueOf(response.split("\\n")[2].split("=")[1]);
+        Properties prop = new Properties();
+        prop.load(new StringReader(response));
+        int schandlerID = Integer.valueOf(prop.getProperty("schandlerid"));
+
         client.write("clientnotifyregister schandlerid=" + schandlerID + " event=any");
         String event;
         while (true) {
             event = client.readUntil("\n");
+            System.out.println(event);
             if (event != null && this.eventListener != null && this.eventListener.get() != null)
                 this.eventListener.get().callback(event);
-            if (event == null || event.startsWith("notifyconnectstatuschange schandlerid=" + schandlerID + " status=disconnected"))
+            if (event == null)
                 break;
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+        System.out.println("TeamSpeak was closed before this program ended :)");
     }
 
     /**
