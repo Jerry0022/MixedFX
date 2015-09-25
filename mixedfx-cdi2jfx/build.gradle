@@ -6,8 +6,8 @@ sourceCompatibility = 1.8
 version = '1.0.1'
 jar {
     manifest {
-        attributes 'Implementation-Title': 'Gradle Quickstart',
-                   'Implementation-Version': version
+        attributes 'Implementation-Title': 'CDI2JFX',
+                'Implementation-Version': version
     }
 }
 
@@ -17,8 +17,7 @@ repositories {
 
 dependencies {
     compile 'org.jboss.weld.se:weld-se:3.0.0.Alpha1'
-    testCompile 'junit:junit:4.12'
-    
+
 }
 
 test {
@@ -27,10 +26,10 @@ test {
 
 uploadArchives {
     repositories {
-      	mavenDeployer {
+        mavenDeployer {
             repository(url: "file:${System.env.GDRIVE}\\LanTool\\mvn-release")
-        	}
-   		}
+        }
+    }
 }
 
 task sourcesJar(type: Jar) {

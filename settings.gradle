@@ -1,3 +1,6 @@
 include 'mixedfx-cdi2jfx'
 include 'mixedfx-tools'
 include 'mixedfx-network'
+include 'mixedfx-gui'
+include 'mixedfx-ts3'
+

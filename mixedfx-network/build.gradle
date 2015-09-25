@@ -7,40 +7,40 @@ version = '1.0.0'
 group = 'de.lantool'
 
 repositories {
-	/*
+    /*
      * For everything :)
      */
     mavenCentral()
     /*
      * For de.mixedfx.network.OverlayNetwork and de.mixedfx.java.InternetChecker
      */
-    maven {	url "file:${System.env.GDRIVE}\\LanTool\\mvn-release"}
+    maven { url "file:${System.env.GDRIVE}\\LanTool\\mvn-release" }
 }
 
 processResources {
-  from ('src') {
-    include '**/*.css'
-    include '**/*.xml'
-    include '**/*.ahk'
-    include '**/*.exe'
-  }
+    from('src') {
+        include '**/*.css'
+        include '**/*.xml'
+        include '**/*.ahk'
+        include '**/*.exe'
+    }
 }
 
 dependencies {
     // For common
     compile 'javax.enterprise:cdi-api:1.2'
     // For logging
-    compile 'de.lantool:mixedfx-tools:1.0.0'
-   	// For de.mixedfx.network.OverlayNetwork and de.mixedfx.java.InternetChecker
-   	compile 'org.icmp4j:icmp4j:1.0.0'
+    compile 'de.lantool:mixedfx-tools:1.0.1'
+    // For de.mixedfx.network.OverlayNetwork and de.mixedfx.java.InternetChecker
+    compile 'org.icmp4j:icmp4j:1.0.0'
 }
 
 uploadArchives {
     repositories {
-      	mavenDeployer {
+        mavenDeployer {
             repository(url: "file:${System.env.GDRIVE}\\LanTool\\mvn-release")
-        	}
-   		}
+        }
+    }
 }
 
 task sourcesJar(type: Jar) {

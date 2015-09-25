@@ -1,5 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'idea'
 apply plugin: 'maven'
 
 sourceCompatibility = 1.8
@@ -10,16 +11,16 @@ group = 'de.lantool'
 jar {
     manifest {
         attributes 'Implementation-Title': 'Gradle Quickstart',
-                   'Implementation-Version': version
+                'Implementation-Version': version
     }
 }
 
 uploadArchives {
     repositories {
-      	mavenDeployer {
+        mavenDeployer {
             repository(url: "file:${System.env.GDRIVE}\\LanTool\\mvn-release")
-        	}
-   		}
+        }
+    }
 }
 
 task sourcesJar(type: Jar) {
@@ -32,8 +33,9 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
-dependencies{
+dependencies {
     compile project(":mixedfx-network")
-	compile project(":mixedfx-tools")
-	compile project(":mixedfx-cdi2jfx")
+    compile project(":mixedfx-tools")
+    compile project(":mixedfx-cdi2jfx")
+    compile project(":mixedfx-ts3")
 }
