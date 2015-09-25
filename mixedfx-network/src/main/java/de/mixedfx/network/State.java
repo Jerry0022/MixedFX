@@ -1,5 +1,5 @@
 package de.mixedfx.network;
 
 public enum State {
-    OFFLINE, SEARCHING, ONLINE;
+    OFFLINE, SEARCHING, ONLINE
 }

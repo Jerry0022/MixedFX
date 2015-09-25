@@ -1,32 +1,28 @@
 package de.mixedfx.network;
 
-import java.lang.ref.WeakReference;
-import java.net.InetAddress;
-import java.util.ArrayList;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
-import org.bushe.swing.event.annotation.AnnotationProcessor;
-import org.bushe.swing.event.annotation.EventTopicSubscriber;
-
 import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.inspector.Inspector;
 import de.mixedfx.network.messages.IdentifiedMessage;
 import de.mixedfx.network.messages.Message;
+import org.bushe.swing.event.annotation.AnnotationProcessor;
+import org.bushe.swing.event.annotation.EventTopicSubscriber;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.lang.ref.WeakReference;
+import java.net.InetAddress;
+import java.util.ArrayList;
 
 /**
  * @author Jerry
  */
 @ApplicationScoped
 public class MessageBus {
-    @Inject
-    ConnectivityManager<?> cm;
-
-    public static final String MESSAGE_RECEIVE = "MESSAGE_RECEIVE";
-
-    private MessageBus intermediateReceiver;
-    private ArrayList<Object> receiverList = new ArrayList<>();
+	public static final String MESSAGE_RECEIVE = "MESSAGE_RECEIVE";
+	@Inject
+	ConnectivityManager<?> cm;
+	private MessageBus intermediateReceiver;
+	private ArrayList<Object> receiverList = new ArrayList<>();
 
     /**
      * To undo this use
@@ -47,7 +43,7 @@ public class MessageBus {
 	if (strongly) {
 	    this.receiverList.add(receiver);
 	} else {
-	    this.receiverList.add(new WeakReference<MessageReceiver>(receiver));
+		this.receiverList.add(new WeakReference<>(receiver));
 	}
     }
 

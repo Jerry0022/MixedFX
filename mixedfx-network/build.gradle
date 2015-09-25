@@ -27,19 +27,10 @@ processResources {
 }
 
 dependencies {
-	// Unsorted! Some are maybe runtime
-    compile group: 'commons-collections', name: 'commons-collections', version: '3.2' // TODO reformat this
-    compile 'commons-codec:commons-codec:1.10'
-    compile 'commons-io:commons-io:2.4'
-   	compile	'commons-net:commons-net:3.3'
-    compile 'org.apache.commons:commons-lang3:3.4'
-   	compile 'com.google.guava:guava:18.0'
-   	// For de.mixedfx.java
-    compile 'com.google.code.gson:gson:2.3.1'
-   	// For de.mixedfx.eventbus
-    compile 'org.bushe:eventbus:1.4'
-    // For de.mixedfx.logging
-    compile 'org.apache.logging.log4j:log4j-core:2.3'
+    // For common
+    compile 'javax.enterprise:cdi-api:1.2'
+    // For logging
+    compile 'de.lantool:mixedfx-tools:1.0.0'
    	// For de.mixedfx.network.OverlayNetwork and de.mixedfx.java.InternetChecker
    	compile 'org.icmp4j:icmp4j:1.0.0'
 }

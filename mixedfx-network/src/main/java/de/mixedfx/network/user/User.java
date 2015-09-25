@@ -1,13 +1,13 @@
 package de.mixedfx.network.user;
 
-import java.io.IOException;
-import java.io.Serializable;
-
 import de.mixedfx.list.Identifiable;
 import de.mixedfx.network.OverlayNetwork;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
+
+import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * A user shall represent a person. A user is identified world unique and ... After initializing the network connection and having a unique pid the instance of myUser is published to the other network
@@ -82,5 +82,5 @@ public abstract class User implements Identifiable, Serializable
 	public String toString()
 	{
 		return "UserID: " + this.getIdentifier();
-	};
+	}
 }

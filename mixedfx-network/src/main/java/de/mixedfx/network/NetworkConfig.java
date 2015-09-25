@@ -1,12 +1,11 @@
 package de.mixedfx.network;
 
-import java.util.Date;
-import java.util.concurrent.atomic.AtomicReference;
-
 import de.mixedfx.logging.Log;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.value.ChangeListener;
+
+import java.util.Date;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class NetworkConfig
 {
@@ -63,7 +62,7 @@ public class NetworkConfig
 
 	static
 	{
-		NetworkConfig.PORT.addListener((ChangeListener<Number>) (observable, oldValue, newValue) ->
+		NetworkConfig.PORT.addListener((observable, oldValue, newValue) ->
 		{
 			if (newValue.intValue() + NetworkConfig.TRIES_AMOUNT * NetworkConfig.TRIES_STEPS > Integer.MAX_VALUE || newValue.intValue() <= 0)
 			{
