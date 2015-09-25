@@ -34,8 +34,9 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 }
 
 dependencies {
-    compile project(":mixedfx-network")
     compile project(":mixedfx-tools")
     compile project(":mixedfx-cdi2jfx")
+    compile project(":mixedfx-network")
+    compile project(":mixedfx-gui")
     compile project(":mixedfx-ts3")
 }
