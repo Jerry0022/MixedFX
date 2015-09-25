@@ -1,6 +1,6 @@
 apply plugin: 'java'
-apply plugin: 'eclipse'
 apply plugin: 'maven'
+apply plugin: 'idea'
 
 sourceCompatibility = 1.8
 version = '1.0.0'
@@ -12,7 +12,7 @@ repositories {
      */
     mavenCentral()
     /*
-     * For de.mixedfx.textandspeech and for de.mixedfx.network.OverlayNetwork and de.mixedfx.java.InternetChecker
+     * For de.mixedfx.network.OverlayNetwork and de.mixedfx.java.InternetChecker
      */
     maven {	url "file:${System.env.GDRIVE}\\LanTool\\mvn-release"}
 }
@@ -29,7 +29,7 @@ processResources {
 dependencies {
 	// Unsorted! Some are maybe runtime
     compile group: 'commons-collections', name: 'commons-collections', version: '3.2' // TODO reformat this
-     compile 'commons-codec:commons-codec:1.10'
+    compile 'commons-codec:commons-codec:1.10'
     compile 'commons-io:commons-io:2.4'
    	compile	'commons-net:commons-net:3.3'
     compile 'org.apache.commons:commons-lang3:3.4'
