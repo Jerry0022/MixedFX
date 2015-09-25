@@ -1,0 +1,26 @@
+group 'de.lantool'
+version '1.0.2'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+
+repositories {
+    mavenCentral()
+    maven { url "file:${System.env.GDRIVE}\\LanTool\\mvn-release" }
+}
+
+dependencies {
+    // For common
+    compile 'de.lantool:mixedfx-tools:1.0.1'
+    compile 'com.google.guava:guava:18.0'
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
