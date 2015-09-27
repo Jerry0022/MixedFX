@@ -1,0 +1,15 @@
+version = '1.0-SNAPSHOT'
+
+dependencies {
+    compile 'de.lantool:mixedfx-tools:1.2'
+    // TEXT TO SPEECH
+    compile 'com.ibm.icu:icu4j:54.1.1'
+    compile 'de.dfki.mary:marytts:5.1.2'
+    compile 'de.dfki.mary:marytts-lang-de:5.1.2'
+    compile 'de.dfki.mary:marytts-lang-en:5.1.2'
+    compile 'de.dfki.mary:voice-cmu-slt-hsmm:5.1.2'
+    compile 'com.detectlanguage:detectlanguage:1.0.5'
+    // SPEECH TO TEXT
+    compile 'com.darkprograms:speech-api:1.0.0'
+    compile 'javaFlacEncoder:java-flac-encoder:0.3.1'
+}

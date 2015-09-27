@@ -18,7 +18,6 @@ import marytts.util.data.audio.AudioPlayer;
 public class TextToSpeech
 {
 	private static AudioPlayer	audioPlayer;
-	private static Language		currentLang;
 
 	/**
 	 *

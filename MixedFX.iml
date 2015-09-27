@@ -14,11 +14,5 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="mixedfx-cdi2jfx" />
-    <orderEntry type="module" module-name="mixedfx-gui" />
-    <orderEntry type="module" module-name="mixedfx-tools" />
-    <orderEntry type="module" module-name="mixedfx-network" />
-    <orderEntry type="module" module-name="mixedfx-ts3" />
-    <orderEntry type="module" module-name="mixedfx-textandspeech" />
   </component>
 </module>
