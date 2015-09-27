@@ -1,20 +1,10 @@
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'maven'
-
-sourceCompatibility = 1.8
-version = '1.0.1'
-group = 'de.lantool'
+version = '1.1-SNAPSHOT'
 
 jar {
     manifest {
         attributes 'Implementation-Title': 'CDI2JFX',
                 'Implementation-Version': version
     }
-}
-
-repositories {
-    mavenCentral()
 }
 
 dependencies {
@@ -24,22 +14,4 @@ dependencies {
 
 test {
     systemProperties 'property': 'value'
-}
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: "file:${System.env.GDRIVE}\\LanTool\\mvn-release")
-        }
-    }
-}
-
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
 }

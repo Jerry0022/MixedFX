@@ -1,8 +1,6 @@
 package de.mixedfx.config;
 
-import javafx.scene.paint.Color;
 import de.mixedfx.file.FileObject;
-import de.mixedfx.gui.ColorConverter;
 
 public class ConfigHandler
 {
@@ -43,10 +41,12 @@ public class ConfigHandler
 	 *            parameter.
 	 * @param color
 	 */
+	/*
 	public static void writeColor(final ConfigMaker configMaker, final ConfigItem configItem, final Color color)
 	{
 		configMaker.writeConfigItem(configItem.setValue(ColorConverter.toRGBA(color)));
 	}
+	*/
 
 	/**
 	 * @param configMaker
@@ -55,6 +55,7 @@ public class ConfigHandler
 	 * @param defaultColor
 	 * @return Returns the JavaFX Color
 	 */
+	/*
 	public static Color readColor(final ConfigMaker configMaker, final ConfigItem configItem, final Color defaultColor)
 	{
 		Color c;
@@ -68,4 +69,5 @@ public class ConfigHandler
 		}
 		return c;
 	}
+	*/
 }

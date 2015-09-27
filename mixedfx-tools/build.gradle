@@ -1,71 +1,30 @@
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'maven'
-
-sourceCompatibility = 1.8
-version = '1.0.0'
-group = 'de.lantool'
-
-repositories {
-    /*
-     * For de.mixedfx.config
-     */
-    maven { url "https://jitpack.io" }
-    /*
-     * For de.mixedfx.textandspeech
-     */
-    maven {
-    	url "http://dl.bintray.com/marytts/marytts"
-    }
-    /*
-     * For de.mixedfx.textandspeech
-     */
-    maven { url "http://dl.bintray.com/dfki-lt/maven" }
-    /*
-     * For de.mixedfx.textandspeech and for de.mixedfx.network.OverlayNetwork and de.mixedfx.java.InternetChecker
-     */
-    maven {	url "file:${System.env.GDRIVE}\\LanTool\\mvn-release"}
-}
-
-processResources {
-  from ('src') {
-    include '**/*.css'
-    include '**/*.xml'
-    include '**/*.ahk'
-    include '**/*.exe'
-  }
-}
+version = '1.2-SNAPSHOT'
 
 dependencies {
-	// Unsorted! Some are maybe runtime
-    compile group: 'commons-collections', name: 'commons-collections', version: '3.2' // TODO reformat this
-     compile 'commons-codec:commons-codec:1.10'
+	// Unsorted! Some are maybe runtime TODO @Jerry Check all these ones
+    compile 'commons-collections:commons-collections:3.2' // TODO reformat this
+	compile 'commons-codec:commons-codec:1.10'
     compile 'commons-io:commons-io:2.4'
    	compile	'commons-net:commons-net:3.3'
     compile 'org.apache.commons:commons-lang3:3.4'
    	compile 'com.google.guava:guava:18.0'
-	//CDI
-//  	compile 'org.jboss.weld.se:weld-se:3.0.0.Alpha1'
+	// TODO @Maxi CDI Following dependency needed?
+    // compile 'org.jboss.weld.se:weld-se:3.0.0.Alpha1'
   	compile 'javax.enterprise:cdi-api:1.2'
    	// For de.mixedfx.java
     compile 'com.google.code.gson:gson:2.3.1'
    	// For de.mixedfx.eventbus
     compile 'org.bushe:eventbus:1.4'
-   	// For additional GUI elements
-    compile 'org.jfxtras:jfxtras-labs:8.0-r3'
-    compile 'org.controlsfx:controlsfx:8.40.9'
    	// For de.mixedfx.config
 	compile 'com.github.apache:commons-configuration:CONFIGURATION_2_0_beta1_RC1'
     compile 'commons-beanutils:commons-beanutils:1.9.2'
     // For de.mixedfx.logging
     compile 'org.apache.logging.log4j:log4j-core:2.3'
-   	// For de.mixedfx.network.OverlayNetwork and de.mixedfx.java.InternetChecker
-   	compile 'org.icmp4j:icmp4j:1.0.0'
    	// For de.mixedfx.textandspeech
    	compile 'com.ibm.icu:icu4j:54.1.1' // TTS
    	compile 'de.dfki.mary:marytts:5.1.2' // TTS
    	compile 'de.dfki.mary:marytts-lang-de:5.1.2' // TTS
-   	compile 'de.dfki.mary:marytts-lang-en:5.1.2' // TTS
+  	compile 'de.dfki.mary:marytts-lang-en:5.1.2' // TTS
    	compile 'de.dfki.mary:voice-cmu-slt-hsmm:5.1.2' // TTS
     compile 'com.detectlanguage:detectlanguage:1.0.5' // TTS
    	compile 'com.darkprograms:speech-api:1.0.0' // STT
@@ -73,22 +32,6 @@ dependencies {
    	// For de.mixedfx.windows.Executor
    	compile 'net.java.dev.jna:jna:4.1.0'
    	compile 'net.java.dev.jna:jna-platform:4.1.0'
-}
-
-uploadArchives {
-    repositories {
-      	mavenDeployer {
-            repository(url: "file:${System.env.GDRIVE}\\LanTool\\mvn-release")
-        	}
-   		}
-}
-
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
+    // For de.mixedfx.network.OverlayNetwork and de.mixedfx.java.InternetChecker
+    compile 'org.icmp4j:icmp4j:1.0.0'
 }
