@@ -19,5 +19,6 @@
     <orderEntry type="module" module-name="mixedfx-tools" />
     <orderEntry type="module" module-name="mixedfx-network" />
     <orderEntry type="module" module-name="mixedfx-ts3" />
+    <orderEntry type="module" module-name="mixedfx-textandspeech" />
   </component>
 </module>

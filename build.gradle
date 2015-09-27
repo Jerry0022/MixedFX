@@ -73,12 +73,14 @@ version = '1.1'
  */
 
 dependencies {
+    // TODO REALLY NEEDED?
     // Project dependencies
-    compile project(":mixedfx-cdi2jfx")
-    compile project(":mixedfx-gui")
-    compile project(":mixedfx-network")
-    compile project(":mixedfx-tools")
-    compile project(":mixedfx-ts3")
+    //compile project(":mixedfx-cdi2jfx")
+    //compile project(":mixedfx-gui")
+    //compile project(":mixedfx-network")
+    //compile project(":mixedfx-textandspeech")
+    //compile project(":mixedfx-tools")
+    //compile project(":mixedfx-ts3")
 }
 
 /*

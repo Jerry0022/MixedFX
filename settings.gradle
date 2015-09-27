@@ -3,6 +3,7 @@ rootProject.name = 'MixedFX'
 include 'mixedfx-cdi2jfx'
 include 'mixedfx-gui'
 include 'mixedfx-network'
+include 'mixedfx-textandspeech'
 include 'mixedfx-tools'
 include 'mixedfx-ts3'
 
