@@ -1,3 +1,7 @@
+// TODO @Maxi How to build all subprojects / modules into one MixedFX jar?
+// Trying to build this there is a jar containing almost nothing but not the modules.
+// Is this necessary, anyway? If not please delete the last lines of this script
+
 /*
  * SCRIPT APPLIED TO ROOT PROJECT AND ALL SUBPROJECTS
  */
