@@ -1,12 +1,6 @@
 group 'de.lantool'
 version '1.0-SNAPSHOT'
 
-apply plugin: 'java'
-apply plugin: 'idea'
-
-repositories {
-    mavenCentral()
-}
 
 dependencies {
     compile 'commons-net:commons-net:3.3'

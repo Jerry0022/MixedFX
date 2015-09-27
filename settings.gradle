@@ -1,6 +1,8 @@
+rootProject.name = 'MixedFX'
+
 include 'mixedfx-cdi2jfx'
-include 'mixedfx-tools'
-include 'mixedfx-network'
 include 'mixedfx-gui'
+include 'mixedfx-network'
+include 'mixedfx-tools'
 include 'mixedfx-ts3'
 

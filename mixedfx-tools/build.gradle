@@ -7,10 +7,6 @@ version = '1.0.0'
 group = 'de.lantool'
 
 repositories {
-	/*
-     * For everything :)
-     */
-    mavenCentral()
     /*
      * For de.mixedfx.config
      */
