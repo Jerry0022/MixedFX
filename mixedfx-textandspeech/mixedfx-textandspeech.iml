@@ -63,5 +63,8 @@
     <orderEntry type="library" name="Gradle: javax.interceptor:javax.interceptor-api:1.2" level="project" />
     <orderEntry type="library" name="Gradle: javax.inject:javax.inject:1" level="project" />
     <orderEntry type="library" name="Gradle: net.lingala.zip4j:zip4j:1.3.2" level="project" />
+    <orderEntry type="library" name="Gradle: de.dfki.mary:voice-bits1-hsmm:5.1" level="project" />
+    <orderEntry type="library" name="Gradle: de.dfki.mary:voice-bits3-hsmm:5.1" level="project" />
+    <orderEntry type="library" name="Gradle: de.dfki.mary:voice-cmu-bdl-hsmm:5.1" level="project" />
   </component>
 </module>

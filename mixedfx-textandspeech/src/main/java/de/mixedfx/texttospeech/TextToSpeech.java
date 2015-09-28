@@ -31,38 +31,6 @@ public class TextToSpeech
 {
 	private static AudioPlayer	audioPlayer;
 
-    public static void loadVoices() throws ZipException, IOException {
-        for(Language lang : Language.values())
-            for(int male=0; male<2; male++)
-            {
-                // Built-in language
-                if(lang.equals(Language.ENGLISH) && male==0)
-                    continue;
-                // Already available?
-                if(new File("voice-"+lang.getVoice(male==0?false:true)+".jar").exists())
-                    continue;
-                else
-                    System.out.println("DO Lang: " + lang);
-
-                String filename = "voice-"+lang.getVoice(male==0?false:true)+"-5.1.zip";
-                File file = new File(filename);
-                FileUtils.copyURLToFile(new URL("http://mary.dfki.de/download/5.1/"+filename), file);
-                ZipFile zipFile = new ZipFile(filename);
-                zipFile.extractAll("./voices");
-            }
-            FileObject zipDirectory = FileObject.create().setPath("voices\\lib\\");
-            Collection<File> files = DataHandler.listFiles(zipDirectory);
-            for(File f : files)
-            {
-                FileObject endFile = FileObject.create(f).setPath(".");
-                FileUtils.copyFile(f, endFile.toFile());
-                DataHandler.deleteFile(endFile.setExtension("zip"));
-                FileUtils.moveFile(endFile.toFile(), endFile.setName(endFile.getName().substring(0, endFile.getName().length()-4)).toFile());
-            }
-            DataHandler.deleteFile(FileObject.create().setPath("voices"));
-            // TODO Jerry In which folder? MaryTTS don't recognize them...
-    }
-
 
 	/**
 	 *

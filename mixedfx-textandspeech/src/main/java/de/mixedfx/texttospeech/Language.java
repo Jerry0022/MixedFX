@@ -8,6 +8,7 @@ import java.util.Locale;
  * 
  * See Languages on https://github.com/marytts/marytts/blob/master/download/marytts-components.xml 
  * E. g. a download url: http://mary.dfki.de/download/5.1/voice-bits1-hsmm-5.1.zip
+ * Then add the contained jar file to the classpath.
  * </pre>
  */
 public enum Language
