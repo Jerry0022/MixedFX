@@ -8,6 +8,7 @@ import java.io.PrintStream;
 
 /**
  * Created by Jerry on 23.09.2015.
+ * Customized for Teamspeak 3!
  */
 public class AutomatedTelnetClient {
 

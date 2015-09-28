@@ -7,15 +7,15 @@ dependencies {
 
     // TEXT TO SPEECH
     compile 'com.detectlanguage:detectlanguage:1.0.5'
-    compile 'com.ibm.icu:icu4j:54.1.1' // MaryTTS
-    compile 'de.dfki.mary:marytts:5.1.2' // MaryTTS
-    compile 'de.dfki.mary:marytts-lang-de:5.1.2' // MaryTTS
-    compile 'de.dfki.mary:marytts-lang-en:5.1.2' // MaryTTS
-    compile 'de.dfki.mary:voice-cmu-slt-hsmm:5.1.2' // MaryTTS
+    runtime 'com.ibm.icu:icu4j:54.1.1' // MaryTTS
+    runtime 'de.dfki.mary:marytts:5.1.2' // MaryTTS
+    runtime 'de.dfki.mary:marytts-lang-de:5.1.2' // MaryTTS
+    runtime 'de.dfki.mary:marytts-lang-en:5.1.2' // MaryTTS
+    runtime 'de.dfki.mary:voice-cmu-slt-hsmm:5.1.2' // MaryTTS
     // TEXT TO SPEECH - CUSTOM VOICES
-    compile 'de.dfki.mary:voice-bits1-hsmm:5.1' // MaryTTS
-    compile 'de.dfki.mary:voice-bits3-hsmm:5.1' // MaryTTS
-    compile 'de.dfki.mary:voice-cmu-bdl-hsmm:5.1' // MaryTTS
+    runtime 'de.dfki.mary:voice-bits1-hsmm:5.1' // MaryTTS
+    runtime 'de.dfki.mary:voice-bits3-hsmm:5.1' // MaryTTS
+    runtime 'de.dfki.mary:voice-cmu-bdl-hsmm:5.1' // MaryTTS
     // SPEECH TO TEXT
     compile 'com.darkprograms:speech-api:1.0.0'
     compile 'javaFlacEncoder:java-flac-encoder:0.3.1'
