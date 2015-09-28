@@ -1,16 +1,16 @@
 version = '1.1-SNAPSHOT'
 
 dependencies {
-    compile 'de.lantool:mixedfx-tools:1.2'
+    compile 'de.lantool:mixedfx-tools:1.3'
     compile 'commons-io:commons-io:2.4'
     compile 'net.lingala.zip4j:zip4j:1.3.2'
 
     // TEXT TO SPEECH
     compile 'com.detectlanguage:detectlanguage:1.0.5'
-    runtime 'com.ibm.icu:icu4j:54.1.1' // MaryTTS
-    runtime 'de.dfki.mary:marytts:5.1.2' // MaryTTS
-    runtime 'de.dfki.mary:marytts-lang-de:5.1.2' // MaryTTS
-    runtime 'de.dfki.mary:marytts-lang-en:5.1.2' // MaryTTS
+    compile 'com.ibm.icu:icu4j:54.1.1' // MaryTTS
+    compile 'de.dfki.mary:marytts:5.1.2' // MaryTTS
+    compile 'de.dfki.mary:marytts-lang-de:5.1.2' // MaryTTS
+    compile 'de.dfki.mary:marytts-lang-en:5.1.2' // MaryTTS
     runtime 'de.dfki.mary:voice-cmu-slt-hsmm:5.1.2' // MaryTTS
     // TEXT TO SPEECH - CUSTOM VOICES
     runtime 'de.dfki.mary:voice-bits1-hsmm:5.1' // MaryTTS
