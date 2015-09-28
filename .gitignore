@@ -1,20 +1,24 @@
 # See also http://git-scm.com/docs/gitignore
 
 # DIRECTORIES
+.metadata/
 bin/
+target/
 build/
 logs/
 log/
 .idea/
 .gradle/
 .settings/
+.classpath/
+.settings/
+.project/
 
 # FILES
-.project
-.classpath
 desktop.ini
 
 # OTHER PATTERNS
 *.uml
 *.umlcd
-*log
+*.log
+*.ini
