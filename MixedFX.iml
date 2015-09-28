@@ -14,5 +14,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="mixedfx-tools" />
+    <orderEntry type="module" module-name="mixedfx-cdi2jfx" />
   </component>
 </module>
