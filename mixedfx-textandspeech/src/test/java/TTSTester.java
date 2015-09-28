@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * Created by India_000 on 27.09.2015.
  */
-public class Main {
+public class TTSTester {
     public static void main(String [] args) throws MaryConfigurationException {
         LocalMaryInterface lm = new LocalMaryInterface();
         System.out.println("Available voices: " + lm.getAvailableVoices());
