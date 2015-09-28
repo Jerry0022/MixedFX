@@ -1,8 +1,9 @@
 package de.mixedfx.windows;
 
 import de.mixedfx.file.FileObject;
+import lombok.Data;
 
-public class Program
+public @Data class Program
 {
 	/**
 	 * The name of the program! (Can be everything)
@@ -16,13 +17,13 @@ public class Program
 	 * The process name (see also taskmgr.exe)!
 	 */
 	public final String		processName;
-	public boolean			processStatus;
+	public boolean 		processStatus;
 
 	/**
 	 * The service name (see services.msc)!
 	 */
 	public final String	serviceName;
-	public boolean		serviceStatus;
+	public boolean 		serviceStatus;
 
 	/**
 	 * @param programName

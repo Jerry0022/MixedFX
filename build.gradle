@@ -69,6 +69,11 @@ subprojects {
          */
         maven { url "http://dl.bintray.com/dfki-lt/maven" }
     }
+
+    dependencies {
+        // In IDE Annotation Processor must be enabled
+        compile 'org.projectlombok:lombok:1.16.6'
+    }
 }
 
 /*
