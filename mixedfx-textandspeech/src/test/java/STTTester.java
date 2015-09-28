@@ -10,9 +10,9 @@ import javafx.beans.property.SimpleBooleanProperty;
 public class STTTester {
     public static void main(String [] args) throws InterruptedException {
         BooleanProperty trigger = new SimpleBooleanProperty();
-        SpeechToText.startListening("", trigger, googleResponse -> System.out.println(googleResponse.getResponse()));
+        SpeechToText.startListening("AIzaSyBcpxfRI3HfMZtbxExkFk24TSM_JKm2PDU", trigger, googleResponse -> System.out.println(googleResponse.getResponse()));
         trigger.set(true);
-        Thread.sleep(5000);
+        Thread.sleep(10000);
         trigger.set(false);
         while(true)
             ;

@@ -1,6 +1,7 @@
 package de.mixedfx.windows;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import de.mixedfx.logging.Log;
@@ -89,15 +90,19 @@ public class WindowsMonitoring
 							c.action((List) items);
 						}
 					}
-
-					try
-					{
-						Thread.sleep(WindowsMonitoring.MONITORING_INTERVAL);
-					}
-					catch (final Exception e)
-					{}
+                    long timeBeforeGC = new Date().getTime();
+                    System.gc();
+                    long difference = timeBeforeGC - new Date().getTime();
+                    if(difference < WindowsMonitoring.MONITORING_INTERVAL)
+                    {
+                        try
+                        {
+                            Thread.sleep(WindowsMonitoring.MONITORING_INTERVAL - difference);
+                        }
+                        catch (final Exception e)
+                        {}
+                    }
 				}
-				;
 			});
 			WindowsMonitoring.monitoringThread.setDaemon(true);
 			WindowsMonitoring.monitoring = true;
