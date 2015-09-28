@@ -12,7 +12,7 @@ public class STTTester {
     public static void main(String [] args) throws InterruptedException {
         Log.turnAllOn();
         BooleanProperty trigger = new SimpleBooleanProperty();
-        SpeechToText.startListening("AIzaSyBcpxfRI3HfMZtbxExkFk24TSM_JKm2PDU", trigger, googleResponse -> System.out.println(googleResponse.getResponse()));
+        SpeechToText.startListening("", trigger, googleResponse -> System.out.println(googleResponse.getAllPossibleResponses()));
         trigger.set(true);
         Thread.sleep(10000);
         trigger.set(false);
