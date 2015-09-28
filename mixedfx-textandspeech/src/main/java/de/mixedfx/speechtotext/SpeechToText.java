@@ -58,37 +58,32 @@ public class SpeechToText
 		}
 
 		trigger.set(false);
-		trigger.addListener(new ChangeListener<Boolean>()
-		{
-			@Override
-			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue)
-			{
-				if (newValue)
-				{
-                    listening = newValue;
-					Inspector.runNowAsDaemon(() ->
-					{
-						try
-						{
-							Log.textAndSpeech.info("Start capturing audio!");
-							File file = new File("CRAudioTest.flac");// The File to record the buffer to. You can also create your own buffer using the getTargetDataLine() method.
-							mic.captureAudioToFile(file);// Begins recording
-							while (listening)
-								Thread.sleep(stopDelay);// Recording
-							mic.close();// Stops recording
-							Log.textAndSpeech.info("Stop capturing!");
-							Log.textAndSpeech.info("Send audio to Google!");
-							byte[] data = Files.readAllBytes(mic.getAudioFile().toPath());// Saves data into memory.
-							dup.recognize(data, (int) mic.getAudioFormat().getSampleRate()); // Sends x milliseconds voice recording to Google
-							mic.getAudioFile().delete();// Deletes Buffer file
-							Log.textAndSpeech.info("Removed old file. Wait for Google's response.");
-						} catch (Exception ex)
-						{
-							Log.textAndSpeech.fatal("Can't write or read from file to which the voice via the micro is captured!");
-						}
-					});
-				}
-			}
-		});
+		trigger.addListener((observable, oldValue, newValue) -> {
+            listening = newValue;
+            if (newValue)
+            {
+                Inspector.runNowAsDaemon(() ->
+                {
+                    try
+                    {
+                        Log.textAndSpeech.info("Start capturing audio!");
+                        File file = new File("CRAudioTest.flac"); // The File to record the buffer to. You can also create your own buffer using the getTargetDataLine() method.
+                        mic.captureAudioToFile(file); // Begins recording
+                        while (listening)
+                            Thread.sleep(stopDelay); // Recording
+                        mic.close();// Stops recording
+                        Log.textAndSpeech.info("Stop capturing!");
+                        Log.textAndSpeech.info("Send audio to Google!");
+                        byte[] data = Files.readAllBytes(mic.getAudioFile().toPath());// Saves data into memory.
+                        dup.recognize(data, (int) mic.getAudioFormat().getSampleRate()); // Sends x milliseconds voice recording to Google
+                        mic.getAudioFile().delete();// Deletes Buffer file
+                        Log.textAndSpeech.info("Removed old file. Wait for Google's response.");
+                    } catch (Exception ex)
+                    {
+                        Log.textAndSpeech.fatal("Can't write or read from file to which the voice via the micro is captured!");
+                    }
+                });
+            }
+        });
 	}
 }

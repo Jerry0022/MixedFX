@@ -1,5 +1,6 @@
 import com.darkprograms.speech.recognizer.GSpeechResponseListener;
 import com.darkprograms.speech.recognizer.GoogleResponse;
+import de.mixedfx.logging.Log;
 import de.mixedfx.speechtotext.SpeechToText;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -9,11 +10,13 @@ import javafx.beans.property.SimpleBooleanProperty;
  */
 public class STTTester {
     public static void main(String [] args) throws InterruptedException {
+        Log.turnAllOn();
         BooleanProperty trigger = new SimpleBooleanProperty();
         SpeechToText.startListening("AIzaSyBcpxfRI3HfMZtbxExkFk24TSM_JKm2PDU", trigger, googleResponse -> System.out.println(googleResponse.getResponse()));
         trigger.set(true);
         Thread.sleep(10000);
         trigger.set(false);
+        System.out.println("Fertig!");
         while(true)
             ;
     }
