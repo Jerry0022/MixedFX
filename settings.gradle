@@ -6,4 +6,5 @@ include 'mixedfx-network'
 include 'mixedfx-textandspeech'
 include 'mixedfx-tools'
 include 'mixedfx-ts3'
+include 'mixedfx-windows'
 
