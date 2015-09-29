@@ -13,6 +13,9 @@ import de.mixedfx.java.StreamUtil;
 import de.mixedfx.windows.Executor;
 import javafx.util.Duration;
 
+/**
+ * Current restriction: You can only run one AHK script / command at a time.
+ */
 public class AHKManager
 {
 	public static final String	AHKExecutable	= "AutoHotkeyU32.exe";
@@ -27,18 +30,19 @@ public class AHKManager
 	 */
 	public static ProcessBuilder checkExistance(final File ahkScript) throws IOException
 	{
-		final FileObject ahkTempExeFile = FileObject.create().setPath(DataHandler.getTempFolder().toString()).setFullName(AHKManager.AHKExecutable);
+		//final FileObject ahkTempExeFile = FileObject.create().setPath(DataHandler.getTempFolder().toString()).setFullName(AHKManager.AHKExecutable);
 		final FileObject ahkTempScript = FileObject.create().setPath(DataHandler.getTempFolder().toString()).setFullName(FileObject.create(ahkScript).getFullName())
 				.setExtension(AHKManager.AHKExtension);
 
 		// Copy AutoHotKey.exe
-		final File ahkExeFile = StreamUtil.stream2file(AHKManager.class.getResourceAsStream(AHKManager.AHKExecutable));
-		if (!ahkTempExeFile.toFile().exists() || !ahkTempExeFile.equalsNameSize(FileObject.create(ahkExeFile)))
-			FileUtils.copyFile(ahkExeFile, ahkTempExeFile.toFile());
-		// Copy Script
+		//final File ahkExeFile = StreamUtil.stream2file(AHKManager.class.getResourceAsStream(AHKManager.AHKExecutable));
+        //if (!ahkTempExeFile.toFile().exists() || !ahkTempExeFile.equalsNameSize(FileObject.create(ahkExeFile)))
+		//	FileUtils.copyFile(ahkExeFile, ahkTempExeFile.toFile());
+		// Copy Script if it does not exist already or was modified
 		if (!ahkTempScript.toFile().exists() || !ahkTempScript.equalsNameSize(FileObject.create(ahkScript)))
 			FileUtils.copyFile(ahkScript, ahkTempScript.toFile());
-		return new ProcessBuilder(ahkTempExeFile.getFullPath(), ahkTempScript.getFullPath());
+
+		return new ProcessBuilder(convertAHK2Exe(ahkTempScript, false).toString());
 	}
 
 	/**
@@ -54,7 +58,7 @@ public class AHKManager
 	}
 
 	/**
-	 * Removes all AHK scripts from temp directory.
+	 * Removes all AHK scripts plus AutoHotKey executable from temp directory.
 	 *
 	 * @throws IOException
 	 *             If something went wrong.
@@ -120,20 +124,6 @@ public class AHKManager
 			throw new IOException("Three random file names were already available. Therefore could not create script file.");
 		else
 		{
-			// Remove file after 3 seconds
-			final String toDelete = script.toString();
-			final Duration delay = Duration.seconds(3);
-			new Thread(() ->
-			{
-				try
-				{
-					Thread.sleep((long) delay.toMillis());
-				}
-				catch (final Exception e)
-				{}
-				DataHandler.deleteFile(FileObject.create(new File(toDelete)));
-			}).start();
-
 			// Start script
 			AHKManager.startScript(script.setExtension(AHKManager.AHKExtension).toFile(), blocking);
 		}
@@ -162,7 +152,7 @@ public class AHKManager
 	 * @param scriptName
 	 *            The name of the script with or without extension
 	 * @param blocking
-	 *            If this method should wait for the completion of the AHK script it is executed NOT AS ADMIN otherwise it is executed as ADMIN!
+	 *            If this method should wait for the completion of the AHK script it is executed NOT AS ADMIN otherwise it is executed as ADMIN
 	 * @throws IOException
 	 *             If file(s) could not be created in temp directory
 	 */
@@ -175,8 +165,44 @@ public class AHKManager
 		// Get resource and start script
 		final File scriptFile = StreamUtil.stream2file(referenceClass.getResourceAsStream(scriptName));
 		AHKManager.startScript(scriptFile, blocking);
-
 	}
+
+    /**
+     *
+     * @param input The ahk file which shall be converted
+     * @param deleteInput If the ahk file shall be deleted after conversion to an exe file
+     */
+    public static FileObject convertAHK2Exe(FileObject input, boolean deleteInput) throws IOException {
+        final FileObject ahk2Exe = FileObject.create().setPath(DataHandler.getTempFolder().toString()).setFullName("Ahk2Exe.exe");
+        final FileObject ansi = FileObject.create().setPath(DataHandler.getTempFolder().toString()).setFullName("ANSI 32-bit.bin");
+        final FileObject unicode32 = FileObject.create().setPath(DataHandler.getTempFolder().toString()).setFullName("Unicode 32-bit.bin");
+        final FileObject unicode64 = FileObject.create().setPath(DataHandler.getTempFolder().toString()).setFullName("Unicode 64-bit.bin");
+        final FileObject ahkSC = FileObject.create().setPath(DataHandler.getTempFolder().toString()).setFullName("AutoHotKeySC.bin");
+
+        if(!ahk2Exe.toFile().exists())
+            FileUtils.copyFile(StreamUtil.stream2file(AHKManager.class.getResourceAsStream(ahk2Exe.getFullName())), ahk2Exe.toFile());
+        if(!ansi.toFile().exists())
+            FileUtils.copyFile(StreamUtil.stream2file(AHKManager.class.getResourceAsStream(ansi.getFullName())), ansi.toFile());
+        if(!unicode32.toFile().exists())
+            FileUtils.copyFile(StreamUtil.stream2file(AHKManager.class.getResourceAsStream(unicode32.getFullName())), unicode32.toFile());
+        if(!unicode64.toFile().exists())
+            FileUtils.copyFile(StreamUtil.stream2file(AHKManager.class.getResourceAsStream(unicode64.getFullName())), unicode64.toFile());
+        if(!ahkSC.toFile().exists())
+            FileUtils.copyFile(StreamUtil.stream2file(AHKManager.class.getResourceAsStream(ahkSC.getFullName())), ahkSC.toFile());
+
+        try
+        {
+            // Start AHK script
+            final ProcessBuilder process = new ProcessBuilder(ahk2Exe.getFullPath(), "/in", "\"" + input.getFullPath() + "\"");
+            process.start().waitFor();
+            if(deleteInput)
+                DataHandler.deleteFile(input);
+        }
+        catch (final InterruptedException e)
+        {}
+
+        return input.setExtension(".exe");
+    }
 
 	/**
 	 * @param script

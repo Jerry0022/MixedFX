@@ -18,6 +18,7 @@ allprojects {
         from('src') {
             include '**/*.css'
             include '**/*.xml'
+            include '**/*.bin'
             include '**/*.ahk'
             include '**/*.exe'
         }

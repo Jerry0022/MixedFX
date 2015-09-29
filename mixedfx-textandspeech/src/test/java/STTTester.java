@@ -1,5 +1,3 @@
-import com.darkprograms.speech.recognizer.GSpeechResponseListener;
-import com.darkprograms.speech.recognizer.GoogleResponse;
 import de.mixedfx.logging.Log;
 import de.mixedfx.speechtotext.SpeechToText;
 import javafx.beans.property.BooleanProperty;
