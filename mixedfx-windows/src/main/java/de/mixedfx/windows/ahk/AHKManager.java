@@ -212,7 +212,7 @@ public class AHKManager
 			if (blocking)
 				process.start().waitFor();
 			else
-				Executor.runAsAdmin(process.command().get(0), process.command().get(1), true);
+				Executor.runAsAdmin(process.command().get(0), true);
 		}
 		catch (final InterruptedException e)
 		{}

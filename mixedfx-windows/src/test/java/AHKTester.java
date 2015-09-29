@@ -8,7 +8,7 @@ import java.io.IOException;
  */
 public class AHKTester {
     public static void main(String [] args) throws IOException {
-        AHKManager.runAHKCommands("MsgBox, 1a", true);
+        AHKManager.runAHKCommands("MsgBox, 1a", false);
         AHKManager.runAHKCommands("MsgBox, 1b", true);
 
         ComplexString str = new ComplexString();
