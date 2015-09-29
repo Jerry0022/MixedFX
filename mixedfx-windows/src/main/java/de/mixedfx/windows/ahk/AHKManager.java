@@ -18,7 +18,6 @@ import javafx.util.Duration;
  */
 public class AHKManager
 {
-	public static final String	AHKExecutable	= "AutoHotkeyU32.exe";
 	public static final String	AHKExtension	= ".ahk";
 
 	/**
@@ -30,14 +29,9 @@ public class AHKManager
 	 */
 	public static ProcessBuilder checkExistance(final File ahkScript) throws IOException
 	{
-		//final FileObject ahkTempExeFile = FileObject.create().setPath(DataHandler.getTempFolder().toString()).setFullName(AHKManager.AHKExecutable);
 		final FileObject ahkTempScript = FileObject.create().setPath(DataHandler.getTempFolder().toString()).setFullName(FileObject.create(ahkScript).getFullName())
 				.setExtension(AHKManager.AHKExtension);
 
-		// Copy AutoHotKey.exe
-		//final File ahkExeFile = StreamUtil.stream2file(AHKManager.class.getResourceAsStream(AHKManager.AHKExecutable));
-        //if (!ahkTempExeFile.toFile().exists() || !ahkTempExeFile.equalsNameSize(FileObject.create(ahkExeFile)))
-		//	FileUtils.copyFile(ahkExeFile, ahkTempExeFile.toFile());
 		// Copy Script if it does not exist already or was modified
 		if (!ahkTempScript.toFile().exists() || !ahkTempScript.equalsNameSize(FileObject.create(ahkScript)))
 			FileUtils.copyFile(ahkScript, ahkTempScript.toFile());
@@ -65,21 +59,8 @@ public class AHKManager
 	 */
 	public static void cleanTempDirectory() throws IOException
 	{
-		AHKManager.cleanTempDirectory(false);
-	}
-
-	/**
-	 * @param onlyScript
-	 *            If true only AHK scripts are removed. Otherwise also the AutoHotKey executable is removed.
-	 * @throws IOException
-	 *             If something went wrong.
-	 */
-	public static void cleanTempDirectory(final boolean onlyScript) throws IOException
-	{
-		if (!onlyScript)
-			DataHandler.deleteFile(FileObject.create().setPath(DataHandler.getTempFolder().getFullPath()).setFullName(AHKManager.AHKExecutable));
-		DataHandler.listFiles(DataHandler.getTempFolder()).stream().filter(file -> FileObject.create(file).getFullExtension().equalsIgnoreCase(AHKManager.AHKExtension))
-				.forEach(file -> DataHandler.deleteFile(FileObject.create(file)));
+        DataHandler.listFiles(DataHandler.getTempFolder()).stream().filter(file -> FileObject.create(file).getFullExtension().equalsIgnoreCase(AHKManager.AHKExtension))
+                .forEach(file -> DataHandler.deleteFile(FileObject.create(file)));
 	}
 
 	/**
