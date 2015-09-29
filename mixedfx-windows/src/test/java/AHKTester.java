@@ -17,5 +17,7 @@ public class AHKTester {
         AHKManager.runAHKCommands(str, true);
 
         AHKManager.runEmbeddedAHKFile(AHKTester.class, "Test.ahk", true);
+
+        AHKManager.cleanTempDirectory();
     }
 }

@@ -2,8 +2,10 @@ package de.mixedfx.windows.ahk;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.UUID;
 
+import de.mixedfx.java.Crypto;
 import org.apache.commons.io.FileUtils;
 
 import de.mixedfx.file.DataHandler;
@@ -12,6 +14,8 @@ import de.mixedfx.java.ComplexString;
 import de.mixedfx.java.StreamUtil;
 import de.mixedfx.windows.Executor;
 import javafx.util.Duration;
+
+import javax.xml.crypto.Data;
 
 /**
  * Current restriction: You can only run one AHK script / command at a time.
@@ -59,8 +63,12 @@ public class AHKManager
 	 */
 	public static void cleanTempDirectory() throws IOException
 	{
-        DataHandler.listFiles(DataHandler.getTempFolder()).stream().filter(file -> FileObject.create(file).getFullExtension().equalsIgnoreCase(AHKManager.AHKExtension))
+        String suffix1 = Crypto.getSHA256(AHKManager.class.getSimpleName()).substring(0, 16) + AHKExtension;
+        String suffix2 = Crypto.getSHA256(AHKManager.class.getSimpleName()).substring(0, 16) + ".exe";
+        Collection<File> tempFolder = DataHandler.listFiles(DataHandler.getTempFolder());
+        tempFolder.stream().filter(file -> FileObject.create(file).getFullName().endsWith(suffix1) || FileObject.create(file).getFullName().endsWith(suffix2))
                 .forEach(file -> DataHandler.deleteFile(FileObject.create(file)));
+       tempFolder.stream().filter(file -> file.exists() && (FileUtils.sizeOf(file) == 0 || (FileObject.create(file).getName().startsWith("stream2file")) && FileObject.create(file).getExtension().equalsIgnoreCase("tmp"))).forEach(file -> DataHandler.deleteFile(FileObject.create(file)));
 	}
 
 	/**
@@ -90,7 +98,7 @@ public class AHKManager
 		FileObject script = null;
 		for (int i = 0; i < 5; i++)
 		{
-			final String id = UUID.randomUUID().toString();
+			final String id = UUID.randomUUID().toString() + Crypto.getSHA256(AHKManager.class.getSimpleName()).substring(0, 16);
 			final FileObject tmpFile = FileObject.create().setPath(DataHandler.getTempFolder().toString()).setName(id).setExtension(AHKManager.AHKExtension);
 			if (!tmpFile.toFile().exists())
 			{
@@ -144,8 +152,10 @@ public class AHKManager
 			scriptName += ".ahk";
 
 		// Get resource and start script
-		final File scriptFile = StreamUtil.stream2file(referenceClass.getResourceAsStream(scriptName));
-		AHKManager.startScript(scriptFile, blocking);
+        final File scriptFile = StreamUtil.stream2file(referenceClass.getResourceAsStream(scriptName));
+        FileObject scriptFileObject = FileObject.create(scriptFile).setName(FileObject.create(scriptFile).getName() + Crypto.getSHA256(AHKManager.class.getSimpleName()).substring(0, 16));
+        FileUtils.moveFile(scriptFile, scriptFileObject.toFile());
+		AHKManager.startScript(scriptFileObject.toFile(), blocking);
 	}
 
     /**
