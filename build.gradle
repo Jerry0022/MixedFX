@@ -14,14 +14,13 @@ allprojects {
     apply plugin: 'eclipse'
     apply plugin: 'maven'
 
-    // TODO @Maxi Why a whitelist. I would recommend a blacklist but doesn't see the need at all to specify this here!?
     processResources {
-        //from('src') {
-            //include '**/*.css'
-            //include '**/*.xml'
-            //include '**/*.ahk'
-            //include '**/*.exe'
-        //}
+        from('src') {
+            include '**/*.css'
+            include '**/*.xml'
+            include '**/*.ahk'
+            include '**/*.exe'
+        }
 
     }
 
