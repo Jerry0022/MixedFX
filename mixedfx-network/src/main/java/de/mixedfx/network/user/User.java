@@ -30,25 +30,26 @@ public abstract class User implements Identifiable, Serializable {
      * This method is called after a User is received by the network. If a user is already in the network this method should return true. If this method returns false, the user will be kicked from the
      * network. This implies that only the newest user is in the network and maybe not even him and there can't be a user twice.
      *
-     * @param user
+     * @param user The object which has to be of the class {@link User} and the identifier must equal this user.
      * @return Returns true if the user is equal to the other user, otherwise false.
      */
     @Override
     public boolean equals(final Object user) {
-        if (user instanceof User)
-            return this.getIdentifier().equals(((User) user).getIdentifier());
-        else
-            return false;
+        return user instanceof User && this.getIdentifier().equals(((User) user).getIdentifier());
     }
 
     public void merge(final User newUser) {
         if (!newUser.networks.stream().anyMatch(n ->
-        {
-            return this.networks.stream().anyMatch(n2 -> n.getIP().getHostAddress().equalsIgnoreCase(n2.getIP().getHostAddress()));
-        })) {
+                this.networks.stream().anyMatch(n2 -> n.getIP().getHostAddress().equalsIgnoreCase(n2.getIP().getHostAddress())))) {
             this.networks.addAll(newUser.networks);
         }
         this.mergeMe(newUser);
+    }
+
+    private void readObject(final java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        this.networks = new SimpleListProperty<>(FXCollections.observableArrayList());
+        this.setMeUp();
     }
 
     /**
@@ -58,12 +59,6 @@ public abstract class User implements Identifiable, Serializable {
      * @param newUser The new one with the same id! All other values might have changed!
      */
     public abstract void mergeMe(User newUser);
-
-    private void readObject(final java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
-        in.defaultReadObject();
-        this.networks = new SimpleListProperty<>(FXCollections.observableArrayList());
-        this.setMeUp();
-    }
 
     /**
      * All transient fields should be set up here!
