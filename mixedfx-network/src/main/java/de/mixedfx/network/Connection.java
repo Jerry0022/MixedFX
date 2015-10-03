@@ -1,12 +1,5 @@
 package de.mixedfx.network;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
-
-import org.bushe.swing.event.annotation.AnnotationProcessor;
-import org.bushe.swing.event.annotation.EventTopicSubscriber;
-
 import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.eventbus.EventBusService;
 import de.mixedfx.eventbus.EventBusServiceInterface;
@@ -14,6 +7,12 @@ import de.mixedfx.inspector.Inspector;
 import de.mixedfx.logging.Log;
 import de.mixedfx.network.messages.GoodByeMessage;
 import de.mixedfx.network.messages.Message;
+import org.bushe.swing.event.annotation.AnnotationProcessor;
+import org.bushe.swing.event.annotation.EventTopicSubscriber;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
 
 public class Connection implements EventBusServiceInterface
 {
@@ -59,16 +58,16 @@ public class Connection implements EventBusServiceInterface
 	public void initilizeEventBusAndSubscriptions()
 	{
 		this.eventBus = new EventBusService(this.getClass() + this.clientSocket.getRemoteSocketAddress().toString().split(":")[0]);
-		this.eventBus.subscribe(Connection.MESSAGE_CHANNEL_RECEIVED, this);
-		this.eventBus.subscribe(Connection.CONNECTION_CHANNEL_LOST, this);
+		this.eventBus.subscribe(MESSAGE_CHANNEL_RECEIVED, this);
+		this.eventBus.subscribe(CONNECTION_CHANNEL_LOST, this);
 		AnnotationProcessor.process(this);
 	}
 
 	@Override
-	@EventTopicSubscriber(topic = Connection.MESSAGE_CHANNEL_SEND)
+	@EventTopicSubscriber(topic = MESSAGE_CHANNEL_SEND)
 	public synchronized void onEvent(final String topic, final Object event)
 	{
-		if (topic.equals(Connection.MESSAGE_CHANNEL_SEND))
+		if (topic.equals(MESSAGE_CHANNEL_SEND))
 		{
 			final Message message = (Message) event;
 			if (message.getToIP() == null || message.getToIP().equals(this.ip))
@@ -76,7 +75,7 @@ public class Connection implements EventBusServiceInterface
 				message.setToIP(this.ip);
 				this.outputConnection.sendMessage(message);
 			}
-		} else if (topic.equals(Connection.MESSAGE_CHANNEL_RECEIVED))
+		} else if (topic.equals(MESSAGE_CHANNEL_RECEIVED))
 		{
 			final Message message = (Message) this.inputConnection.getNextMessage();
 			message.setFromIP(this.ip);
@@ -99,19 +98,23 @@ public class Connection implements EventBusServiceInterface
 		Log.network.debug("Closing " + this.getClass().getSimpleName());
 
 		AnnotationProcessor.unprocess(this);
-		this.eventBus.unsubscribe(Connection.CONNECTION_CHANNEL_LOST, this);
-		this.eventBus.unsubscribe(Connection.MESSAGE_CHANNEL_RECEIVED, this);
+		this.eventBus.unsubscribe(CONNECTION_CHANNEL_LOST, this);
+		this.eventBus.unsubscribe(MESSAGE_CHANNEL_RECEIVED, this);
 
 		try
 		{
-			while (!this.outputConnection.outputMessageCache.isEmpty())
-				;
+			while (!this.outputConnection.outputMessageCache.isEmpty()) {
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException ignored) {
+				}
+			}
 			// Terminate first to processing last remaining steps.
 			this.outputConnection.terminate();
 			this.inputConnection.terminate();
 			// Close socket to be sure that everything was closed.
 			this.clientSocket.close();
-		} catch (final IOException e)
+		} catch (final IOException ignored)
 		{
 		}
 

@@ -63,13 +63,13 @@ public class MessageBus {
 			}
 		    } else {
 			for (final Object id : idMessage.getToUserIDs()) {
-			    FindIP: for (final InetAddress ip : this.cm.tcp_user_map().keySet()) {
-				if (this.cm.tcp_user_map().get(ip).getOriginalUser().getIdentifier().equals(id)) {
-				    message.setToIP(ip);
-				    EventBusExtended.publishAsyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
-				    break FindIP; // Avoid double sending!
+				for (final InetAddress ip : this.cm.tcp_user_map().keySet()) {
+					if (this.cm.tcp_user_map().get(ip).getOriginalUser().getIdentifier().equals(id)) {
+						message.setToIP(ip);
+						EventBusExtended.publishAsyncSafe(Connection.MESSAGE_CHANNEL_SEND, message);
+						break; // Avoid double sending!
+					}
 				}
-			    }
 			}
 		    }
 		}

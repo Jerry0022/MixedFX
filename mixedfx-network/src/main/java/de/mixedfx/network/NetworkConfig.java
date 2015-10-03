@@ -4,9 +4,6 @@ import de.mixedfx.logging.Log;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
-import java.util.Date;
-import java.util.concurrent.atomic.AtomicReference;
-
 public class NetworkConfig
 {
 	/**
@@ -54,11 +51,6 @@ public class NetworkConfig
 	 * </p>
 	 */
 	public static IntegerProperty PORT = new SimpleIntegerProperty(8888);
-
-	/**
-	 * Is null if no date was published by the service. May need some time to get this value filled if I'm a client!
-	 */
-	protected static AtomicReference<Date> networkExistsSince = new AtomicReference<>(null);
 
 	static
 	{

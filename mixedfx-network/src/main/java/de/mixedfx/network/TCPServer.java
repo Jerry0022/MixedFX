@@ -1,16 +1,16 @@
 package de.mixedfx.network;
 
+import de.mixedfx.logging.Log;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-
-import de.mixedfx.logging.Log;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.collections.FXCollections;
 
 class TCPServer
 {
@@ -112,10 +112,7 @@ class TCPServer
 
 			synchronized (NetworkManager.t.tcpClients)
 			{
-				for (final TCPClient c : this.connectionList)
-				{
-					c.stop();
-				}
+				this.connectionList.forEach(de.mixedfx.network.TCPClient::stop);
 				this.connectionList.clear();
 			}
 		}

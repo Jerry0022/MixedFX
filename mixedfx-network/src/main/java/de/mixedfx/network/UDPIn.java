@@ -1,14 +1,10 @@
 package de.mixedfx.network;
 
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
+import de.mixedfx.inspector.Inspector;
+
+import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import de.mixedfx.inspector.Inspector;
 
 class UDPIn
 {
@@ -51,10 +47,7 @@ class UDPIn
 
 	public synchronized void close()
 	{
-		for (final DatagramSocket socket : this.sockets)
-		{
-			socket.close();
-		}
+		this.sockets.forEach(java.net.DatagramSocket::close);
 		this.sockets.clear();
 	}
 

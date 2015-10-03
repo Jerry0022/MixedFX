@@ -13,12 +13,12 @@ public class UDPDetected implements Serializable
 	}
 
 	/*
-	 * Set on receival
+	 * Set on receive
 	 */
 	public InetAddress address;
 
 	/*
-	 * Set on sending.
+	 * Set on sending
 	 */
 	private long timeStamp;
 
@@ -39,12 +39,8 @@ public class UDPDetected implements Serializable
 	}
 
 	@Override
-	public boolean equals(Object object)
-	{
-		if (object instanceof UDPDetected)
-			return ((UDPDetected) object).address.equals(this.address);
-		else
-			return false;
+	public boolean equals(Object object) {
+		return object instanceof UDPDetected && ((UDPDetected) object).address.equals(this.address);
 	}
 
 	/*

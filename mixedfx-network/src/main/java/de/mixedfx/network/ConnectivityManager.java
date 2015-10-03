@@ -3,6 +3,8 @@ package de.mixedfx.network;
 import de.mixedfx.inspector.Inspector;
 import de.mixedfx.logging.Log;
 import de.mixedfx.network.messages.UserMessage;
+import de.mixedfx.network.overlay.MasterNetworkHandler;
+import de.mixedfx.network.overlay.OverlayNetwork;
 import de.mixedfx.network.user.User;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
@@ -61,18 +63,15 @@ public class ConnectivityManager<T extends User> {
                                 newUser.networks.add(MasterNetworkHandler.get(userMessage.getFromIP()));
                                 if (this.otherUsers.contains(newUser)) {
                                     this.otherUsers.get(this.otherUsers.indexOf(newUser)).merge(newUser);
-                                }
-                                else {
+                                } else {
                                     this.otherUsers.add(newUser);
                                 }
                             }
-                        }
-                        else {
+                        } else {
                             Log.network.debug("UserMessage was from me!");
                         }
                         return true;
-                    }
-                    else {
+                    } else {
                         return false;
                     }
                 });
@@ -125,8 +124,7 @@ public class ConnectivityManager<T extends User> {
     public void start(final T myUniqueUser) {
         if ((this.myUniqueUser == null)) {
             this.setMyUser(myUniqueUser);
-        }
-        else {
+        } else {
             this.myUniqueUser.merge(myUniqueUser);
         }
         this.start();
@@ -140,8 +138,7 @@ public class ConnectivityManager<T extends User> {
     public void switchStatus() {
         if (this.state.get().equals(State.OFFLINE)) {
             this.start();
-        }
-        else {
+        } else {
             this.stop();
         }
     }
@@ -192,8 +189,7 @@ public class ConnectivityManager<T extends User> {
                             synchronized (this.otherUsers) {
                                 if (!this.tcp_user_map.containsValue(new UserMessage<T>(oldUser))) {
                                     this.otherUsers.remove(oldUser);
-                                }
-                                else {
+                                } else {
                                     Log.network.info("User is still available over other connection! ");
                                 }
                             }
@@ -202,8 +198,7 @@ public class ConnectivityManager<T extends User> {
                             }
                         }
                     }
-                }
-                else if (c.wasAdded()) {
+                } else if (c.wasAdded()) {
                     for (final TCPClient tcp2 : c.getAddedSubList()) {
                         synchronized (NetworkManager.t.tcpClients) {
                             final UserMessage<T> message = new UserMessage<T>(this.myUniqueUser);

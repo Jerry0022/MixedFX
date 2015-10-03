@@ -1,11 +1,5 @@
 package de.mixedfx.network;
 
-import java.io.IOException;
-import java.net.InetAddress;
-
-import org.bushe.swing.event.annotation.AnnotationProcessor;
-import org.bushe.swing.event.annotation.EventTopicSubscriber;
-
 import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.logging.Log;
 import de.mixedfx.network.messages.GoodByeMessage;
@@ -13,15 +7,15 @@ import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import org.bushe.swing.event.annotation.AnnotationProcessor;
+import org.bushe.swing.event.annotation.EventTopicSubscriber;
+
+import java.io.IOException;
+import java.net.InetAddress;
 
 public class TCPCoordinator
 {
 	public static final String CONNECTION_LOST = "TCP_CONNECTION_LOST";
-
-	/**
-	 * The id of the first connection!
-	 */
-	public static int CONNECTION_ID = 1;
 
 	private final TCPServer					tcpServer;
 	public final ListProperty<TCPClient>	tcpClients;
@@ -59,20 +53,13 @@ public class TCPCoordinator
 		try
 		{
 			this.tcpServer.start();
-			this.tcpServer.connectionList.addListener(new ListChangeListener<TCPClient>()
-			{
-				@Override
-				public void onChanged(javafx.collections.ListChangeListener.Change<? extends TCPClient> c)
-				{
-					synchronized (tcpClients)
-					{
-						while (c.next())
-						{
-							if (c.wasAdded())
-								tcpClients.addAll(c.getAddedSubList());
-							else if (c.wasRemoved())
-								tcpClients.removeAll(c.getRemoved());
-						}
+			this.tcpServer.connectionList.addListener((ListChangeListener.Change<? extends TCPClient> c) -> {
+				synchronized (tcpClients) {
+					while (c.next()) {
+						if (c.wasAdded())
+							tcpClients.addAll(c.getAddedSubList());
+						else if (c.wasRemoved())
+							tcpClients.removeAll(c.getRemoved());
 					}
 				}
 			});
@@ -81,7 +68,6 @@ public class TCPCoordinator
 			Log.network.fatal("Error occured while starting TCP server: " + e.getCause().getMessage());
 			this.stopTCPFull();
 			EventBusExtended.publishSyncSafe(NetworkManager.NETWORK_FATALERROR, e);
-			return;
 		}
 	}
 
@@ -113,10 +99,9 @@ public class TCPCoordinator
 
 		try
 		{
-			TCPClient client = null;
-
 			Log.network.info("Start TCP connection to: " + ip.getHostAddress());
-			client = new TCPClient().start(ip);
+
+			TCPClient client = new TCPClient().start(ip);
 			synchronized (tcpClients)
 			{
 				if (client != null)
@@ -151,7 +136,7 @@ public class TCPCoordinator
 			try
 			{
 				Thread.sleep(NetworkConfig.TCP_UNICAST_INTERVAL * 2);
-			} catch (InterruptedException e)
+			} catch (InterruptedException ignored)
 			{
 			}
 

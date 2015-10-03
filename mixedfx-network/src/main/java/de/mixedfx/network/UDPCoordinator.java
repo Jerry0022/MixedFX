@@ -1,5 +1,15 @@
 package de.mixedfx.network;
 
+import de.mixedfx.eventbus.EventBusExtended;
+import de.mixedfx.eventbus.EventBusService;
+import de.mixedfx.inspector.Inspector;
+import de.mixedfx.logging.Log;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
+import org.apache.commons.collections.CollectionUtils;
+import org.bushe.swing.event.EventTopicSubscriber;
+
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
@@ -14,17 +24,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.bushe.swing.event.EventTopicSubscriber;
-
-import de.mixedfx.eventbus.EventBusExtended;
-import de.mixedfx.eventbus.EventBusService;
-import de.mixedfx.inspector.Inspector;
-import de.mixedfx.logging.Log;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.collections.FXCollections;
 
 public class UDPCoordinator implements EventTopicSubscriber<Object> {
     public static final String RECEIVE = "RECEIVE";
@@ -82,7 +81,7 @@ public class UDPCoordinator implements EventTopicSubscriber<Object> {
     }
 
     private boolean oldMessage;
-    private volatile List<InetAddress> cached = new ArrayList<InetAddress>();
+	private final List<InetAddress> cached = new ArrayList<>();
 
     @SuppressWarnings("unchecked")
     @Override
@@ -104,9 +103,9 @@ public class UDPCoordinator implements EventTopicSubscriber<Object> {
 			}
 		    }
 		}
-	    } catch (final SocketException e) {
-	    }
-	    if (ownOne) {
+		} catch (final SocketException ignored) {
+		}
+		if (ownOne) {
 		return;
 	    }
 
@@ -185,12 +184,12 @@ public class UDPCoordinator implements EventTopicSubscriber<Object> {
 				    + "Connection is now closed! " + newDetected.address);
 
 			    handler.cancel(true);
-			    // Lock of callable still works...
-			    try {
+				// Lock if callable still works...
+				try {
 				Thread.sleep(NetworkConfig.TCP_CONNECTION_ESTABLISHING_RETRY);
-			    } catch (final InterruptedException e) {
-			    }
-			    synchronized (UDPCoordinator.this.cached) {
+				} catch (final InterruptedException ignored) {
+				}
+				synchronized (UDPCoordinator.this.cached) {
 				UDPCoordinator.this.cached.remove(newDetected.address);
 			    }
 			}

@@ -1,16 +1,11 @@
 package de.mixedfx.network;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.NotSerializableException;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
-import java.net.InetAddress;
-import java.util.ArrayList;
-
 import de.mixedfx.eventbus.EventBusService;
 import de.mixedfx.logging.Log;
+
+import java.io.*;
+import java.net.InetAddress;
+import java.util.ArrayList;
 
 public class ConnectionInput implements Runnable
 {
@@ -27,7 +22,7 @@ public class ConnectionInput implements Runnable
 		this.eventBusParent = EventBusService.getEventBus(ConnectionInput.parentClass + ip.toString());
 		this.objectInputStream = new ObjectInputStream(inputStream);
 
-		this.inputMessageCache = new ArrayList<Serializable>();
+		this.inputMessageCache = new ArrayList<>();
 
 		Log.network.trace(this.getClass().getSimpleName() + " initialized!");
 	}
@@ -51,12 +46,11 @@ public class ConnectionInput implements Runnable
 	@Override
 	public void run()
 	{
-		Object receivedObject = null;
 		while (this.isRunning)
 		{
 			try
 			{
-				receivedObject = this.objectInputStream.readObject();
+				Object receivedObject = this.objectInputStream.readObject();
 
 				if (receivedObject instanceof Serializable)
 				{
@@ -107,7 +101,7 @@ public class ConnectionInput implements Runnable
 			try
 			{
 				this.objectInputStream.close();
-			} catch (final IOException e)
+			} catch (final IOException ignored)
 			{
 			}
 			Log.network.trace(this.getClass().getSimpleName() + " terminated!");

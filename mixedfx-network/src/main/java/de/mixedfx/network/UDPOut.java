@@ -1,18 +1,13 @@
 package de.mixedfx.network;
 
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.InterfaceAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.util.Date;
-import java.util.Enumeration;
-
 import de.mixedfx.inspector.Inspector;
 import de.mixedfx.logging.Log;
+
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
+import java.net.*;
+import java.util.Date;
+import java.util.Enumeration;
 
 class UDPOut
 {
@@ -41,11 +36,11 @@ class UDPOut
 	{
 		Inspector.runNowAsDaemon(() ->
 		{
-			boolean worked = true;
 			Exception exception = new Exception("No exception occured!");
 
-			while (worked)
+			while (true)
 			{
+				boolean worked = true;
 				worked = false;
 
 				byte[] sendData = null;
@@ -69,6 +64,7 @@ class UDPOut
 				{
 					try
 					{
+						assert sendData != null;
 						final DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("255.255.255.255"),
 								NetworkConfig.PORT.get() + i * NetworkConfig.TRIES_STEPS);
 						this.socket.send(sendPacket);
@@ -120,7 +116,7 @@ class UDPOut
 							}
 						}
 					}
-				} catch (final Exception e1)
+				} catch (final Exception ignored)
 				{
 				}
 
