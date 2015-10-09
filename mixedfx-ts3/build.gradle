@@ -4,4 +4,5 @@ version '1.3-SNAPSHOT'
 dependencies {
     compile 'commons-net:commons-net:3.3'
     compile 'de.lantool:mixedfx-tools:1.2'
+    compile 'de.lantool:mixedfx-windows:1.3-SNAPSHOT'
 }

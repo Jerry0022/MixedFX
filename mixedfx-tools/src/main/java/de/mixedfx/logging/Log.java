@@ -1,14 +1,13 @@
 package de.mixedfx.logging;
 
-import java.lang.annotation.Annotation;
-import java.net.URISyntaxException;
-
-import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.spi.InjectionPoint;
-
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
+
+import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.InjectionPoint;
+import java.lang.annotation.Annotation;
+import java.net.URISyntaxException;
 
 /**
  * Turn all Loggers on / off by calling {@link #turnAllOn()} or
@@ -64,9 +63,5 @@ public class Log {
 	for (final Logger l : Log.CONTEXT.getLoggers()) {
 	    l.setLevel(Level.OFF);
 	}
-    }
-
-    public static void main(String[] args) {
-	System.out.println("Bis hier!");
     }
 }

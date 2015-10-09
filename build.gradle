@@ -80,27 +80,22 @@ subprojects {
  * SCRIPT APPLIED ONLY TO ROOT PROJECT
  */
 
-version = '1.1'
+version = '1.3'
 
 /*
  * DEPENDENCIES
  */
 
 dependencies {
-    // TODO REALLY NEEDED?
     // Project dependencies
-    //compile project(":mixedfx-cdi2jfx")
-    //compile project(":mixedfx-gui")
-    //compile project(":mixedfx-network")
-    //compile project(":mixedfx-textandspeech")
-    //compile project(":mixedfx-tools")
-    //compile project(":mixedfx-ts3")
-    //compile project(":mixedfx-windows")
+    compile project(":mixedfx-cdi2jfx")
+    compile project(":mixedfx-gui")
+    compile project(":mixedfx-network")
+    compile project(":mixedfx-textandspeech")
+    compile project(":mixedfx-tools")
+    compile project(":mixedfx-ts3")
+    compile project(":mixedfx-windows")
 }
-
-/*
- * INSTALL / UPLOAD
- */
 
 jar {
     manifest {

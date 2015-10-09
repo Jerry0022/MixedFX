@@ -23,22 +23,22 @@ public class TS3User {
     }
 
     public int getID() {
-        return Integer.valueOf(property.getProperty("clid"));
+        return Integer.parseInt(property.getProperty("clid"));
     }
 
     public int getChannelID() {
-        return Integer.valueOf(property.getProperty("cid"));
+        return Integer.parseInt(property.getProperty("cid"));
     }
 
     public int getDatabaseID() {
-        return Integer.valueOf(property.getProperty("client_database_id"));
+        return Integer.parseInt(property.getProperty("client_database_id"));
     }
 
     /**
      * @return Returns true if it is a usual user. False if it is a generated Server Client.
      */
     public boolean isNormalUser() {
-        return Integer.valueOf(property.getProperty("client_type")) == 0;
+        return Integer.parseInt(property.getProperty("client_type")) == 0;
     }
 
     public String getName() {

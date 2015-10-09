@@ -3,10 +3,8 @@ package de.mixedfx.ts3;
 import de.mixedfx.inspector.Inspector;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Properties;
 
 public class TeamSpeak3 {
     public interface Callback {
@@ -50,7 +48,7 @@ public class TeamSpeak3 {
         this.eventListener = new WeakReference<>(null);
 
         client = new AutomatedTelnetClient(hostaddress, PORT);
-        client.readUntil("schandlerid=1");
+        client.read();
 
         Inspector.runNowAsDaemon(()->{
             try {
@@ -65,17 +63,18 @@ public class TeamSpeak3 {
      * @throws IOException Throws an exception if no instance of TeamSpeak 3 was found!
      */
     public void startEventListener(String server, int port) throws IOException {
+        /*
         AutomatedTelnetClient client = new AutomatedTelnetClient(server, port);
-        String response = client.sendCommand("currentschandlerid");
+        ComplexString response = client.sendCommand("currentschandlerid");
 
         Properties prop = new Properties();
-        prop.load(new StringReader(response));
-        int schandlerID = Integer.valueOf(prop.getProperty("schandlerid"));
+        prop.load(new StringReader(response.toString()));
+        int schandlerID = Integer.parseInt(prop.getProperty("schandlerid"));
 
         client.write("clientnotifyregister schandlerid=" + schandlerID + " event=any");
         String event;
         while (true) {
-            event = client.readUntil("\n");
+            event = client.readUntil("\n", "\n");
             System.out.println("TS3 Event" + event);
             if (event != null && this.eventListener != null && this.eventListener.get() != null)
                 this.eventListener.get().callback(event);
@@ -88,6 +87,7 @@ public class TeamSpeak3 {
             }
         }
         System.out.println("TeamSpeak was closed before this program ended :)");
+        */
     }
 
     /**
@@ -109,15 +109,23 @@ public class TeamSpeak3 {
      */
     public ArrayList<TS3User> getClients() {
         ArrayList<TS3User> result = new ArrayList<>();
-        String participantsUnformatted = client.sendCommand("clientlist");
-        String[] participants = participantsUnformatted.split("\\|");
-        for (String participant : participants)
-            result.add(new TS3User(participant));
+        try {
+            TS3Response participantsUnformatted = client.sendCommand("clientlist");
+            if (!participantsUnformatted.isError()) {
+                String[] participants = participantsUnformatted.getResponse().toString().split("\\|");
+                for (String participant : participants)
+                    result.add(new TS3User(participant));
+            }
+        } catch (IOException e) {
+        }
         return result;
     }
 
     public void disconnect() {
-        client.disconnect();
+        try {
+            client.disconnect();
+        } catch (IOException ignored) {
+        }
     }
 
     public String getHostaddress() {
