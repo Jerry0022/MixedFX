@@ -15,7 +15,7 @@ import java.io.PrintStream;
 public class TS3TelnetClient {
     @Autowired
     @Qualifier(value = "TS3")
-    private Logger logger;
+    private Logger LOGGER;
 
     private TelnetClient telnet;
     private BufferedReader in;
@@ -27,7 +27,6 @@ public class TS3TelnetClient {
      * @throws IOException If TeamSpeak 3 Client Plugin is not available. E. g. TeamSpeak 3 is not opened.
      */
     public void start(String server, int port) throws IOException {
-        logger.info("HAMMER");
         telnet = new TelnetClient();
         // Connect to the specified server
         telnet.connect(server, port);
@@ -44,7 +43,7 @@ public class TS3TelnetClient {
      * @return Returns the output as complete TS3Response.
      * @throws IOException Throws exception if something went wrong while reading.
      */
-    public synchronized TS3Response read() throws IOException {
+    public TS3Response read() throws IOException {
         TS3Response response = new TS3Response();
         String line;
         while ((line = in.readLine()) != null) {
@@ -57,7 +56,7 @@ public class TS3TelnetClient {
         return response;
     }
 
-    public synchronized TS3Event readEvent() throws IOException {
+    public TS3Event readEvent() throws IOException {
         String line;
         while ((line = in.readLine()) != null) {
             if (!line.trim().isEmpty()) {
@@ -72,8 +71,9 @@ public class TS3TelnetClient {
      *
      * @param command The command to execute.
      */
-    public synchronized void write(String command) {
+    public void write(String command) {
         out.println(command);
+        out.flush();
     }
 
     /**
@@ -83,7 +83,7 @@ public class TS3TelnetClient {
      * @return Returns the {@link TS3Response} from telnet.
      * @throws IOException Is thrown if sth. went wrong while reading.
      */
-    public synchronized TS3Response sendCommand(String command) throws IOException {
+    public TS3Response sendCommand(String command) throws IOException {
         write(command);
         return read();
     }

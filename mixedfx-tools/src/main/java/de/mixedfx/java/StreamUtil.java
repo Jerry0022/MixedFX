@@ -13,7 +13,6 @@ public class StreamUtil {
 
     public static File stream2file(final InputStream in) throws IOException {
         final File tempFile = File.createTempFile(StreamUtil.PREFIX, StreamUtil.SUFFIX);
-        tempFile.deleteOnExit();
         try (FileOutputStream out = new FileOutputStream(tempFile)) {
             IOUtils.copy(in, out);
         }
