@@ -1,15 +1,17 @@
-package de.mixedfx.ts3;
+package de.mixedfx.ts3.de.mixedfx.ts3.cdi;
 
 import de.mixedfx.java.ComplexString;
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * Created by Jerry on 04.10.2015.
  */
+@ToString
 public class TS3Response {
     private
     @Getter
-    boolean done;
+    boolean complete;
 
     private
     @Getter
@@ -30,16 +32,16 @@ public class TS3Response {
     }
 
     public void addLine(String line) {
-        if (done)
+        if (complete)
             throw new IllegalStateException("Response already fully got?");
 
         if (line.contains("selected schandlerid=")) {
-            done = true;
+            complete = true;
             error = false;
         } else if (line.contains("error id=") && line.contains("msg=")) {
-            done = true;
+            complete = true;
             errorMessage = line.split("msg=")[1];
-            error = errorMessage.equalsIgnoreCase("ok") ? true : false;
+            error = !errorMessage.trim().equalsIgnoreCase("ok");
         } else {
             this.response.add(line);
         }

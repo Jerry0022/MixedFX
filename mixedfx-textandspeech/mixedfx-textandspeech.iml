@@ -67,6 +67,12 @@
     <orderEntry type="library" scope="RUNTIME" name="Gradle: de.dfki.mary:voice-bits1-hsmm:5.1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: de.dfki.mary:voice-bits3-hsmm:5.1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: de.dfki.mary:voice-cmu-bdl-hsmm:5.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-context:4.2.1.RELEASE" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-aop:4.2.1.RELEASE" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-beans:4.2.1.RELEASE" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-core:4.2.1.RELEASE" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-expression:4.2.1.RELEASE" level="project" />
+    <orderEntry type="library" name="Gradle: aopalliance:aopalliance:1.0" level="project" />
   </component>
   <component name="org.twodividedbyzero.idea.findbugs">
     <option name="_basePreferences">

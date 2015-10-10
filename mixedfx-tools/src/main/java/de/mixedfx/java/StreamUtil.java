@@ -1,27 +1,23 @@
 package de.mixedfx.java;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.commons.io.IOUtils;
+public class StreamUtil {
+    public static final String PREFIX = "stream2file";
+    public static final String SUFFIX = ".tmp";
 
-public class StreamUtil
-{
-
-	public static final String	PREFIX	= "stream2file";
-	public static final String	SUFFIX	= ".tmp";
-
-	public static File stream2file(final InputStream in) throws IOException
-	{
-		final File tempFile = File.createTempFile(StreamUtil.PREFIX, StreamUtil.SUFFIX);
-		tempFile.deleteOnExit();
-		try (FileOutputStream out = new FileOutputStream(tempFile))
-		{
-			IOUtils.copy(in, out);
-		}
-		return tempFile;
-	}
+    public static File stream2file(final InputStream in) throws IOException {
+        final File tempFile = File.createTempFile(StreamUtil.PREFIX, StreamUtil.SUFFIX);
+        tempFile.deleteOnExit();
+        try (FileOutputStream out = new FileOutputStream(tempFile)) {
+            IOUtils.copy(in, out);
+        }
+        return tempFile;
+    }
 
 }

@@ -1,14 +1,16 @@
-package de.mixedfx.ts3;
+package de.mixedfx.ts3.de.mixedfx.ts3.cdi;
+
+import lombok.ToString;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Properties;
 
+@ToString
 public class TS3User {
     private Properties property = new Properties();
 
     /**
-     *
      * @param original The user as text String formatted by TeamSpeak 3
      */
     public TS3User(String original) {
@@ -35,7 +37,7 @@ public class TS3User {
     }
 
     /**
-     * @return Returns true if it is a usual user. False if it is a generated Server Client.
+     * @return Returns true if it is a usual user. False if it is a generated server client.
      */
     public boolean isNormalUser() {
         return Integer.parseInt(property.getProperty("client_type")) == 0;

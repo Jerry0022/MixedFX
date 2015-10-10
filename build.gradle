@@ -73,6 +73,8 @@ subprojects {
     dependencies {
         // In IDE Annotation Processor must be enabled
         compile 'org.projectlombok:lombok:1.16.6'
+        // E. g. for simple CDI via Spring
+        compile 'org.springframework:spring-context:4.2.1.RELEASE'
     }
 }
 
