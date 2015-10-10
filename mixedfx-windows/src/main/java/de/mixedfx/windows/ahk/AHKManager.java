@@ -1,21 +1,17 @@
 package de.mixedfx.windows.ahk;
 
+import de.mixedfx.file.DataHandler;
+import de.mixedfx.file.FileObject;
+import de.mixedfx.java.ComplexString;
+import de.mixedfx.java.Crypto;
+import de.mixedfx.java.StreamUtil;
+import de.mixedfx.windows.Executor;
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.UUID;
-
-import de.mixedfx.java.Crypto;
-import org.apache.commons.io.FileUtils;
-
-import de.mixedfx.file.DataHandler;
-import de.mixedfx.file.FileObject;
-import de.mixedfx.java.ComplexString;
-import de.mixedfx.java.StreamUtil;
-import de.mixedfx.windows.Executor;
-import javafx.util.Duration;
-
-import javax.xml.crypto.Data;
 
 /**
  * Current restriction: You can only run one AHK script / command at a time.
@@ -68,7 +64,7 @@ public class AHKManager
         Collection<File> tempFolder = DataHandler.listFiles(DataHandler.getTempFolder());
         tempFolder.stream().filter(file -> FileObject.create(file).getFullName().endsWith(suffix1) || FileObject.create(file).getFullName().endsWith(suffix2))
                 .forEach(file -> DataHandler.deleteFile(FileObject.create(file)));
-       tempFolder.stream().filter(file -> file.exists() && (FileUtils.sizeOf(file) == 0 || (FileObject.create(file).getName().startsWith("stream2file")) && FileObject.create(file).getExtension().equalsIgnoreCase("tmp"))).forEach(file -> DataHandler.deleteFile(FileObject.create(file)));
+		tempFolder.stream().filter(file -> file.exists() && (FileUtils.sizeOf(file) == 0 && FileObject.create(file).getExtension().equalsIgnoreCase("tmp"))).forEach(file -> DataHandler.deleteFile(FileObject.create(file)));
 	}
 
 	/**

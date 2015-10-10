@@ -12,7 +12,6 @@ import java.io.IOException;
 /**
  * Created by Jerry on 09.10.2015.
  */
-//@Configuration
 @ComponentScan
 public class TS3Tester_cdi {
     @Autowired
@@ -25,7 +24,11 @@ public class TS3Tester_cdi {
             while (true) {
                 System.out.println("Waiting for TS3 to start!");
                 try {
-                    instance.start();
+                    boolean pluginEnabled = instance.start();
+                    if (!pluginEnabled) {
+                        System.out.println("In TS3 ClientQuery plugin must be enabled!");
+                        break; // Stop this
+                    }
                 } catch (IOException e) {
                     System.out.println("An unknown exception occurred!");
                     e.printStackTrace();

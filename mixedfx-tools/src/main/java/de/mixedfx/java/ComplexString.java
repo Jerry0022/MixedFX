@@ -1,12 +1,10 @@
 package de.mixedfx.java;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-
-import org.apache.commons.lang3.StringUtils;
-
-import de.mixedfx.logging.Log;
 
 /**
  * Each Row of the String should be an element.
@@ -61,7 +59,7 @@ public class ComplexString extends ArrayList<String>
 		}
 
 		if (!hasIndicator)
-			Log.DEFAULT.error(new IllegalArgumentException("Didn't find indicator! Indicator: " + indicator));
+			System.out.println(new IllegalArgumentException("Didn't find indicator! Indicator: " + indicator));
 
 		return result;
 	}
@@ -98,7 +96,7 @@ public class ComplexString extends ArrayList<String>
 		}
 
 		if (!hasIndicator)
-			Log.DEFAULT.error(new IllegalArgumentException("Didn't find indicator! Indicator: " + indicator));
+			System.out.println(new IllegalArgumentException("Didn't find indicator! Indicator: " + indicator));
 
 		return false;
 	}
