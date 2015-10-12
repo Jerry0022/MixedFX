@@ -28,8 +28,8 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-@Configuration
 @Component
+@Configuration
 public class ConnectivityManager<T extends User> {
     @Bean
     @Qualifier(value = "Network")
@@ -140,7 +140,7 @@ public class ConnectivityManager<T extends User> {
                                 User toUpdateUser = this.otherUsers.get(this.otherUsers.indexOf(oldUser));
                                 new ArrayList<>(toUpdateUser.networks).stream().
                                         filter(overlayNetwork -> overlayNetwork.getIP().equals(tcpClient.remoteAddress)).
-                                        forEach(toRemove -> toUpdateUser.networks.remove(toRemove));
+                                        forEach(toUpdateUser.networks::remove);
                                 LOGGER.debug("Removed user message from list: " + tcpClient.remoteAddress);
                             }
 

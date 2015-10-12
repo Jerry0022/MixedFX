@@ -108,8 +108,7 @@ public class Inspector
 			try
 			{
 				Thread.sleep((long) timeToWait.toMillis());
-			}
-			catch (final InterruptedException e)
+			} catch (final InterruptedException ignored)
 			{}
 			Platform.runLater(toRun);
 		}).start();
@@ -141,8 +140,7 @@ public class Inspector
 			try
 			{
 				Thread.sleep((long) timeToWait.toMillis());
-			}
-			catch (final InterruptedException e)
+			} catch (final InterruptedException ignored)
 			{}
 			toRun.run();
 		});
@@ -202,7 +200,12 @@ public class Inspector
 	public static void sleep(Duration duration) {
 		try {
 			Thread.sleep((long) duration.toMillis());
-		} catch (InterruptedException e) {
+		} catch (InterruptedException ignored) {
 		}
+	}
+
+	public static void endlessSleep() {
+		while (true)
+			sleep(Duration.seconds(10));
 	}
 }
