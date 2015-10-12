@@ -1,4 +1,4 @@
-package de.mixedfx.ts3.de.mixedfx.ts3.cdi;
+package de.mixedfx.ts3;
 
 import de.mixedfx.inspector.Inspector;
 import de.mixedfx.java.ComplexString;
@@ -22,7 +22,7 @@ import java.util.Properties;
 @Configuration
 public abstract class TS3Instance {
     /*
-     * TS3 LOGGING
+     * LOGGING
      */
     @Bean
     @Qualifier(value = "TS3")
@@ -34,7 +34,10 @@ public abstract class TS3Instance {
     @Qualifier(value = "TS3")
     Logger LOGGER;
 
-    public static final String LOCALHOST = "localhost";
+    /*
+     * LOGIC
+     */
+
     public static final int PORT = 25639;
 
     @Autowired
@@ -144,7 +147,7 @@ public abstract class TS3Instance {
     }
 
     /*
-     * EVENTS
+     * SETTER
      */
 
     /**

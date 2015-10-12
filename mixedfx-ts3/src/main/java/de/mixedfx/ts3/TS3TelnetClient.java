@@ -1,4 +1,4 @@
-package de.mixedfx.ts3.de.mixedfx.ts3.cdi;
+package de.mixedfx.ts3;
 
 import org.apache.commons.net.telnet.TelnetClient;
 import org.apache.logging.log4j.Logger;

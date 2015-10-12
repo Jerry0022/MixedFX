@@ -1,4 +1,4 @@
-package de.mixedfx.ts3.de.mixedfx.ts3.cdi;
+package de.mixedfx.ts3;
 
 /**
  * Created by Jerry on 10.10.2015.

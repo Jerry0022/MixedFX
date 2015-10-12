@@ -1,7 +1,6 @@
 package de.mixedfx.ts3;
 
 import de.mixedfx.inspector.Inspector;
-import de.mixedfx.ts3.de.mixedfx.ts3.cdi.TS3LocalInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;

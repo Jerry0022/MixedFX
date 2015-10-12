@@ -1,4 +1,4 @@
-package de.mixedfx.ts3.de.mixedfx.ts3.cdi;
+package de.mixedfx.ts3;
 
 import org.springframework.stereotype.Component;
 
@@ -10,6 +10,6 @@ import java.io.IOException;
 @Component
 public class TS3LocalInstance extends TS3Instance {
     public boolean start() throws IOException {
-        return super.start(LOCALHOST, PORT);
+        return super.start("localhost", PORT);
     }
 }
