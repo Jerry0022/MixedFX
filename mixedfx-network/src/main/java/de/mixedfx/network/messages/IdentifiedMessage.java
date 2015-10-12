@@ -14,18 +14,12 @@ public abstract class IdentifiedMessage extends Message {
     @Getter
     Object fromUserID;
 
-    private ArrayList<Object> toUserIDs;
+    private
+    @Getter
+    ArrayList<Object> toUserIDs;
 
     public IdentifiedMessage() {
         this.toUserIDs = new ArrayList<>();
-    }
-
-    public Object getFromUserID() {
-	return this.fromUserID;
-    }
-
-    public ArrayList<Object> getToUserIDs() {
-	return this.toUserIDs;
     }
 
     /**

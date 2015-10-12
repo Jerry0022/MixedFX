@@ -4,9 +4,9 @@ import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.inspector.Inspector;
 import de.mixedfx.network.messages.IdentifiedMessage;
 import de.mixedfx.network.messages.Message;
+import lombok.Setter;
 import org.bushe.swing.event.annotation.AnnotationProcessor;
 import org.bushe.swing.event.annotation.EventTopicSubscriber;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.ref.WeakReference;
@@ -21,8 +21,9 @@ import java.util.ArrayList;
 public class MessageBus {
 	public static final String MESSAGE_RECEIVE = "MESSAGE_RECEIVE";
 
-	@Autowired
-	private ConnectivityManager<?> connectivityManager;
+	private
+	@Setter
+	ConnectivityManager<?> connectivityManager;
 
 	private ArrayList<Object> receiverList = new ArrayList<>();
 

@@ -17,7 +17,7 @@ public class Message implements Serializable
 	/**
 	 * The message was sent from this one ip to avoid packet circuits.
 	 */
-	public
+	private
 	@Getter
 	@Setter
 	InetAddress fromIP;
@@ -25,7 +25,7 @@ public class Message implements Serializable
 	/**
 	 * The message is sent to this one ip to avoid packet circuits.
 	 */
-	public
+	private
 	@Getter
 	@Setter
 	InetAddress toIP;

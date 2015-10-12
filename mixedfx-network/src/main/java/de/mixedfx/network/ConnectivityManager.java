@@ -20,12 +20,15 @@ import org.bushe.swing.event.EventBus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+@Configuration
 @Component
 public class ConnectivityManager<T extends User> {
     @Bean
@@ -61,6 +64,11 @@ public class ConnectivityManager<T extends User> {
         this.otherUsers = new SimpleListProperty<>(FXCollections.observableArrayList());
         this.state = new SimpleObjectProperty<>(State.OFFLINE);
         this.tcp_user_map = new Hashtable<>(16);
+    }
+
+    @PostConstruct
+    public void init() {
+        bus.setConnectivityManager(this);
 
         /*
          * Update otherUsers list.
@@ -107,7 +115,6 @@ public class ConnectivityManager<T extends User> {
                         return false;
                     }
                 });
-
         // Old user who disconnected
         networkManager.t.tcpClients.addListener(this::tcpClientsChanged);
     }
