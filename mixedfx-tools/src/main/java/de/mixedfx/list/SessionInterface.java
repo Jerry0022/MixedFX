@@ -2,7 +2,7 @@ package de.mixedfx.list;
 
 public interface SessionInterface extends Identifiable
 {
-	public void on();
+	void on();
 
-	public void off();
+	void off();
 }

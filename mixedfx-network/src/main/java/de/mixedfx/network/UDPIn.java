@@ -1,11 +1,13 @@
 package de.mixedfx.network;
 
 import de.mixedfx.inspector.Inspector;
+import org.springframework.stereotype.Component;
 
 import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 class UDPIn
 {
 	private final List<DatagramSocket> sockets;

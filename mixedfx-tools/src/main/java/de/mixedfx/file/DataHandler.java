@@ -1,18 +1,18 @@
 package de.mixedfx.file;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * <pre>
@@ -105,14 +105,7 @@ public final class DataHandler
 			// File exists
 			if (!file.isDirectory())
 			{
-				if (file.delete())
-				{
-					success = true;
-				}
-				else
-				{
-					success = false;
-				}
+				success = file.delete();
 			}
 			else
 			{

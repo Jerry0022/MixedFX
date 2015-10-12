@@ -14,5 +14,5 @@ public interface EasyModifierHandler {
      * @param parent The Parent who has a not null id and the matching {@link EasyModifierConfig#staticClass}!
      * @param doIt   If true, trigger was pressed, otherwise it was released!
      */
-    public void modify(Parent parent, boolean doIt);
+    void modify(Parent parent, boolean doIt);
 }

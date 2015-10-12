@@ -97,9 +97,6 @@ public class ConfigItem
 
 	public boolean equals(final ConfigItem item)
 	{
-		if (this.getSectionKey().equals(item.getSectionKey()))
-			return true;
-		else
-			return false;
+		return this.getSectionKey().equals(item.getSectionKey());
 	}
 }

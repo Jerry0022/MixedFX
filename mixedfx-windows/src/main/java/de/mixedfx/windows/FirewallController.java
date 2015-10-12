@@ -1,9 +1,9 @@
 package de.mixedfx.windows;
 
-import java.util.concurrent.TimeoutException;
-
 import de.mixedfx.java.ComplexString;
 import de.mixedfx.logging.Log;
+
+import java.util.concurrent.TimeoutException;
 
 public class FirewallController
 {
@@ -48,10 +48,7 @@ public class FirewallController
 			if (response.containsAllRows("Status", "EIN"))
 				result = true;
 			else
-				if (response.containsAllRows("Status", "AUS"))
-					result = false;
-				else
-					result = true; // At least one firewall is enabled but not all are enabled => ENABLED
+				result = !response.containsAllRows("Status", "AUS");
 			Log.windows.debug("Windows Firewalls are " + (result ? "enabled!" : "disabled!"));
 			return result;
 		}

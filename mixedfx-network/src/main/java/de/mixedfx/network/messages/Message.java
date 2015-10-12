@@ -1,5 +1,8 @@
 package de.mixedfx.network.messages;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.net.InetAddress;
 import java.util.Date;
@@ -9,52 +12,23 @@ import java.util.Date;
  *
  * @author Jerry
  */
-@SuppressWarnings("serial")
 public class Message implements Serializable
 {
 	/**
 	 * The message was sent from this one ip to avoid packet circuits.
 	 */
-	private InetAddress fromIP;
+	public
+	@Getter
+	@Setter
+	InetAddress fromIP;
 
 	/**
 	 * The message is sent to this one ip to avoid packet circuits.
 	 */
-	private InetAddress toIP;
+	public
+	@Getter
+	@Setter
+	InetAddress toIP;
 
 	private Date timeStamp;
-
-	/*
-	 * START Message object
-	 */
-	public Message()
-	{
-	}
-
-	public InetAddress getFromIP()
-	{
-		return fromIP;
-	}
-
-	public void setFromIP(InetAddress fromIP)
-	{
-		this.fromIP = fromIP;
-	}
-
-	/**
-	 * @return The IP of the next hop!
-	 */
-	public InetAddress getToIP()
-	{
-		return this.toIP;
-	}
-
-	/**
-	 * @param toIP
-	 *            The IP of the next hop!
-	 */
-	public void setToIP(InetAddress toIP)
-	{
-		this.toIP = toIP;
-	}
 }

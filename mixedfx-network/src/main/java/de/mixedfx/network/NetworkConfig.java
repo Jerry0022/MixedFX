@@ -1,9 +1,10 @@
 package de.mixedfx.network;
 
-import de.mixedfx.logging.Log;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class NetworkConfig
 {
 	/**
@@ -50,7 +51,7 @@ public class NetworkConfig
 	 * If UDP port fails a {@link NetworkManager#NETWORK_FATALERROR} is thrown (can be thrown also if other errors occur).
 	 * </p>
 	 */
-	public static IntegerProperty PORT = new SimpleIntegerProperty(8888);
+	public static IntegerProperty PORT = new SimpleIntegerProperty(9999);
 
 	static
 	{
@@ -58,7 +59,7 @@ public class NetworkConfig
 		{
 			if (newValue.intValue() + NetworkConfig.TRIES_AMOUNT * NetworkConfig.TRIES_STEPS > Integer.MAX_VALUE || newValue.intValue() <= 0)
 			{
-				Log.network.error("PORT plus TRIES_AMOUNT * TRIES_STEPS extends minimum / maximum integer value! Change was undone!");
+				log.error("PORT plus TRIES_AMOUNT * TRIES_STEPS extends minimum / maximum integer value! Change was undone!");
 				NetworkConfig.PORT.set(oldValue.intValue());
 			}
 		});

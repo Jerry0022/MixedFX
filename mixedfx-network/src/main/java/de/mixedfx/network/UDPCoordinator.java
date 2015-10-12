@@ -3,12 +3,15 @@ package de.mixedfx.network;
 import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.eventbus.EventBusService;
 import de.mixedfx.inspector.Inspector;
-import de.mixedfx.logging.Log;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.logging.log4j.Logger;
 import org.bushe.swing.event.EventTopicSubscriber;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
@@ -25,6 +28,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+@Component
 public class UDPCoordinator implements EventTopicSubscriber<Object> {
     public static final String RECEIVE = "RECEIVE";
     public static final String ERROR = "ERROR";
@@ -40,169 +44,157 @@ public class UDPCoordinator implements EventTopicSubscriber<Object> {
     public static ListProperty<UDPDetected> allAdresses;
 
     static {
-	UDPCoordinator.allAdresses = new SimpleListProperty<>(FXCollections.observableArrayList(new ArrayList<>()));
-    }
+		UDPCoordinator.allAdresses = new SimpleListProperty<>(FXCollections.observableArrayList(new ArrayList<>()));
+	}
 
-    private final UDPIn in;
-    private final UDPOut out;
+	@Autowired
+	@Qualifier(value = "Network")
+	Logger LOGGER;
+
+	@Autowired
+	private NetworkManager networkManager;
+	@Autowired
+	private UDPIn in;
+	@Autowired
+	private UDPOut out;
 
     public UDPCoordinator() {
-	/*
-	 * Get events of UDPOut and UDPIn
-	 */
-	UDPCoordinator.service.subscribe(UDPCoordinator.ERROR, this);
-	UDPCoordinator.service.subscribe(UDPCoordinator.RECEIVE, this);
-
-	/*
-	 * Start UDP Server and if started successfully start UDPClient
-	 */
-	this.in = new UDPIn();
-	this.out = new UDPOut();
-    }
+		/*
+		 * Get events of UDPOut and UDPIn
+		 */
+		UDPCoordinator.service.subscribe(UDPCoordinator.ERROR, this);
+		UDPCoordinator.service.subscribe(UDPCoordinator.RECEIVE, this);
+	}
 
     public synchronized void startUDPFull() {
-	UDPCoordinator.allAdresses.clear();
+		UDPCoordinator.allAdresses.clear();
 
-	try {
-	    this.in.start();
-	    this.out.start();
-	} catch (final Exception e) {
-	    UDPCoordinator.service.publishSync(UDPCoordinator.ERROR, e);
+		try {
+			this.in.start();
+			this.out.start();
+		} catch (final Exception e) {
+			UDPCoordinator.service.publishSync(UDPCoordinator.ERROR, e);
+		}
 	}
-    }
 
-    public synchronized void stopUDPFull() {
-	if (this.out != null) {
-	    this.out.close();
+	public synchronized void stopUDPFull() {
+		if (this.out != null) {
+			this.out.close();
+		}
+		if (this.in != null) {
+			this.in.close();
+		}
 	}
-	if (this.in != null) {
-	    this.in.close();
-	}
-    }
 
-    private boolean oldMessage;
 	private final List<InetAddress> cached = new ArrayList<>();
 
-    @SuppressWarnings("unchecked")
     @Override
     public synchronized void onEvent(final String topic, final Object data) {
-	if (topic.equals(UDPCoordinator.RECEIVE)) {
-	    final DatagramPacket packet = (DatagramPacket) data;
+		if (topic.equals(UDPCoordinator.RECEIVE)) {
+			final DatagramPacket packet = (DatagramPacket) data;
 
-	    /*
-	     * Check all interfaces if it was a broadcast to myself!
-	     */
-	    boolean ownOne = false;
-	    try {
-		final Enumeration<NetworkInterface> nics = NetworkInterface.getNetworkInterfaces();
-		while (nics.hasMoreElements()) {
-		    final NetworkInterface nic = nics.nextElement();
-		    for (final InetAddress nicAdress : Collections.list(nic.getInetAddresses())) {
-			if (nicAdress.getHostAddress().equals(packet.getAddress().getHostAddress())) {
-			    ownOne = true;
+			/*
+			 * Check all interfaces if it was a broadcast to myself!
+			 */
+			boolean ownOne = false;
+			try {
+				final Enumeration<NetworkInterface> nics = NetworkInterface.getNetworkInterfaces();
+				while (nics.hasMoreElements()) {
+					final NetworkInterface nic = nics.nextElement();
+					for (final InetAddress inetAddress : Collections.list(nic.getInetAddresses())) {
+						if (inetAddress.getHostAddress().equals(packet.getAddress().getHostAddress())) {
+							ownOne = true;
+						}
+					}
+				}
+			} catch (final SocketException ignored) {
 			}
-		    }
-		}
-		} catch (final SocketException ignored) {
-		}
-		if (ownOne) {
-		return;
-	    }
+			if (ownOne)
+				return;
 
-	    /*
-	     * Read packet!
-	     */
-	    final ByteArrayInputStream in = new ByteArrayInputStream(packet.getData());
-	    try {
-		final ObjectInputStream is = new ObjectInputStream(in);
-		final UDPDetected newDetected = (UDPDetected) is.readObject();
-		newDetected.address = packet.getAddress();
-		/*
-		 * Register / Update the client in local list of UDP contacts.
-		 */
+			/*
+			 * Read packet!
+			 */
+			final ByteArrayInputStream in = new ByteArrayInputStream(packet.getData());
+			try {
+				final ObjectInputStream is = new ObjectInputStream(in);
+				final UDPDetected newDetected = (UDPDetected) is.readObject();
+				newDetected.address = packet.getAddress();
 
-		// Add all sending NICs to list
-		// TODO Check if working
-		if (CollectionUtils.exists(UDPCoordinator.allAdresses,
-			(obj) -> UDPDetected.getByAddress(newDetected.address).test((UDPDetected) obj))) {
-		    CollectionUtils
-			    .select(UDPCoordinator.allAdresses,
-				    (obj) -> UDPDetected.getByAddress(newDetected.address).test(newDetected))
-			    .forEach(t -> {
-				final UDPDetected localDetected = (UDPDetected) t;
-				if (newDetected.getTimeStamp().after(localDetected.getTimeStamp())) {
-				    // New UDP message of known NIC
-				    // Register change of state for this
-				    // participant
-				    localDetected.update(newDetected.getTimeStamp());
-				    UDPCoordinator.allAdresses.set(UDPCoordinator.allAdresses.indexOf(localDetected),
-					    localDetected);
-				    Log.network.trace("Updated " + newDetected);
+				/*
+				 * Register / Update the client in local list of UDP contacts.
+				 */
+
+				// Add all sending NICs to list
+				// TODO Check if working
+				if (CollectionUtils.exists(UDPCoordinator.allAdresses, udp -> UDPDetected.getByAddress(newDetected.address).test((UDPDetected) udp))) {
+					// UDP Sender is already registered
+					CollectionUtils
+							.select(UDPCoordinator.allAdresses, udp -> UDPDetected.getByAddress(newDetected.address).test((UDPDetected) udp))
+							.forEach(udp -> {
+								final UDPDetected localDetected = (UDPDetected) udp;
+								if (newDetected.getTimeStamp().after(localDetected.getTimeStamp())) {
+									LOGGER.trace("New UDP message received!");
+									// New UDP message of known NIC
+									// Register change of state for this participant
+									localDetected.update(newDetected.getTimeStamp());
+									// Fire replace event for listeners
+									UDPCoordinator.allAdresses.set(UDPCoordinator.allAdresses.indexOf(localDetected), localDetected);
+									LOGGER.trace("Updated " + newDetected);
+								} else {
+									return; // Old UDP Packet, newer one was already received!
+								}
+							});
 				} else {
-				    this.oldMessage = true;
+					// New UDP message of unknown NIC
+					UDPCoordinator.allAdresses.add(newDetected);
+					LOGGER.debug("New " + newDetected);
 				}
-			    });
-		} else {
-		    // New UDP message of unknown NIC
-		    UDPCoordinator.allAdresses.add(newDetected);
-		    Log.network.debug("New " + newDetected);
-		}
 
-		if (this.oldMessage) {
-		    this.oldMessage = false;
-		    return; // Old UDP Packet, newer one was already received!
-		}
-		Log.network.trace("New UDP message received!");
-
-		/*
-		 * Connect to other one!
-		 */
-		Log.network.trace("Cached requests: " + this.cached);
-		boolean alreadyWaiting;
-		synchronized (this.cached) {
-		    if (!this.cached.contains(newDetected.address)) {
-			alreadyWaiting = false;
-			this.cached.add(newDetected.address);
-		    } else {
-			alreadyWaiting = true;
-		    }
-		}
-		if (!alreadyWaiting) {
-		    final ScheduledExecutorService executor = Executors.newScheduledThreadPool(2,
-			    Inspector.getThreadFactory());
-		    final Future handler = executor.submit(() -> {
-			NetworkManager.t.startFullTCP(newDetected.address);
-			synchronized (UDPCoordinator.this.cached) {
-			    UDPCoordinator.this.cached.remove(newDetected.address);
-			}
-			return null;
-		    });
-		    executor.schedule(() -> {
-			if (!handler.isDone()) {
-			    Log.network.warn("A TCP connection needed to much time to establish! Time waited: "
-				    + NetworkConfig.TCP_CONNECTION_ESTABLISHING_TIMEOUT + " milliseconds."
-				    + "Connection is now closed! " + newDetected.address);
-
-			    handler.cancel(true);
-				// Lock if callable still works...
-				try {
-				Thread.sleep(NetworkConfig.TCP_CONNECTION_ESTABLISHING_RETRY);
-				} catch (final InterruptedException ignored) {
+				/*
+				 * Connect to other one!
+				 */
+				// Check cache
+				LOGGER.trace("Cached requests: " + this.cached);
+				synchronized (this.cached) {
+					if (this.cached.contains(newDetected.address))
+						return;
 				}
-				synchronized (UDPCoordinator.this.cached) {
-				UDPCoordinator.this.cached.remove(newDetected.address);
-			    }
-			}
-		    } , NetworkConfig.TCP_CONNECTION_ESTABLISHING_TIMEOUT, TimeUnit.MILLISECONDS);
-		}
-	    } catch (final Exception e) {
-		UDPCoordinator.service.publishSync(UDPCoordinator.ERROR, e);
-	    }
-	} else if (topic.equals(UDPCoordinator.ERROR)) {
-	    NetworkManager.t.stopTCPFull();
-	    this.stopUDPFull();
+				this.cached.add(newDetected.address);
 
-	    EventBusExtended.publishSyncSafe(NetworkManager.NETWORK_FATALERROR, data);
+				// Connect
+				final ScheduledExecutorService executor = Executors.newScheduledThreadPool(2, Inspector.getThreadFactory());
+				final Future handler = executor.submit(() -> {
+					networkManager.t.startFullTCP(newDetected.address);
+					synchronized (UDPCoordinator.this.cached) {
+						UDPCoordinator.this.cached.remove(newDetected.address);
+					}
+					return null;
+				});
+				executor.schedule(() -> {
+					if (!handler.isDone()) {
+						LOGGER.warn("A TCP connection needed to much time to establish! Time waited: "
+								+ NetworkConfig.TCP_CONNECTION_ESTABLISHING_TIMEOUT + " milliseconds."
+								+ "Connection is now closed! " + newDetected.address);
+
+						handler.cancel(true);
+						// Lock if callable still works...
+						try {
+							Thread.sleep(NetworkConfig.TCP_CONNECTION_ESTABLISHING_RETRY);
+						} catch (final InterruptedException ignored) {
+						}
+						synchronized (UDPCoordinator.this.cached) {
+							UDPCoordinator.this.cached.remove(newDetected.address);
+						}
+					}
+				}, NetworkConfig.TCP_CONNECTION_ESTABLISHING_TIMEOUT, TimeUnit.MILLISECONDS);
+			} catch (final Exception e) {
+				UDPCoordinator.service.publishSync(UDPCoordinator.ERROR, e);
+			}
+		} else if (topic.equals(UDPCoordinator.ERROR)) {
+			networkManager.t.stopTCPFull();
+			this.stopUDPFull();
+			EventBusExtended.publishSyncSafe(NetworkManager.NETWORK_FATALERROR, data);
+		}
 	}
-    }
 }

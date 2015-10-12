@@ -1,9 +1,12 @@
 package de.mixedfx.network;
 
-import de.mixedfx.logging.Log;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -12,10 +15,20 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+@Component
 class TCPServer
 {
-	public ListProperty<TCPClient> connectionList;
+	@Autowired
+	@Qualifier(value = "Network")
+	Logger LOGGER;
 
+	@Autowired
+	NetworkManager networkManager;
+
+	/**
+	 * Is set after start was called.
+	 */
+	public ListProperty<TCPClient> connectionList;
 	private Registrar registrar;
 
 	public void start() throws IOException
@@ -37,9 +50,7 @@ class TCPServer
 			}
 		}
 		if (this.registrar == null)
-		{
 			throw exception;
-		}
 	}
 
 	/**
@@ -74,7 +85,7 @@ class TCPServer
 		{
 			this.serverSocket = new ServerSocket(port);
 			this.connectionList = new SimpleListProperty<>(FXCollections.observableArrayList(new ArrayList<>()));
-			Log.network.debug(this.getClass().getSimpleName() + " initialized on " + this.serverSocket.getLocalSocketAddress());
+			LOGGER.debug(this.getClass().getSimpleName() + " initialized on " + this.serverSocket.getLocalSocketAddress());
 		}
 
 		@Override
@@ -86,15 +97,15 @@ class TCPServer
 				try
 				{
 					final Socket clientSocket = this.serverSocket.accept();
-					synchronized (NetworkManager.t.tcpClients)
+					synchronized (networkManager.t.tcpClients)
 					{
 						this.connectionList.add(new TCPClient().start(clientSocket));
 					}
-					Log.network.debug("TCP Registrar successfully registered client!");
+					LOGGER.debug("TCP Registrar successfully registered client!");
 				} catch (final IOException e)
 				{
 					// In case of termination or connection failure => nothing to do!
-					Log.network.debug(this.getClass().getSimpleName() + " closed");
+					LOGGER.debug(this.getClass().getSimpleName() + " closed!");
 					running = false;
 				}
 			}
@@ -110,7 +121,7 @@ class TCPServer
 				// In case of termination => nothing to do!
 			}
 
-			synchronized (NetworkManager.t.tcpClients)
+			synchronized (networkManager.t.tcpClients)
 			{
 				this.connectionList.forEach(de.mixedfx.network.TCPClient::stop);
 				this.connectionList.clear();

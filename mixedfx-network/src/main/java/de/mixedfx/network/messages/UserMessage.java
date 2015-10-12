@@ -1,12 +1,15 @@
 package de.mixedfx.network.messages;
 
 import de.mixedfx.network.user.User;
+import lombok.NonNull;
+import lombok.ToString;
 
+@ToString
 public class UserMessage<T extends User> extends Message
 {
 	private final T myUser;
 
-	public UserMessage(final T myUser)
+	public UserMessage(@NonNull T myUser)
 	{
 		this.myUser = myUser;
 	}
@@ -26,11 +29,5 @@ public class UserMessage<T extends User> extends Message
 	public T getOriginalUser()
 	{
 		return this.myUser;
-	}
-
-	@Override
-	public String toString()
-	{
-		return "UserMessage with User: " + this.myUser;
 	}
 }

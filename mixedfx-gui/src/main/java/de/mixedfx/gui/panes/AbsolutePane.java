@@ -72,7 +72,7 @@ public class AbsolutePane extends Pane {
     }
 
     private void makeScaleDependant(final Region node, final Region referencePane) {
-        final ChangeListener<Number> widthListener = (ChangeListener<Number>) (observable, oldValue, newValue) ->
+        final ChangeListener<Number> widthListener = (observable, oldValue, newValue) ->
         {
             if (oldValue.doubleValue() <= 0)
                 AbsolutePane.this.widthDB.put(referencePane, newValue);
@@ -80,7 +80,7 @@ public class AbsolutePane extends Pane {
                 node.scaleXProperty().set(newValue.doubleValue() / AbsolutePane.this.widthDB.get(referencePane).doubleValue());
         };
 
-        final ChangeListener<Number> heightListener = (ChangeListener<Number>) (observable, oldValue, newValue) ->
+        final ChangeListener<Number> heightListener = (observable, oldValue, newValue) ->
         {
             if (oldValue.doubleValue() <= 0)
                 AbsolutePane.this.heightDB.put(referencePane, newValue);
@@ -91,7 +91,7 @@ public class AbsolutePane extends Pane {
         referencePane.widthProperty().addListener(widthListener);
         referencePane.heightProperty().addListener(heightListener);
 
-        final ChangeListener<Parent> removeListener = (ChangeListener<Parent>) (observable, oldValue, newValue) ->
+        final ChangeListener<Parent> removeListener = (observable, oldValue, newValue) ->
         {
             if (newValue == null) {
                 referencePane.widthProperty().removeListener(widthListener);

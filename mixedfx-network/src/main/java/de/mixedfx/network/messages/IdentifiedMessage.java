@@ -1,22 +1,23 @@
 package de.mixedfx.network.messages;
 
-import java.util.ArrayList;
-
-import javax.inject.Inject;
-
-import de.mixedfx.network.ConnectivityManager;
 import de.mixedfx.network.user.User;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public abstract class IdentifiedMessage extends Message {
-    private final Object fromUserID;
+    private
+    @Setter
+    @Getter
+    Object fromUserID;
+
     private ArrayList<Object> toUserIDs;
 
-    @Inject
-    private ConnectivityManager<?> cm;
-
     public IdentifiedMessage() {
-	this.fromUserID = this.cm.getMyUser().getIdentifier();
-	this.toUserIDs = new ArrayList<>();
+        this.toUserIDs = new ArrayList<>();
     }
 
     public Object getFromUserID() {
@@ -32,12 +33,8 @@ public abstract class IdentifiedMessage extends Message {
      *            May not be null. If empty it is a broadcast otherwise a multi-
      *            or unicast.
      */
-    public void setReceivers(final ArrayList<Object> toUserIDs) {
-	if (toUserIDs == null) {
-	    throw new IllegalArgumentException("Parameter toUserIDs may not be null!");
-	}
-
-	this.toUserIDs = toUserIDs;
+    public void setReceivers(@NonNull ArrayList<Object> toUserIDs) {
+        this.toUserIDs = toUserIDs;
     }
 
     /**
@@ -48,8 +45,6 @@ public abstract class IdentifiedMessage extends Message {
      *            unicast.
      */
     public void setReceivers(final User... toUsers) {
-	for (final User user : toUsers) {
-	    this.toUserIDs.add(user.getIdentifier());
-	}
+        Arrays.asList(toUsers).forEach(user -> this.toUserIDs.add(user.getIdentifier()));
     }
 }

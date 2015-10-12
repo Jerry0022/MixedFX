@@ -1,13 +1,13 @@
 package de.mixedfx.windows;
 
+import de.mixedfx.java.ComplexString;
+import de.mixedfx.windows.ahk.AHKManager;
+import javafx.util.Duration;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Date;
 import java.util.concurrent.TimeoutException;
-
-import de.mixedfx.java.ComplexString;
-import de.mixedfx.windows.ahk.AHKManager;
-import javafx.util.Duration;
 
 public class MasterController
 {
@@ -16,7 +16,7 @@ public class MasterController
 		/**
 		 * @return Returns true if condition was accepted.
 		 */
-		public boolean done();
+		boolean done();
 	}
 
 	public static final long TIMEOUT = (long) Duration.seconds(3).toMillis();

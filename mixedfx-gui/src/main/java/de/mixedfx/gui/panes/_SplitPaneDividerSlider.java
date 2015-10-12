@@ -156,7 +156,7 @@ public class _SplitPaneDividerSlider {
 
     public enum Direction {
 
-        UP, DOWN, LEFT, RIGHT;
+        UP, DOWN, LEFT, RIGHT
     }
 
     private class SlideTransition extends Transition {
@@ -236,11 +236,11 @@ public class _SplitPaneDividerSlider {
                     } // intent to slide out content:  
                     else {
                         if (getCurrentDividerPosition() < 1.0) {
-//                        	System.err.println("HÄ2?");
+//                        	System.err.println("Hï¿½2?");
                             setCurrentDividerPosition(getLastDividerPosition() + d * this.difference);
                         }
                         else {//DONE
-//                        	System.err.println("HÄ?");
+//                        	System.err.println("Hï¿½?");
                             setCurrentDividerPosition(1.0);
                             stop();
                         }

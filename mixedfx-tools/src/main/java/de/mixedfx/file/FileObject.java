@@ -1,11 +1,11 @@
 package de.mixedfx.file;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 
 /**
  * <pre>
@@ -127,13 +127,7 @@ public class FileObject implements Cloneable
 	 */
 	public boolean equals(final FileObject toCompare)
 	{
-		if (this.getFullPath().equalsIgnoreCase(toCompare.getFullPath()))
-		{
-			return true;
-		} else
-		{
-			return false;
-		}
+		return this.getFullPath().equalsIgnoreCase(toCompare.getFullPath());
 	}
 
 	/**
@@ -144,13 +138,7 @@ public class FileObject implements Cloneable
 	 */
 	public boolean equalsNameSize(final FileObject toCompare)
 	{
-		if (this.getName().equalsIgnoreCase(toCompare.getName()) && this.size().equals(toCompare.size()))
-		{
-			return true;
-		} else
-		{
-			return false;
-		}
+		return this.getName().equalsIgnoreCase(toCompare.getName()) && this.size().equals(toCompare.size());
 	}
 
 	/**

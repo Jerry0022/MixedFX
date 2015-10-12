@@ -4,9 +4,9 @@ import de.mixedfx.eventbus.EventBusExtended;
 import de.mixedfx.eventbus.EventBusService;
 import de.mixedfx.eventbus.EventBusServiceInterface;
 import de.mixedfx.inspector.Inspector;
-import de.mixedfx.logging.Log;
 import de.mixedfx.network.messages.GoodByeMessage;
 import de.mixedfx.network.messages.Message;
+import lombok.extern.log4j.Log4j2;
 import org.bushe.swing.event.annotation.AnnotationProcessor;
 import org.bushe.swing.event.annotation.EventTopicSubscriber;
 
@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 
+@Log4j2
 public class Connection implements EventBusServiceInterface {
     protected static final String MESSAGE_CHANNEL_SEND = "MESSAGE_CHANNEL_SEND";
     protected static final String MESSAGE_CHANNEL_RECEIVED = "MESSAGE_CHANNEL_RECEIVED";
@@ -28,7 +29,7 @@ public class Connection implements EventBusServiceInterface {
     private EventBusService eventBus;
 
     public Connection(final Socket clientSocket) throws IOException {
-        Log.network.debug("Initializing " + this.getClass().getSimpleName() + " with " + clientSocket.getInetAddress());
+        log.debug("Initializing " + this.getClass().getSimpleName() + " with " + clientSocket.getInetAddress());
 
         this.ip = clientSocket.getInetAddress();
 
@@ -48,7 +49,7 @@ public class Connection implements EventBusServiceInterface {
         this.inputConnection = new ConnectionInput(clientSocket.getInputStream(), ip);
         Inspector.runNowAsDaemon(this.inputConnection);
 
-        Log.network.debug(this.getClass().getSimpleName() + " initialized!");
+        log.debug(this.getClass().getSimpleName() + " initialized!");
     }
 
     @Override
@@ -75,7 +76,7 @@ public class Connection implements EventBusServiceInterface {
                 final Message message = (Message) this.inputConnection.getNextMessage();
                 message.setFromIP(this.ip);
                 if (message instanceof GoodByeMessage) {
-                    Log.network.debug("Got GoodByeMessage!");
+                    log.debug("Got GoodByeMessage!");
                     this.close();
                     EventBusExtended.publishSyncSafe(TCPCoordinator.CONNECTION_LOST, this);
                 } else
@@ -90,7 +91,7 @@ public class Connection implements EventBusServiceInterface {
     }
 
     public synchronized void close() {
-        Log.network.debug("Closing " + this.getClass().getSimpleName());
+        log.debug("Closing " + this.getClass().getSimpleName());
 
         AnnotationProcessor.unprocess(this);
         this.eventBus.unsubscribe(CONNECTION_CHANNEL_LOST, this);
@@ -111,6 +112,6 @@ public class Connection implements EventBusServiceInterface {
         } catch (final IOException ignored) {
         }
 
-        Log.network.debug(this.getClass().getSimpleName() + " closed!");
+        log.debug(this.getClass().getSimpleName() + " closed!");
     }
 }

@@ -2,7 +2,6 @@ package de.mixedfx.gui;
 
 import javafx.beans.binding.DoubleExpression;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 
@@ -49,7 +48,7 @@ public class RegionManipulator {
      * @param image  ImageProperty which shall be the background of the region.
      */
     public static void bindBackground(final Region region, final ObjectProperty<Image> image) {
-        image.addListener((ChangeListener<Image>) (observable, oldValue, newValue) ->
+        image.addListener((observable, oldValue, newValue) ->
         {
             RegionManipulator.bindBackground(region, newValue);
         });

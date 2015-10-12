@@ -108,6 +108,6 @@ public class CollapsePane extends HBox {
     }
 
     public interface CollapseDoneInterface {
-        public void collapseDone();
+        void collapseDone();
     }
 }

@@ -6,7 +6,6 @@ import de.mixedfx.gui.panes.SuperPane;
 import de.mixedfx.inspector.Inspector;
 import de.mixedfx.logging.Log;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
@@ -59,7 +58,7 @@ public class Layouter {
         popOver.setAutoHide(true);
         popOver.setAutoFix(true);
         popOver.setDetachable(false);
-        popOver.showingProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) ->
+        popOver.showingProperty().addListener((observable, oldValue, newValue) ->
         {
             if (!newValue)
                 Platform.runLater(() ->
@@ -110,9 +109,9 @@ public class Layouter {
                  * Initialize PopOver content!
 				 */
                 final HBox toolBox = new HBox();
-                final Button button = new Button("Bild auswählen!");
+                final Button button = new Button("Bild auswï¿½hlen!");
                 final ColorPicker picker = new ColorPicker();
-                picker.showingProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> popOver.setAutoHide(!newValue));
+                picker.showingProperty().addListener((observable, oldValue, newValue) -> popOver.setAutoHide(!newValue));
                 picker.setOnAction(event1 -> RegionManipulator.bindBackground(region, ImageProducer.getMonoColored(picker.getValue())));
                 toolBox.getChildren().addAll(picker, button);
                 popOver.setContentNode(toolBox);
@@ -120,7 +119,7 @@ public class Layouter {
                 {
                     popOver.setAutoHide(false);
                     final FileChooser imageChooser = new FileChooser();
-                    imageChooser.setTitle("Bild auswählen!");
+                    imageChooser.setTitle("Bild auswï¿½hlen!");
                     final File selected = imageChooser.showOpenDialog(popOver);
                     RegionManipulator.bindBackground(region, ImageHandler.readImage(FileObject.create(selected)));
                     popOver.setAutoHide(true);

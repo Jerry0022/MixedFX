@@ -3,7 +3,6 @@ package de.mixedfx.gui;
 import de.mixedfx.logging.Log;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.input.KeyCode;
@@ -30,7 +29,7 @@ public class EasyModifier {
             }
         };
 
-        trigger.addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> EasyModifier.runOnAllSubNodes(root, config.staticClass, newValue, styleHandler, handler));
+        trigger.addListener((observable, oldValue, newValue) -> EasyModifier.runOnAllSubNodes(root, config.staticClass, newValue, styleHandler, handler));
     }
 
     /**

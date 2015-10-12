@@ -1,15 +1,14 @@
 package de.mixedfx.inspector;
 
+import javafx.application.Platform;
+import javafx.scene.Node;
+import javafx.scene.layout.Region;
+import javafx.util.Duration;
+
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
-
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.scene.Node;
-import javafx.scene.layout.Region;
-import javafx.util.Duration;
 
 /**
  * This class helps to identify changes or visual panes correctly. Or helps simply for testing GUI.
@@ -28,13 +27,13 @@ public class Inspector
 	 */
 	public static void inspectSize(final Region region, final String name)
 	{
-		region.widthProperty().addListener((ChangeListener<Number>) (observable, oldValue, newValue) ->
+		region.widthProperty().addListener((observable, oldValue, newValue) ->
 		{
 			System.out.println("Width of " + name + " changed to: " + newValue);
 
 		});
 
-		region.heightProperty().addListener((ChangeListener<Number>) (observable, oldValue, newValue) ->
+		region.heightProperty().addListener((observable, oldValue, newValue) ->
 		{
 			System.out.println("Height of " + name + " changed to: " + newValue);
 
@@ -193,5 +192,17 @@ public class Inspector
 			thread.setDaemon(true);
 			return thread;
 		};
+	}
+
+	/**
+	 * Sleeps a duration and ignores {@link InterruptedException}!
+	 *
+	 * @param duration The duration to sleep.
+	 */
+	public static void sleep(Duration duration) {
+		try {
+			Thread.sleep((long) duration.toMillis());
+		} catch (InterruptedException e) {
+		}
 	}
 }

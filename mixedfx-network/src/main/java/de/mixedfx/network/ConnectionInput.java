@@ -1,12 +1,13 @@
 package de.mixedfx.network;
 
 import de.mixedfx.eventbus.EventBusService;
-import de.mixedfx.logging.Log;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.util.ArrayList;
 
+@Log4j2
 public class ConnectionInput implements Runnable
 {
 	private static final Class<?> parentClass = Connection.class;
@@ -24,7 +25,7 @@ public class ConnectionInput implements Runnable
 
 		this.inputMessageCache = new ArrayList<>();
 
-		Log.network.trace(this.getClass().getSimpleName() + " initialized!");
+		log.trace(this.getClass().getSimpleName() + " initialized!");
 	}
 
 	protected Serializable getNextMessage()
@@ -59,11 +60,11 @@ public class ConnectionInput implements Runnable
 					{
 						this.inputMessageCache.add(receivedMessage);
 					}
-					Log.network.trace(this.getClass().getSimpleName() + " received message!");
+					log.trace(this.getClass().getSimpleName() + " received message!");
 					this.eventBusParent.publishAsync(Connection.MESSAGE_CHANNEL_RECEIVED, this);
 				} else
 				{
-					Log.network.warn(new Exception("Not a message received! Object rejected!"));
+					log.warn(new Exception("Not a message received! Object rejected!"));
 				}
 			} catch (final EOFException e)
 			{
@@ -74,14 +75,14 @@ public class ConnectionInput implements Runnable
 				{
 					if (e instanceof NotSerializableException || e.getCause() instanceof NotSerializableException)
 					{
-						Log.network.error(new Exception("A class is not serializable! Implement Serializable interface!"));
+						log.error(new Exception("A class is not serializable! Implement Serializable interface!"));
 					}
 
 					synchronized (this.inputMessageCache)
 					{
 						this.inputMessageCache.clear();
 						this.terminate();
-						Log.network.debug(this.getClass().getSimpleName() + " lost stream! Exception: " + e.getMessage());
+						log.debug(this.getClass().getSimpleName() + " lost stream! Exception: " + e.getMessage());
 						if (this.eventBusParent != null)
 							this.eventBusParent.publishSync(Connection.CONNECTION_CHANNEL_LOST, this);
 					}
@@ -104,7 +105,7 @@ public class ConnectionInput implements Runnable
 			} catch (final IOException ignored)
 			{
 			}
-			Log.network.trace(this.getClass().getSimpleName() + " terminated!");
+			log.trace(this.getClass().getSimpleName() + " terminated!");
 			return true;
 		} else
 		{

@@ -1,7 +1,10 @@
 package de.mixedfx.network;
 
 import de.mixedfx.eventbus.EventBusExtended;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class NetworkManager
 {
 	/**
@@ -11,31 +14,27 @@ public class NetworkManager
 	 */
 	public static final String NETWORK_FATALERROR = "NETWORK_FATALERROR";
 
-	protected static volatile boolean running;
+	protected volatile boolean running;
 
-	public static TCPCoordinator	t;
-	public static UDPCoordinator	u;
+	@Autowired
+	public TCPCoordinator t;
+	@Autowired
+	public UDPCoordinator u;
 
-	static
-	{
-		NetworkManager.t = new TCPCoordinator();
-		NetworkManager.u = new UDPCoordinator();
-	}
-
-	public synchronized static void start()
+	public synchronized void start()
 	{
 		if (!running)
 		{
-			NetworkManager.u.startUDPFull();
-			NetworkManager.t.startServer();
-			NetworkManager.running = true;
+			u.startUDPFull();
+			t.startServer();
+			running = true;
 		}
 	}
 
-	public synchronized static void stop()
+	public synchronized void stop()
 	{
-		NetworkManager.running = false;
-		NetworkManager.t.stopTCPFull();
-		NetworkManager.u.stopUDPFull();
+		running = false;
+		t.stopTCPFull();
+		u.stopUDPFull();
 	}
 }

@@ -1,19 +1,19 @@
 package de.mixedfx.windows;
 
+import de.mixedfx.logging.Log;
+import javafx.util.Duration;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import de.mixedfx.logging.Log;
-import javafx.util.Duration;
 
 public class WindowsMonitoring
 {
 	public interface Callback<T>
 	{
-		public void action(List<T> object);
+		void action(List<T> object);
 
-		public List<T> getItems();
+		List<T> getItems();
 	}
 
 	public static final long MONITORING_INTERVAL = (long) Duration.seconds(1).toMillis();

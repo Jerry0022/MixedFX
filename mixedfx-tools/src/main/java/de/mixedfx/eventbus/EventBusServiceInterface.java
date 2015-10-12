@@ -19,7 +19,7 @@ public interface EventBusServiceInterface extends EventTopicSubscriber<Object>
 	 * 	}
 	 * </pre>
 	 */
-	public void initilizeEventBusAndSubscriptions();
+	void initilizeEventBusAndSubscriptions();
 
 	/**
 	 * Make this method synchronized to force synchronous events on listener side
@@ -27,5 +27,5 @@ public interface EventBusServiceInterface extends EventTopicSubscriber<Object>
 	 * @see org.bushe.swing.event.EventTopicSubscriber#onEvent(java.lang.String, java.lang.Object)
 	 */
 	@Override
-	public void onEvent(String topic, Object event);
+	void onEvent(String topic, Object event);
 }

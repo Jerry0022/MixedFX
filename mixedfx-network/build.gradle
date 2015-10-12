@@ -1,28 +1,8 @@
 version = '1.3-SNAPSHOT'
 
 dependencies {
-    // For common
-    compile 'org.jboss.weld.se:weld-se:3.0.0.Alpha1'
-    compile 'de.lantool:mixedfx-cdi2jfx:1.3-SNAPSHOT'
-    // For logging
-    compile 'de.lantool:mixedfx-tools:1.2'
+    // For logging and others
+    compile 'de.lantool:mixedfx-tools:1.3-SNAPSHOT'
     // For de.mixedfx.network.overlay.OverlayNetwork
     compile 'org.icmp4j:icmp4j:1.0.0'
-}
-
-
-apply plugin: 'com.github.johnrengelman.shadow'
-buildscript {
-    repositories { jcenter() }
-    dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.2'
-    }
-}
-
-jar {
-    manifest {
-        attributes 'Implementation-Title': 'Gradle Quickstart',
-                'Implementation-Version': version,
-                'Main-Class': 'de.mixedfx.network.NetworkTester'
-    }
 }

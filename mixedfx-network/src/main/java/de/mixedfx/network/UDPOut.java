@@ -1,7 +1,10 @@
 package de.mixedfx.network;
 
 import de.mixedfx.inspector.Inspector;
-import de.mixedfx.logging.Log;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
@@ -9,8 +12,13 @@ import java.net.*;
 import java.util.Date;
 import java.util.Enumeration;
 
+@Component
 class UDPOut
 {
+	@Autowired
+	@Qualifier(value = "Network")
+	Logger LOGGER;
+
 	private DatagramSocket socket;
 
 	/**
@@ -125,14 +133,14 @@ class UDPOut
 					break;
 				}
 
-				Log.network.trace("Sent UDP message! " + me.getTimeStamp());
+				LOGGER.trace("Sent UDP message! " + me.getTimeStamp());
 
 				try
 				{
 					Thread.sleep(NetworkConfig.UDP_BROADCAST_INTERVAL);
 				} catch (final Exception e)
 				{
-					Log.network.fatal("UDP broadcast interval could not be applied!");
+					LOGGER.fatal("UDP broadcast interval could not be applied!");
 				}
 			}
 

@@ -59,7 +59,7 @@ public class _AdvancedSplitWorking extends StackPane implements ChangeListener<N
         this.constantPane.prefHeightProperty().bind(this.referencePane.heightProperty());
 
         this.shiftingPane.widthProperty().addListener(
-                (ChangeListener<Number>) (observable, oldValue, newValue) -> {
+                (observable, oldValue, newValue) -> {
                     // Must be done in the next GUI frame process step because
                     // otherwise the this.constantPane width calculation already
                     // took place and is not done before the next action is
@@ -121,7 +121,7 @@ public class _AdvancedSplitWorking extends StackPane implements ChangeListener<N
         this.shiftingPane = shiftingPane;
         this.shiftingPane.setStyle("-fx-background-color: yellow");
         this.shiftingPane.widthProperty().addListener(
-                (ChangeListener<Number>) (observable, oldValue, newValue) -> {
+                (observable, oldValue, newValue) -> {
                     // Must be done in the next GUI frame process step because
                     // otherwise the this.constantPane width calculation already
                     // took place and is not done before the next action is

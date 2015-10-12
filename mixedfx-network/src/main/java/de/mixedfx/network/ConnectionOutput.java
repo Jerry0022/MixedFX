@@ -1,7 +1,7 @@
 package de.mixedfx.network;
 
 import de.mixedfx.eventbus.EventBusService;
-import de.mixedfx.logging.Log;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.net.InetAddress;
 import java.util.ArrayList;
 
+@Log4j2
 public class ConnectionOutput implements Runnable {
     private static final Class<?> parentClass = Connection.class;
 
@@ -24,12 +25,12 @@ public class ConnectionOutput implements Runnable {
         this.objectOutputStream = new ObjectOutputStream(outputStream);
         this.outputMessageCache = new ArrayList<>();
 
-        Log.network.trace(this.getClass().getSimpleName() + " initialized!");
+        log.trace(this.getClass().getSimpleName() + " initialized!");
     }
 
     protected void sendMessage(final Serializable message) {
         synchronized (this.outputMessageCache) {
-            Log.network.trace(this.getClass().getSimpleName() + " sends a Message!");
+            log.trace(this.getClass().getSimpleName() + " sends a Message!");
             this.outputMessageCache.add(message);
         }
     }
@@ -42,12 +43,12 @@ public class ConnectionOutput implements Runnable {
                     try {
                         this.objectOutputStream.reset(); // GBC can collect written objects
                         this.objectOutputStream.writeObject(this.outputMessageCache.get(0));
-                        Log.network.trace(this.getClass().getSimpleName() + " message successfully sent!");
+                        log.trace(this.getClass().getSimpleName() + " message successfully sent!");
                         this.outputMessageCache.remove(0);
                     } catch (final IOException e) {
                         this.outputMessageCache.clear();
                         if (this.terminate()) {
-                            Log.network.debug("OutputStream lost!");
+                            log.debug("OutputStream lost!");
                             this.eventBusParent.publishSync(Connection.CONNECTION_CHANNEL_LOST, this);
                         }
                     }
@@ -57,7 +58,7 @@ public class ConnectionOutput implements Runnable {
             try {
                 Thread.sleep(NetworkConfig.TCP_UNICAST_INTERVAL);
             } catch (final InterruptedException e) {
-                Log.network.fatal("TCP unicast interval could not be applied!");
+                log.fatal("TCP unicast interval could not be applied!");
             }
         }
     }
@@ -71,7 +72,7 @@ public class ConnectionOutput implements Runnable {
                 }
             }
 
-            Log.network.trace("Terminating " + this.getClass().getSimpleName() + "!");
+            log.trace("Terminating " + this.getClass().getSimpleName() + "!");
             this.running = false;
 
             try {
@@ -79,9 +80,9 @@ public class ConnectionOutput implements Runnable {
             } catch (final IOException e) {
                 // In rare cases could be called twice, therefore soft
                 // Exception is needed, no impact!
-                Log.network.trace("WRITE ERROR! No reason to fear about this :D!");
+                log.trace("WRITE ERROR! No reason to fear about this :D!");
             }
-            Log.network.trace(this.getClass().getSimpleName() + " terminated!");
+            log.trace(this.getClass().getSimpleName() + " terminated!");
             return true;
         } else {
             return false;

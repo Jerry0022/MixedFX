@@ -153,7 +153,7 @@ public class Tutorializer {
         final MagicPane contentPane = new MagicPane(popContent);
 
         // Set up PopOver tutorial control
-        final Hyperlink backButton = new Hyperlink("Zurück!");
+        final Hyperlink backButton = new Hyperlink("Zurï¿½ck!");
         final Hyperlink stopButton = new Hyperlink("Tutorial beenden!");
         final Hyperlink goButton = new Hyperlink("Weiter!");
         final BorderPane tutorialBox = new BorderPane();
@@ -170,7 +170,7 @@ public class Tutorializer {
 
         // Set up movements
         Tutorializer.currentIndex = 0;
-        popContent.addListener((ChangeListener<Node>) (observable, oldValue, newValue) ->
+        popContent.addListener((observable, oldValue, newValue) ->
         {
             if (Tutorializer.currentIndex == 0)
                 backButton.setVisible(false);
