@@ -1,6 +1,7 @@
-package de.mixedfx.ts3;
+package de.mixedfx.test;
 
 import de.mixedfx.inspector.Inspector;
+import de.mixedfx.ts3.TS3LocalInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -11,7 +12,7 @@ import java.io.IOException;
 /**
  * Created by Jerry on 09.10.2015.
  */
-@ComponentScan
+@ComponentScan(basePackages = "de.mixedfx.ts3")
 public class TS3Tester_cdi {
     @Autowired
     private TS3LocalInstance instance;

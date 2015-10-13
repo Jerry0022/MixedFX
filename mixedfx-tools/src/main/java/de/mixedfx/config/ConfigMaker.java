@@ -1,14 +1,13 @@
 package de.mixedfx.config;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
+import de.mixedfx.file.DataHandler;
+import de.mixedfx.file.FileObject;
 import org.apache.commons.configuration2.INIConfiguration;
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 
-import de.mixedfx.file.DataHandler;
-import de.mixedfx.file.FileObject;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class ConfigMaker
 {

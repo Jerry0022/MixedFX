@@ -6,6 +6,7 @@ import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,6 +29,7 @@ import java.util.Collection;
  *
  * @author Jerry
  */
+@Component
 public final class DataHandler
 {
 	/*
