@@ -4,7 +4,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import lombok.extern.log4j.Log4j2;
 
-@Log4j2
+@Log4j2(topic = "Network")
 public class NetworkConfig
 {
 	/**

@@ -5,12 +5,10 @@ import de.mixedfx.network.ConnectivityManager;
 import de.mixedfx.network.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.UUID;
 
-@ComponentScan(basePackages = "de.mixedfx.network")
 @Configuration
 public class NetworkTester {
     @Autowired

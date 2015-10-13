@@ -7,7 +7,7 @@ import java.io.*;
 import java.net.InetAddress;
 import java.util.ArrayList;
 
-@Log4j2
+@Log4j2(topic = "Network")
 public class ConnectionInput implements Runnable
 {
 	private static final Class<?> parentClass = Connection.class;

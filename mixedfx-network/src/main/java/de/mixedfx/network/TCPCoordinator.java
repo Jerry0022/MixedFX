@@ -9,11 +9,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.util.Duration;
 import lombok.NonNull;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.bushe.swing.event.annotation.AnnotationProcessor;
 import org.bushe.swing.event.annotation.EventTopicSubscriber;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -21,13 +20,10 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 
 @Component
+@Log4j2(topic = "Network")
 public class TCPCoordinator
 {
 	public static final String CONNECTION_LOST = "TCP_CONNECTION_LOST";
-
-	@Autowired
-	@Qualifier(value = "Network")
-	Logger LOGGER;
 
 	@Autowired
 	private NetworkManager networkManager;
@@ -46,12 +42,12 @@ public class TCPCoordinator
 	@EventTopicSubscriber(topic = TCPCoordinator.CONNECTION_LOST)
 	public void lostConnection(final String topic, final Connection connection)
 	{
-		LOGGER.debug("TCP Connection with IP " + connection.ip + " lost!");
+		log.debug("TCP Connection with IP " + connection.ip + " lost!");
 
 		synchronized (tcpClients)
 		{
 			(new ArrayList<>(tcpClients)).stream().filter(tcpClient -> tcpClient.remoteAddress.equals(connection.ip)).forEach(tcpClient1 -> tcpClients.remove(tcpClient1));
-			LOGGER.debug("All remaining tcp clients: " + tcpClients);
+			log.debug("All remaining tcp clients: " + tcpClients);
 		}
 	}
 
@@ -73,7 +69,7 @@ public class TCPCoordinator
 			});
 		} catch (final IOException e)
 		{
-			LOGGER.fatal("Error occured while starting TCP server: ", e);
+			log.fatal("Error occured while starting TCP server: ", e);
 			this.stopTCPFull();
 			EventBusExtended.publishSyncSafe(NetworkManager.NETWORK_FATALERROR, e);
 		}
@@ -94,7 +90,7 @@ public class TCPCoordinator
 		synchronized (tcpClients)
 		{
 			tcpClients.stream().filter(tcpClient -> tcpClient.remoteAddress.equals(ip)).forEach(tcpClient1 -> {
-				LOGGER.trace("Already connected to: " + ip);
+				log.trace("Already connected to: " + ip);
 				return;
 			});
 		}
@@ -102,7 +98,7 @@ public class TCPCoordinator
 		// Start outgoing connection
 		try
 		{
-			LOGGER.info("Start TCP connection to: " + ip.getHostAddress());
+			log.info("Start TCP connection to: " + ip.getHostAddress());
 			TCPClient client = new TCPClient().start(ip);
 			synchronized (tcpClients)
 			{
@@ -111,10 +107,10 @@ public class TCPCoordinator
 			}
 		} catch (final IOException e)
 		{
-			LOGGER.warn("Error occurred while starting TCP client: " + e);
+			log.warn("Error occurred while starting TCP client: " + e);
 			return;
 		}
-		LOGGER.debug("Full TCP connection established to " + ip);
+		log.debug("Full TCP connection established to " + ip);
 	}
 
 	/**
@@ -124,14 +120,14 @@ public class TCPCoordinator
 	{
 		synchronized (tcpClients)
 		{
-			LOGGER.info("Stop TCP connection!");
+			log.info("Stop TCP connection!");
 
 			// Send a GoodBye to everyone who is still available to avoid ghost connections.
 			tcpClients.forEach(tcpClient -> {
 				final GoodByeMessage goodbyeMessage = new GoodByeMessage();
 				goodbyeMessage.setToIP(tcpClient.remoteAddress);
 				EventBusExtended.publishSyncSafe(Connection.MESSAGE_CHANNEL_SEND, goodbyeMessage);
-				LOGGER.debug("Sent GoodByeMessage!");
+				log.debug("Sent GoodByeMessage!");
 			});
 
 			Inspector.sleep(Duration.millis(NetworkConfig.TCP_UNICAST_INTERVAL * 2));

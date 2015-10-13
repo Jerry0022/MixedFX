@@ -3,9 +3,8 @@ package de.mixedfx.network;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -16,12 +15,9 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 @Component
+@Log4j2(topic = "Network")
 class TCPServer
 {
-	@Autowired
-	@Qualifier(value = "Network")
-	Logger LOGGER;
-
 	@Autowired
 	NetworkManager networkManager;
 
@@ -85,7 +81,7 @@ class TCPServer
 		{
 			this.serverSocket = new ServerSocket(port);
 			this.connectionList = new SimpleListProperty<>(FXCollections.observableArrayList(new ArrayList<>()));
-			LOGGER.debug(this.getClass().getSimpleName() + " initialized on " + this.serverSocket.getLocalSocketAddress());
+			log.debug(this.getClass().getSimpleName() + " initialized on " + this.serverSocket.getLocalSocketAddress());
 		}
 
 		@Override
@@ -101,11 +97,11 @@ class TCPServer
 					{
 						this.connectionList.add(new TCPClient().start(clientSocket));
 					}
-					LOGGER.debug("TCP Registrar successfully registered client!");
+					log.debug("TCP Registrar successfully registered client!");
 				} catch (final IOException e)
 				{
 					// In case of termination or connection failure => nothing to do!
-					LOGGER.debug(this.getClass().getSimpleName() + " closed!");
+					log.debug(this.getClass().getSimpleName() + " closed!");
 					running = false;
 				}
 			}

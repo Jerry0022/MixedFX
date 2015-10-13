@@ -1,7 +1,6 @@
 package de.mixedfx.network;
 
 import de.mixedfx.inspector.Inspector;
-import de.mixedfx.logging.Log;
 import de.mixedfx.network.messages.UserMessage;
 import de.mixedfx.network.overlay.MasterNetworkHandler;
 import de.mixedfx.network.overlay.OverlayNetwork;
@@ -15,12 +14,10 @@ import javafx.collections.ListChangeListener;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.bushe.swing.event.EventBus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -29,18 +26,9 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 @Component
-@Configuration
+@ComponentScan(basePackages = "de.mixedfx.network")
+@Log4j2(topic = "Network")
 public class ConnectivityManager<T extends User> {
-    @Bean
-    @Qualifier(value = "Network")
-    public Logger produceLogger() {
-        return Log.CONTEXT.getLogger("Network");
-    }
-
-    @Autowired
-    @Qualifier(value = "Network")
-    Logger LOGGER;
-
     @Autowired
     private MessageBus bus;
 
@@ -82,7 +70,7 @@ public class ConnectivityManager<T extends User> {
         EventBus.subscribeVetoListenerStrongly(MessageBus.MESSAGE_RECEIVE,
                 (topic, message) -> {
                     if (message instanceof UserMessage) {
-                        LOGGER.debug("UserMessage received: " + message);
+                        log.debug("UserMessage received: " + message);
                         final UserMessage<T> userMessage = (UserMessage<T>) message;
                         // Only if message is not from me
                         if (!userMessage.getOriginalUser().equals(this.myUniqueUser)) {
@@ -93,7 +81,7 @@ public class ConnectivityManager<T extends User> {
                                 }
                                 // Update mapping anyway
                                 this.tcp_user_map.put(userMessage.getFromIP(), userMessage);
-                                LOGGER.debug("Put UserMessage " + userMessage + " from ip "
+                                log.debug("Put UserMessage " + userMessage + " from ip "
                                         + userMessage.getFromIP() + " to my list!");
                             }
                             synchronized (this.otherUsers) {
@@ -108,7 +96,7 @@ public class ConnectivityManager<T extends User> {
                                 }
                             }
                         } else {
-                            LOGGER.warn("UserMessage was from me!");
+                            log.warn("UserMessage was from me!");
                         }
                         return true;
                     } else {
@@ -141,7 +129,7 @@ public class ConnectivityManager<T extends User> {
                                 new ArrayList<>(toUpdateUser.networks).stream().
                                         filter(overlayNetwork -> overlayNetwork.getIP().equals(tcpClient.remoteAddress)).
                                         forEach(toUpdateUser.networks::remove);
-                                LOGGER.debug("Removed user message from list: " + tcpClient.remoteAddress);
+                                log.debug("Removed user message from list: " + tcpClient.remoteAddress);
                             }
 
                             // Remove from otherUsers list
@@ -149,7 +137,7 @@ public class ConnectivityManager<T extends User> {
                                 if (!this.tcp_user_map.containsValue(new UserMessage<>(oldUser))) {
                                     this.otherUsers.remove(oldUser);
                                 } else {
-                                    LOGGER.info("User is still available over other connection! ");
+                                    log.info("User is still available over other connection! ");
                                 }
                             }
                             if (this.tcp_user_map.keySet().isEmpty()) {
@@ -164,7 +152,7 @@ public class ConnectivityManager<T extends User> {
                             final UserMessage<T> message = new UserMessage<>(this.myUniqueUser);
                             message.setToIP(tcpClient.remoteAddress);
                             this.bus.send(message);
-                            LOGGER.debug("Sent " + message + " to " + tcpClient.remoteAddress);
+                            log.debug("Sent " + message + " to " + tcpClient.remoteAddress);
                         }
                     });
                 }

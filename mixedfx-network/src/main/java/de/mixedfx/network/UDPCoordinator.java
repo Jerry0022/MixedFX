@@ -6,11 +6,10 @@ import de.mixedfx.inspector.Inspector;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.logging.log4j.Logger;
 import org.bushe.swing.event.EventTopicSubscriber;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
@@ -29,6 +28,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @Component
+@Log4j2(topic = "Network")
 public class UDPCoordinator implements EventTopicSubscriber<Object> {
     public static final String RECEIVE = "RECEIVE";
     public static final String ERROR = "ERROR";
@@ -46,10 +46,6 @@ public class UDPCoordinator implements EventTopicSubscriber<Object> {
     static {
 		UDPCoordinator.allAdresses = new SimpleListProperty<>(FXCollections.observableArrayList(new ArrayList<>()));
 	}
-
-	@Autowired
-	@Qualifier(value = "Network")
-	Logger LOGGER;
 
 	@Autowired
 	private NetworkManager networkManager;
@@ -134,13 +130,13 @@ public class UDPCoordinator implements EventTopicSubscriber<Object> {
 							.forEach(udp -> {
 								final UDPDetected localDetected = (UDPDetected) udp;
 								if (newDetected.getTimeStamp().after(localDetected.getTimeStamp())) {
-									LOGGER.trace("New UDP message received!");
+									log.trace("New UDP message received!");
 									// New UDP message of known NIC
 									// Register change of state for this participant
 									localDetected.update(newDetected.getTimeStamp());
 									// Fire replace event for listeners
 									UDPCoordinator.allAdresses.set(UDPCoordinator.allAdresses.indexOf(localDetected), localDetected);
-									LOGGER.trace("Updated " + newDetected);
+									log.trace("Updated " + newDetected);
 								} else {
 									return; // Old UDP Packet, newer one was already received!
 								}
@@ -148,14 +144,14 @@ public class UDPCoordinator implements EventTopicSubscriber<Object> {
 				} else {
 					// New UDP message of unknown NIC
 					UDPCoordinator.allAdresses.add(newDetected);
-					LOGGER.debug("New " + newDetected);
+					log.debug("New " + newDetected);
 				}
 
 				/*
 				 * Connect to other one!
 				 */
 				// Check cache
-				LOGGER.trace("Cached requests: " + this.cached);
+				log.trace("Cached requests: " + this.cached);
 				synchronized (this.cached) {
 					if (this.cached.contains(newDetected.address))
 						return;
@@ -173,7 +169,7 @@ public class UDPCoordinator implements EventTopicSubscriber<Object> {
 				});
 				executor.schedule(() -> {
 					if (!handler.isDone()) {
-						LOGGER.warn("A TCP connection needed to much time to establish! Time waited: "
+						log.warn("A TCP connection needed to much time to establish! Time waited: "
 								+ NetworkConfig.TCP_CONNECTION_ESTABLISHING_TIMEOUT + " milliseconds."
 								+ "Connection is now closed! " + newDetected.address);
 

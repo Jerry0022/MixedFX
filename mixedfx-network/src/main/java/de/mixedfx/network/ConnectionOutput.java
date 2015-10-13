@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.net.InetAddress;
 import java.util.ArrayList;
 
-@Log4j2
+@Log4j2(topic = "Network")
 public class ConnectionOutput implements Runnable {
     private static final Class<?> parentClass = Connection.class;
 

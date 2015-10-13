@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 
-@Log4j2
+@Log4j2(topic = "Network")
 public class Connection implements EventBusServiceInterface {
     protected static final String MESSAGE_CHANNEL_SEND = "MESSAGE_CHANNEL_SEND";
     protected static final String MESSAGE_CHANNEL_RECEIVED = "MESSAGE_CHANNEL_RECEIVED";
