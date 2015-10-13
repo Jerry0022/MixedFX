@@ -2,8 +2,8 @@ package de.mixedfx.assets;
 
 import de.mixedfx.file.DataHandler;
 import de.mixedfx.file.FileObject;
-import de.mixedfx.logging.Log;
 import javafx.scene.image.Image;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
@@ -18,6 +18,7 @@ import java.io.*;
  *
  * @author Jerry
  */
+@Log4j2(topic = "Assets")
 public class MasterHandler {
     /**
      * @param file
@@ -32,7 +33,7 @@ public class MasterHandler {
             try {
                 return (T) FileUtils.readFileToString(DataHandler.createOrFindFile(file));
             } catch (IOException | InterruptedException e) {
-                Log.assets.error("Could not read/access file! " + file);
+                log.error("Could not read/access file! " + file);
                 return null;
             }
 
@@ -51,7 +52,7 @@ public class MasterHandler {
                     return input;
                 }
             } catch (IOException | InterruptedException | ClassNotFoundException e) {
-                Log.assets.error("Could not read/access file or class failure! " + file);
+                log.error("Could not read/access file or class failure! " + file);
                 e.printStackTrace();
                 return null;
             }
@@ -64,7 +65,7 @@ public class MasterHandler {
             try {
                 ImageHandler.writeImage(file, (Image) object);
             } catch (final IOException e) {
-                Log.assets.error("Could not write/access file! " + file);
+                log.error("Could not write/access file! " + file);
             }
         }
         else if (object instanceof String) {
@@ -73,7 +74,7 @@ public class MasterHandler {
                 ps.write(((String) object).getBytes());
                 ps.close();
             } catch (final IOException | InterruptedException e) {
-                Log.assets.error("Could not write/access file! " + file);
+                log.error("Could not write/access file! " + file);
             }
         }
         else {
@@ -82,7 +83,7 @@ public class MasterHandler {
                 outputStream.writeObject(object);
                 outputStream.close();
             } catch (final IOException | InterruptedException e) {
-                Log.assets.error("Could not write/access file! " + file);
+                log.error("Could not write/access file! " + file);
             }
 
         }

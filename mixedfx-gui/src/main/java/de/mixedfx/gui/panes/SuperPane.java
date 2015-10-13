@@ -2,7 +2,6 @@ package de.mixedfx.gui.panes;
 
 import de.mixedfx.gui.RegionManipulator;
 import de.mixedfx.inspector.Inspector;
-import de.mixedfx.logging.Log;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -15,6 +14,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
  *
  * @author JerryMobil
  */
+@Log4j2(topic = "GUI")
 public class SuperPane extends StackPane {
     /**
      * Says how many tasks can be run in parallel. Other tasks will wait. MUST be set before {@link SuperPane} is initialized!
@@ -367,7 +368,7 @@ public class SuperPane extends StackPane {
             return;
         this.getChildren().add(dynamic);
         if (this.content == null)
-            Log.assets.warn("The SuperPane has no content. Therefore nothing will be blurred after opening this Dynamic: " + dynamic);
+            log.warn("The SuperPane has no content. Therefore nothing will be blurred after opening this Dynamic: " + dynamic);
         if (darkenLastLayer)
             this.blurAndDarkenPreLastLayer();
 

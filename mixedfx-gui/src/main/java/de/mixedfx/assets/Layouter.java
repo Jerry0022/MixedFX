@@ -4,7 +4,6 @@ import de.mixedfx.file.FileObject;
 import de.mixedfx.gui.*;
 import de.mixedfx.gui.panes.SuperPane;
 import de.mixedfx.inspector.Inspector;
-import de.mixedfx.logging.Log;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
@@ -17,10 +16,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
+import lombok.extern.log4j.Log4j2;
 import org.controlsfx.control.PopOver.ArrowLocation;
 
 import java.io.File;
 
+@Log4j2(topic = "Assets")
 public class Layouter {
 
     /**
@@ -71,7 +72,7 @@ public class Layouter {
                             @Override
                             protected Void call() throws Exception {
                                 layoutManager.saveElement(parent.getId(), image);
-                                Log.assets.trace("Background of node with id " + parent.getId() + " was saved! SuperPane was informed!");
+                                log.trace("Background of node with id " + parent.getId() + " was saved! SuperPane was informed!");
                                 return null;
                             }
                         };
@@ -95,7 +96,7 @@ public class Layouter {
         final EasyModifierHandler handler = (parent, doIt) ->
         {
             if (!(parent instanceof Region)) {
-                Log.assets.warn("Can layout only Regions but this Parent is marked with the style class but not a Region: " + parent);
+                log.warn("Can layout only Regions but this Parent is marked with the style class but not a Region: " + parent);
                 return;
             }
 
@@ -103,7 +104,7 @@ public class Layouter {
 
             final EventHandler<MouseEvent> event = event2 ->
             {
-                Log.assets.trace("Clicked on a dynamically modifable element with id " + region.getId() + "!");
+                log.trace("Clicked on a dynamically modifable element with id " + region.getId() + "!");
 
 				/*
                  * Initialize PopOver content!

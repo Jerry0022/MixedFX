@@ -8,7 +8,6 @@ import de.mixedfx.file.FileObject;
 import de.mixedfx.gui.EasyModifierConfig;
 import de.mixedfx.gui.RegionManipulator;
 import de.mixedfx.java.StringArrayList;
-import de.mixedfx.logging.Log;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -16,7 +15,9 @@ import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +26,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+@Component
+@Log4j2(topic = "Assets")
 public class LayoutManager {
     /**
      * The amount of (dynamic) images maximal cached for this application!
@@ -38,17 +41,24 @@ public class LayoutManager {
 
     public static String defaultLayoutName = "Layout1";
 
-    public final LoadingCache<String, Image> imageCache;
+    public LoadingCache<String, Image> imageCache;
 
-    public final FileObject standardLayoutDir;
+    public FileObject standardLayoutDir;
 
-    public final FileObject layoutDir;
+    public FileObject layoutDir;
 
     public StringProperty currentLayout;
 
     public Node root;
 
     public String layoutableClass;
+
+    /**
+     * {@link #init(Node, FileObject, String)} must be called to use this class!
+     */
+    public LayoutManager() {
+
+    }
 
     /**
      * First found Layout will be used!
@@ -79,6 +89,10 @@ public class LayoutManager {
      * @param layoutDir The directory which will contain the layout folders.
      */
     public LayoutManager(final Node root, final FileObject layoutDir, final String defaultLayout) {
+        init(root, layoutDir, defaultLayout);
+    }
+
+    public void init(final Node root, final FileObject layoutDir, final String defaultLayout) {
         if (!Platform.isFxApplicationThread())
             throw new IllegalStateException("Must run from FX Thread!");
         if ((root != null) && (root.getScene() == null))
@@ -100,7 +114,7 @@ public class LayoutManager {
             try {
                 FileUtils.forceMkdir(this.layoutDir.toFile());
             } catch (final IOException e) {
-                Log.assets.fatal("Can't create layout directory! " + layoutDir);
+                log.fatal("Can't create layout directory! " + layoutDir);
             }
         }
 
@@ -109,7 +123,7 @@ public class LayoutManager {
             try {
                 FileUtils.forceMkdir(this.standardLayoutDir.toFile());
             } catch (final IOException e) {
-                Log.assets.fatal("Can't create pre use directory! " + layoutDir);
+                log.fatal("Can't create pre use directory! " + layoutDir);
             }
         }
 
@@ -139,7 +153,7 @@ public class LayoutManager {
             try {
                 DataHandler.createFolder(layoutFullPath);
             } catch (final IOException e) {
-                Log.assets.error("Could not create layout! " + layoutFullPath);
+                log.error("Could not create layout! " + layoutFullPath);
             }
         }
 
@@ -156,7 +170,7 @@ public class LayoutManager {
             if (FileObject.create(file).getName().equalsIgnoreCase(LayoutManager.STYLE_FILE_NAME))
                 try {
                     this.root.getScene().getStylesheets().add(file.toURI().toURL().toExternalForm());
-                    Log.assets.trace("Loaded layout stylesheet!");
+                    log.trace("Loaded layout stylesheet!");
                 } catch (final MalformedURLException e) {
                 }
             else {
@@ -166,7 +180,7 @@ public class LayoutManager {
                 if (node instanceof Region)
                     RegionManipulator.bindBackground((Region) node, this.readImage(fileObject));
                 else if (node != null) // If node is null the image is a dynamic image!
-                    Log.assets.warn("The node " + node + " for the id " + id + " is not a Region. Only Regions are supported for layouting!");
+                    log.warn("The node " + node + " for the id " + id + " is not a Region. Only Regions are supported for layouting!");
             }
         }
 
@@ -193,7 +207,7 @@ public class LayoutManager {
         try {
             return this.imageCache.get(name);
         } catch (final ExecutionException e) {
-            Log.assets.error("Exception shown while reading image from cache or disk!", e);
+            log.error("Exception shown while reading image from cache or disk!", e);
             return ImageProducer.getMonoColored(Color.RED);
         }
     }
@@ -228,12 +242,12 @@ public class LayoutManager {
             if (this.getList().size() > 1)
                 this.applyLayout(this.getList().get(this.getList().indexOf(layout) == 0 ? 1 : 0));
             else {
-                Log.assets.warn("Can't remove current layout " + layout + " because there is no other one!");
+                log.warn("Can't remove current layout " + layout + " because there is no other one!");
                 return false;
             }
         }
         final boolean result = DataHandler.deleteFile(this.layoutDir.setFullName(layout));
-        Log.assets.trace("Layout " + layout + " removed " + (result ? "succesfully" : "unsuccessfully") + "!");
+        log.trace("Layout " + layout + " removed " + (result ? "succesfully" : "unsuccessfully") + "!");
         return result;
     }
 
@@ -248,7 +262,7 @@ public class LayoutManager {
         if (this.currentLayout.get().equalsIgnoreCase(oldName))
             this.currentLayout.set(newName);
         final boolean result = oldFolder.renameTo(newFolder);
-        Log.assets.trace("Layout " + oldName + " renamed to " + newName + " " + (result ? "succesfully" : "unsuccessfully") + "!");
+        log.trace("Layout " + oldName + " renamed to " + newName + " " + (result ? "succesfully" : "unsuccessfully") + "!");
         return result;
     }
 

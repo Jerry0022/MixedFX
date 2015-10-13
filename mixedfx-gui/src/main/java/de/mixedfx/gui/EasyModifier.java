@@ -1,15 +1,16 @@
 package de.mixedfx.gui;
 
-import de.mixedfx.logging.Log;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.input.KeyCode;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Log4j2(topic = "GUI")
 public class EasyModifier {
     /**
      * Trigger to go in modifying mode is a boolean change!
@@ -90,7 +91,7 @@ public class EasyModifier {
                 emptyList.add(root);
             }
             else {
-                Log.assets.warn("The node " + root + " has no id but has the identifying style class " + styleClass + ". A modifying operation can only perform if the id is uniquely filled.");
+                log.warn("The node " + root + " has no id but has the identifying style class " + styleClass + ". A modifying operation can only perform if the id is uniquely filled.");
             }
 
         if (root.getChildrenUnmodifiable().size() > 0) {
@@ -99,7 +100,7 @@ public class EasyModifier {
                     EasyModifier.runOnAllSubNodes((Parent) node, styleClass, doIt, emptyList, modifier);
                 }
                 else if (root.getStyleClass().contains(styleClass))
-                    Log.assets.warn("The node " + node + " is not a Parent but has the identifying style class " + styleClass + ". Only javafx.scene.Parent are supported!");
+                    log.warn("The node " + node + " is not a Parent but has the identifying style class " + styleClass + ". Only javafx.scene.Parent are supported!");
             }
         }
         return emptyList;

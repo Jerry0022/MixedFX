@@ -1,7 +1,6 @@
 package de.mixedfx.gui;
 
 import de.mixedfx.gui.panes.MagicPane;
-import de.mixedfx.logging.Log;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -19,6 +18,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import lombok.extern.log4j.Log4j2;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.PopOver.ArrowLocation;
 
@@ -27,6 +27,7 @@ import java.util.*;
 /**
  * @author Jerry
  */
+@Log4j2(topic = "Assets")
 public class Tutorializer {
     public static BooleanProperty active = new SimpleBooleanProperty(false);
 
@@ -87,11 +88,11 @@ public class Tutorializer {
      */
     public static void startTutorial(final Scene scene, final List<Node> tutorialNodes, final Runnable tutorialDone) {
         if (scene == null) {
-            Log.assets.error("Tutorial can be only started after rootNode is part of the scene!");
+            log.error("Tutorial can be only started after rootNode is part of the scene!");
             return;
         }
         if (Tutorializer.active.get()) {
-            Log.assets.error("A tutorial is still active!");
+            log.error("A tutorial is still active!");
             return;
         }
         Tutorializer.active.set(true);
@@ -109,12 +110,12 @@ public class Tutorializer {
                     Integer.valueOf(String.valueOf(node.getProperties().get("tutorialNr")));
                     verifiedNodes.add(node);
                 } catch (final Exception e) {
-                    Log.assets.warn("The value " + node.getProperties().get("tutorialNr")
+                    log.warn("The value " + node.getProperties().get("tutorialNr")
                             + " of the key \"tutorialNr\" as user data of an element is not in correct format! It can only be processed if it is an Integer or a String representation of an Integer!");
                 }
             }
             else
-                Log.assets.warn("A \"tutorial\" element has not the user data key \"tutorialNr\"! It can't be processed!");
+                log.warn("A \"tutorial\" element has not the user data key \"tutorialNr\"! It can't be processed!");
 
         // Sort the list of Nodes by index!
         final Comparator<Node> comparator = (o1, o2) ->
@@ -126,11 +127,11 @@ public class Tutorializer {
         Collections.sort(verifiedNodes, comparator);
 
         if (verifiedNodes.size() < 1) {
-            Log.assets.warn("Tutorial has no nodes on which a tutorial can be shown!");
+            log.warn("Tutorial has no nodes on which a tutorial can be shown!");
             return;
         }
         if (tutorialNodes.size() < verifiedNodes.size()) {
-            Log.assets.warn("The tutorial nodes must be of the same or higher size as the marked nodes!");
+            log.warn("The tutorial nodes must be of the same or higher size as the marked nodes!");
             return;
         }
 
