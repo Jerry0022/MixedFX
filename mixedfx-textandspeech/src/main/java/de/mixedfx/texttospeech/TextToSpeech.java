@@ -1,36 +1,34 @@
 package de.mixedfx.texttospeech;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Collection;
-import java.util.Locale;
-
-import javax.sound.sampled.AudioInputStream;
-import javax.xml.crypto.Data;
-
 import com.detectlanguage.DetectLanguage;
 import com.detectlanguage.errors.APIError;
-
-import de.mixedfx.file.DataHandler;
-import de.mixedfx.file.FileObject;
-import de.mixedfx.logging.Log;
 import de.mixedfx.speechtotext.IncorrectInputLanguage;
+import lombok.extern.log4j.Log4j2;
 import marytts.LocalMaryInterface;
 import marytts.MaryInterface;
 import marytts.exceptions.MaryConfigurationException;
 import marytts.exceptions.SynthesisException;
 import marytts.util.data.audio.AudioPlayer;
-import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
-import net.lingala.zip4j.model.UnzipParameters;
-import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
+import javax.sound.sampled.AudioInputStream;
+import java.util.Locale;
+
+@Component
+@Log4j2(topic = "TextToSpeech")
+@Configuration
 public class TextToSpeech
 {
-	private static AudioPlayer	audioPlayer;
+	@Autowired
+	private AudioPlayer audioPlayer;
 
+	@Bean
+	public AudioPlayer produceAudioPlayer() {
+		return new AudioPlayer();
+	}
 
 	/**
 	 *
@@ -41,7 +39,7 @@ public class TextToSpeech
 	 * @throws IncorrectInputLanguage
 	 *             If the input couldn't be process with the specified language.
 	 */
-	public static void say(final String input, TTSConfig config) throws IncorrectInputLanguage
+	public void say(final String input, TTSConfig config) throws IncorrectInputLanguage
 	{
 		// Input mustn't be null
 		if ((input == null) || input.isEmpty())
@@ -57,7 +55,7 @@ public class TextToSpeech
 			maryttsServer = new LocalMaryInterface();
 		} catch (final MaryConfigurationException ex)
 		{
-			Log.textAndSpeech.fatal("MaryConfigurationException registered: " + ex);
+			log.fatal("MaryConfigurationException registered: " + ex);
 			return;
 		}
 
@@ -74,7 +72,7 @@ public class TextToSpeech
 				config.lang = Language.getVoiceByLocale(locale);
 			} catch (final APIError e)
 			{
-				Log.textAndSpeech.warn("DetectLanguage API could not detect it! Use default voice now!");
+				log.warn("DetectLanguage API could not detect it! Use default voice now!");
 				final Locale locale = new Locale("en");
 				config.lang = Language.getVoiceByLocale(locale);
 			}
@@ -86,21 +84,21 @@ public class TextToSpeech
 		try
 		{
 			final AudioInputStream audio = maryttsServer.generateAudio(input);
-			TextToSpeech.audioPlayer = new AudioPlayer();
-			TextToSpeech.audioPlayer.setAudio(audio);
-			TextToSpeech.audioPlayer.start();
+			audioPlayer = new AudioPlayer();
+			audioPlayer.setAudio(audio);
+			audioPlayer.start();
 			if (config.block)
 			{
 				try
 				{
-					TextToSpeech.audioPlayer.join();
+					audioPlayer.join();
 				} catch (final InterruptedException e)
 				{
 				}
 			}
 		} catch (final SynthesisException ex)
 		{
-			Log.textAndSpeech.fatal("Error saving input! " + ex);
+			log.fatal("Error saving input! " + ex);
 			throw new IncorrectInputLanguage();
 		}
 	}

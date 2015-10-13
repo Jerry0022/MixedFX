@@ -1,5 +1,8 @@
 package de.mixedfx.texttospeech;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class TTSConfig
 {
 	/**
