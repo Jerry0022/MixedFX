@@ -20,7 +20,7 @@ public class WindowsMonitoring
 
 	private static List<Callback<?>>	callbacks	= new ArrayList<Callback<?>>();
 	private static Thread				monitoringThread;
-	private static boolean				monitoring;
+	private static volatile boolean monitoring;
 
 	public static void remove(final Callback<?> callback)
 	{
@@ -77,9 +77,7 @@ public class WindowsMonitoring
 									}
 									else
 										if (o instanceof Firewalls)
-										{
 											((Firewalls) o).status = firewallsStatus;
-										}
 										else
 										{
 											Log.windows.error("Can't retrieve status of an object of type: " + o);
